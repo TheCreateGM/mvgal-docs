@@ -125,6 +125,15 @@ MVGAL uses a three-tier transfer strategy:
 - **Userspace components**: GPL-3.0-only
 - **Rust crates**: MIT OR Apache-2.0
 
+## Source Code
+
+The MVGAL source code is available for purchase at:
+
+- **Patreon Shop** — [patreon.com/axogm/shop](https://www.patreon.com/axogm/shop)
+- **Ko-fi Shop** — [ko-fi.com/axogm/shop](https://ko-fi.com/axogm/shop)
+
+Your purchase helps fund continued development of MVGAL and other open-source projects.
+
 ## Getting Help
 
 - **Issues & bugs** — [github.com/TheCreateGM/mvgal-docs/issues](https://github.com/TheCreateGM/mvgal-docs/issues)
