@@ -8,25 +8,32 @@ Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) tr
 
 MVGAL solves this by aggregating all available GPUs — regardless of vendor — into a single logical device. Any application, game, or compute workload can use it without modification.
 
-```
-Your Application / Game / AI Workload
-           │              │              │
-       Vulkan           OpenCL          CUDA
-           ▼              ▼              ▼
-┌──────────────────────────────────────────────────┐
-│            MVGAL API Interception Layer            │
-│  VK_LAYER_MVGAL │ libmvgal_opencl │ libmvgal_cuda │
-└──────────────────────┬───────────────────────────┘
-                       │ Unix socket
-                       ▼
-┌──────────────────────────────────────────────────┐
-│               mvgald  (daemon)                     │
-│  Scheduler │ MemoryMgr │ PowerMgr │ Metrics │ IPC │
-└──────┬──────────┬──────────┬──────────┬──────────┘
-       │          │          │          │
-       ▼          ▼          ▼          ▼
-  amdgpu.ko  nvidia.ko  i915/xe.ko  mtgpu-drv.ko
-  (AMD GPU) (NVIDIA GPU) (Intel GPU) (MTT GPU)
+```mermaid
+flowchart TD
+    A["Your Application / Game / AI Workload"]
+
+    A --> B["Vulkan"]
+    A --> C["OpenCL"]
+    A --> D["CUDA"]
+
+    B --> E
+    C --> E
+    D --> E
+
+    subgraph Interception["MVGAL API Interception Layer"]
+        E["VK_LAYER_MVGAL<br/>libmvgal_opencl<br/>libmvgal_cuda"]
+    end
+
+    E -->|Unix socket| F
+
+    subgraph Daemon["mvgald (daemon)"]
+        F["Scheduler<br/>MemoryMgr<br/>PowerMgr<br/>Metrics<br/>IPC"]
+    end
+
+    F --> G["amdgpu.ko<br/>(AMD GPU)"]
+    F --> H["nvidia.ko<br/>(NVIDIA GPU)"]
+    F --> I["i915 / xe.ko<br/>(Intel GPU)"]
+    F --> J["mtgpu-drv.ko<br/>(MTT GPU)"]
 ```
 
 ## Features
