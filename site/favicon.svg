@@ -1,8 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="12" fill="#1a1a1a"/>
-  <rect x="8" y="20" width="48" height="24" rx="4" fill="#76b900"/>
-  <rect x="14" y="26" width="8" height="12" rx="2" fill="#1a1a1a"/>
-  <rect x="28" y="26" width="8" height="12" rx="2" fill="#1a1a1a"/>
-  <rect x="42" y="26" width="8" height="12" rx="2" fill="#1a1a1a"/>
-  <rect x="8" y="44" width="48" height="4" rx="2" fill="#4a9eff"/>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 257 249" width="528" height="512">
+	<defs>
+		<image  width="167" height="107" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKcAAABrAQMAAAAo8gBgAAAAAXNSR0IB2cksfwAAAAZQTFRFLDlHAAAAf/vG8QAAAAJ0Uk5T/wDltzBKAAAAa0lEQVR4nGNkYKhvYGBg+CjA/uOgg/wDIPMvCwPjqCg5ogwM/39yMDCMio6KDiJRMCBKtL6WhfEfZlofFUUXZWCw388ElCAsysDQ2AAS/f9/VJQ80QYGSEk7KkpIFFwEECUKSqNA7qgoGaIAKaGnMGRiNroAAAAASUVORK5CYII="/>
+		<image  width="167" height="107" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKcAAABrAQMAAAAo8gBgAAAAAXNSR0IB2cksfwAAAAZQTFRFVHqVAAAAC4Qa1gAAAAJ0Uk5T/wDltzBKAAAAa0lEQVR4nGNkYKhvYGBg+CjA/uOgg/wDIPMvCwPjqCg5ogwM/39yMDCMio6KDiJRMCBKtL6WhfEfZlofFUUXZWCw388ElCAsysDQ2AAS/f9/VJQ80QYGSEk7KkpIFFwEECUKSqNA7qgoGaIAKaGnMGRiNroAAAAASUVORK5CYII="/>
+		<image  width="257" height="107" id="img3" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQEAAABrAQMAAABNOqU2AAAAAXNSR0IB2cksfwAAAAZQTFRFAAAALDlHcgxfwgAAAAJ0Uk5TAP9bkSK1AAAAcElEQVR4nGNkYPzHAAR/WUBkfQOIZGRg4P/wk4MBAhhHVQxfFf+hDIafHPYHoMz/TKSqaAQZDRKyP/BQAchk/jOqYoSpAIFRFaMqRlUMJRXsPwiV66MqRlWM1vvDTgUUoKmACTcSoQLathxVMRJVAAD42FcZ5soFfwAAAABJRU5ErkJggg=="/>
+		<image  width="257" height="107" id="img4" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQEAAABrAQMAAABNOqU2AAAAAXNSR0IB2cksfwAAAAZQTFRFAAAAVHqVm2fJFAAAAAJ0Uk5TAP9bkSK1AAAAcElEQVR4nGNkYPzHAAR/WUBkfQOIZGRg4P/wk4MBAhhHVQxfFf+hDIafHPYHoMz/TKSqaAQZDRKyP/BQAchk/jOqYoSpAIFRFaMqRlUMJRXsPwiV66MqRlWM1vvDTgUUoKmACTcSoQLathxVMRJVAAD42FcZ5soFfwAAAABJRU5ErkJggg=="/>
+	</defs>
+	<style>
+	</style>
+	<use id="MV copy" href="#img1" x="45" y="10"/>
+	<use id="MV" href="#img2" x="45" y="0"/>
+	<use id="GAL copy" href="#img3" x="0" y="132"/>
+	<use id="GAL" href="#img4" x="0" y="142"/>
 </svg>
