@@ -6,7 +6,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 ## 📚 Documentation
 
-- **HTML site** — [Open the full documentation site](site/index.html) (self-contained, works on GitHub Pages / Gitea Pages)
+- **HTML site** — [Open the full documentation site](https://thecreategm.github.io/mvgal-docs/site/index.html) (self-contained, works on GitHub Pages / Gitea Pages)
 - **Markdown source** — [`docs/`](docs/) contains the raw documentation files
 - **Quick Start** — [`docs/QUICKSTART.md`](docs/QUICKSTART.md)
 - **Installation** — [`docs/INSTALL.md`](docs/INSTALL.md)
