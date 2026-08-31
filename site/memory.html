@@ -4,6 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Memory Management — MVGAL Documentation</title>
+<meta name="description" content="MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.">
+<meta name="keywords" content="MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety">
+<meta name="author" content="MVGAL Project">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="generator" content="MVGAL docs site generator">
+<link rel="canonical" href="https://thecreategm.github.io/mvgal-docs/site/memory.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MVGAL Documentation">
+<meta property="og:title" content="Memory Management — MVGAL Documentation">
+<meta property="og:description" content="MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.">
+<meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/memory.html">
+<meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
+<meta property="og:locale" content="en_US">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Memory Management — MVGAL Documentation">
+<meta name="twitter:description" content="MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.">
+<meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Memory Management \u2014 MVGAL Documentation", "name": "Memory Management \u2014 MVGAL Documentation", "description": "MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.", "url": "https://thecreategm.github.io/mvgal-docs/site/memory.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Memory Management \u2014 MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/memory.html"}]}}</script>
 <style>
 :root {
   --bg: #0f1117;

@@ -4,6 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Architecture — MVGAL Documentation</title>
+<meta name="description" content="The 8-layer MVGAL system architecture: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.">
+<meta name="keywords" content="MVGAL architecture, 8-layer, kernel module, mvgald daemon, Vulkan layer, OpenCL ICD, CUDA shim, DRM meta-driver, vendor ops">
+<meta name="author" content="MVGAL Project">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="generator" content="MVGAL docs site generator">
+<link rel="canonical" href="https://thecreategm.github.io/mvgal-docs/site/architecture.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MVGAL Documentation">
+<meta property="og:title" content="Architecture — MVGAL Documentation">
+<meta property="og:description" content="The 8-layer MVGAL system architecture: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.">
+<meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/architecture.html">
+<meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
+<meta property="og:locale" content="en_US">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Architecture — MVGAL Documentation">
+<meta name="twitter:description" content="The 8-layer MVGAL system architecture: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.">
+<meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Architecture \u2014 MVGAL Documentation", "name": "Architecture \u2014 MVGAL Documentation", "description": "The 8-layer MVGAL system architecture: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.", "url": "https://thecreategm.github.io/mvgal-docs/site/architecture.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL architecture, 8-layer, kernel module, mvgald daemon, Vulkan layer, OpenCL ICD, CUDA shim, DRM meta-driver, vendor ops", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Architecture \u2014 MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/architecture.html"}]}}</script>
 <style>
 :root {
   --bg: #0f1117;
