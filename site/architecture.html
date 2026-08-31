@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html" class="active">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-architecture">MVGAL Architecture</h1>
+<p><strong>Version:</strong> 0.7.0 | <strong>Last Updated:</strong> August 2026</p>
+<hr>
+<h2 id="overview">Overview</h2>
+<p>MVGAL (Multi-Vendor GPU Aggregation Layer for Linux) is an <strong>eight-layer</strong> system that presents two or more heterogeneous GPUs from different vendors as a single logical device to all applications without requiring application changes.</p>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                        Applications                              │
+│          (Games, Blender, PyTorch, OpenCL programs)              │
+├──────────────────────────────────────────────────────────────────┤
+│                Layer 8: Tooling &amp; Bindings                        │
+│  CLI (mvgal-info/status/bench) · Qt Dashboard · REST API ·      │
+│  Steam Frame Pacer · Language Bindings (Java, C#, D, Nim, V,    │
+│  Crystal, Haxe)                                                  │
+├──────────────────────────────────────────────────────────────────┤
+│                Layer 7: API Interception                          │
+│  VK_LAYER_MVGAL · libmvgal_opencl.so · libmvgal_cuda.so ·       │
+│  libmvgal_gl.so (OpenGL LD_PRELOAD) · D3D9/11/12 shims ·        │
+│  Metal shim · WebGPU shim · SPIR-V Routing                       │
+├──────────────────────────────────────────────────────────────────┤
+│                Layer 6: Safety Subsystems (Rust)                  │
+│  fence_manager · memory_safety · capability_model                │
+│  Memory-safe FFI boundary between C/C++ and Rust                 │
+├──────────────────────────────────────────────────────────────────┤
+│          Layer 5: Work Distribution Engine (WDE)                  │
+│  7+3 Scheduling Strategies · Memory Heap Hierarchy               │
+│  (Heaps 0-4) · Workload Analysis → Strategy Selection            │
+│  RLD (Render Layer Dist.) · REP (Replication) · PPL (Pipeline)   │
+├──────────────────────────────────────────────────────────────────┤
+│          Layer 4: Intermediate Framing Layer (IMFL)               │
+│  Frame Sessions · Cross-GPU Migration Plans · Steam Profiles   │
+│  Execution Context Lifecycle · Migration Path Selection           │
+├──────────────────────────────────────────────────────────────────┤
+│                Layer 3: Runtime Daemon (mvgald)                   │
+│  Scheduler · MemoryManager · PowerManager · MetricsCollector ·   │
+│  IpcServer · DeviceRegistry · D-Bus API · Daemon State Machine   │
+├──────────────────────────────────────────────────────────────────┤
+│          Layer 2: Vendor GPU Driver Dispatch (VGDD)               │
+│  struct mvgal_vendor_ops · amdgpu / nvidia / intel / mtt        │
+│  Per-vendor command submission · VRAM alloc · power mgmt         │
+│  DMA-BUF export/import · PCIe P2P · Utilization query            │
+├──────────────────────────────────────────────────────────────────┤
+│          Layer 1: Hardware Abstraction Layer (HAL)                │
+│  mvgal.ko (char dev → DRM migration path) · PCI enumeration ·   │
+│  GPU topology · IOCTL interface · NTSYNC · Cross-GPU DMA-BUF    │
+│  /dev/mvgal0 · sysfs interface                                   │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
+│   │ amdgpu.ko│  │nvidia.ko │  │i915/xe.ko│  │mtgpu-drv │       │
+│   │  (AMD)   │  │ (NVIDIA) │  │ (Intel)  │  │  (MTT)   │       │
+│   └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
+│                    Vendor Kernel Drivers                          │
+└──────────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="layer-summary">Layer Summary</h3>
+<table>
+<thead><tr>
+<th>Layer</th>
+<th>Name</th>
+<th>Abbr.</th>
+<th>Source</th>
+<th>Language</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>Hardware Abstraction Layer</td>
+<td>HAL</td>
+<td><code>kernel/</code></td>
+<td>C (GPL-2.0)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Vendor GPU Driver Dispatch</td>
+<td>VGDD</td>
+<td><code>kernel/vendors/</code></td>
+<td>C (GPL-2.0)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Runtime Daemon</td>
+<td>Runtime</td>
+<td><code>runtime/daemon/</code></td>
+<td>C++20</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Intermediate Framing Layer</td>
+<td>IMFL</td>
+<td><code>src/userspace/execution/</code></td>
+<td>C17</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Work Distribution Engine</td>
+<td>WDE</td>
+<td><code>src/userspace/scheduler/</code></td>
+<td>C17</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Safety Subsystems</td>
+<td>Safety</td>
+<td><code>safe/</code></td>
+<td>Rust</td>
+</tr>
+<tr>
+<td>7</td>
+<td>API Interception</td>
+<td>Intercept</td>
+<td><code>src/userspace/intercept/</code> + <code>opengl/</code></td>
+<td>C17</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tooling & Bindings</td>
+<td>Tooling</td>
+<td><code>tools/</code> + <code>steam/</code> + <code>ui/</code> + <code>bindings/</code></td>
+<td>C17, Go, Qt</td>
+</tr>
+</tbody></table>
+<h3 id="interface-contracts">Interface Contracts</h3>
+<table>
+<thead><tr>
+<th>Boundary</th>
+<th>Mechanism</th>
+<th>Protocol/Format</th>
+</tr></thead><tbody>
+<tr>
+<td>HAL → VGDD</td>
+<td>Function pointer table</td>
+<td><code>struct mvgal_vendor_ops</code></td>
+</tr>
+<tr>
+<td>HAL → Runtime</td>
+<td>IOCTL</td>
+<td><code>mvgal_uapi.h</code> (10 ioctls)</td>
+</tr>
+<tr>
+<td>VGDD → Vendor kdbs</td>
+<td>Linux kernel API</td>
+<td>DRM, DMA-BUF, PCI subsystem</td>
+</tr>
+<tr>
+<td>Runtime → IMFL/WDE</td>
+<td>Unix socket IPC</td>
+<td>MVGAL IPC binary protocol</td>
+</tr>
+<tr>
+<td>IMFL → WDE</td>
+<td>Internal function calls</td>
+<td><code>execution_plan.h</code> / <code>scheduler.h</code></td>
+</tr>
+<tr>
+<td>Runtime → Safety</td>
+<td>C FFI (<code>extern "C"</code>)</td>
+<td><code>mvgal_fence_<em></code>, <code>mvgal_mem_</em></code>, <code>mvgal_cap_*</code></td>
+</tr>
+<tr>
+<td>Intercept → IMFL</td>
+<td>C function calls</td>
+<td><code>mvgal_execution_*</code> API</td>
+</tr>
+<tr>
+<td>Tooling → Runtime</td>
+<td>IPC (socket) or REST</td>
+<td>MVGAL IPC or HTTP <code>:7474</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="layer-1--hardware-abstraction-layer-hal">Layer 1 — Hardware Abstraction Layer (HAL)</h2>
+<p><strong>Source:</strong> <code>kernel/</code> (9 source files) <strong>License:</strong> GPL-2.0-only <strong>Device node:</strong> <code>/dev/mvgal0</code> (char dev, Phase 1) → future DRM driver (Phase 2)</p>
+<h3 id="responsibilities">Responsibilities</h3>
+<ul>
+<li>Registers a character device <code>/dev/mvgal0</code> via <code>alloc_chrdev_region</code> and <code>cdev_add</code>.</li>
+<li>Enumerates all display-class PCI devices at module load and on hotplug events.</li>
+<li>Exposes GPU topology, PCIe link information, and BAR sizes to user space via ioctls.</li>
+<li>Manages cross-GPU DMA-BUF export/import and unified virtual address space.</li>
+<li>Implements kernel-side workload queue with 16 priority levels.</li>
+<li>Provides cross-vendor fence and timeline synchronization primitives.</li>
+<li>NTSYNC kernel module for Windows-compatible sync primitives (WoW64).</li>
+</ul>
+<h3 id="module-parameters">Module Parameters</h3>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>enable_debug</code></td>
+<td>bool</td>
+<td>false</td>
+<td>Enable verbose kernel log output</td>
+</tr>
+<tr>
+<td><code>max_devices</code></td>
+<td>uint</td>
+<td>8</td>
+<td>Maximum number of GPUs supported</td>
+</tr>
+</tbody></table>
+<h3 id="ioctl-interface">IOCTL Interface</h3>
+<p>Defined in <code>include/mvgal/mvgal_uapi.h</code>:</p>
+<table>
+<thead><tr>
+<th>IOCTL</th>
+<th>Direction</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>MVGAL_IOCTL_QUERY_DEVICES</code></td>
+<td>Read</td>
+<td>Number and descriptors of detected GPUs</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_QUERY_CAPABILITIES</code></td>
+<td>Read</td>
+<td>Aggregate capability profile</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_SUBMIT_WORKLOAD</code></td>
+<td>Write</td>
+<td>Submit a workload to the scheduler</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_ALLOC_MEMORY</code></td>
+<td>Read/Write</td>
+<td>Allocate unified virtual memory</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_FREE_MEMORY</code></td>
+<td>Write</td>
+<td>Free a unified memory allocation</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_IMPORT_DMABUF</code></td>
+<td>Write</td>
+<td>Import a DMA-BUF file descriptor</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_EXPORT_DMABUF</code></td>
+<td>Read</td>
+<td>Export a buffer as DMA-BUF</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_WAIT_FENCE</code></td>
+<td>Write</td>
+<td>Wait for a fence to be signaled</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_SIGNAL_FENCE</code></td>
+<td>Write</td>
+<td>Signal a fence</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOCTL_SET_GPU_AFFINITY</code></td>
+<td>Write</td>
+<td>Pin a context to specific GPUs</td>
+</tr>
+</tbody></table>
+<h3 id="kernel-source-files">Kernel Source Files</h3>
+<table>
+<thead><tr>
+<th>File</th>
+<th>Purpose</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal_main.c</code></td>
+<td>Module init/exit, PCI scan, char dev registration</td>
+</tr>
+<tr>
+<td><code>mvgal_ioctl.c</code></td>
+<td>IOCTL dispatch table (10 handlers)</td>
+</tr>
+<tr>
+<td><code>mvgal_dma_buf.c</code></td>
+<td>Cross-GPU DMA-BUF export/import implementation</td>
+</tr>
+<tr>
+<td><code>mvgal_fence.c</code></td>
+<td>Fence and timeline sync primitives</td>
+</tr>
+<tr>
+<td><code>mvgal_memory.c</code></td>
+<td>Kernel-side memory management (GEM/buffer objects)</td>
+</tr>
+<tr>
+<td><code>mvgal_sched.c</code></td>
+<td>Kernel-side workload queue (16 priority levels)</td>
+</tr>
+<tr>
+<td><code>mvgal_sysfs.c</code></td>
+<td>Sysfs interface for GPU metrics</td>
+</tr>
+<tr>
+<td><code>mvgal_ntsync.c</code></td>
+<td>NTSYNC Windows-compatible sync primitives</td>
+</tr>
+<tr>
+<td><code>mvgal_p2p.c</code></td>
+<td>PCIe P2P DMA setup and teardown</td>
+</tr>
+</tbody></table>
+<h3 id="char-dev--drm-driver-migration-path">Char Dev → DRM Driver Migration Path</h3>
+<p>The current HAL uses a character device (<code>/dev/mvgal0</code>) for Phase 1. A full DRM driver is planned:</p>
+<table>
+<thead><tr>
+<th>Phase</th>
+<th>Approach</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td>Phase 1 (current)</td>
+<td><code>alloc_chrdev_region</code> + <code>cdev_add</code></td>
+<td>✅ Implemented</td>
+</tr>
+<tr>
+<td>Phase 2</td>
+<td><code>drm_driver</code> registration as minor DRM subsystem</td>
+<td>🔄 Planned</td>
+</tr>
+<tr>
+<td>Phase 2 goals</td>
+<td>DRM sync object support, DRM scheduler integration, GEM object lifecycle, <code>drm_gem_prime_export/import</code></td>
+<td>🔄 Planned</td>
+</tr>
+<tr>
+<td>Rationale</td>
+<td>Char dev avoids claiming PCI devices from vendor drivers; DRM path enables native compositor integration</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>Migration does <strong>not</strong> replace vendor DRM drivers (<code>amdgpu.ko</code>, <code>nvidia.ko</code>, etc.). MVGAL remains an above-driver coordinator.</p>
+<hr>
+<h2 id="layer-2--vendor-gpu-driver-dispatch-vgdd">Layer 2 — Vendor GPU Driver Dispatch (VGDD)</h2>
+<p><strong>Source:</strong> <code>kernel/vendors/</code> <strong>License:</strong> GPL-2.0-only</p>
+<h3 id="responsibilities">Responsibilities</h3>
+<p>Each vendor implements the same <code>struct mvgal_vendor_ops</code> interface to abstract away vendor-specific GPU driver interactions.</p>
+<h3 id="vendor-operations">Vendor Operations</h3>
+<pre><code class="language-c">struct mvgal_vendor_ops {
+    int  (*init)(struct mvgal_gpu_device *dev);
+    void (*fini)(struct mvgal_gpu_device *dev);
+    int  (*submit_cs)(struct mvgal_gpu_device *dev, struct mvgal_workload *wl);
+    int  (*alloc_vram)(struct mvgal_gpu_device *dev, size_t size, uint64_t *addr);
+    void (*free_vram)(struct mvgal_gpu_device *dev, uint64_t addr);
+    int  (*wait_idle)(struct mvgal_gpu_device *dev, uint32_t timeout_ms);
+    int  (*set_power_state)(struct mvgal_gpu_device *dev, enum mvgal_power_state);
+    struct dma_buf *(*export_dmabuf)(struct mvgal_gpu_device *dev, uint64_t addr, size_t size);
+    int  (*import_dmabuf)(struct mvgal_gpu_device *dev, struct dma_buf *buf, uint64_t *addr);
+    int  (*query_utilization)(struct mvgal_gpu_device *dev, uint32_t *util_percent);
+};</code></pre>
+<h3 id="vendor-implementations">Vendor Implementations</h3>
+<table>
+<thead><tr>
+<th>File</th>
+<th>Vendor</th>
+<th>Driver Interfaces</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal_amd.c</code></td>
+<td>AMD</td>
+<td><code>amdgpu.ko</code> via DRM prime + sysfs</td>
+</tr>
+<tr>
+<td><code>mvgal_nvidia.c</code></td>
+<td>NVIDIA</td>
+<td><code>nvidia.ko</code> / <code>nvidia-open.ko</code> via procfs + DMA-BUF</td>
+</tr>
+<tr>
+<td><code>mvgal_intel.c</code></td>
+<td>Intel</td>
+<td><code>i915.ko</code> / <code>xe.ko</code> via DRM prime</td>
+</tr>
+<tr>
+<td><code>mvgal_mtt.c</code></td>
+<td>Moore Threads</td>
+<td><code>mtgpu-drv.ko</code> via vendor API (experimental)</td>
+</tr>
+</tbody></table>
+<h3 id="design-decisions">Design Decisions</h3>
+<p><strong>No <code>pci_register_driver</code>:</strong> MVGAL must not claim PCI devices away from vendor drivers. Using <code>pci_get_device</code> in a scan loop allows MVGAL to observe all GPUs without interfering with their existing drivers.</p>
+<p><strong>Vendor ops as function pointers:</strong> Allows compile-time selection of supported vendors and clean degradation when a vendor module is absent.</p>
+<hr>
+<h2 id="layer-3--runtime-daemon-mvgald">Layer 3 — Runtime Daemon (mvgald)</h2>
+<p><strong>Source:</strong> <code>runtime/daemon/</code> (C++20) <strong>Socket:</strong> <code>/run/mvgal/mvgal.sock</code> <strong>PID file:</strong> <code>/run/mvgal/mvgald.pid</code> <strong>D-Bus:</strong> <code>org.mvgal.daemon</code></p>
+<h3 id="responsibilities">Responsibilities</h3>
+<p>Central coordination point for all MVGAL operations. Runs as a systemd service, manages GPU state, handles client IPC, and exposes telemetry.</p>
+<h3 id="subsystems">Subsystems</h3>
+<h4 id="deviceregistry-deviceregistrycpp">DeviceRegistry (<code>device_registry.cpp</code>)</h4>
+<p>Enumerates GPUs via <code>/sys/class/drm/cardN/device/</code> and PCI bus scan. Normalizes vendor-specific metadata into <code>GpuDevice</code> objects with:</p>
+<ul>
+<li>PCI slot, vendor/device IDs, DRM node path</li>
+<li>Capabilities: VRAM size/free, bandwidth, compute units, API flags, PCIe gen/lanes, NUMA node</li>
+<li>State: utilization %, memory %, temperature, power draw, clock speed, power state</li>
+</ul>
+<h4 id="scheduler-schedulercpp">Scheduler (<code>scheduler.cpp</code>)</h4>
+<p>Three scheduling modes:</p>
+<ul>
+<li><code>STATIC_PARTITIONING</code> — divide workload by static weights</li>
+<li><code>DYNAMIC_LOAD_BALANCING</code> — route to GPU with most available capacity</li>
+<li><code>APPLICATION_PROFILE</code> — pre-configured profiles for known applications</li>
+</ul>
+<p>Priority queue with 16 levels. Work-stealing when one GPU's queue depth exceeds threshold.</p>
+<h4 id="memorymanager-memorymanagercpp">MemoryManager (<code>memory_manager.cpp</code>)</h4>
+<p>Coordinates cross-GPU memory allocation. Tracks allocations per GPU, implements DMA-BUF transfer path, PCIe P2P fallback, and host-RAM staging.</p>
+<h4 id="powermanager-powermanagercpp">PowerManager (<code>power_manager.cpp</code>)</h4>
+<p>Power state machine:</p>
+<pre><code>ACTIVE → SUSTAINED → IDLE → PARK</code></pre>
+<p>Configurable timeouts:</p>
+<ul>
+<li><code>idleTimeoutMs</code> (default: 5000 ms) — time without workload before going idle</li>
+<li><code>sustainedTimeoutMs</code> (default: 30000 ms) — time in idle before sustained</li>
+<li><code>parkTimeoutMs</code> (default: 60000 ms) — time in sustained before parking</li>
+</ul>
+<p>DVFS: adjusts GPU clock based on utilization. Thermal throttling at configurable threshold (default: 85°C).</p>
+<h4 id="metricscollector-metricscollectorcpp">MetricsCollector (<code>metrics_collector.cpp</code>)</h4>
+<p>Polls sysfs at configurable interval (default: 1000 ms). Collects:</p>
+<ul>
+<li>GPU utilization, memory utilization, memory bandwidth (read/write)</li>
+<li>Temperature, power draw, clock speed, queue depth</li>
+<li>Submit latency, execution time, wait time</li>
+</ul>
+<p>Exposes telemetry subscription API for clients.</p>
+<h4 id="ipcserver-ipcservercpp">IpcServer (<code>ipc_server.cpp</code>)</h4>
+<p>Unix domain socket server. Binary message format:</p>
+<pre><code>┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
+│  magic   │ version  │  type    │ reqId    │ payloadSz│  flags   │ reserved │
+│ 'MVGL'   │    1     │ uint32   │ uint32   │ uint32   │ uint32   │ uint32   │
+│ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │
+└──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘</code></pre>
+<p>Message types: <code>HELLO</code>, <code>GOODBYE</code>, <code>QUERY_DEVICES</code>, <code>QUERY_DEVICE_CAPABILITIES</code>, <code>QUERY_UNIFIED_CAPABILITIES</code>, <code>ALLOC_MEMORY</code>, <code>FREE_MEMORY</code>, <code>IMPORT_DMABUF</code>, <code>EXPORT_DMABUF</code>, <code>SUBMIT_WORKLOAD</code>, <code>WAIT_WORKLOAD</code>, <code>SET_SCHEDULING_MODE</code>, <code>SET_GPU_PRIORITY</code>, <code>SET_GPU_ENABLED</code>, <code>GET_STATISTICS</code>, <code>SUBSCRIBE_TELEMETRY</code>, <code>UNSUBSCRIBE_TELEMETRY</code>, <code>GET_CONFIG</code>, <code>SET_CONFIG</code>, <code>LOAD_CONFIG</code>, <code>SAVE_CONFIG</code>, <code>ERROR</code>.</p>
+<p>Authentication: <code>SCM_CREDENTIALS</code> — only <code>video</code> group members or root may submit workloads.</p>
+<h4 id="d-bus-api-orgmvgaldaemon">D-Bus API (<code>org.mvgal.daemon</code>)</h4>
+<table>
+<thead><tr>
+<th>Interface</th>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>org.mvgal.GPUManager</code></td>
+<td><code>ListGPUs</code></td>
+<td>Returns array of GPU device paths</td>
+</tr>
+<tr>
+<td><code>org.mvgal.GPUManager</code></td>
+<td><code>GetGPUStats(path)</code></td>
+<td>Returns utilization, temp, power</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Scheduler</code></td>
+<td><code>GetStrategy</code></td>
+<td>Returns current scheduling strategy</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Scheduler</code></td>
+<td><code>SetStrategy(string)</code></td>
+<td>Sets scheduling strategy</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Scheduler</code></td>
+<td><code>GetGPUPriorities</code></td>
+<td>Returns per-GPU priority levels</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Power</code></td>
+<td><code>GetPowerState(path)</code></td>
+<td>Returns current power state of a GPU</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Power</code></td>
+<td><code>SetPowerState(path, string)</code></td>
+<td>Manually set power state</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Config</code></td>
+<td><code>GetConfig</code></td>
+<td>Returns full daemon configuration</td>
+</tr>
+<tr>
+<td><code>org.mvgal.Config</code></td>
+<td><code>SetConfig(string, variant)</code></td>
+<td>Set a configuration value</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="layer-4--intermediate-framing-layer-imfl">Layer 4 — Intermediate Framing Layer (IMFL)</h2>
+<p><strong>Source:</strong> <code>src/userspace/execution/</code> (C17) <strong>Header:</strong> <code>include/mvgal/execution.h</code></p>
+<h3 id="responsibilities">Responsibilities</h3>
+<p>Translates intercepted API calls into scheduler workloads. Manages frame sessions (begin → submit → present lifecycle), generates cross-GPU migration plans, and produces Steam/Proton scheduling profiles.</p>
+<h3 id="execution-context-lifecycle">Execution Context Lifecycle</h3>
+<pre><code>mvgal_execution_begin_frame()   → allocates frame_id, records API/strategy/app
+mvgal_execution_submit()        → creates execution plan, selects GPUs, chooses migration path
+mvgal_execution_present()       → finalizes frame, triggers frame pacer if needed
+mvgal_execution_get_frame_stats() → returns timing, GPU list, bytes migrated</code></pre>
+<h3 id="migration-path-selection">Migration Path Selection</h3>
+<pre><code>1. DMA-BUF zero-copy   (MVGAL_EXECUTION_MIGRATION_STREAM)
+2. PCIe P2P            (MVGAL_EXECUTION_MIGRATION_STREAM with P2P)
+3. Host-RAM staging    (MVGAL_EXECUTION_MIGRATION_EVICT)
+4. Mirror/replicate    (MVGAL_EXECUTION_MIGRATION_MIRROR)</code></pre>
+<h3 id="frame-session-data">Frame Session Data</h3>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>frame_id</code></td>
+<td><code>uint64_t</code></td>
+<td>Monotonically increasing frame identifier</td>
+</tr>
+<tr>
+<td><code>api</code></td>
+<td><code>enum mvgal_api</code></td>
+<td>Originating API (Vulkan, OpenCL, CUDA, etc.)</td>
+</tr>
+<tr>
+<td><code>strategy</code></td>
+<td><code>enum mvgal_strategy</code></td>
+<td>Scheduling strategy assigned to this frame</td>
+</tr>
+<tr>
+<td><code>gpu_mask</code></td>
+<td><code>uint32_t</code></td>
+<td>Bitmask of GPUs selected for this frame</td>
+</tr>
+<tr>
+<td><code>migration_path</code></td>
+<td><code>enum mvgal_migration</code></td>
+<td>Selected migration path (stream/P2P/evict/mirror)</td>
+</tr>
+<tr>
+<td><code>bytes_migrated</code></td>
+<td><code>uint64_t</code></td>
+<td>Total bytes transferred for this frame</td>
+</tr>
+<tr>
+<td><code>start_ns</code></td>
+<td><code>uint64_t</code></td>
+<td>Frame start timestamp (CLOCK_MONOTONIC)</td>
+</tr>
+<tr>
+<td><code>end_ns</code></td>
+<td><code>uint64_t</code></td>
+<td>Frame end timestamp</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="layer-5--work-distribution-engine-wde">Layer 5 — Work Distribution Engine (WDE)</h2>
+<p><strong>Source:</strong> <code>src/userspace/scheduler/</code> + <code>src/userspace/memory/</code> (C17) <strong>Headers:</strong> <code>include/mvgal/scheduler.h</code>, <code>include/mvgal/memory.h</code></p>
+<h3 id="responsibilities">Responsibilities</h3>
+<p>Selects the optimal work distribution strategy per workload, manages memory allocation across the GPU memory hierarchy, and implements 10 scheduling strategies (7 existing + 3 new).</p>
+<h3 id="scheduling-strategies">Scheduling Strategies</h3>
+<h4 id="existing-strategies-7">Existing Strategies (7)</h4>
+<table>
+<thead><tr>
+<th>Strategy</th>
+<th>Enum</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td>Round-robin</td>
+<td><code>MVGAL_STRATEGY_ROUND_ROBIN</code></td>
+<td>Even distribution across all GPUs</td>
+</tr>
+<tr>
+<td>AFR</td>
+<td><code>MVGAL_STRATEGY_AFR</code></td>
+<td>Even frames → GPU 0, odd frames → GPU 1</td>
+</tr>
+<tr>
+<td>SFR</td>
+<td><code>MVGAL_STRATEGY_SFR</code></td>
+<td>Screen split horizontally or vertically</td>
+</tr>
+<tr>
+<td>Task-based</td>
+<td><code>MVGAL_STRATEGY_TASK</code></td>
+<td>Route by workload type (graphics vs compute)</td>
+</tr>
+<tr>
+<td>Compute offload</td>
+<td><code>MVGAL_STRATEGY_COMPUTE_OFFLOAD</code></td>
+<td>Route compute to highest-FLOPS GPU</td>
+</tr>
+<tr>
+<td>Hybrid</td>
+<td><code>MVGAL_STRATEGY_HYBRID</code></td>
+<td>Adaptive — selects best strategy per workload</td>
+</tr>
+<tr>
+<td>Single GPU</td>
+<td><code>MVGAL_STRATEGY_SINGLE_GPU</code></td>
+<td>Use only the primary GPU</td>
+</tr>
+</tbody></table>
+<h4 id="new-strategies-3">New Strategies (3)</h4>
+<table>
+<thead><tr>
+<th>Strategy</th>
+<th>Abbr.</th>
+<th>Enum</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td>Render Layer Distribution</td>
+<td>RLD</td>
+<td><code>MVGAL_STRATEGY_RLD</code></td>
+<td>Distribute render layers (e.g., UI, world, post-fx) across different GPUs based on layer affinity. Best for complex scenes with separable rendering passes.</td>
+</tr>
+<tr>
+<td>Replication Mode</td>
+<td>REP</td>
+<td><code>MVGAL_STRATEGY_REPLICATION</code></td>
+<td>Replicate identical work across GPUs for comparison/redundancy. Useful for scientific computing validation and fault-tolerant rendering.</td>
+</tr>
+<tr>
+<td>Pipeline Parallelism</td>
+<td>PPL</td>
+<td><code>MVGAL_STRATEGY_PIPELINE_PARALLELISM</code></td>
+<td>Split a pipeline across GPUs (GPU 0 → pre-process, GPU N → post-process). Best for streaming workloads and media encoding pipelines.</td>
+</tr>
+</tbody></table>
+<h4 id="strategy-selection-criteria">Strategy Selection Criteria</h4>
+<table>
+<thead><tr>
+<th>Workload Type</th>
+<th>Recommended Strategy</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr>
+<td>Gaming (fast-paced)</td>
+<td>AFR, SFR</td>
+<td>Minimizes frame latency, even GPU utilization</td>
+</tr>
+<tr>
+<td>Gaming (complex scenes)</td>
+<td>RLD</td>
+<td>Separates rendering layers across GPUs</td>
+</tr>
+<tr>
+<td>AI Training</td>
+<td>Compute offload, PPL</td>
+<td>Maximizes throughput via batch sharding</td>
+</tr>
+<tr>
+<td>AI Inference</td>
+<td>Round-robin, Task-based</td>
+<td>Even load distribution</td>
+</tr>
+<tr>
+<td>Media encoding</td>
+<td>PPL</td>
+<td>Pipeline stages across GPUs</td>
+</tr>
+<tr>
+<td>Scientific computing</td>
+<td>REP</td>
+<td>Cross-verification of results</td>
+</tr>
+<tr>
+<td>Mixed workloads</td>
+<td>Hybrid</td>
+<td>Adaptive strategy selection</td>
+</tr>
+</tbody></table>
+<h3 id="memory-heap-hierarchy-heaps-04">Memory Heap Hierarchy (Heaps 0–4)</h3>
+<p>The WDE manages memory across a 5-tier heap hierarchy, each with distinct performance/latency characteristics:</p>
+<table>
+<thead><tr>
+<th>Heap</th>
+<th>Name</th>
+<th>Location</th>
+<th>Access Latency</th>
+<th>Capacity</th>
+<th>Best For</th>
+</tr></thead><tbody>
+<tr>
+<td>Heap 0</td>
+<td>GPU VRAM (local)</td>
+<td>On each GPU die</td>
+<td>~1–10 µs</td>
+<td>GB–tens of GB</td>
+<td>Active rendering, compute working set</td>
+</tr>
+<tr>
+<td>Heap 1</td>
+<td>GPU VRAM (peer)</td>
+<td>On other GPUs via PCIe</td>
+<td>~5–50 µs</td>
+<td>GB–tens of GB</td>
+<td>Shared data, read-only textures</td>
+</tr>
+<tr>
+<td>Heap 2</td>
+<td>Host RAM (NIC-attached)</td>
+<td>System RAM, NUMA-local</td>
+<td>~100–500 ns</td>
+<td>GB–hundreds of GB</td>
+<td>Staging, fallback allocations</td>
+</tr>
+<tr>
+<td>Heap 3</td>
+<td>Host RAM (remote)</td>
+<td>System RAM, non-local NUMA</td>
+<td>~200–1000 ns</td>
+<td>GB–hundreds of GB</td>
+<td>Cold data, persistent storage</td>
+</tr>
+<tr>
+<td>Heap 4</td>
+<td>SSD/Storage</td>
+<td>NVMe / block device swap</td>
+<td>~10–100 µs</td>
+<td>TB</td>
+<td>Memory oversubscription, checkpoint</td>
+</tr>
+</tbody></table>
+<p><strong>Allocation Policy:</strong></p>
+<pre><code>Request size &lt; 64 MB  →  Heap 0 (GPU with most free VRAM)
+Render target         →  Heap 0 (GPU that will write first, from workload history)
+Large buffer (&gt;1 GB)  →  Heap 2 (host RAM staging) + stream to Heap 0 as needed
+Read-only textures    →  Heap 1 (replicate to peer GPU VRAM)
+Cold data             →  Heap 3 (remote NUMA) or Heap 4 (SSD swap)</code></pre>
+<hr>
+<h2 id="layer-6--safety-subsystems-rust">Layer 6 — Safety Subsystems (Rust)</h2>
+<p><strong>Source:</strong> <code>safe/</code> (3 Rust crates, edition 2021, MSRV 1.75) <strong>License:</strong> MIT OR Apache-2.0</p>
+<h3 id="responsibilities">Responsibilities</h3>
+<p>Memory-safe implementations of critical subsystems that require rigorous lifetime tracking. Each crate exposes a C FFI interface with <code>#[no_mangle] extern "C"</code> functions.</p>
+<h3 id="fencemanager-248-loc"><code>fence_manager</code> (~248 LOC)</h3>
+<p>Cross-device fence lifecycle management.</p>
+<p><strong>State machine:</strong> <code>Pending → Submitted → Signalled → Reset</code></p>
+<pre><code class="language-c">uint64_t mvgal_fence_create(uint32_t gpu_index);
+void     mvgal_fence_submit(uint64_t handle);
+void     mvgal_fence_signal(uint64_t handle);
+uint32_t mvgal_fence_state(uint64_t handle);   // 0=Pending 1=Submitted 2=Signalled 3=Reset
+void     mvgal_fence_reset(uint64_t handle);
+void     mvgal_fence_destroy(uint64_t handle);</code></pre>
+<p><strong>C FFI:</strong></p>
+<h3 id="memorysafety-230-loc"><code>memory_safety</code> (~230 LOC)</h3>
+<p>Safe wrappers for cross-GPU memory allocation tracking with reference counting.</p>
+<p><strong>Placements:</strong> <code>SystemRam</code>, <code>GpuVram</code>, <code>Mirrored</code></p>
+<pre><code class="language-c">uint64_t mvgal_mem_track(uint64_t size, uint32_t placement);
+void     mvgal_mem_retain(uint64_t handle);
+void     mvgal_mem_release(uint64_t handle);
+void     mvgal_mem_set_dmabuf(uint64_t handle, int32_t fd);
+uint64_t mvgal_mem_size(uint64_t handle);
+uint32_t mvgal_mem_placement(uint64_t handle);
+uint64_t mvgal_mem_total_system_bytes(void);
+uint64_t mvgal_mem_total_gpu_bytes(void);</code></pre>
+<p><strong>C FFI:</strong></p>
+<h3 id="capabilitymodel-260-loc"><code>capability_model</code> (~260 LOC)</h3>
+<p>GPU capability normalization, aggregate profile computation, and JSON serialization.</p>
+<p><strong>Tiers:</strong> <code>Full</code> (all GPUs same API set), <code>ComputeOnly</code>, <code>Mixed</code></p>
+<pre><code class="language-c">uint64_t    mvgal_cap_compute(const GpuCapability *caps, uint32_t count);
+void        mvgal_cap_free(uint64_t handle);
+uint64_t    mvgal_cap_total_vram(uint64_t handle);
+uint32_t    mvgal_cap_tier(uint64_t handle);
+const char *mvgal_cap_to_json(uint64_t handle);</code></pre>
+<p><strong>C FFI:</strong></p>
+<h3 id="rustc-ffi-boundary">Rust/C++ FFI Boundary</h3>
+<p>The FFI boundary between Rust safety crates (Layer 6) and the C++ daemon (Layer 3) is defined as follows:</p>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                   C++ Daemon (mvgald)                    │
+│  #include "fence_manager.h"  // C FFI declarations       │
+│  #include "memory_safety.h"  // C FFI declarations       │
+│  #include "capability_model.h"  // C FFI declarations    │
+├──────────────────────────────────────────────────────────┤
+│                    extern "C" {                           │
+│  mvgal_fence_create()  →  fence_manager::Fence::new()    │
+│  mvgal_mem_track()     →  memory_safety::TrackedAlloc    │
+│  mvgal_cap_compute()   →  capability_model::compute()    │
+│                    }                                      │
+├──────────────────────────────────────────────────────────┤
+│                Rust Crates (safe/)                        │
+│  fence_manager   →  #[no_mangle] extern "C" fn ...       │
+│  memory_safety   →  #[no_mangle] extern "C" fn ...       │
+│  capability_model  →  #[no_mangle] extern "C" fn ...     │
+└──────────────────────────────────────────────────────────┘</code></pre>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>All cross-language calls go through C FFI (<code>extern "C"</code>). No direct C++→Rust name mangling.</li>
+<li>Handles are <code>uint64_t</code> opaque tokens. No Rust structs exposed across the boundary.</li>
+<li>Memory allocations that cross the boundary use the C allocator (<code>malloc</code>/<code>free</code>) via <code>CString</code> / <code>Box::into_raw</code>.</li>
+<li>Error propagation: functions return <code>int32_t</code> where <code>&lt; 0</code> indicates an error. Extended error info is logged on the Rust side.</li>
+</ul>
+<hr>
+<h2 id="layer-7--api-interception">Layer 7 — API Interception</h2>
+<p><strong>Source:</strong> <code>src/userspace/intercept/</code> + <code>opengl/</code> (C17)</p>
+<h3 id="responsibilities">Responsibilities</h3>
+<p>Intercepts application API calls transparently and routes them through the MVGAL pipeline without application modification.</p>
+<h3 id="vulkan-layer-srcuserspaceinterceptvulkan">Vulkan Layer (<code>src/userspace/intercept/vulkan/</code>)</h3>
+<p><code>VK_LAYER_MVGAL</code> is a Vulkan explicit layer registered via <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code>.</p>
+<p>Uses the Vulkan loader dispatch-chain pattern. Each intercepted function looks up the next function pointer via <code>vkGetInstanceProcAddr</code> / <code>vkGetDeviceProcAddr</code>.</p>
+<p><strong>Intercepted functions:</strong></p>
+<ul>
+<li>Instance: <code>vkCreateInstance</code>, <code>vkDestroyInstance</code>, <code>vkEnumeratePhysicalDevices</code></li>
+<li>Device: <code>vkCreateDevice</code>, <code>vkDestroyDevice</code>, <code>vkGetDeviceQueue</code>, <code>vkGetDeviceQueue2</code></li>
+<li>Queue: <code>vkQueueSubmit</code>, <code>vkQueueSubmit2</code>, <code>vkQueueSubmit2KHR</code></li>
+<li>Physical device: <code>vkGetPhysicalDeviceProperties</code>, <code>vkGetPhysicalDeviceFeatures</code>, <code>vkGetPhysicalDeviceMemoryProperties</code>, <code>vkGetPhysicalDeviceQueueFamilyProperties</code>, <code>vkGetPhysicalDeviceProperties2</code>, <code>vkGetPhysicalDeviceFeatures2</code>, <code>vkGetPhysicalDeviceMemoryProperties2</code></li>
+</ul>
+<p><strong>Global state</strong> (<code>g_mvgal_layer_state</code>): linked lists of instance, device, queue, and physical device dispatch tables. Protected by <code>pthread_mutex_t</code>. Atomic submit counter.</p>
+<p><strong>MVGAL VkPhysicalDevice extensions:</strong></p>
+<ul>
+<li><code>VK_MVGAL_aggregation_device</code> — query aggregated device properties</li>
+<li><code>VK_MVGAL_memory_heaps</code> — query MVGAL memory heap hierarchy (Heaps 0-4)</li>
+<li><code>VK_MVGAL_scheduling_hint</code> — hint scheduling strategy per queue</li>
+</ul>
+<p><strong>Debug:</strong> <code>MVGAL_VULKAN_DEBUG=1</code> enables logging. <code>MVGAL_VULKAN_LOG_PATH=&lt;path&gt;</code> redirects to file.</p>
+<h3 id="opencl-layer-srcuserspaceinterceptopencl">OpenCL Layer (<code>src/userspace/intercept/opencl/</code>)</h3>
+<p>LD_PRELOAD-based interception. Presents all GPUs as a single MVGAL OpenCL platform. NDRange kernels are partitioned across GPUs by splitting the global work size.</p>
+<p>Registered via <code>/etc/OpenCL/vendors/mvgal.icd</code>.</p>
+<h3 id="cuda-shim-srcuserspaceinterceptcuda">CUDA Shim (<code>src/userspace/intercept/cuda/</code>)</h3>
+<p>LD_PRELOAD-based interception of 40+ CUDA Driver and Runtime API functions. Intercepts:</p>
+<ul>
+<li><code>cuLaunchKernel</code>, <code>cudaLaunchKernel</code> — kernel launches</li>
+<li><code>cuMemAlloc</code>, <code>cudaMalloc</code>, <code>cuMemFree</code>, <code>cudaFree</code> — memory management</li>
+<li><code>cuMemcpy<em></code>, <code>cudaMemcpy</em></code> — memory transfers</li>
+<li>Cross-GPU copy detection and memory tracking per GPU</li>
+</ul>
+<h3 id="direct3d-shims-srcuserspaceinterceptd3d">Direct3D Shims (<code>src/userspace/intercept/d3d/</code>)</h3>
+<table>
+<thead><tr>
+<th>Shim</th>
+<th>Targets</th>
+<th>Approach</th>
+</tr></thead><tbody>
+<tr>
+<td>D3D9</td>
+<td>Direct3D 9 games</td>
+<td>DXVK bridge → Vulkan layer</td>
+</tr>
+<tr>
+<td>D3D11</td>
+<td>Direct3D 11 applications</td>
+<td>DXVK bridge → Vulkan layer</td>
+</tr>
+<tr>
+<td>D3D12</td>
+<td>Direct3D 12 applications</td>
+<td>VKD3D-Proton bridge → Vulkan layer</td>
+</tr>
+</tbody></table>
+<p>All D3D shims intercept <code>CreateDXGIFactory<em></code>, <code>CreateDirect3D11Device</em></code>, <code>CreateDirect3D12Device*</code> and inject MVGAL into the DXVK/VKD3D-Proton pipeline.</p>
+<h3 id="metal-shim-srcuserspaceinterceptmetal">Metal Shim (<code>src/userspace/intercept/metal/</code>)</h3>
+<p>Interposes <code>MTLCreateSystemDefaultDevice</code> and <code>MTLCopyAllDevices</code> via <code>DYLD_INSERT_LIBRARIES</code>. Routes Metal command buffers through MVGAL scheduling. Note: Metal interception is macOS-only (future).</p>
+<h3 id="webgpu-shim-srcuserspaceinterceptwebgpu">WebGPU Shim (<code>src/userspace/intercept/webgpu/</code>)</h3>
+<p>Intercepts <code>wgpuCreateInstance</code>, <code>WGPUAdapter</code> enumeration. Proxies WebGPU workloads to MVGAL for browser-based compute and ML workloads.</p>
+<h3 id="spir-v-routing-srcuserspaceinterceptspirv">SPIR-V Routing (<code>src/userspace/intercept/spirv/</code>)</h3>
+<p>Inspects SPIR-V shader modules at pipeline creation time. Routes compute shaders identified as AI/ML kernels to the Compute Offload scheduler. Enables cross-vendor SPIR-V capability probing.</p>
+<h3 id="opengl-preload-openglmvgalglpreloadc">OpenGL Preload (<code>opengl/mvgal_gl_preload.c</code>)</h3>
+<p>LD_PRELOAD shim intercepting <code>glXSwapBuffers</code> and <code>eglSwapBuffers</code>. Injects frame pacing telemetry. Actual OpenGL→Vulkan translation is handled by Zink (Mesa).</p>
+<hr>
+<h2 id="layer-8--tooling--bindings">Layer 8 — Tooling & Bindings</h2>
+<h3 id="cli-tools-tools">CLI Tools (<code>tools/</code>)</h3>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>Key Functions</th>
+<th>Language</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal-info</code></td>
+<td><code>enumerate_drm_gpus()</code>, reads <code>/sys/class/drm/cardN/device/</code>, JSON output</td>
+<td>C</td>
+</tr>
+<tr>
+<td><code>mvgal-status</code></td>
+<td><code>discover_gpus()</code>, <code>refresh_gpu_status()</code>, ANSI progress bars, daemon socket check</td>
+<td>C</td>
+</tr>
+<tr>
+<td><code>mvgal-bench</code></td>
+<td><code>bench_memory_bandwidth()</code>, <code>bench_compute()</code>, <code>bench_scheduling_latency()</code>, <code>bench_sync_overhead()</code></td>
+<td>C</td>
+</tr>
+<tr>
+<td><code>mvgal-compat</code></td>
+<td><code>check_system()</code>, <code>check_app()</code>, 15+ app database, system readiness scoring</td>
+<td>C</td>
+</tr>
+<tr>
+<td><code>mvgal-config</code></td>
+<td><code>list_gpus()</code>, <code>set_strategy()</code>, <code>set_gpu_enabled()</code>, <code>show_stats()</code></td>
+<td>C</td>
+</tr>
+<tr>
+<td><code>mvgal-powercurve</code></td>
+<td>Per-GPU power curve tuning, DVFS override, thermal threshold config</td>
+<td>C</td>
+</tr>
+</tbody></table>
+<h3 id="qt-dashboard-ui">Qt Dashboard (<code>ui/</code>)</h3>
+<ul>
+<li><code>mvgal_dashboard.cpp</code> — Qt5/Qt6 main window with 4 tabs: Overview, Scheduler, Logs, Config</li>
+<li><code>GpuWidget</code> — per-GPU utilization/VRAM progress bars, temperature, power, clock, workload type</li>
+<li><code>mvgal_rest_server.go</code> — Go HTTP server on <code>:7474</code></li>
+</ul>
+<h3 id="rest-api">REST API</h3>
+<table>
+<thead><tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>GET /api/v1/gpus</code></td>
+<td>Read</td>
+<td>All GPU metrics</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/gpus/{id}</code></td>
+<td>Read</td>
+<td>Single GPU</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/scheduler</code></td>
+<td>Read</td>
+<td>Current mode and GPU count</td>
+</tr>
+<tr>
+<td><code>PUT /api/v1/scheduler</code></td>
+<td>Write</td>
+<td>Set scheduling strategy</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/stats</code></td>
+<td>Read</td>
+<td>Aggregate stats (total VRAM, avg utilization, daemon status)</td>
+</tr>
+<tr>
+<td><code>GET /api/v1/logs</code></td>
+<td>Read</td>
+<td>Last 100 lines of daemon log</td>
+</tr>
+</tbody></table>
+<h3 id="steam-integration-steam">Steam Integration (<code>steam/</code>)</h3>
+<ul>
+<li><code>mvgal_frame_pacer.c</code> — vsync-aligned frame pacing with ring buffer (depth 8)</li>
+<li>Steam compatibility tool integration (select in Properties → Compatibility)</li>
+</ul>
+<table>
+<thead><tr>
+<th>Environment Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ENABLE_MVGAL</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>Enable MVGAL for this launch</td>
+</tr>
+<tr>
+<td><code>MVGAL_STRATEGY</code></td>
+<td><code>afr</code>, <code>sfr</code>, <code>hybrid</code>, <code>single</code>, <code>rld</code>, <code>ppl</code></td>
+<td>Scheduling strategy</td>
+</tr>
+<tr>
+<td><code>MVGAL_FRAME_PACING</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>Enable vsync-aligned frame pacing</td>
+</tr>
+<tr>
+<td><code>MVGAL_GPU_MASK</code></td>
+<td>hex bitmask</td>
+<td>Which GPUs to use (e.g. <code>0x3</code> = GPU 0+1)</td>
+</tr>
+<tr>
+<td><code>MVGAL_VULKAN_DEBUG</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>Enable Vulkan layer debug logging</td>
+</tr>
+</tbody></table>
+<h3 id="language-bindings-bindings">Language Bindings (<code>bindings/</code>)</h3>
+<table>
+<thead><tr>
+<th>Language</th>
+<th>Directory</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td>Java</td>
+<td><code>bindings/java/</code></td>
+<td>JNI wrappers around C API</td>
+</tr>
+<tr>
+<td>C#</td>
+<td><code>bindings/csharp/</code></td>
+<td>P/Invoke bindings</td>
+</tr>
+<tr>
+<td>D</td>
+<td><code>bindings/d/</code></td>
+<td>D import bindings</td>
+</tr>
+<tr>
+<td>Nim</td>
+<td><code>bindings/nim/</code></td>
+<td>Nim wrapper</td>
+</tr>
+<tr>
+<td>V</td>
+<td><code>bindings/v/</code></td>
+<td>V bindings</td>
+</tr>
+<tr>
+<td>Crystal</td>
+<td><code>bindings/crystal/</code></td>
+<td>Crystal FFI wrappers</td>
+</tr>
+<tr>
+<td>Haxe</td>
+<td><code>bindings/haxe/</code></td>
+<td>Haxe extern bindings</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="data-flow-gaming-workload-afr">Data Flow: Gaming Workload (AFR)</h2>
+<pre><code>Game (via Proton/DXVK)
+  │
+  │ vkQueueSubmit (frame N)
+  ▼
+VK_LAYER_MVGAL (Layer 7 — Intercept)
+  │ intercepts submit, increments atomic counter, logs telemetry
+  │ forwards to next layer in dispatch chain
+  ▼
+Physical ICD (AMD / NVIDIA / Intel)
+  │
+  │ (parallel) mvgald AFR scheduler
+  │   ├─ Frame N   → GPU 0  (even)
+  │   └─ Frame N+1 → GPU 1  (odd)
+  ▼
+Frame pacer (steam/mvgal_frame_pacer.c) [Layer 8 — Tooling]
+  │ ring buffer depth 8, background thread
+  │ sleep_until_ns(next_vsync_boundary)
+  ▼
+vkQueuePresentKHR on display-connected GPU</code></pre>
+<h2 id="data-flow-ai-compute-workload">Data Flow: AI Compute Workload</h2>
+<pre><code>PyTorch / TensorFlow
+  │
+  │ CUDA kernel launch (cudaLaunchKernel)
+  ▼
+MVGAL CUDA shim (Layer 7 — Intercept, LD_PRELOAD)
+  │ intercepts, translates to MVGAL workload submission
+  ▼
+mvgald Compute Offload scheduler (Layer 3 — Runtime)
+  │ shards batch dimension across N GPUs
+  │ allocates input tensors via unified memory manager
+  │ issues DMA-BUF transfers for cross-GPU data
+  ▼
+GPU 0 … GPU N-1 (parallel execution)
+  │
+  │ results collected via write-combined system
+  ▼
+Application receives aggregated result</code></pre>
+<h2 id="data-flow-render-layer-distribution-rld">Data Flow: Render Layer Distribution (RLD)</h2>
+<pre><code>Game with separable UI / world / post-fx layers
+  │
+  │ vkQueueSubmit (multiple command buffers per frame)
+  ▼
+VK_LAYER_MVGAL (Layer 7 — Intercept)
+  │ identifies layer boundaries from render passes
+  ▼
+WDE RLD strategy (Layer 5)
+  │   ├─ UI layer       → GPU 0 (simple, latency-sensitive)
+  │   ├─ World layer    → GPU 1 (complex geometry, high FLOPS)
+  │   └─ Post-FX layer  → GPU 2 (compute-heavy, low VRAM need)
+  ▼
+IMFL (Layer 4) produces composite plan
+  │ DMA-BUF transfer for final composite
+  ▼
+Display-connected GPU presents final frame</code></pre>
+<hr>
+<h2 id="memory-architecture">Memory Architecture</h2>
+<h3 id="allocation-policy">Allocation Policy</h3>
+<pre><code>Request size &lt; 64 MB          → Heap 0 (GPU local VRAM)
+Render target                 → Heap 0 (write GPU)
+Read-only texture             → Heap 1 (replicate to peers)
+Large buffer &gt;1 GB            → Heap 2 (host staging → stream to Heap 0)
+Persistent/cold data          → Heap 3 (remote NUMA)
+Memory oversubscription       → Heap 4 (SSD swap)</code></pre>
+<h3 id="transfer-path">Transfer Path</h3>
+<pre><code>Source GPU export
+  │
+  ├─ DMA-BUF viable?  →  dma_buf_map_attachment (zero-copy, kernel-supported)
+  │
+  └─ DMA-BUF not viable
+       │
+       ├─ PCIe P2P viable?  →  pci_p2pdma (requires same root complex, kernel 5.10+)
+       │
+       └─ Fallback  →  mmap source + DMA to host staging buffer + upload to dest GPU</code></pre>
+<h3 id="memory-flags">Memory Flags</h3>
+<table>
+<thead><tr>
+<th>Flag</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>HOST_VALID</code></td>
+<td><code>1&lt;&lt;0</code></td>
+<td>CPU can access (mapped)</td>
+</tr>
+<tr>
+<td><code>GPU_VALID</code></td>
+<td><code>1&lt;&lt;1</code></td>
+<td>GPUs can access</td>
+</tr>
+<tr>
+<td><code>CPU_CACHED</code></td>
+<td><code>1&lt;&lt;2</code></td>
+<td>CPU cached</td>
+</tr>
+<tr>
+<td><code>CPU_UNCACHED</code></td>
+<td><code>1&lt;&lt;3</code></td>
+<td>CPU uncached (write-combined)</td>
+</tr>
+<tr>
+<td><code>SHARED</code></td>
+<td><code>1&lt;&lt;4</code></td>
+<td>Shared across GPUs</td>
+</tr>
+<tr>
+<td><code>DMA_BUF</code></td>
+<td><code>1&lt;&lt;5</code></td>
+<td>Use DMA-BUF</td>
+</tr>
+<tr>
+<td><code>P2P</code></td>
+<td><code>1&lt;&lt;6</code></td>
+<td>Enable P2P transfers</td>
+</tr>
+<tr>
+<td><code>REPLICATED</code></td>
+<td><code>1&lt;&lt;7</code></td>
+<td>Mirror across all GPUs</td>
+</tr>
+<tr>
+<td><code>PERSISTENT</code></td>
+<td><code>1&lt;&lt;8</code></td>
+<td>Persistent CPU mapping</td>
+</tr>
+<tr>
+<td><code>LAZY_ALLOCATE</code></td>
+<td><code>1&lt;&lt;9</code></td>
+<td>Defer physical allocation</td>
+</tr>
+<tr>
+<td><code>ZERO_INITIALIZED</code></td>
+<td><code>1&lt;&lt;10</code></td>
+<td>Zero on allocation</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="key-design-decisions">Key Design Decisions</h2>
+<table>
+<thead><tr>
+<th>Decision</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr>
+<td>Character device instead of DRM driver (Phase 1)</td>
+<td>Avoids claiming PCI devices from vendor drivers; simpler to maintain across kernel versions</td>
+</tr>
+<tr>
+<td>DRM driver (Phase 2)</td>
+<td>Planned migration for native compositor integration, DRM sync objects, and GEM lifecycle</td>
+</tr>
+<tr>
+<td>Vulkan layer instead of full ICD (Phase 1)</td>
+<td>Allows transparent interception without application changes; full ICD planned for Phase 5</td>
+</tr>
+<tr>
+<td>8-layer architecture</td>
+<td>Separates HAL (kernel) from VGDD (vendor dispatch), distinguishes IMFL (framing) from WDE (strategy), elevates Rust safety to its own layer</td>
+</tr>
+<tr>
+<td>Rust for safety-critical paths</td>
+<td>Eliminates memory safety bugs in fence/memory tracking; C FFI boundary provides clean interop</td>
+</tr>
+<tr>
+<td>C17 for userspace, C++20 for daemon</td>
+<td>C17 maximizes compatibility with GPU driver headers; C++20 provides modern abstractions for daemon</td>
+</tr>
+<tr>
+<td>Unix socket IPC with <code>SCM_CREDENTIALS</code></td>
+<td>Zero-dependency authentication; no D-Bus or systemd dependency required for core IPC</td>
+</tr>
+<tr>
+<td>D-Bus as optional management interface</td>
+<td>Standard Linux desktop integration for monitoring tools and session services</td>
+</tr>
+<tr>
+<td>DMA-BUF for cross-GPU transfers</td>
+<td>Kernel-supported zero-copy path; works across all vendor drivers that support it</td>
+</tr>
+<tr>
+<td>Sysfs polling for GPU metrics</td>
+<td>No vendor-specific SDK required; works on all supported vendors</td>
+</tr>
+<tr>
+<td><code>pkexec</code> for all privileged operations</td>
+<td>Policy-compliant privilege escalation; no <code>sudo</code> dependency</td>
+</tr>
+<tr>
+<td>5-tier memory heap hierarchy</td>
+<td>Matches real hardware topology (local VRAM, peer VRAM, NUMA host RAM, remote RAM, SSD)</td>
+</tr>
+<tr>
+<td>10 scheduling strategies (7+3)</td>
+<td>Covers all known workload patterns; RLD/REP/PPL address gaps from original 7 strategies</td>
+</tr>
+<tr>
+<td>Language bindings for 7 languages</td>
+<td>Maximizes accessibility for developers in different ecosystems with zero additional runtime cost</td>
+</tr>
+</tbody></table>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

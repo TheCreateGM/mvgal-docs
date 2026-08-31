@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html" class="active">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-design-document">MVGAL Design Document</h1>
+<p><strong>Version:</strong> 0.7.0 | <strong>Last Updated:</strong> August 2026</p>
+<hr>
+<h2 id="design-goals">Design Goals</h2>
+<ol>
+<li><strong>Transparent multi-vendor GPU aggregation</strong> — applications see one logical GPU regardless of how many physical GPUs exist.</li>
+<li><strong>Zero application changes</strong> — interception via Vulkan layer, OpenCL ICD, CUDA shim, and LD_PRELOAD.</li>
+<li><strong>Vendor-agnostic scheduling</strong> — AMD, NVIDIA, Intel, and Moore Threads GPUs work together.</li>
+<li><strong>Safety-first</strong> — kernel module with DRM registration, Rust safety crates for critical paths.</li>
+<li><strong>Low overhead</strong> — target <2% frame time regression for single-GPU pass-through mode.</li>
+</ol>
+<hr>
+<h2 id="architecture-decisions">Architecture Decisions</h2>
+<h3 id="decision-1-kernel-module-as-drm-meta-driver">Decision 1: Kernel Module as DRM Meta-Driver</h3>
+<p><strong>Chosen approach:</strong> A Linux kernel module (<code>mvgal.ko</code>) that registers as a DRM client and exposes <code>/dev/mvgal0</code> with 10 DRM ioctls.</p>
+<p><strong>Alternatives considered:</strong></p>
+<ul>
+<li><strong>Userspace-only daemon:</strong> Simpler to develop, no kernel patching required. Rejected because DMA-BUF zero-copy and cross-device synchronization require kernel-level buffer management.</li>
+<li><strong>Upstream DRM proposal:</strong> Would integrate natively with the DRM subsystem. Deferred because upstream review cycle is 6-12 months and vendor driver compatibility is uncertain.</li>
+<li><strong>eBPF-based approach:</strong> Modern, safe, no module loading. Rejected because eBPF programs cannot manage GPU memory or synchronize across vendors at the required latency.</li>
+</ul>
+<p><strong>Tradeoffs:</strong></p>
+<ul>
+<li>(+) Full control over buffer management and scheduling</li>
+<li>(+) DMA-BUF import/export across vendors</li>
+<li>(-) Requires module signing and MOK enrollment for Secure Boot</li>
+<li>(-) Must track kernel API changes across releases</li>
+</ul>
+<h3 id="decision-2-c20-daemon-with-ipc-over-unix-socket">Decision 2: C++20 Daemon with IPC over Unix Socket</h3>
+<p><strong>Chosen approach:</strong> <code>mvgald</code> is a C++20 daemon communicating with clients via Unix socket (<code>/run/mvgal/mvgal.sock</code>) using a binary protocol with MVGL magic header and SCM_CREDENTIALS authentication.</p>
+<p><strong>Alternatives considered:</strong></p>
+<ul>
+<li><strong>D-Bus as primary IPC:</strong> Simpler, well-supported. Rejected because D-Bus adds ~50μs per message round-trip; GPU workload submission needs sub-10μs latency.</li>
+<li><strong>Shared memory ring buffer:</strong> Lowest latency. Rejected because it requires mmap setup per client and complicates authentication.</li>
+<li><strong>gRPC/Protobuf:</strong> Cross-language, schema-defined. Rejected because it adds ~100KB binary dependency and serialization overhead.</li>
+</ul>
+<p><strong>Tradeoffs:</strong></p>
+<ul>
+<li>(+) Low latency (~2-5μs per IPC call)</li>
+<li>(+) Native Unix credential verification</li>
+<li>(-) Custom binary protocol requires versioning discipline</li>
+<li>(-) No automatic cross-language binding generation</li>
+</ul>
+<h3 id="decision-3-ldpreload-interception-for-all-apis">Decision 3: LD_PRELOAD Interception for All APIs</h3>
+<p><strong>Chosen approach:</strong> Transparent interception via Vulkan implicit layer, OpenCL ICD wrapper, CUDA function hooking (40+ functions), and LD_PRELOAD for OpenGL/D3D/Metal/WebGPU.</p>
+<p><strong>Alternatives considered:</strong></p>
+<ul>
+<li><strong>Library wrapping (link-time):</strong> Compile against MVGAL lib instead of vendor lib. Rejected because it requires recompilation and breaks binary compatibility.</li>
+<li><strong>ptrace-based interception:</strong> No library modification needed. Rejected because ptrace has severe performance penalties and breaks anti-cheat.</li>
+<li><strong>Binary patching:</strong> Modify vendor libraries in-place. Rejected because it violates vendor licenses and breaks with updates.</li>
+</ul>
+<p><strong>Tradeoffs:</strong></p>
+<ul>
+<li>(+) Zero application changes</li>
+<li>(+) Works with any binary (Steam games, AI frameworks)</li>
+<li>(-) Environment variable setup required per-launch</li>
+<li>(-) Anti-cheat software may flag LD_PRELOAD</li>
+</ul>
+<h3 id="decision-4-dma-buf-zero-copy-with-host-ram-fallback">Decision 4: DMA-BUF Zero-Copy with Host-RAM Fallback</h3>
+<p><strong>Chosen approach:</strong> Three-tier memory transfer: (1) DMA-BUF zero-copy between GPUs sharing the same IOMMU group, (2) PCIe P2P for GPUs on the same root complex, (3) host-RAM staging as universal fallback.</p>
+<p><strong>Alternatives considered:</strong></p>
+<ul>
+<li><strong>CUDA peer-to-peer only:</strong> Works for NVIDIA+NVIDIA. Rejected because MVGAL must handle AMD+NVIDIA+Intel combinations.</li>
+<li><strong>ROCm hipMemcpyPeer:</strong> AMD-specific. Rejected for the same reason.</li>
+<li><strong>Always host-staged:</strong> Simplest implementation. Rejected because it adds 2-5ms latency per cross-GPU transfer for large buffers.</li>
+</ul>
+<p><strong>Tradeoffs:</strong></p>
+<ul>
+<li>(+) Best-case performance with zero-copy</li>
+<li>(+) Universal fallback ensures correctness</li>
+<li>(-) Complex fallback logic with three code paths</li>
+<li>(-) DMA-BUF support varies by driver version</li>
+</ul>
+<h3 id="decision-5-rust-for-safety-critical-subsystems">Decision 5: Rust for Safety-Critical Subsystems</h3>
+<p><strong>Chosen approach:</strong> Three Rust crates (<code>fence_manager</code>, <code>memory_safety</code>, <code>capability_model</code>) with C FFI exports for use by the C++ daemon.</p>
+<p><strong>Alternatives considered:</strong></p>
+<ul>
+<li><strong>All C++ with RAII:</strong> Would keep the codebase single-language. Rejected because Rust's ownership model eliminates entire classes of bugs (use-after-free, data races) that are critical in GPU synchronization code.</li>
+<li><strong>All Rust:</strong> Would maximize safety. Rejected because the kernel module must be C (Linux requirement) and the existing IPC/scheduler code is mature C++.</li>
+<li><strong>Valgrind/ASan in CI:</strong> Runtime detection. Rejected as insufficient alone — static analysis via Rust borrow checker is strictly better for prevention.</li>
+</ul>
+<p><strong>Tradeoffs:</strong></p>
+<ul>
+<li>(+) Memory safety without garbage collection</li>
+<li>(+) Compile-time enforcement of concurrency safety</li>
+<li>(-) FFI boundary adds complexity</li>
+<li>(-) Two build systems (Cargo + CMake)</li>
+</ul>
+<h3 id="decision-6-9-scheduling-strategies">Decision 6: 9 Scheduling Strategies</h3>
+<p><strong>Chosen approach:</strong> Nine built-in strategies: Single, Auto, Round-robin, AFR, SFR, Task, Compute offload, Hybrid, Custom. Auto-detect selects the best strategy based on workload type.</p>
+<p><strong>Alternatives considered:</strong></p>
+<ul>
+<li><strong>Fixed single strategy:</strong> Simplest. Rejected because different workloads benefit from different strategies (AFR for gaming, compute offload for AI).</li>
+<li><strong>User-configured only:</strong> No auto-detect. Rejected because most users won't know which strategy is best.</li>
+<li><strong>ML-based adaptive:</strong> Uses the AI scheduling mode. Deferred because it requires training data and adds model loading overhead.</li>
+</ul>
+<p><strong>Tradeoffs:</strong></p>
+<ul>
+<li>(+) Covers all common use cases</li>
+<li>(+) Auto-detect reduces user configuration burden</li>
+<li>(-) 9 strategies increase code surface area</li>
+<li>(-) Auto-detect heuristics may be wrong for edge cases</li>
+</ul>
+<hr>
+<h2 id="data-flow">Data Flow</h2>
+<pre><code>Application
+    │
+    ▼
+Interception Layer (Vulkan/CL/CUDA/GL)
+    │ serialize workload descriptor
+    ▼
+IPC Client ──── Unix Socket ────▶ IPC Server (mvgald)
+                                       │
+                                       ▼
+                                  Scheduler
+                                  ├─ Select GPU(s) based on strategy
+                                  ├─ Check memory availability
+                                  └─ Assign priority
+                                       │
+                                       ▼
+                                  Memory Manager
+                                  ├─ Allocate VRAM on target GPU(s)
+                                  ├─ Import/export DMA-BUF
+                                  └─ Fallback to host-RAM if needed
+                                       │
+                                       ▼
+                                  Kernel Module (/dev/mvgal0)
+                                  ├─ DRM ioctl submission
+                                  ├─ Vendor-specific dispatch (VGDD)
+                                  └─ Fence signaling
+                                       │
+                                       ▼
+                                  GPU Hardware</code></pre>
+<hr>
+<h2 id="security-model">Security Model</h2>
+<ul>
+<li><strong>Socket permissions:</strong> <code>/run/mvgal/mvgal.sock</code> is mode <code>0660</code> (root:root)</li>
+<li><strong>IPC authentication:</strong> SCM_CREDENTIALS on Unix socket; only root or video group members can connect</li>
+<li><strong>Kernel module:</strong> Signed at install time; MOK enrollment for Secure Boot</li>
+<li><strong>Device nodes:</strong> <code>/dev/mvgal*</code> owned by root:video, mode 0660</li>
+<li><strong>pkexec:</strong> All privileged operations use pkexec, never sudo in scripts</li>
+<li><strong>No firmware flashing:</strong> Vendor-overriding firmware operations are explicitly excluded</li>
+</ul>
+<hr>
+<h2 id="performance-characteristics">Performance Characteristics</h2>
+<table>
+<thead><tr>
+<th>Path</th>
+<th>Latency</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>Single-GPU pass-through</td>
+<td><2% overhead</td>
+<td>No cross-GPU transfer needed</td>
+</tr>
+<tr>
+<td>DMA-BUF zero-copy</td>
+<td>~5-10μs</td>
+<td>Kernel-level buffer mapping</td>
+</tr>
+<tr>
+<td>PCIe P2P transfer</td>
+<td>~50-200μs</td>
+<td>Depends on buffer size and PCIe gen</td>
+</tr>
+<tr>
+<td>Host-RAM staging</td>
+<td>~2-5ms</td>
+<td>CPU copy bottleneck</td>
+</tr>
+<tr>
+<td>IPC round-trip</td>
+<td>~2-5μs</td>
+<td>Unix socket with binary protocol</td>
+</tr>
+<tr>
+<td>Scheduler decision</td>
+<td>~1-10μs</td>
+<td>Priority queue with 16 levels</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="limitations-and-known-issues">Limitations and Known Issues</h2>
+<ol>
+<li><strong>No direct upstream kernel integration</strong> — the module must be built and signed per-kernel.</li>
+<li><strong>Anti-cheat compatibility</strong> — LD_PRELOAD interception may be flagged by kernel-level anti-cheat (EAC, BattlEye).</li>
+<li><strong>Network GPU pooling</strong> — remote GPU support is implemented but not yet production-ready.</li>
+<li><strong>AI scheduling</strong> — the ML-based scheduler requires training data and is not yet deployed.</li>
+<li><strong>Collective communication</strong> — the AllReduce/AllGather/Broadcast library is a stub; no UCX/UCC integration.</li>
+</ol>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

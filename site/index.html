@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html" class="active">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+
+<div class="hero">
+  <h1>MVGAL — Multi-Vendor GPU Aggregation Layer</h1>
+  <p>Combine multiple GPUs from different vendors into one logical device — transparently, without modifying your applications.</p>
+  <p style="margin-top:12px">
+    <span class="badge">v0.7.0</span>
+    <span class="badge">AMD · NVIDIA · Intel · Moore Threads</span>
+    <span class="badge">Vulkan · OpenCL · CUDA</span>
+  </p>
+</div>
+<h2>Documentation</h2>
+<div class="card-grid">
+<a class="card" href="quickstart.html"><h3>Quick Start</h3><p>Get MVGAL running in 5 minutes.</p></a>
+<a class="card" href="install.html"><h3>Installation</h3><p>Install from COPR, PPA, AUR, or build from source.</p></a>
+<a class="card" href="build.html"><h3>Building</h3><p>Build MVGAL from source with CMake, Meson, or Zig.</p></a>
+<a class="card" href="architecture.html"><h3>Architecture</h3><p>The 8-layer system architecture.</p></a>
+<a class="card" href="design.html"><h3>Design</h3><p>Design goals and architecture decisions.</p></a>
+<a class="card" href="api.html"><h3>API Reference</h3><p>Complete public C API reference.</p></a>
+<a class="card" href="strategies.html"><h3>Scheduling Strategies</h3><p>10 workload distribution strategies.</p></a>
+<a class="card" href="memory.html"><h3>Memory Management</h3><p>Unified VRAM, DMA-BUF, P2P, and staging.</p></a>
+<a class="card" href="hardware.html"><h3>Hardware Compatibility</h3><p>Supported GPUs and drivers.</p></a>
+<a class="card" href="steam.html"><h3>Steam / Proton</h3><p>Multi-GPU gaming integration.</p></a>
+<a class="card" href="power.html"><h3>Power Management</h3><p>DVFS, idle states, thermal control.</p></a>
+<a class="card" href="troubleshooting.html"><h3>Troubleshooting</h3><p>Common issues and solutions.</p></a>
+<a class="card" href="status.html"><h3>Project Status</h3><p>Current milestone and component status.</p></a>
+</div>
+<h2>What is MVGAL?</h2>
+<p>Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.</p>
+<p>MVGAL solves this by aggregating all available GPUs — regardless of vendor — into a single logical device. Any application, game, or compute workload can use it without modification.</p>
+<h2>Quick Start</h2>
+<pre><code># Start the daemon
+pkexec systemctl start mvgald
+pkexec systemctl enable mvgald   # start on boot
+
+# Verify
+mvgal-info          # list detected GPUs
+mvgal-status        # real-time utilization
+mvgal-compat --system   # check readiness</code></pre>
+<h2>License</h2>
+<ul>
+  <li><strong>Kernel module</strong>: GPL-2.0-only</li>
+  <li><strong>Userspace components</strong>: GPL-3.0-only</li>
+  <li><strong>Rust crates</strong>: MIT OR Apache-2.0</li>
+</ul>
+
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

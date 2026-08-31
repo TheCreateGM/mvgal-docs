@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory Management — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html" class="active">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-memory-management">MVGAL Memory Management</h1>
+<p><strong>Version:</strong> 0.2.2</p>
+<hr>
+<h2 id="overview">Overview</h2>
+<p>MVGAL implements a unified memory manager that abstracts over physically separate GPU VRAM pools. Applications see a single virtual address space; MVGAL handles placement, migration, and synchronization transparently.</p>
+<hr>
+<h2 id="memory-architecture">Memory Architecture</h2>
+<pre><code>Application virtual address space
+         │
+         ▼
+┌─────────────────────────────────────────────────────┐
+│           Unified Virtual Memory (UVM)               │
+│   Single address space spanning all GPU VRAM pools   │
+└──────────────┬──────────────┬───────────────────────┘
+               │              │
+    ┌──────────▼──┐    ┌──────▼──────────┐
+    │  GPU 0 VRAM │    │  GPU 1 VRAM     │
+    │  (AMD 4 GiB)│    │  (NVIDIA 8 GiB) │
+    └─────────────┘    └─────────────────┘
+               │              │
+               └──────┬───────┘
+                      │
+              ┌───────▼───────┐
+              │  Host RAM     │
+              │  (staging)    │
+              └───────────────┘</code></pre>
+<hr>
+<h2 id="transfer-path-selection">Transfer Path Selection</h2>
+<p>MVGAL selects the optimal transfer path automatically:</p>
+<pre><code>1. DMA-BUF zero-copy
+   ├─ Kernel-supported (Linux 5.6+)
+   ├─ Works: AMD↔AMD, Intel↔Intel, AMD↔Intel
+   └─ Requires: both drivers export DMA-BUF
+
+2. PCIe Peer-to-Peer (P2P)
+   ├─ Direct GPU-to-GPU over PCIe
+   ├─ Requires: same PCIe root complex, kernel 5.10+
+   └─ Works: AMD↔NVIDIA (with nvidia-drm.modeset=1)
+
+3. Host-RAM staging
+   ├─ Always available
+   ├─ Highest latency (~2× PCIe bandwidth)
+   └─ Used when DMA-BUF and P2P are unavailable</code></pre>
+<h3 id="measured-bandwidth-typical-pcie-40-x16">Measured bandwidth (typical PCIe 4.0 x16)</h3>
+<table>
+<thead><tr>
+<th>Path</th>
+<th>Bandwidth</th>
+</tr></thead><tbody>
+<tr>
+<td>GPU-local VRAM</td>
+<td>400–900 GB/s</td>
+</tr>
+<tr>
+<td>DMA-BUF zero-copy</td>
+<td>20–30 GB/s</td>
+</tr>
+<tr>
+<td>PCIe P2P</td>
+<td>12–16 GB/s</td>
+</tr>
+<tr>
+<td>Host-RAM staging</td>
+<td>6–12 GB/s</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="memory-flags">Memory Flags</h2>
+<table>
+<thead><tr>
+<th>Flag</th>
+<th>Value</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_HOST_VALID</code></td>
+<td><code>1&lt;&lt;0</code></td>
+<td>CPU can access (mapped)</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_GPU_VALID</code></td>
+<td><code>1&lt;&lt;1</code></td>
+<td>GPUs can access</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_CPU_CACHED</code></td>
+<td><code>1&lt;&lt;2</code></td>
+<td>CPU cached memory</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_CPU_UNCACHED</code></td>
+<td><code>1&lt;&lt;3</code></td>
+<td>Write-combined, uncached</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_SHARED</code></td>
+<td><code>1&lt;&lt;4</code></td>
+<td>Shared across GPUs</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_DMA_BUF</code></td>
+<td><code>1&lt;&lt;5</code></td>
+<td>Use DMA-BUF for sharing</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_P2P</code></td>
+<td><code>1&lt;&lt;6</code></td>
+<td>Enable PCIe P2P transfers</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_REPLICATED</code></td>
+<td><code>1&lt;&lt;7</code></td>
+<td>Mirror on all GPUs</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_PERSISTENT</code></td>
+<td><code>1&lt;&lt;8</code></td>
+<td>Persistent CPU mapping</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_LAZY_ALLOCATE</code></td>
+<td><code>1&lt;&lt;9</code></td>
+<td>Defer physical allocation</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_FLAG_ZERO_INITIALIZED</code></td>
+<td><code>1&lt;&lt;10</code></td>
+<td>Zero on allocation</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="allocation-policy">Allocation Policy</h2>
+<pre><code>Request size &lt; 64 MB
+  └─ Allocate on GPU with most free VRAM
+
+Render target
+  └─ Allocate on GPU that will write first
+     (determined from workload history)
+
+Large buffer (&gt; 64 MB)
+  └─ Allocate on GPU most likely to use it
+     (determined from access pattern history)
+
+Shared buffer (gpu_mask has multiple bits set)
+  └─ Allocate on primary GPU, DMA-BUF export to others</code></pre>
+<hr>
+<h2 id="memory-sharing-modes">Memory Sharing Modes</h2>
+<table>
+<thead><tr>
+<th>Mode</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>MVGAL_MEMORY_SHARING_NONE</code></td>
+<td>GPU-local only</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_SHARING_DMABUF</code></td>
+<td>DMA-BUF export/import</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_SHARING_P2P</code></td>
+<td>PCIe peer-to-peer</td>
+</tr>
+<tr>
+<td><code>MVGAL_MEMORY_SHARING_HOST</code></td>
+<td>Host-RAM staging</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="memory-mirroring">Memory Mirroring</h2>
+<p>Read-only allocations accessed by multiple GPUs can be replicated to each GPU's local VRAM:</p>
+<pre><code class="language-c">// Replicate buffer to GPU 0 and GPU 1
+mvgal_memory_replicate(buffer, 0x3);  // gpu_mask = 0b11</code></pre>
+<p>The mirror controller tracks access patterns per allocation and applies hysteresis to avoid thrashing. A buffer is mirrored when:</p>
+<ul>
+<li>It is accessed by ≥2 GPUs in the same frame</li>
+<li>The access count exceeds the mirror threshold (configurable)</li>
+<li>Sufficient VRAM is available on all target GPUs</li>
+</ul>
+<hr>
+<h2 id="predictive-prefetching">Predictive Prefetching</h2>
+<p>MVGAL tracks per-buffer access patterns across frames. When a buffer is consistently accessed by GPU N in frame F, MVGAL prefetches it to GPU N before frame F+1 begins.</p>
+<p>Prefetch is triggered by <code>mvgal_execution_submit()</code> based on the execution plan's <code>selected_gpu_mask</code>.</p>
+<hr>
+<h2 id="dma-buf-integration">DMA-BUF Integration</h2>
+<h3 id="export">Export</h3>
+<pre><code class="language-c">int fd;
+mvgal_memory_export_dmabuf(buffer, &amp;fd);
+// fd is a DMA-BUF file descriptor
+// Pass to another process or GPU driver</code></pre>
+<h3 id="import">Import</h3>
+<pre><code class="language-c">mvgal_buffer_t buffer;
+mvgal_memory_import_dmabuf(ctx, fd, size, &amp;buffer);</code></pre>
+<h3 id="kernel-level-via-mvgalko">Kernel-level (via mvgal.ko)</h3>
+<p>The kernel module uses <code>DRM_IOCTL_PRIME_HANDLE_TO_FD</code> and <code>DRM_IOCTL_PRIME_FD_TO_HANDLE</code> to export/import DMA-BUF objects between vendor DRM drivers.</p>
+<hr>
+<h2 id="rust-memory-safety-layer">Rust Memory Safety Layer</h2>
+<p>The <code>memory_safety</code> Rust crate tracks all allocations with reference counting:</p>
+<pre><code>mvgal_mem_track(size, placement)  →  handle
+mvgal_mem_retain(handle)          →  increment refcount
+mvgal_mem_release(handle)         →  decrement; free at 0
+mvgal_mem_set_dmabuf(handle, fd)  →  associate DMA-BUF fd</code></pre>
+<p>Placements: <code>SystemRam=0</code>, <code>GpuVram=1</code>, <code>Mirrored=2</code></p>
+<pre><code class="language-c">uint64_t mvgal_mem_total_system_bytes(void);
+uint64_t mvgal_mem_total_gpu_bytes(void);</code></pre>
+<p>Statistics:</p>
+<hr>
+<h2 id="memory-statistics">Memory Statistics</h2>
+<pre><code class="language-c">mvgal_memory_stats_t stats;
+mvgal_memory_get_stats(ctx, &amp;stats);
+
+// stats.total_allocated_bytes
+// stats.total_gpu_bytes
+// stats.total_system_bytes
+// stats.dmabuf_count
+// stats.p2p_transfers
+// stats.staging_transfers
+// stats.bytes_transferred</code></pre>
+<hr>
+<h2 id="numa-aware-allocation">NUMA-Aware Allocation</h2>
+<p>MVGAL reads the NUMA node for each GPU from <code>/sys/bus/pci/devices/&lt;slot&gt;/numa_node</code>. When allocating host-side staging buffers, it prefers memory on the NUMA node closest to the GPU that will use it.</p>
+<hr>
+<h2 id="eviction-policy">Eviction Policy</h2>
+<p>When GPU VRAM is full:</p>
+<ol>
+<li>Scan allocations sorted by last-access time (LRU)</li>
+<li>Evict least-recently-used allocations to host RAM</li>
+<li>Re-populate on next access (demand paging)</li>
+</ol>
+<p>Allocations with <code>MVGAL_MEMORY_FLAG_PERSISTENT</code> are never evicted.</p>
+<hr>
+<h2 id="configuration">Configuration</h2>
+<p>In <code>/etc/mvgal/mvgal.conf</code>:</p>
+<pre><code class="language-ini">[memory]
+# Enable DMA-BUF sharing
+enable_dmabuf = true
+
+# Enable PCIe P2P transfers
+p2p_enabled = true
+
+# Replicate small buffers (&lt; threshold) to all GPUs
+replicate_threshold = 67108864   # 64 MB
+
+# Preferred copy method: dmabuf, p2p, host
+preferred_copy_method = dmabuf</code></pre>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

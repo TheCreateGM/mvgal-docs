@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installation — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html" class="active">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-installation-guide">MVGAL Installation Guide</h1>
+<p><strong>Version:</strong> 0.2.2 | <strong>Date:</strong> May 2026</p>
+<hr>
+<h2 id="quick-install">Quick Install</h2>
+<h3 id="fedora--rhel--centos">Fedora / RHEL / CentOS</h3>
+<pre><code class="language-bash"># Enable COPR repository
+sudo dnf copr enable mvgal/mvgal
+
+# Install
+sudo dnf install mvgal mvgal-dkms
+
+# Start daemon
+sudo systemctl enable --now mvgald</code></pre>
+<h3 id="debian--ubuntu">Debian / Ubuntu</h3>
+<pre><code class="language-bash"># Add PPA
+sudo add-apt-repository ppa:mvgal/stable
+sudo apt update
+
+# Install
+sudo apt install mvgal mvgal-dkms
+
+# Start daemon
+sudo systemctl enable --now mvgald</code></pre>
+<h3 id="arch-linux">Arch Linux</h3>
+<pre><code class="language-bash"># Install from AUR
+yay -S mvgal-dkms mvgal
+
+# Start daemon
+sudo systemctl enable --now mvgald</code></pre>
+<hr>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="hardware">Hardware</h3>
+<ul>
+<li><strong>Minimum</strong>: 2 GPUs from any supported vendor</li>
+<li><strong>Recommended</strong>: GPUs on same PCIe root complex for P2P support</li>
+<li><strong>Supported vendors</strong>: AMD (RDNA 1/2/3), NVIDIA (Turing/Ampere/Hopper/Ada), Intel (Xe/Arc), Moore Threads (S2000/S3000/S4000)</li>
+</ul>
+<h3 id="software">Software</h3>
+<table>
+<thead><tr>
+<th>Component</th>
+<th>Version</th>
+<th>Required</th>
+</tr></thead><tbody>
+<tr>
+<td>Linux kernel</td>
+<td>6.1+</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>GCC</td>
+<td>11+</td>
+<td>Yes (C11)</td>
+</tr>
+<tr>
+<td>CMake</td>
+<td>3.16+</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td>1.75+</td>
+<td>Yes (safety crates)</td>
+</tr>
+<tr>
+<td>Go</td>
+<td>1.21+</td>
+<td>Optional (REST server, exporter)</td>
+</tr>
+<tr>
+<td>Qt5/Qt6</td>
+<td>5.15+ / 6.2+</td>
+<td>Optional (dashboard)</td>
+</tr>
+<tr>
+<td>Vulkan SDK</td>
+<td>1.3+</td>
+<td>Optional (Vulkan layer)</td>
+</tr>
+<tr>
+<td>CUDA Toolkit</td>
+<td>12.0+</td>
+<td>Optional (CUDA wrapper)</td>
+</tr>
+<tr>
+<td>ROCm</td>
+<td>5.0+</td>
+<td>Optional (AMD compute)</td>
+</tr>
+<tr>
+<td>oneAPI</td>
+<td>2024.0+</td>
+<td>Optional (Intel compute)</td>
+</tr>
+</tbody></table>
+<h3 id="vendor-drivers">Vendor Drivers</h3>
+<p>Install vendor drivers <strong>before</strong> installing MVGAL:</p>
+<pre><code class="language-bash"># AMD (open-source, included in kernel)
+# No additional installation needed
+
+# NVIDIA (proprietary)
+sudo dnf install akmod-nvidia  # Fedora
+sudo apt install nvidia-driver  # Debian/Ubuntu
+
+# Intel (open-source, included in kernel)
+# No additional installation needed
+
+# Moore Threads
+# Install mtgpu-drv from vendor</code></pre>
+<hr>
+<h2 id="build-from-source">Build from Source</h2>
+<h3 id="cmake-recommended">CMake (Recommended)</h3>
+<pre><code class="language-bash">git clone https://github.com/axogm/mvgal.git
+cd mvgal
+mkdir build &amp;&amp; cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)
+sudo make install</code></pre>
+<h3 id="meson">Meson</h3>
+<pre><code class="language-bash">meson setup build --buildtype=release
+ninja -C build
+sudo ninja -C build install</code></pre>
+<h3 id="zig">Zig</h3>
+<pre><code class="language-bash">zig build -Doptimize=ReleaseSafe
+sudo zig build install</code></pre>
+<h3 id="build-options">Build Options</h3>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>-DMVGAL_BUILD_TESTS=ON</code></td>
+<td>ON</td>
+<td>Build test suite</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_BENCHMARKS=ON</code></td>
+<td>ON</td>
+<td>Build benchmarks</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_VULKAN_LAYER=ON</code></td>
+<td>ON</td>
+<td>Build Vulkan layer</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_CUDA_WRAPPER=ON</code></td>
+<td>ON</td>
+<td>Build CUDA wrapper</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_OPENCL_ICD=ON</code></td>
+<td>ON</td>
+<td>Build OpenCL ICD</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_D3D_WRAPPER=ON</code></td>
+<td>ON</td>
+<td>Build D3D wrapper</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_METAL_WRAPPER=ON</code></td>
+<td>ON</td>
+<td>Build Metal wrapper</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_WEBGPU_WRAPPER=ON</code></td>
+<td>ON</td>
+<td>Build WebGPU wrapper</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_UI=ON</code></td>
+<td>ON</td>
+<td>Build Qt dashboard</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_REST_SERVER=ON</code></td>
+<td>ON</td>
+<td>Build Go REST server</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_PROMETHEUS_EXPORTER=ON</code></td>
+<td>ON</td>
+<td>Build Prometheus exporter</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_STEAM_LAYER=ON</code></td>
+<td>ON</td>
+<td>Build Steam compatibility layer</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_OPENGL_LAYER=ON</code></td>
+<td>ON</td>
+<td>Build OpenGL preload shim</td>
+</tr>
+<tr>
+<td><code>-DMVGAL_BUILD_BINDINGS=ON</code></td>
+<td>ON</td>
+<td>Build language bindings</td>
+</tr>
+</tbody></table>
+<h3 id="kernel-module">Kernel Module</h3>
+<pre><code class="language-bash"># Build
+cd kernel
+make
+
+# Install
+sudo make install
+
+# Load
+sudo modprobe mvgal
+
+# Verify
+ls -l /dev/mvgal*
+ls /sys/class/mvgal/</code></pre>
+<h3 id="dkms-auto-rebuild-on-kernel-update">DKMS (Auto-rebuild on kernel update)</h3>
+<pre><code class="language-bash">sudo dkms add ./kernel
+sudo dkms build mvgal/0.2.2
+sudo dkms install mvgal/0.2.2</code></pre>
+<h3 id="rust-crates">Rust Crates</h3>
+<pre><code class="language-bash">cd safe
+cargo build --release
+cargo test</code></pre>
+<hr>
+<h2 id="post-installation">Post-Installation</h2>
+<h3 id="1-verify-installation">1. Verify Installation</h3>
+<pre><code class="language-bash"># Check kernel module
+lsmod | grep mvgal
+
+# Check device
+ls -l /dev/mvgal*
+
+# Check sysfs
+ls /sys/class/mvgal/
+
+# Check daemon
+systemctl status mvgald
+
+# Run info tool
+mvgal-info</code></pre>
+<h3 id="2-configure">2. Configure</h3>
+<pre><code class="language-bash"># Edit configuration
+sudo nano /etc/mvgal/mvgal.conf
+
+# Set scheduling strategy
+mvgal-config strategy set auto
+
+# Enable GPUs
+mvgal-config gpu enable 0
+mvgal-config gpu enable 1</code></pre>
+<h3 id="3-enable-vulkan-layer">3. Enable Vulkan Layer</h3>
+<pre><code class="language-bash"># System-wide
+sudo cp src/userspace/vulkan_layer/MVGAL_VkLayer_mvgal.json \
+  /etc/vulkan/implicit_layer.d/
+
+# Or per-user
+mkdir -p ~/.local/share/vulkan/implicit_layer.d/
+cp src/userspace/vulkan_layer/MVGAL_VkLayer_mvgal.json \
+  ~/.local/share/vulkan/implicit_layer.d/</code></pre>
+<h3 id="4-enable-cuda-wrapper">4. Enable CUDA Wrapper</h3>
+<pre><code class="language-bash"># Add to /etc/ld.so.preload
+echo "/usr/lib/mvgal/libmvgal_cuda.so" | sudo tee -a /etc/ld.so.preload
+
+# Or per-application
+LD_PRELOAD=/usr/lib/mvgal/libmvgal_cuda.so your_app</code></pre>
+<h3 id="5-enable-opencl-icd">5. Enable OpenCL ICD</h3>
+<pre><code class="language-bash"># Register ICD
+echo "/usr/lib/mvgal/libmvgal_opencl.so" | sudo tee /etc/OpenCL/vendors/mvgal.icd</code></pre>
+<h3 id="6-enable-opengl-layer">6. Enable OpenGL Layer</h3>
+<pre><code class="language-bash"># Per-application
+LD_PRELOAD=/usr/lib/mvgal/libmvgal_gl.so your_app</code></pre>
+<h3 id="7-enable-steam-layer">7. Enable Steam Layer</h3>
+<pre><code class="language-bash"># Copy to Steam compatibility tools
+cp -r steam ~/.steam/root/compatibilitytools.d/mvgal
+
+# Or system-wide
+sudo cp -r steam /usr/share/steam/compatibilitytools.d/mvgal</code></pre>
+<hr>
+<h2 id="configuration-reference">Configuration Reference</h2>
+<h3 id="etcmvgalmvgalconf"><code>/etc/mvgal/mvgal.conf</code></h3>
+<pre><code class="language-ini">[daemon]
+log_level = info
+log_file = /var/log/mvgal/mvgald.log
+pid_file = /var/run/mvgal/mvgald.pid
+ipc_socket = /var/run/mvgal/mvgald.sock
+
+[scheduler]
+strategy = auto
+frame_timeout_ms = 16
+migration_threshold = 3
+work_stealing = true
+
+[memory]
+allocation_policy = best_fit
+transfer_policy = dma_buf
+staging_buffer_size_mb = 256
+
+[power]
+idle_timeout_ms = 5000
+sustained_timeout_ms = 30000
+park_timeout_ms = 60000
+dvfs_enabled = true
+thermal_threshold_c = 85
+
+[metrics]
+poll_interval_ms = 1000
+telemetry_enabled = true
+prometheus_enabled = true
+prometheus_port = 9100
+
+[rest]
+enabled = true
+port = 7474
+bind = 127.0.0.1</code></pre>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="kernel-module-not-loading">Kernel Module Not Loading</h3>
+<pre><code class="language-bash"># Check dmesg
+dmesg | grep mvgal
+
+# Check for conflicts
+lsmod | grep -E "nvidia|amdgpu|i915"
+
+# Force load
+sudo modprobe mvgal</code></pre>
+<h3 id="daemon-not-starting">Daemon Not Starting</h3>
+<pre><code class="language-bash"># Check logs
+journalctl -u mvgald -f
+
+# Check socket
+ls -l /var/run/mvgal/mvgald.sock
+
+# Run manually
+sudo mvgald --foreground --log-level debug</code></pre>
+<h3 id="vulkan-layer-not-working">Vulkan Layer Not Working</h3>
+<pre><code class="language-bash"># Check layer discovery
+vulkaninfo | grep -i mvgal
+
+# Check layer JSON
+cat /etc/vulkan/implicit_layer.d/MVGAL_VkLayer_mvgal.json
+
+# Enable validation
+export VK_LAYER_MVGAL_DEBUG=1</code></pre>
+<h3 id="cuda-wrapper-not-intercepting">CUDA Wrapper Not Intercepting</h3>
+<pre><code class="language-bash"># Check preload
+cat /etc/ld.so.preload
+
+# Check library
+ldd /usr/lib/mvgal/libmvgal_cuda.so
+
+# Test with verbose
+LD_PRELOAD=/usr/lib/mvgal/libmvgal_cuda.so LD_DEBUG=libs your_app</code></pre>
+<h3 id="no-gpus-detected">No GPUs Detected</h3>
+<pre><code class="language-bash"># Check PCI devices
+lspci | grep -i vga
+
+# Check sysfs
+ls /sys/class/mvgal/mvgal0/
+
+# Rescan
+echo 1 | sudo tee /sys/class/mvgal/mvgal0/rescan</code></pre>
+<hr>
+<h2 id="uninstall">Uninstall</h2>
+<pre><code class="language-bash"># Stop daemon
+sudo systemctl stop mvgald
+sudo systemctl disable mvgald
+
+# Remove kernel module
+sudo rmmod mvgal
+sudo dkms remove mvgal/0.2.2 --all
+
+# Remove packages
+sudo dnf remove mvgal mvgal-dkms  # Fedora
+sudo apt remove mvgal mvgal-dkms  # Debian/Ubuntu
+sudo pacman -R mvgal mvgal-dkms   # Arch
+
+# Remove configuration
+sudo rm -rf /etc/mvgal/
+sudo rm -rf /var/log/mvgal/
+sudo rm -rf /var/run/mvgal/
+
+# Remove Vulkan layer
+sudo rm /etc/vulkan/implicit_layer.d/MVGAL_VkLayer_mvgal.json
+
+# Remove CUDA wrapper
+sudo sed -i '/mvgal_cuda/d' /etc/ld.so.preload
+
+# Remove OpenCL ICD
+sudo rm /etc/OpenCL/vendors/mvgal.icd
+
+# Remove Steam layer
+rm -rf ~/.steam/root/compatibilitytools.d/mvgal
+sudo rm -rf /usr/share/steam/compatibilitytools.d/mvgal</code></pre>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

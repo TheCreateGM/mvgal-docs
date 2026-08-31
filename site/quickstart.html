@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick Start — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html" class="active">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-quick-start">MVGAL Quick Start</h1>
+<p>Get MVGAL running in 5 minutes.</p>
+<hr>
+<h2 id="1-check-your-gpus">1. Check your GPUs</h2>
+<pre><code class="language-bash"># See what GPUs the system sees
+ls /sys/class/drm/card*/device/vendor 2&gt;/dev/null | xargs -I{} sh -c 'echo {} &amp;&amp; cat {}'</code></pre>
+<p>You need at least 2 GPUs. MVGAL supports AMD, NVIDIA, Intel, and Moore Threads in any combination.</p>
+<hr>
+<h2 id="2-install-dependencies">2. Install dependencies</h2>
+<pre><code class="language-bash"># Ubuntu / Debian
+sudo apt install cmake ninja-build libdrm-dev libpci-dev libudev-dev \
+                 libvulkan-dev pkg-config gcc g++
+
+# Fedora / RHEL
+sudo dnf install cmake ninja-build libdrm-devel pciutils-devel \
+                 systemd-devel vulkan-devel gcc-c++
+
+# Arch Linux
+sudo pacman -S cmake ninja libdrm pciutils systemd vulkan-devel gcc</code></pre>
+<hr>
+<h2 id="3-build">3. Build</h2>
+<pre><code class="language-bash">git clone https://github.com/TheCreateGM/mvgal.git
+cd mvgal
+
+mkdir -p build_output &amp;&amp; cd build_output
+cmake .. -DCMAKE_BUILD_TYPE=Release -DMVGAL_BUILD_RUNTIME=ON -DMVGAL_BUILD_TOOLS=ON
+make -j$(nproc)</code></pre>
+<hr>
+<h2 id="4-install">4. Install</h2>
+<pre><code class="language-bash"># From the repo root — uses pkexec for privileged steps
+bash build/install.sh</code></pre>
+<p>This installs:</p>
+<ul>
+<li><code>mvgald</code> daemon → <code>/usr/bin/mvgald</code></li>
+<li>CLI tools → <code>/usr/bin/mvgal-{info,status,bench,compat,config}</code></li>
+<li>Vulkan layer → <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code></li>
+<li>OpenCL ICD → <code>/etc/OpenCL/vendors/mvgal.icd</code></li>
+<li>Config → <code>/etc/mvgal/mvgal.conf</code></li>
+<li>Systemd service → <code>/etc/systemd/system/mvgald.service</code></li>
+</ul>
+<hr>
+<h2 id="5-start-the-daemon">5. Start the daemon</h2>
+<pre><code class="language-bash">pkexec systemctl start mvgald
+pkexec systemctl enable mvgald   # auto-start on boot</code></pre>
+<hr>
+<h2 id="6-verify">6. Verify</h2>
+<pre><code class="language-bash">mvgal-info</code></pre>
+<pre><code>========================================================================
+  MVGAL — Multi-Vendor GPU Aggregation Layer  |  mvgal-info
+========================================================================
+  Kernel : Linux 6.19.10-300.fc44.x86_64
+  mvgal.ko: not loaded
+  /dev/mvgal0: absent
+
+  Detected 2 GPU(s):
+
+  GPU 0 — AMD GPU [1002:743f]
+  ------------------------------------------------------------
+    PCI slot   : 0000:03:00.0
+    Vendor ID  : 0x1002  (AMD)
+    VRAM       : 3.98 GiB total, 0.79 GiB used (20%)
+    Temperature: 56 °C
+    Utilization: 12 %
+
+  GPU 1 — NVIDIA GPU [10de:2584]
+  ------------------------------------------------------------
+    PCI slot   : 0000:04:00.0
+    Vendor ID  : 0x10DE  (NVIDIA)
+    VRAM       : 8.00 GiB total
+
+========================================================================
+  Logical MVGAL Device
+========================================================================
+  Physical GPUs aggregated : 2
+  Vendors present          : AMD NVIDIA
+  Capability tier          : Mixed (heterogeneous)
+  Vulkan layer registered  : yes
+  Daemon socket            : /run/mvgal/mvgal.sock (present)</code></pre>
+<p>Expected output:</p>
+<hr>
+<h2 id="7-use-with-applications">7. Use with applications</h2>
+<h3 id="any-vulkan-application">Any Vulkan application</h3>
+<p>The Vulkan layer is implicit — it activates automatically for all Vulkan apps. No changes needed.</p>
+<pre><code class="language-bash"># Verify the layer is in the chain
+vulkaninfo 2&gt;/dev/null | grep MVGAL</code></pre>
+<h3 id="steam-games">Steam games</h3>
+<pre><code>ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%</code></pre>
+<p>Add to Steam launch options (Properties → Launch Options):</p>
+<h3 id="opencl-applications">OpenCL applications</h3>
+<pre><code class="language-bash"># Check MVGAL platform is visible
+clinfo | grep -A3 MVGAL</code></pre>
+<h3 id="cuda-applications">CUDA applications</h3>
+<pre><code class="language-bash">LD_PRELOAD=/usr/lib/libmvgal_cuda.so your_cuda_app</code></pre>
+<h3 id="opengl-applications-via-zink">OpenGL applications (via Zink)</h3>
+<pre><code class="language-bash">MESA_LOADER_DRIVER_OVERRIDE=zink ENABLE_MVGAL=1 glxgears</code></pre>
+<hr>
+<h2 id="8-monitor-in-real-time">8. Monitor in real time</h2>
+<pre><code class="language-bash"># One-shot status
+mvgal-status
+
+# Continuous refresh every 500ms
+mvgal-status --watch --interval 500
+
+# Run benchmarks
+mvgal-bench all
+
+# Check app compatibility
+mvgal-compat "doom"
+mvgal-compat --system</code></pre>
+<hr>
+<h2 id="9-change-scheduling-strategy">9. Change scheduling strategy</h2>
+<pre><code class="language-bash"># Alternate Frame Rendering (best for gaming)
+mvgal-config set-strategy afr
+
+# Compute offload (best for AI/HPC)
+mvgal-config set-strategy compute_offload
+
+# Show current config
+mvgal-config show-config</code></pre>
+<hr>
+<h2 id="10-load-the-kernel-module-optional">10. Load the kernel module (optional)</h2>
+<p>The kernel module enables deeper integration (DMA-BUF at kernel level, <code>/dev/mvgal0</code>). It is optional — MVGAL works without it via user-space interception.</p>
+<pre><code class="language-bash">cd kernel
+make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
+pkexec insmod mvgal.ko
+dmesg | grep MVGAL</code></pre>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<pre><code class="language-bash"># Check DRM devices exist
+ls /sys/class/drm/card*/device/vendor
+# Check GPU drivers are loaded
+lsmod | grep -E 'amdgpu|nvidia|i915|xe|mtgpu'</code></pre>
+<p><strong>No GPUs detected:</strong></p>
+<pre><code class="language-bash">pkexec journalctl -u mvgald -n 50
+# Or run in foreground
+mvgald --no-daemon</code></pre>
+<p><strong>Daemon not starting:</strong></p>
+<pre><code class="language-bash">ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
+# If missing, reinstall:
+bash build/install.sh --no-kernel --no-daemon</code></pre>
+<p><strong>Vulkan layer not active:</strong></p>
+<pre><code class="language-bash"># Add yourself to the video group
+pkexec usermod -aG video $USER
+# Log out and back in</code></pre>
+<p><strong>Permission denied on socket:</strong></p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

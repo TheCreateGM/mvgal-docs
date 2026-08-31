@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html" class="active">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-build-guide">MVGAL Build Guide</h1>
+<p><strong>Version:</strong> 0.2.2</p>
+<hr>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="required">Required</h3>
+<table>
+<thead><tr>
+<th>Package</th>
+<th>Ubuntu/Debian</th>
+<th>Fedora/RHEL</th>
+<th>Arch</th>
+</tr></thead><tbody>
+<tr>
+<td>CMake ≥ 3.16</td>
+<td><code>cmake</code></td>
+<td><code>cmake</code></td>
+<td><code>cmake</code></td>
+</tr>
+<tr>
+<td>Ninja</td>
+<td><code>ninja-build</code></td>
+<td><code>ninja-build</code></td>
+<td><code>ninja</code></td>
+</tr>
+<tr>
+<td>GCC ≥ 11 or Clang ≥ 13</td>
+<td><code>gcc g++</code></td>
+<td><code>gcc-c++</code></td>
+<td><code>gcc</code></td>
+</tr>
+<tr>
+<td>libdrm</td>
+<td><code>libdrm-dev</code></td>
+<td><code>libdrm-devel</code></td>
+<td><code>libdrm</code></td>
+</tr>
+<tr>
+<td>libpci / pciaccess</td>
+<td><code>libpci-dev</code></td>
+<td><code>pciutils-devel</code></td>
+<td><code>pciutils</code></td>
+</tr>
+<tr>
+<td>libudev</td>
+<td><code>libudev-dev</code></td>
+<td><code>systemd-devel</code></td>
+<td><code>systemd</code></td>
+</tr>
+<tr>
+<td>pkg-config</td>
+<td><code>pkg-config</code></td>
+<td><code>pkgconfig</code></td>
+<td><code>pkgconf</code></td>
+</tr>
+</tbody></table>
+<h3 id="optional">Optional</h3>
+<table>
+<thead><tr>
+<th>Package</th>
+<th>Purpose</th>
+<th>Ubuntu/Debian</th>
+</tr></thead><tbody>
+<tr>
+<td>Vulkan SDK</td>
+<td>Vulkan layer build</td>
+<td><code>libvulkan-dev vulkan-tools</code></td>
+</tr>
+<tr>
+<td>OpenCL headers</td>
+<td>OpenCL layer build</td>
+<td><code>opencl-headers ocl-icd-dev</code></td>
+</tr>
+<tr>
+<td>Rust ≥ 1.75</td>
+<td>Safety crates</td>
+<td><code>rustup</code></td>
+</tr>
+<tr>
+<td>Go ≥ 1.21</td>
+<td>REST API server</td>
+<td><code>golang</code></td>
+</tr>
+<tr>
+<td>Qt5 or Qt6</td>
+<td>Dashboard</td>
+<td><code>qtbase5-dev</code> or <code>qt6-base-dev</code></td>
+</tr>
+<tr>
+<td>Linux kernel headers</td>
+<td>Kernel module</td>
+<td><code>linux-headers-$(uname -r)</code></td>
+</tr>
+</tbody></table>
+<h3 id="automated-install">Automated install</h3>
+<pre><code class="language-bash">bash scripts/install_dependencies.sh</code></pre>
+<p>All privileged steps use <code>pkexec</code>.</p>
+<hr>
+<h2 id="cmake-build-primary">CMake Build (Primary)</h2>
+<h3 id="quick-build">Quick build</h3>
+<pre><code class="language-bash">mkdir -p build_output &amp;&amp; cd build_output
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)</code></pre>
+<h3 id="full-build-with-all-options">Full build with all options</h3>
+<pre><code class="language-bash">cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DMVGAL_BUILD_KERNEL=ON \
+  -DMVGAL_BUILD_RUNTIME=ON \
+  -DMVGAL_BUILD_API=ON \
+  -DMVGAL_BUILD_TOOLS=ON \
+  -DMVGAL_ENABLE_RUST=ON \
+  -DMVGAL_BUILD_TESTS=ON \
+  -G Ninja
+ninja -j$(nproc)</code></pre>
+<h3 id="cmake-options">CMake Options</h3>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>MVGAL_BUILD_KERNEL</code></td>
+<td>ON</td>
+<td>Build kernel module source</td>
+</tr>
+<tr>
+<td><code>MVGAL_BUILD_RUNTIME</code></td>
+<td>ON</td>
+<td>Build C++20 runtime daemon</td>
+</tr>
+<tr>
+<td><code>MVGAL_BUILD_API</code></td>
+<td>OFF</td>
+<td>Build API layers (Vulkan, OpenCL, CUDA)</td>
+</tr>
+<tr>
+<td><code>MVGAL_BUILD_GAMING</code></td>
+<td>OFF</td>
+<td>Build gaming integration</td>
+</tr>
+<tr>
+<td><code>MVGAL_BUILD_TOOLS</code></td>
+<td>ON</td>
+<td>Build CLI tools</td>
+</tr>
+<tr>
+<td><code>MVGAL_ENABLE_RUST</code></td>
+<td>ON</td>
+<td>Build Rust safety crates</td>
+</tr>
+<tr>
+<td><code>MVGAL_BUILD_TESTS</code></td>
+<td>ON</td>
+<td>Build test suite</td>
+</tr>
+<tr>
+<td><code>MVGAL_ENABLE_SANITIZERS</code></td>
+<td>OFF</td>
+<td>Enable ASan + UBSan (Debug only)</td>
+</tr>
+<tr>
+<td><code>MVGAL_ENABLE_COVERAGE</code></td>
+<td>OFF</td>
+<td>Enable gcov coverage</td>
+</tr>
+<tr>
+<td><code>MVGAL_USE_CCACHE</code></td>
+<td>ON</td>
+<td>Use ccache if available</td>
+</tr>
+</tbody></table>
+<h3 id="build-targets">Build targets</h3>
+<pre><code class="language-bash">cmake --build build_output --target mvgald          # daemon only
+cmake --build build_output --target mvgal-info      # single tool
+cmake --build build_output --target VK_LAYER_MVGAL  # Vulkan layer
+cmake --build build_output --target mvgal_opencl    # OpenCL layer</code></pre>
+<hr>
+<h2 id="meson-build-alternative">Meson Build (Alternative)</h2>
+<pre><code class="language-bash">meson setup builddir \
+  -Dwith_vulkan=true \
+  -Dwith_opencl=true \
+  -Dwith_daemon=true \
+  -Dwith_tests=true \
+  -Dbuildtype=release
+ninja -C builddir
+ninja -C builddir test</code></pre>
+<h3 id="meson-options-mesonoptionstxt">Meson options (<code>meson_options.txt</code>)</h3>
+<table>
+<thead><tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>with_vulkan</code></td>
+<td>false</td>
+<td>Build Vulkan layer</td>
+</tr>
+<tr>
+<td><code>with_opencl</code></td>
+<td>false</td>
+<td>Build OpenCL layer</td>
+</tr>
+<tr>
+<td><code>with_cuda</code></td>
+<td>false</td>
+<td>Build CUDA shim</td>
+</tr>
+<tr>
+<td><code>with_daemon</code></td>
+<td>true</td>
+<td>Build daemon</td>
+</tr>
+<tr>
+<td><code>with_tests</code></td>
+<td>false</td>
+<td>Build tests</td>
+</tr>
+<tr>
+<td><code>with_benchmarks</code></td>
+<td>false</td>
+<td>Build benchmarks</td>
+</tr>
+<tr>
+<td><code>with_kernel_module</code></td>
+<td>false</td>
+<td>Build kernel module</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="zig-build">Zig Build</h2>
+<pre><code class="language-bash">zig build                                    # build all defaults
+zig build -Dbuild-runtime=true              # daemon + frame pacer
+zig build -Dbuild-tools=true                # CLI tools
+zig build -Dbuild-tests=true test           # run tests</code></pre>
+<hr>
+<h2 id="rust-components">Rust Components</h2>
+<pre><code class="language-bash"># Build all crates
+cargo build --release
+
+# Build individual crates
+cargo build --release -p fence_manager
+cargo build --release -p memory_safety
+cargo build --release -p capability_model
+
+# Run tests
+cargo test
+cargo test --release
+
+# Check without building
+cargo check --all</code></pre>
+<hr>
+<h2 id="kernel-module">Kernel Module</h2>
+<p>The kernel module requires kernel headers and must be built with kbuild:</p>
+<pre><code class="language-bash">cd kernel
+make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
+
+# Load (requires pkexec)
+pkexec insmod mvgal.ko
+pkexec insmod mvgal.ko enable_debug=1   # with debug logging
+
+# Verify
+dmesg | grep MVGAL
+ls /dev/mvgal0
+
+# Unload
+pkexec rmmod mvgal</code></pre>
+<p>The kernel module is tested on Linux 6.19. It uses <code>class_create</code> compatibility shims for kernels 6.4+.</p>
+<hr>
+<h2 id="qt-dashboard">Qt Dashboard</h2>
+<pre><code class="language-bash">mkdir -p ui/build &amp;&amp; cd ui/build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j$(nproc)
+./mvgal-dashboard</code></pre>
+<p>Requires Qt5 or Qt6 with Widgets and Network modules.</p>
+<h2 id="go-rest-server">Go REST Server</h2>
+<pre><code class="language-bash">cd ui
+go build -o mvgal-rest-server ./mvgal_rest_server.go
+./mvgal-rest-server --listen :7474</code></pre>
+<hr>
+<h2 id="running-tests">Running Tests</h2>
+<pre><code class="language-bash"># C tests (via CTest)
+cd build_output
+ctest --output-on-failure --timeout 60
+
+# Rust tests
+cargo test
+
+# Standalone tool tests
+./tools/mvgal-info
+./tools/mvgal-bench all
+./tools/mvgal-compat --system</code></pre>
+<hr>
+<h2 id="installation">Installation</h2>
+<h3 id="generic-installer-recommended">Generic installer (recommended)</h3>
+<pre><code class="language-bash">bash build/install.sh [--prefix /usr] [--no-kernel] [--no-daemon]</code></pre>
+<p>All privileged steps use <code>pkexec</code>:</p>
+<ul>
+<li>Kernel module → <code>/lib/modules/$(uname -r)/extra/mvgal.ko</code></li>
+<li>udev rules → <code>/etc/udev/rules.d/99-mvgal.rules</code></li>
+<li>Vulkan layer → <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code></li>
+<li>OpenCL ICD → <code>/etc/OpenCL/vendors/mvgal.icd</code></li>
+<li>Systemd service → <code>/etc/systemd/system/mvgald.service</code></li>
+<li>Config → <code>/etc/mvgal/mvgal.conf</code></li>
+</ul>
+<h3 id="cmake-install">CMake install</h3>
+<pre><code class="language-bash">cd build_output
+pkexec make install   # or: pkexec cmake --install .</code></pre>
+<hr>
+<h2 id="cross-compilation-arm64">Cross-Compilation (ARM64)</h2>
+<pre><code class="language-bash">cmake .. \
+  -DCMAKE_TOOLCHAIN_FILE=build/cmake/toolchains/aarch64-linux-gnu.cmake \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DMVGAL_BUILD_KERNEL=OFF   # kernel module requires native build
+make -j$(nproc)</code></pre>
+<pre><code class="language-bash">sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu</code></pre>
+<p>Requires <code>aarch64-linux-gnu-gcc</code> cross-compiler:</p>
+<hr>
+<h2 id="packaging">Packaging</h2>
+<h3 id="debian--ubuntu">Debian / Ubuntu</h3>
+<pre><code class="language-bash">cd packaging &amp;&amp; bash build_deb.sh
+# Output: packaging/build/mvgal_0.2.2_amd64.deb
+pkexec dpkg -i packaging/build/mvgal_0.2.2_amd64.deb</code></pre>
+<h3 id="rpm-fedora--rhel--opensuse">RPM (Fedora / RHEL / openSUSE)</h3>
+<pre><code class="language-bash">rpmbuild -bb packaging/rpm/mvgal.spec
+# Output: ~/rpmbuild/RPMS/x86_64/mvgal-0.2.2-1.x86_64.rpm
+pkexec rpm -ivh ~/rpmbuild/RPMS/x86_64/mvgal-0.2.2-1.x86_64.rpm</code></pre>
+<h3 id="arch-linux">Arch Linux</h3>
+<pre><code class="language-bash">cd packaging/arch
+makepkg -si</code></pre>
+<hr>
+<h2 id="ci--github-actions">CI / GitHub Actions</h2>
+<p>Both workflows are <strong>manual-only</strong> (<code>workflow_dispatch</code>). To run:</p>
+<ol>
+<li>Go to <strong>Actions</strong> tab on GitHub</li>
+<li>Select <strong>CI</strong> or <strong>Build on Fedora COPR</strong></li>
+<li>Click <strong>Run workflow</strong></li>
+</ol>
+<p>The CI workflow runs:</p>
+<ul>
+<li>Build matrix: Ubuntu 22.04 + 24.04, GCC + Clang</li>
+<li>Unit tests via CTest</li>
+<li>Vulkan layer smoke test (lavapipe)</li>
+<li>clang-tidy static analysis</li>
+<li>clang-format check</li>
+<li>Rust clippy + rustfmt</li>
+<li>Packaging check</li>
+<li>shellcheck on all <code>.sh</code> files</li>
+</ul>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="libdrm-not-found"><code>libdrm not found</code></h3>
+<pre><code class="language-bash">sudo apt install libdrm-dev   # Ubuntu
+sudo dnf install libdrm-devel  # Fedora</code></pre>
+<h3 id="vulkanvulkanh-not-found"><code>vulkan/vulkan.h not found</code></h3>
+<pre><code class="language-bash">sudo apt install libvulkan-dev
+cmake .. -DMVGAL_BUILD_API=ON</code></pre>
+<h3 id="kernel-module-fails-to-load--ebusy">Kernel module fails to load: <code>-EBUSY</code></h3>
+<pre><code class="language-bash">pkexec rmmod mvgal
+pkexec insmod kernel/mvgal.ko</code></pre>
+<p>The module uses <code>alloc_chrdev_region</code> to avoid conflicts. If <code>/dev/mvgal0</code> already exists from a previous load:</p>
+<h3 id="rust-build-fails-msrv">Rust build fails: <code>MSRV</code></h3>
+<pre><code class="language-bash">rustup update stable
+rustup default stable</code></pre>
+<p>MVGAL requires Rust 1.75+:</p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

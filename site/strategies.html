@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scheduling Strategies — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html" class="active">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-scheduling--memory-strategies">MVGAL Scheduling & Memory Strategies</h1>
+<blockquote>
+<p><strong>Version</strong>: 0.5.0</p>
+<p><strong>Layer</strong>: 5 — WDE (Workload Distribution Engine)</p>
+<p><strong>Status</strong>: Comprehensive</p>
+<p><strong>Last Updated</strong>: 2026-06-06</p>
+</blockquote>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#existing-scheduler-strategies">Existing Scheduler Strategies (7)</a></li>
+<li><a href="#new-strategies">New Strategies</a></li>
+</ol>
+<ul>
+<li><a href="#rld-render-layer-distribution">RLD — Render Layer Distribution</a></li>
+<li><a href="#rep-replication-mode">REP — Replication Mode</a></li>
+<li><a href="#ppl-pipeline-parallelism">PPL — Pipeline Parallelism</a></li>
+</ul>
+<ol>
+<li><a href="#memory-heap-hierarchy">Memory Heap Hierarchy</a></li>
+<li><a href="#strategy-selection">Strategy Selection</a></li>
+<li><a href="#workload-type-matrix">Workload-Type Matrix</a></li>
+</ol>
+<hr>
+<h2 id="overview">Overview</h2>
+<p>MVGAL's Workload Distribution Engine (WDE, Layer 5) implements 10 scheduling strategies that map GPU work across 1–N physical devices. The first 7 strategies cover conventional GPU sharing (time-slicing, spatial partitioning, load balancing). The 3 new strategies — RLD, REP, PPL — target multi-GPU workloads where frames, data, or pipeline stages are distributed across devices.</p>
+<p>All strategies operate through the common <code>mvgal_scheduler</code> interface defined in <code>src/userspace/scheduler/</code> and the kernel-side <code>mvgal_scheduler.c</code> for prioritization.</p>
+<hr>
+<h2 id="existing-scheduler-strategies-7">Existing Scheduler Strategies (7)</h2>
+<h3 id="1-round-robin-rr">1. Round-Robin (RR)</h3>
+<p>Assigns submissions to GPUs in cyclic order. Simplest balancing — no per-device load tracking. Best for homogeneous pools with uniform workload.</p>
+<h3 id="2-least-load-ll">2. Least-Load (LL)</h3>
+<p>Tracks per-GPU queue depth and assigns to the device with fewest pending submissions. Requires metrics_collector for queue-depth sampling.</p>
+<h3 id="3-priority-pri">3. Priority (PRI)</h3>
+<p>Each submission carries a priority hint (0–7). High-priority work lands on the fastest device; lower-priority fills remaining capacity.</p>
+<h3 id="4-affinity-aff">4. Affinity (AFF)</h3>
+<p>Pins a process or context to a specific GPU. Once assigned, all submissions from that context target the same device. Useful for latency-sensitive workloads (VR compositors, real-time rendering).</p>
+<h3 id="5-bin-packing-bp">5. Bin-Packing (BP)</h3>
+<p>Packs submissions into the smallest number of GPUs to maximise idle-device power saving. Complementary to power_manager — devices with no load enter D3.</p>
+<h3 id="6-gpu-aware-ga">6. GPU-Aware (GA)</h3>
+<p>Respects topology: NVLink/XGMI peers get first preference for inter-GPU transfers; PCIe-attached devices are fallback.</p>
+<h3 id="7-hybrid-hyb">7. Hybrid (HYB)</h3>
+<p>Combines two or more strategies via a weighted decision function. Configured through the scheduler JSON policy file (see <code>mvgal-sched</code> tool).</p>
+<hr>
+<h2 id="new-strategies">New Strategies</h2>
+<h3 id="rld--render-layer-distribution">RLD — Render Layer Distribution</h3>
+<p><strong>Purpose</strong>: Split a single frame's render layers across multiple GPUs, re-compositing via the daemon's inter-GPU transfer engine.</p>
+<p><strong>How it works</strong>:</p>
+<ol>
+<li>Application submits a full command buffer to the intercept layer (Layer 7).</li>
+<li>The intercept layer decomposes the submission into N logical render layers</li>
+</ol>
+<p>(opaque, transparent, post-process, UI overlay).</p>
+<ol>
+<li>Each layer is dispatched to a different GPU via DMA-BUF export.</li>
+<li>After completion, layers are composited by <code>mvgald</code> on the primary GPU</li>
+</ol>
+<p>using the inter-GPU copy engine (<code>runtime/daemon/ipc_server.cpp</code>).</p>
+<p><strong>Best for</strong>:</p>
+<ul>
+<li>Deferred-shading renderers with separable geometry/lighting passes</li>
+<li>Split-frame VR (left eye / right eye on separate GPUs)</li>
+<li>UI-overlay rendering without compositor stalls</li>
+</ul>
+<p><strong>Constraints</strong>:</p>
+<ul>
+<li>Requires <code>MVGAL_RENDER_LAYER_SPLIT</code> feature flag in device caps</li>
+<li>Layer decomposition overhead ≤ 5% frame budget</li>
+<li>Inter-GPU copy must saturate at least PCIe 4.0 x16 bandwidth</li>
+</ul>
+<h3 id="rep--replication-mode">REP — Replication Mode</h3>
+<p><strong>Purpose</strong>: Replicate identical workloads across N GPUs for fault tolerance, ML training data parallelism, or benchmarking.</p>
+<p><strong>How it works</strong>:</p>
+<ol>
+<li>A single submission is cloned N–1 times by the WDE.</li>
+<li>Each clone targets a distinct GPU with identical command buffers.</li>
+<li>Completion waits for all replicas to finish.</li>
+<li>Results are compared via a reduction callback (optional; for fault-tolerant</li>
+</ol>
+<p>mode only).</p>
+<p><strong>Best for</strong>:</p>
+<ul>
+<li>Data-parallel ML training (same model, different micro-batches)</li>
+<li>Mission-critical rendering (triple-redundant display)</li>
+<li>Comparative benchmarking (same workload, different GPU SKUs)</li>
+</ul>
+<p><strong>Constraints</strong>:</p>
+<ul>
+<li>Replicas share the same input buffer (copy-on-write via DMA-BUF)</li>
+<li>Fault-tolerant mode adds ~10% overhead for result comparison</li>
+<li>N ≥ 2 required; no upper limit beyond VRAM capacity</li>
+</ul>
+<h3 id="ppl--pipeline-parallelism">PPL — Pipeline Parallelism</h3>
+<p><strong>Purpose</strong>: Split a GPU workload into pipeline stages and assign each stage to a different GPU, streaming data through the chain.</p>
+<p><strong>How it works</strong>:</p>
+<ol>
+<li>The WDE analyses the command DAG (<code>docs/ARCHITECTURE.md §4.3 — IMFL</code>).</li>
+<li>It partitions the DAG into N contiguous stages at natural barrier boundaries.</li>
+<li>Each stage executes on one GPU; outputs are transferred to the next GPU</li>
+</ol>
+<p>via P2P DMA-BUF.</p>
+<ol>
+<li>Pipeline depth is N; throughput is limited by the slowest stage.</li>
+</ol>
+<p><strong>Best for</strong>:</p>
+<ul>
+<li>Post-processing chains (tone-map → sharpen → output encode)</li>
+<li>Video transcoding pipelines (decode → process → encode)</li>
+<li>Multi-pass compute workloads</li>
+</ul>
+<p><strong>Constraints</strong>:</p>
+<ul>
+<li>Requires DAG analysis from IMFL (Layer 4)</li>
+<li>Stage imbalance reduces throughput; <code>mvgal-sched analyze</code> reports efficiency</li>
+<li>P2P DMA-BUF between non-adjacent stages adds latency</li>
+</ul>
+<hr>
+<h2 id="memory-heap-hierarchy">Memory Heap Hierarchy</h2>
+<p>MVGAL defines 4 memory heaps with distinct performance characteristics. Applications or the WDE select a heap based on access pattern.</p>
+<table>
+<thead><tr>
+<th>Heap</th>
+<th>Name</th>
+<th>Location</th>
+<th>Bandwidth</th>
+<th>Use Case</th>
+</tr></thead><tbody>
+<tr>
+<td>0</td>
+<td>HOST</td>
+<td>System RAM</td>
+<td>~50 GB/s (DDR5)</td>
+<td>Staging, CPU access</td>
+</tr>
+<tr>
+<td>1</td>
+<td>VRAM_CACHE</td>
+<td>GPU VRAM (preferred)</td>
+<td>~900 GB/s (HBM2e)</td>
+<td>Frequent device-local access</td>
+</tr>
+<tr>
+<td>2</td>
+<td>VRAM_STEER</td>
+<td>Arbitrated GPU VRAM</td>
+<td>Bandwidth-shared</td>
+<td>Multi-GPU shared allocations</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ZONE_BIN</td>
+<td>Partitioned VRAM</td>
+<td>Slab-granularity</td>
+<td>Fine-grained allocation regions</td>
+</tr>
+</tbody></table>
+<p><strong>Heap 0 — HOST</strong>: Traditional system memory. Coherent with CPU cache. Used for submission stagin, readbacks, and fallback when VRAM is exhausted.</p>
+<p><strong>Heap 1 — VRAM_CACHE</strong>: The preferred device-local allocation. Uses first-touch placement on the GPU that first accesses the buffer. Migrates on access pattern change (monitored by <code>mvgald</code> metrics).</p>
+<p><strong>Heap 2 — VRAM_STEER</strong>: For allocations shared across multiple GPUs. The daemon arbitrates which device's VRAM hosts the physical allocation; other devices access via P2P DMA-BUF. Arbitration policy is configurable (RR, LL, locality).</p>
+<p><strong>Heap 3 — ZONE_BIN</strong>: Divides VRAM into fixed-size zones (configured via <code>mvgal-config</code>). Allocations are rounded up to the nearest zone size. Reduces fragmentation for small, frequently-allocated buffers.</p>
+<p>The heap hierarchy is exposed through <code>include/mvgal/mvgal_unified_heap.h</code> and <code>include/mvgal/mvgal_memory.h</code>.</p>
+<hr>
+<h2 id="strategy-selection">Strategy Selection</h2>
+<p>The WDE selects a strategy based on workload characteristics:</p>
+<pre><code>Workload Type ──→ Strategy Selection ──→ Heap Assignment ──→ GPU Mapping</code></pre>
+<h3 id="selection-criteria">Selection Criteria</h3>
+<table>
+<thead><tr>
+<th>Workload Type</th>
+<th>Default Strategy</th>
+<th>Heap</th>
+<th>Rationale</th>
+</tr></thead><tbody>
+<tr>
+<td>Single-GPU game</td>
+<td>PRI</td>
+<td>VRAM_CACHE</td>
+<td>Fastest GPU gets the frame</td>
+</tr>
+<tr>
+<td>Multi-GPU VR</td>
+<td>RLD</td>
+<td>VRAM_STEER</td>
+<td>Split eye renders</td>
+</tr>
+<tr>
+<td>ML Training (data-parallel)</td>
+<td>REP</td>
+<td>ZONE_BIN</td>
+<td>Identical model on each GPU</td>
+</tr>
+<tr>
+<td>Video Transcoding</td>
+<td>PPL</td>
+<td>HOST + VRAM_CACHE</td>
+<td>Stream through pipeline</td>
+</tr>
+<tr>
+<td>Compute Shader</td>
+<td>LL + GA</td>
+<td>VRAM_CACHE</td>
+<td>Load-balance with topology</td>
+</tr>
+<tr>
+<td>Compositor</td>
+<td>AFF</td>
+<td>VRAM_CACHE</td>
+<td>Pin to display GPU</td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>HYB (RR+LL)</td>
+<td>VRAM_CACHE</td>
+<td>Safe default</td>
+</tr>
+</tbody></table>
+<h3 id="override-mechanism">Override Mechanism</h3>
+<p>Strategy can be overridden per-application via:</p>
+<ul>
+<li><code>MVGAL_SCHED_STRATEGY</code> environment variable</li>
+<li><code>/etc/mvgal/app-policies/&lt;app&gt;.json</code> policy file</li>
+<li><code>mvgal-sched set-policy &lt;app&gt; &lt;strategy&gt;</code> CLI command</li>
+</ul>
+<hr>
+<h2 id="workload-type-matrix">Workload-Type Matrix</h2>
+<p>The following table shows which strategies are applicable per GPU API:</p>
+<table>
+<thead><tr>
+<th>API</th>
+<th style="text-align:center">RR</th>
+<th style="text-align:center">LL</th>
+<th style="text-align:center">PRI</th>
+<th style="text-align:center">AFF</th>
+<th style="text-align:center">BP</th>
+<th style="text-align:center">GA</th>
+<th style="text-align:center">HYB</th>
+<th style="text-align:center">RLD</th>
+<th style="text-align:center">REP</th>
+<th style="text-align:center">PPL</th>
+</tr></thead><tbody>
+<tr>
+<td>Vulkan</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+</tr>
+<tr>
+<td>OpenGL</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+</tr>
+<tr>
+<td>OpenCL</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+</tr>
+<tr>
+<td>CUDA</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+</tr>
+<tr>
+<td>Direct3D (WCL)</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+</tr>
+<tr>
+<td>Metal (via WCL)</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+</tr>
+<tr>
+<td>WebGPU</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">✓</td>
+</tr>
+</tbody></table>
+<p><strong>Legend</strong>: ✓ = applicable, — = not applicable</p>
+<hr>
+<p><em>See <code>docs/ARCHITECTURE.md</code> §5—WDE for the layer architecture. See <code>src/userspace/scheduler/</code> for implementation.</em></p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

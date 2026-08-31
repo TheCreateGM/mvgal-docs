@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Power Management — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html" class="active">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-power-management">MVGAL Power Management</h1>
+<blockquote>
+<p><strong>Version</strong>: 0.5.0</p>
+<p><strong>Last Updated</strong>: 2026-06-06</p>
+</blockquote>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#power-curve-system">Power Curve System</a></li>
+<li><a href="#idle-state-machine">Idle State Machine</a></li>
+<li><a href="#dvfs-control">DVFS Control</a></li>
+<li><a href="#gamemode-integration">Gamemode Integration</a></li>
+<li><a href="#thermal-throttling">Thermal Throttling</a></li>
+<li><a href="#mvgal-powercurve-tool"><code>mvgal-powercurve</code> Tool</a></li>
+<li><a href="#vendor-specific-power-management">Vendor-Specific Power Management</a></li>
+</ol>
+<hr>
+<h2 id="overview">Overview</h2>
+<p>MVGAL power management operates at two levels:</p>
+<ol>
+<li><strong>Kernel-level</strong> (<code>kernel/mvgal_power.c</code>, <code>kernel/mvgal_power.h</code>):</li>
+</ol>
+<ul>
+<li>Per-GPU DVFS control (frequency/voltage scaling)</li>
+<li>Thermal monitoring and throttling</li>
+<li>Power budget enforcement</li>
+</ul>
+<ol>
+<li><strong>Userspace daemon</strong> (<code>runtime/daemon/power_manager.cpp</code>, <code>.hpp</code>):</li>
+</ol>
+<ul>
+<li>Power curve management</li>
+<li>Idle detection and power gating</li>
+<li>Fan curve management</li>
+<li>Metrics collection via NVML/hwmon/fdinfo</li>
+</ul>
+<p>The kernel module provides the low-level controls; the daemon implements policy. Communication flows through the <code>mvgal_gpu_power</code> struct and IOCTL interface.</p>
+<hr>
+<h2 id="power-curve-system">Power Curve System</h2>
+<p>Power curves map GPU workload intensity to power limits, expressed as a percentage of Thermal Design Power (TDP).</p>
+<h3 id="curve-structure">Curve Structure</h3>
+<pre><code>Utilization % → Power Limit % of TDP</code></pre>
+<p>A power curve is a table of (utilization, power_limit, temperature_target) points. Linear interpolation is used between points.</p>
+<h3 id="curve-points-default">Curve Points (Default)</h3>
+<table>
+<thead><tr>
+<th style="text-align:center">Utilization</th>
+<th style="text-align:center">Power Limit</th>
+<th style="text-align:center">Temp Target</th>
+<th style="text-align:center">Voltage</th>
+</tr></thead><tbody>
+<tr>
+<td style="text-align:center">0%</td>
+<td style="text-align:center">30%</td>
+<td style="text-align:center">40°C</td>
+<td style="text-align:center">Min</td>
+</tr>
+<tr>
+<td style="text-align:center">25%</td>
+<td style="text-align:center">50%</td>
+<td style="text-align:center">55°C</td>
+<td style="text-align:center">Eco</td>
+</tr>
+<tr>
+<td style="text-align:center">50%</td>
+<td style="text-align:center">75%</td>
+<td style="text-align:center">70°C</td>
+<td style="text-align:center">Balanced</td>
+</tr>
+<tr>
+<td style="text-align:center">75%</td>
+<td style="text-align:center">90%</td>
+<td style="text-align:center">80°C</td>
+<td style="text-align:center">Boost</td>
+</tr>
+<tr>
+<td style="text-align:center">95%</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">83°C</td>
+<td style="text-align:center">Max</td>
+</tr>
+<tr>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">105%</td>
+<td style="text-align:center">85°C</td>
+<td style="text-align:center">Turbo (if available)</td>
+</tr>
+</tbody></table>
+<h3 id="power-curve-profiles">Power Curve Profiles</h3>
+<p>MVGAL ships with four pre-defined profiles:</p>
+<table>
+<thead><tr>
+<th>Profile</th>
+<th style="text-align:center">Max Power</th>
+<th style="text-align:center">Temp Target</th>
+<th>Use Case</th>
+</tr></thead><tbody>
+<tr>
+<td><code>powersave</code></td>
+<td style="text-align:center">60% TDP</td>
+<td style="text-align:center">65°C</td>
+<td>Quiet, battery</td>
+</tr>
+<tr>
+<td><code>balanced</code></td>
+<td style="text-align:center">80% TDP</td>
+<td style="text-align:center">75°C</td>
+<td>Default</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td style="text-align:center">100% TDP</td>
+<td style="text-align:center">83°C</td>
+<td>Gaming</td>
+</tr>
+<tr>
+<td><code>turbo</code></td>
+<td style="text-align:center">110% TDP</td>
+<td style="text-align:center">85°C</td>
+<td>Benchmarking</td>
+</tr>
+</tbody></table>
+<pre><code class="language-bash">mvgal-powercurve --profile performance</code></pre>
+<p>Toggle profiles with:</p>
+<h3 id="custom-curves">Custom Curves</h3>
+<pre><code class="language-json">{
+  "profile": "custom",
+  "points": [
+    {"util": 0, "power": 30, "temp": 40},
+    {"util": 30, "power": 60, "temp": 60},
+    {"util": 70, "power": 85, "temp": 75},
+    {"util": 100, "power": 100, "temp": 82}
+  ],
+  "fan_curve": "quiet"
+}</code></pre>
+<p>Users can define custom curves in JSON (<code>/etc/mvgal/powercurve.json</code>):</p>
+<hr>
+<h2 id="idle-state-machine">Idle State Machine</h2>
+<p>GPUs transition through four power states, defined in <code>runtime/daemon/power_manager.hpp</code>:</p>
+<pre><code>          ┌──────────────────────────────────────────────┐
+          │                                              │
+          ▼                                              │
+   ┌──────────┐    timeout    ┌───────────┐              │
+   │  ACTIVE  │ ────────────→ │SUSTAINED  │              │
+   │  (D0)    │               │  (D0-low)  │              │
+   └──────────┘               └───────────┘              │
+        ↑                           │                    │
+        │                     timeout│                    │
+        │                           ▼                    │
+        │                    ┌───────────┐    timeout    │
+        │                    │   IDLE    │ ─────────────  │
+        │                    │  (D3hot)  │                │
+        │                    └───────────┘                │
+        │                           │                    │
+        │                     timeout│                    │
+        │                           ▼                    │
+        │                    ┌───────────┐               │
+        └────────────────────│   PARK    │               │
+        activity wakes        │  (D3cold) │               │
+                             └───────────┘</code></pre>
+<h3 id="state-descriptions">State Descriptions</h3>
+<table>
+<thead><tr>
+<th>State</th>
+<th style="text-align:center">Power</th>
+<th style="text-align:center">Wake Latency</th>
+<th>Driver State</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ACTIVE</code> (D0)</td>
+<td style="text-align:center">100% TDP</td>
+<td style="text-align:center">—</td>
+<td>Fully operational</td>
+</tr>
+<tr>
+<td><code>SUSTAINED</code> (D0-low)</td>
+<td style="text-align:center">60–80% TDP</td>
+<td style="text-align:center">< 1 ms</td>
+<td>Clocks reduced</td>
+</tr>
+<tr>
+<td><code>IDLE</code> (D3hot)</td>
+<td style="text-align:center">10–30% TDP</td>
+<td style="text-align:center">10–100 ms</td>
+<td>VRAM self-refresh</td>
+</tr>
+<tr>
+<td><code>PARK</code> (D3cold)</td>
+<td style="text-align:center">~0% TDP</td>
+<td style="text-align:center">100–500 ms</td>
+<td>VRAM off, context saved</td>
+</tr>
+</tbody></table>
+<h3 id="transition-timers">Transition Timers</h3>
+<table>
+<thead><tr>
+<th>Transition</th>
+<th style="text-align:center">Default Timer</th>
+<th style="text-align:center">Configurable</th>
+</tr></thead><tbody>
+<tr>
+<td>ACTIVE → SUSTAINED</td>
+<td style="text-align:center">5 s idle</td>
+<td style="text-align:center">Yes (<code>idle_sustained_ms</code>)</td>
+</tr>
+<tr>
+<td>SUSTAINED → IDLE</td>
+<td style="text-align:center">30 s idle</td>
+<td style="text-align:center">Yes (<code>idle_park_ms</code>)</td>
+</tr>
+<tr>
+<td>IDLE → PARK</td>
+<td style="text-align:center">120 s idle</td>
+<td style="text-align:center">Yes (<code>park_delay_ms</code>)</td>
+</tr>
+<tr>
+<td>Any → ACTIVE</td>
+<td style="text-align:center">Instant (on activity)</td>
+<td style="text-align:center">—</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="dvfs-control">DVFS Control</h2>
+<p>Dynamic Voltage and Frequency Scaling is managed through <code>kernel/mvgal_power.h</code> with support for four DVFS modes:</p>
+<table>
+<thead><tr>
+<th>Mode</th>
+<th>Behavior</th>
+<th>Use Case</th>
+</tr></thead><tbody>
+<tr>
+<td><code>PERFORMANCE</code></td>
+<td>Max clock always</td>
+<td>Gaming, ML</td>
+</tr>
+<tr>
+<td><code>BALANCED</code></td>
+<td>Scale on demand</td>
+<td>Default</td>
+</tr>
+<tr>
+<td><code>POWERSAVE</code></td>
+<td>Min clock preferred</td>
+<td>Battery, idle</td>
+</tr>
+<tr>
+<td><code>CUSTOM</code></td>
+<td>User-defined curve</td>
+<td>Advanced tuning</td>
+</tr>
+</tbody></table>
+<h3 id="policy-parameters">Policy Parameters</h3>
+<p>Each DVFS policy includes:</p>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Description</th>
+<th style="text-align:center">Default</th>
+</tr></thead><tbody>
+<tr>
+<td><code>min_freq_mhz</code></td>
+<td>Minimum GPU clock</td>
+<td style="text-align:center">300 MHz</td>
+</tr>
+<tr>
+<td><code>max_freq_mhz</code></td>
+<td>Maximum GPU clock</td>
+<td style="text-align:center">Vendor max</td>
+</tr>
+<tr>
+<td><code>up_threshold</code></td>
+<td>Util% to scale up</td>
+<td style="text-align:center">80%</td>
+</tr>
+<tr>
+<td><code>down_threshold</code></td>
+<td>Util% to scale down</td>
+<td style="text-align:center">30%</td>
+</tr>
+<tr>
+<td><code>step_delay_ms</code></td>
+<td>Min interval between changes</td>
+<td style="text-align:center">50 ms</td>
+</tr>
+</tbody></table>
+<h3 id="querying-dvfs-state">Querying DVFS State</h3>
+<pre><code class="language-bash"># Current DVFS mode and frequencies
+mvgal-info --dvfs
+
+# Per-GPU power state
+mvgal-info --power</code></pre>
+<hr>
+<h2 id="gamemode-integration">Gamemode Integration</h2>
+<p>MVGAL integrates with Feral Interactive's <code>gamemode</code> daemon.</p>
+<h3 id="when-gamemode-is-active">When Gamemode Is Active</h3>
+<ol>
+<li>Power profile switches to <code>performance</code> (or <code>turbo</code> if configured).</li>
+<li>DVFS mode set to <code>PERFORMANCE</code>.</li>
+<li>Idle-state entry timers increased (reduces wake-from-idle latency).</li>
+<li>CPU governor hint set to <code>performance</code>.</li>
+<li>Fan curve set to <code>active</code> (higher fan speeds, lower temps).</li>
+</ol>
+<h3 id="enabling-gamemode">Enabling Gamemode</h3>
+<pre><code class="language-bash"># Install gamemode
+dnf install gamemode
+
+# Enable gamemode daemon
+systemctl enable --now gamemoded
+
+# Run a game with gamemode
+gamemoderun ./mygame
+
+# Or configure Steam to auto-launch gamemode:
+# Settings → Compatibility → Enable gamemode</code></pre>
+<h3 id="configuration">Configuration</h3>
+<p>MVGAL-specific gamemode config at <code>/etc/mvgal/gamemode.conf</code>:</p>
+<pre><code class="language-ini">[mvgal]
+profile=performance
+dvfs_mode=PERFORMANCE
+idle_sustained_ms=30000
+idle_park_ms=60000
+fan_curve=active</code></pre>
+<hr>
+<h2 id="thermal-throttling">Thermal Throttling</h2>
+<p>Thermal management is implemented in <code>kernel/mvgal_power.c</code> with a five-tier state machine defined in <code>runtime/daemon/power_manager.hpp</code>.</p>
+<h3 id="thermal-states">Thermal States</h3>
+<table>
+<thead><tr>
+<th>State</th>
+<th style="text-align:center">Temp Range</th>
+<th>Action</th>
+</tr></thead><tbody>
+<tr>
+<td><code>NORMAL</code></td>
+<td style="text-align:center">< 75°C</td>
+<td>No action</td>
+</tr>
+<tr>
+<td><code>WARN</code></td>
+<td style="text-align:center">75–85°C</td>
+<td>Increase fan speed, log warning</td>
+</tr>
+<tr>
+<td><code>HOT</code></td>
+<td style="text-align:center">85–92°C</td>
+<td>Reduce max clock by 10%</td>
+</tr>
+<tr>
+<td><code>THROTTLING</code></td>
+<td style="text-align:center">92–100°C</td>
+<td>Aggressive clock reduction, power cap</td>
+</tr>
+<tr>
+<td><code>CRITICAL</code></td>
+<td style="text-align:center">> 100°C</td>
+<td>Emergency shutdown (kernel-level)</td>
+</tr>
+</tbody></table>
+<h3 id="throttle-levels">Throttle Levels</h3>
+<p>When in <code>THROTTLING</code> state, the kernel applies throttle levels:</p>
+<table>
+<thead><tr>
+<th style="text-align:center">Level</th>
+<th style="text-align:center">Clock Reduction</th>
+<th style="text-align:center">Power Cap</th>
+<th style="text-align:center">Duration</th>
+</tr></thead><tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">10%</td>
+<td style="text-align:center">90% TDP</td>
+<td style="text-align:center">Until temp < 90°C</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">25%</td>
+<td style="text-align:center">75% TDP</td>
+<td style="text-align:center">Until temp < 85°C</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">50%</td>
+<td style="text-align:center">50% TDP</td>
+<td style="text-align:center">Until temp < 80°C</td>
+</tr>
+</tbody></table>
+<h3 id="temperature-monitoring">Temperature Monitoring</h3>
+<pre><code class="language-bash"># Current temperatures
+mvgal-info --temperature
+
+# Thermal history
+mvgal-info --temperature --history</code></pre>
+<hr>
+<h2 id="mvgal-powercurve-tool"><code>mvgal-powercurve</code> Tool</h2>
+<p>The <code>mvgal-powercurve</code> CLI manages power profiles. Available in <code>tools/</code>.</p>
+<h3 id="commands">Commands</h3>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal-powercurve --list</code></td>
+<td>List available profiles</td>
+</tr>
+<tr>
+<td><code>mvgal-powercurve --profile &lt;name&gt;</code></td>
+<td>Set active profile</td>
+</tr>
+<tr>
+<td><code>mvgal-powercurve --status</code></td>
+<td>Show current power state</td>
+</tr>
+<tr>
+<td><code>mvgal-powercurve --fan &lt;speed&gt;</code></td>
+<td>Manual fan override (0–100)</td>
+</tr>
+<tr>
+<td><code>mvgal-powercurve --benchmark</code></td>
+<td>Run power benchmark</td>
+</tr>
+<tr>
+<td><code>mvgal-powercurve --curve &lt;file&gt;</code></td>
+<td>Load custom curve from JSON</td>
+</tr>
+</tbody></table>
+<h3 id="example-usage">Example Usage</h3>
+<pre><code class="language-bash"># Check current state
+mvgal-powercurve --status
+
+# Set performance mode
+mvgal-powercurve --profile performance
+
+# Load custom curve
+mvgal-powercurve --curve ~/my-curve.json
+
+# Run fan at 60%
+mvgal-powercurve --fan 60</code></pre>
+<hr>
+<h2 id="vendor-specific-power-management">Vendor-Specific Power Management</h2>
+<h3 id="nvidia">NVIDIA</h3>
+<ul>
+<li><strong>NVML interface</strong>: <code>runtime/daemon/nvml_loader.cpp</code> loads NVML dynamically.</li>
+<li>Exposed metrics: power draw, temperature, fan speed, clock frequencies.</li>
+<li>Supports <code>nvidia-smi</code>-style power limiting.</li>
+<li>Dynamic boost on RTX 30xx+.</li>
+</ul>
+<h3 id="amd">AMD</h3>
+<ul>
+<li><strong>hwmon interface</strong>: Reads via <code>/sys/class/drm/card<em>/device/hwmon/hwmon</em>/</code>.</li>
+<li>Exposed metrics: power draw (via <code>amdgpu</code> hwmon), temperature, fan speed.</li>
+<li><code>amdgpu</code> firmware-based DVFS (no direct clock control from kernel module).</li>
+</ul>
+<h3 id="intel">Intel</h3>
+<ul>
+<li><strong>hwmon interface</strong>: Via <code>/sys/class/drm/card<em>/device/hwmon/hwmon</em>/</code>.</li>
+<li>Exposed metrics: power draw, temperature (DG2+).</li>
+<li>Integrated GPUs share system thermal zone.</li>
+</ul>
+<h3 id="moore-threads">Moore Threads</h3>
+<ul>
+<li><strong>Vendor API</strong>: Proprietary MTGX power interface.</li>
+<li>Exposed metrics: power draw, temperature (basic).</li>
+<li>DVFS support in beta status.</li>
+</ul>
+<hr>
+<p><em>See <code>docs/ARCHITECTURE.md</code> §3—Runtime Daemon for daemon architecture. See <code>runtime/daemon/power_manager.cpp</code> for implementation. See <code>kernel/mvgal_power.c</code> for kernel-level DVFS.</em></p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

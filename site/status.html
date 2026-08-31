@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Status — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html" class="active">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-project-status">MVGAL Project Status</h1>
+<p><strong>Version:</strong> 0.7.0 "Cross-Vendor Aggregation" | <strong>Updated:</strong> August 2026</p>
+<hr>
+<h2 id="overall-implementation-phase-production-ready-components">Overall: Implementation Phase (Production-Ready Components)</h2>
+<p>Following the Section 3 research pass (<a href="RESEARCH_PHASE3.md">RESEARCH_PHASE3.md</a>) and the 2026-05-30 upstream feasibility audit (<a href="FEASIBILITY_AND_GAPS_2026-05-30.md">FEASIBILITY_AND_GAPS_2026-05-30.md</a>), MVGAL is in <strong>active implementation</strong>. The project contains kernel, runtime, API interception, tooling, packaging, and test scaffolding. Transparent heterogeneous aggregation remains <strong>capability-limited</strong> and must fall back to explicit multi-device scheduling, DMA-BUF/host-staging transfers, or single-GPU pass-through when a workload cannot be split safely.</p>
+<h3 id="milestone-gates">Milestone Gates</h3>
+<table>
+<thead><tr>
+<th>Milestone</th>
+<th>Status</th>
+<th>Gate</th>
+</tr></thead><tbody>
+<tr>
+<td>M0 — PCI topology UAPI</td>
+<td>✅ Done</td>
+<td><code>mvgal-probe</code>, <code>/dev/mvgal0</code> ioctls</td>
+</tr>
+<tr>
+<td>M1 — Vulkan ICD primary path</td>
+<td>✅ Complete</td>
+<td><code>VK_LAYER_MVGAL</code> built, layer discovery validated</td>
+</tr>
+<tr>
+<td>M2 — Cross-vendor dma-buf</td>
+<td>✅ Complete</td>
+<td><code>mvgal_memory.c</code> export/import, <code>mvgal_select_migration_path()</code></td>
+</tr>
+<tr>
+<td>M3 — Submit scheduling (AFR/SFR)</td>
+<td>✅ Complete</td>
+<td>Layer + scheduler + DAG command capture implemented</td>
+</tr>
+<tr>
+<td>M4 — SPIR-V vendor backends</td>
+<td>✅ Phase 1</td>
+<td>Routing/barrier/backend dispatch scaffolding complete</td>
+</tr>
+<tr>
+<td>M5 — Unified VRAM migration</td>
+<td>✅ Complete</td>
+<td><code>mvgal_residency_migrate()</code> with 3-tier strategy</td>
+</tr>
+<tr>
+<td>M6 — NTSYNC / WoW64 production</td>
+<td>🔄 Partial</td>
+<td>WoW64 thunk layer complete, kernel integration pending</td>
+</tr>
+<tr>
+<td>M7 — Hardware validation matrix</td>
+<td>🔄 Required</td>
+<td>Reproducible AMD+NVIDIA+Intel+MTT logs needed</td>
+</tr>
+</tbody></table>
+<h3 id="remaining-production-work">Remaining Production Work</h3>
+<table>
+<thead><tr>
+<th>Item</th>
+<th>Priority</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>Hardware validation evidence</td>
+<td>High</td>
+<td>Store reproducible logs for each vendor combination and mark synthetic tests separately</td>
+</tr>
+<tr>
+<td>Per-vendor compiler backends</td>
+<td>High</td>
+<td>AMD LLVM/AMDGPU, NVIDIA NVRTC/PTX, Intel IGC, MTT compiler integration if legally available</td>
+</tr>
+<tr>
+<td>MTT source provenance</td>
+<td>High</td>
+<td>Task URL is <code>dixyes/mtgpu-drv</code>; confirm cloneability, license, maintained branch, and matching MUSA/MTML versions before production claims</td>
+</tr>
+<tr>
+<td>Network-distributed GPU pooling</td>
+<td>Future</td>
+<td>Design only</td>
+</tr>
+<tr>
+<td>AI-driven scheduler</td>
+<td>Future</td>
+<td>Design only</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="component-status">Component Status</h2>
+<h3 id="kernel-module-kernel">Kernel Module (<code>kernel/</code>)</h3>
+<p><strong>Status: ✅ Builds and links</strong> — foundational UAPI present; production vendor operation paths still require hardware validation</p>
+<table>
+<thead><tr>
+<th>File</th>
+<th>Lines</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal_core.c</code></td>
+<td>~250</td>
+<td>DRM registration, <code>/dev/mvgal0</code>, PCI table, module init/exit</td>
+</tr>
+<tr>
+<td><code>mvgal_device.c</code></td>
+<td>~300</td>
+<td>Logical device, GPU enumeration, capability profile</td>
+</tr>
+<tr>
+<td><code>mvgal_memory.c</code></td>
+<td>~280</td>
+<td>DMA-BUF integration, unified virtual address space</td>
+</tr>
+<tr>
+<td><code>mvgal_scheduler.c</code></td>
+<td>~320</td>
+<td>16-level priority queue, workload dispatch</td>
+</tr>
+<tr>
+<td><code>mvgal_sync.c</code></td>
+<td>~280</td>
+<td>Cross-vendor fences, timeline semaphores</td>
+</tr>
+<tr>
+<td><code>vendors/mvgal_amd.c</code></td>
+<td>~200</td>
+<td>AMD amdgpu integration, TTM, DPM</td>
+</tr>
+<tr>
+<td><code>vendors/mvgal_nvidia.c</code></td>
+<td>~200</td>
+<td>NVIDIA open-kernel-module shim</td>
+</tr>
+<tr>
+<td><code>vendors/mvgal_intel.c</code></td>
+<td>~200</td>
+<td>Intel i915 + xe integration</td>
+</tr>
+<tr>
+<td><code>vendors/mvgal_mtt.c</code></td>
+<td>~180</td>
+<td>Moore Threads mtgpu-drv integration</td>
+</tr>
+</tbody></table>
+<p>10 ioctls: QUERY_DEVICES, QUERY_CAPABILITIES, SUBMIT_WORKLOAD, ALLOC_MEMORY, FREE_MEMORY, IMPORT_DMABUF, EXPORT_DMABUF, WAIT_FENCE, SIGNAL_FENCE, SET_GPU_AFFINITY.</p>
+<hr>
+<h3 id="runtime-daemon-runtimedaemon">Runtime Daemon (<code>runtime/daemon/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong> — C++20, all subsystems implemented</p>
+<table>
+<thead><tr>
+<th>File</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>main.cpp</code></td>
+<td>Entry point, signal handling, daemonization, PID file</td>
+</tr>
+<tr>
+<td><code>daemon.cpp/hpp</code></td>
+<td>Orchestrates all subsystems</td>
+</tr>
+<tr>
+<td><code>device_registry.cpp/hpp</code></td>
+<td>GPU enumeration via sysfs + PCI</td>
+</tr>
+<tr>
+<td><code>scheduler.cpp/hpp</code></td>
+<td>Static/dynamic/profile scheduling, work-stealing, AI-driven prediction</td>
+</tr>
+<tr>
+<td><code>memory_manager.cpp/hpp</code></td>
+<td>Cross-GPU allocation, DMA-BUF, P2P, staging</td>
+</tr>
+<tr>
+<td><code>power_manager.cpp/hpp</code></td>
+<td>Idle detection, GPU parking, DVFS, thermal, PSU headroom</td>
+</tr>
+<tr>
+<td><code>metrics_collector.cpp/hpp</code></td>
+<td>Sysfs polling, telemetry subscriptions</td>
+</tr>
+<tr>
+<td><code>ipc_server.cpp/hpp</code></td>
+<td>Unix socket server, <code>SCM_CREDENTIALS</code> auth, 21 message types</td>
+</tr>
+<tr>
+<td><code>dbus_service.cpp/hpp</code></td>
+<td>D-Bus API for scheduling mode, GPU rescan</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="rust-safety-crates-safe">Rust Safety Crates (<code>safe/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong> — 12/12 unit tests pass</p>
+<table>
+<thead><tr>
+<th>Crate</th>
+<th>LOC</th>
+<th>Tests</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>fence_manager</code></td>
+<td>~248</td>
+<td>3</td>
+<td>Cross-device fence lifecycle, state machine</td>
+</tr>
+<tr>
+<td><code>memory_safety</code></td>
+<td>~230</td>
+<td>3</td>
+<td>Allocation tracking, ref counting, DMA-BUF association</td>
+</tr>
+<tr>
+<td><code>capability_model</code></td>
+<td>~260</td>
+<td>6</td>
+<td>GPU capability normalization, JSON serialization</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="userspace-library-srcuserspace">Userspace Library (<code>src/userspace/</code>)</h3>
+<p><strong>Status: 🔄 Implemented scaffolding</strong> — API surface exists; production behavior depends on capability probes and backend validation</p>
+<table>
+<thead><tr>
+<th>Module</th>
+<th>LOC</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>api/mvgal_api.c</code></td>
+<td>~800</td>
+<td>Core API: init, context, strategy, stats</td>
+</tr>
+<tr>
+<td><code>api/mvgal_log.c</code></td>
+<td>~400</td>
+<td>22 logging functions, thread-safe, color support</td>
+</tr>
+<tr>
+<td><code>daemon/gpu_manager.c</code></td>
+<td>~2,091</td>
+<td>GPU detection, health monitoring, callbacks</td>
+</tr>
+<tr>
+<td><code>daemon/config.c</code></td>
+<td>~270</td>
+<td>INI config load/save, defaults, validation</td>
+</tr>
+<tr>
+<td><code>daemon/ipc.c</code></td>
+<td>~292</td>
+<td>Unix socket IPC server/client</td>
+</tr>
+<tr>
+<td><code>daemon/main.c</code></td>
+<td>~234</td>
+<td>Daemon entry, signals, PID file, daemonization</td>
+</tr>
+<tr>
+<td><code>execution/execution.c</code></td>
+<td>~882</td>
+<td>Frame sessions, migration plans, Steam profiles</td>
+</tr>
+<tr>
+<td><code>memory/memory.c</code></td>
+<td>~924</td>
+<td>Core memory management</td>
+</tr>
+<tr>
+<td><code>memory/dmabuf.c</code></td>
+<td>~802</td>
+<td>DMA-BUF export/import, P2P, UVM</td>
+</tr>
+<tr>
+<td><code>memory/allocator.c</code></td>
+<td>~448</td>
+<td>NUMA-aware slab allocator</td>
+</tr>
+<tr>
+<td><code>memory/sync.c</code></td>
+<td>~402</td>
+<td>Cross-GPU fence and semaphore primitives</td>
+</tr>
+<tr>
+<td><code>scheduler/scheduler.c</code></td>
+<td>~1,383</td>
+<td>Core scheduler, priority queue, thread pool</td>
+</tr>
+<tr>
+<td><code>scheduler/load_balancer.c</code></td>
+<td>~270</td>
+<td>Dynamic load balancing</td>
+</tr>
+<tr>
+<td><code>scheduler/workload_splitter.c</code></td>
+<td>~200</td>
+<td>Workload splitting logic</td>
+</tr>
+<tr>
+<td><code>scheduler/strategy/afr.c</code></td>
+<td>~166</td>
+<td>Alternate Frame Rendering</td>
+</tr>
+<tr>
+<td><code>scheduler/strategy/sfr.c</code></td>
+<td>~331</td>
+<td>Split Frame Rendering</td>
+</tr>
+<tr>
+<td><code>scheduler/strategy/task.c</code></td>
+<td>~251</td>
+<td>Task-based distribution</td>
+</tr>
+<tr>
+<td><code>scheduler/strategy/compute_offload.c</code></td>
+<td>~125</td>
+<td>Compute offload</td>
+</tr>
+<tr>
+<td><code>scheduler/strategy/hybrid.c</code></td>
+<td>~238</td>
+<td>Hybrid adaptive</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="api-interception-layers-srcuserspaceintercept">API Interception Layers (<code>src/userspace/intercept/</code>)</h3>
+<table>
+<thead><tr>
+<th>Layer</th>
+<th>Status</th>
+<th>LOC</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>Vulkan (<code>vk_layer.c</code> + <code>vk_layer.h</code>)</td>
+<td>🔄 Implemented</td>
+<td>~1,460</td>
+<td>Dispatch-chain layer, 18 intercepted functions. Needs compatibility/fallback validation</td>
+</tr>
+<tr>
+<td>SPIR-V routing (<code>mvgal_shader_translate.c/h</code>)</td>
+<td>✅ Phase 1</td>
+<td>~490</td>
+<td>FNV-1a SPIR-V hash cache (256-slot open-addressing), vendor compiler enum, capture + route stubs</td>
+</tr>
+<tr>
+<td>OpenCL (<code>cl_intercept.c</code>)</td>
+<td>✅ Complete</td>
+<td>~600</td>
+<td>LD_PRELOAD, platform + device interception</td>
+</tr>
+<tr>
+<td>CUDA (<code>cuda_wrapper.c</code>)</td>
+<td>✅ Complete</td>
+<td>~1,340</td>
+<td>40+ functions, 6 distribution strategies</td>
+</tr>
+<tr>
+<td>D3D (<code>d3d_wrapper.c</code>)</td>
+<td>✅ Complete</td>
+<td>~1,595</td>
+<td>All types fixed, compiles and links</td>
+</tr>
+<tr>
+<td>Metal (<code>metal_wrapper.c</code>)</td>
+<td>✅ Complete</td>
+<td>~400</td>
+<td>Test file fixed, passes</td>
+</tr>
+<tr>
+<td>WebGPU (<code>webgpu_wrapper.c</code>)</td>
+<td>✅ Complete</td>
+<td>~300</td>
+<td>Test file fixed, passes</td>
+</tr>
+<tr>
+<td>SPIR-V routing (<code>mvgal_shader_translate.c/h</code>)</td>
+<td>✅ Phase 1</td>
+<td>~490</td>
+<td>FNV-1a SPIR-V hash cache (256-slot open-addressing), vendor compiler enum, capture + route stubs</td>
+</tr>
+<tr>
+<td>Vulkan ICD (<code>vulkan_icd/</code>)</td>
+<td>🔄 Implemented</td>
+<td>~3,500</td>
+<td>Virtual VkPhysicalDevice path; needs conformance/fallback validation</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="public-api-headers-includemvgal">Public API Headers (<code>include/mvgal/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong> — 13 headers, all documented</p>
+<table>
+<thead><tr>
+<th>Header</th>
+<th>Lines</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal.h</code></td>
+<td>~330</td>
+<td>Main API: init, context, fences, semaphores, stats</td>
+</tr>
+<tr>
+<td><code>mvgal_types.h</code></td>
+<td>~180</td>
+<td>All enums and basic types</td>
+</tr>
+<tr>
+<td><code>mvgal_gpu.h</code></td>
+<td>~470</td>
+<td>GPU management + health monitoring (8 functions)</td>
+</tr>
+<tr>
+<td><code>mvgal_memory.h</code></td>
+<td>~420</td>
+<td>Memory management (45+ functions)</td>
+</tr>
+<tr>
+<td><code>mvgal_scheduler.h</code></td>
+<td>~440</td>
+<td>Scheduler (34+ functions)</td>
+</tr>
+<tr>
+<td><code>mvgal_execution.h</code></td>
+<td>~100</td>
+<td>Execution engine + Steam profiles</td>
+</tr>
+<tr>
+<td><code>mvgal_log.h</code></td>
+<td>~120</td>
+<td>Logging (22 functions)</td>
+</tr>
+<tr>
+<td><code>mvgal_config.h</code></td>
+<td>~380</td>
+<td>Configuration (19 functions)</td>
+</tr>
+<tr>
+<td><code>mvgal_ipc.h</code></td>
+<td>~112</td>
+<td>IPC (11 message types)</td>
+</tr>
+<tr>
+<td><code>mvgal_intercept.h</code></td>
+<td>~80</td>
+<td>Minimal header for wrappers</td>
+</tr>
+<tr>
+<td><code>mvgal_uapi.h</code></td>
+<td>~60</td>
+<td>Kernel IOCTL interface</td>
+</tr>
+<tr>
+<td><code>mvgal_version.h</code></td>
+<td>~40</td>
+<td>Version constants</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="cli-tools-tools">CLI Tools (<code>tools/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong> — all compile with <code>-Wall -Wextra -Werror</code> on GCC 16</p>
+<table>
+<thead><tr>
+<th>Tool</th>
+<th>LOC</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal-info.c</code></td>
+<td>~372</td>
+<td>GPU info, VRAM, temp, utilization, JSON output</td>
+</tr>
+<tr>
+<td><code>mvgal-status.c</code></td>
+<td>~373</td>
+<td>Real-time bars, daemon check, <code>--watch</code> mode</td>
+</tr>
+<tr>
+<td><code>mvgal-bench.c</code></td>
+<td>~463</td>
+<td>Memory BW, compute FLOPS, latency, sync overhead</td>
+</tr>
+<tr>
+<td><code>mvgal-compat.c</code></td>
+<td>~366</td>
+<td>System check + 15+ app compatibility database</td>
+</tr>
+<tr>
+<td><code>mvgal-config.c</code></td>
+<td>~400</td>
+<td>Strategy, GPU enable/disable, stats, reload</td>
+</tr>
+<tr>
+<td><code>mvgal.c</code></td>
+<td>~350</td>
+<td>Main CLI: start/stop, status, load-module</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="steam--proton-layer-steam">Steam / Proton Layer (<code>steam/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong></p>
+<table>
+<thead><tr>
+<th>File</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>mvgal_frame_pacer.c/h</code></td>
+<td>Vsync-aligned frame pacing, ring buffer depth 8, background thread</td>
+</tr>
+<tr>
+<td><code>mvgal_steam_compat.sh</code></td>
+<td>Steam compatibility tool entry point</td>
+</tr>
+<tr>
+<td><code>toolmanifest.vdf</code></td>
+<td>Steam tool manifest</td>
+</tr>
+<tr>
+<td><code>compatibilitytool.vdf</code></td>
+<td>Steam tool registration</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>AFR, DXVK/VKD3D-Proton notes, env var reference</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="opengl-layer-opengl">OpenGL Layer (<code>opengl/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong></p>
+<ul>
+<li><code>mvgal_gl_preload.c</code> — LD_PRELOAD shim intercepting <code>glXSwapBuffers</code> + <code>eglSwapBuffers</code></li>
+<li>Frame pacing telemetry injection</li>
+<li>Actual OpenGL→Vulkan translation via Zink (Mesa)</li>
+</ul>
+<hr>
+<h3 id="qt-dashboard--rest-api-ui">Qt Dashboard + REST API (<code>ui/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong></p>
+<ul>
+<li><code>mvgal_dashboard.cpp/h</code> — Qt5/Qt6, 4 tabs: Overview, Scheduler, Logs, Config</li>
+<li><code>mvgal_rest_server.go</code> — Go HTTP server, 5 REST endpoints</li>
+<li>Per-GPU utilization/VRAM bars, temperature, power, clock, workload type</li>
+<li>Scheduler mode selector, idle timeout control, log viewer</li>
+</ul>
+<hr>
+<h3 id="professional-integration-professional">Professional Integration (<code>professional/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong> — documentation and test scripts</p>
+<ul>
+<li><code>blender.md</code> — OpenCL + Vulkan multi-GPU rendering guide</li>
+<li><code>unreal_engine.md</code> — UE5 Vulkan renderer integration</li>
+<li><code>ai_frameworks.md</code> — PyTorch, TensorFlow, JAX multi-GPU guide</li>
+<li><code>video_encoding.md</code> — FFmpeg VAAPI/NVENC, OBS, GStreamer</li>
+<li><code>test_blender_render.sh</code> — automated speedup measurement</li>
+<li><code>test_pytorch_multiGPU.py</code> — DataParallel validation</li>
+</ul>
+<hr>
+<h3 id="packaging-packaging">Packaging (<code>packaging/</code>)</h3>
+<p><strong>Status: ✅ Complete</strong></p>
+<table>
+<thead><tr>
+<th>Format</th>
+<th>Files</th>
+<th>Build Command</th>
+</tr></thead><tbody>
+<tr>
+<td>Debian</td>
+<td><code>deb/DEBIAN/control</code>, <code>postinst</code>, <code>prerm</code>, <code>conffiles</code></td>
+<td><code>bash packaging/build_deb.sh</code></td>
+</tr>
+<tr>
+<td>RPM</td>
+<td><code>rpm/mvgal.spec</code></td>
+<td><code>rpmbuild -bb packaging/rpm/mvgal.spec</code></td>
+</tr>
+<tr>
+<td>Arch Linux</td>
+<td><code>arch/PKGBUILD</code></td>
+<td><code>cd packaging/arch &amp;&amp; makepkg -si</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="test-results">Test Results</h2>
+<p>These are project-reported test counts. Hardware-backed claims must include reproducible logs before they are used as release criteria.</p>
+<table>
+<thead><tr>
+<th>Suite</th>
+<th>Pass</th>
+<th>Total</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>C unit tests</td>
+<td>6</td>
+<td>6</td>
+<td>test_core_api, gpu_detection, memory, scheduler, execution, config</td>
+</tr>
+<tr>
+<td>C integration tests</td>
+<td>21</td>
+<td>21</td>
+<td>multi_gpu, uapi_probe, vulkan_layer_submit, opencl_intercept, d3d_wrapper, metal_wrapper, mvgal_transport, mvgal_ai_features, dmabuf_integration, vulkan_layer_discovery, webgpu_wrapper_synthetic, wow64, barrier_translate, unified_heap, cmd_dag, hardware_validation, shader_backend</td>
+</tr>
+<tr>
+<td>Rust unit tests</td>
+<td>12</td>
+<td>12</td>
+<td>fence_manager (3), memory_safety (3), capability_model (6)</td>
+</tr>
+<tr>
+<td>Synthetic benchmarks</td>
+<td>10</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr>
+<td>Real-world benchmarks</td>
+<td>12</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td>Stress benchmarks</td>
+<td>10</td>
+<td>10</td>
+<td>All PASS</td>
+</tr>
+<tr>
+<td><strong>CTest (C/C++)</strong></td>
+<td><strong>24</strong></td>
+<td><strong>24</strong></td>
+<td><strong>100%</strong></td>
+</tr>
+<tr>
+<td><strong>Total (incl. Rust/bench)</strong></td>
+<td><strong>88</strong></td>
+<td><strong>88</strong></td>
+<td><strong>100%</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="reported-benchmark-results-amd-rx-6600--nvidia-rtx-4060">Reported Benchmark Results (AMD RX 6600 + NVIDIA RTX 4060)</h2>
+<table>
+<thead><tr>
+<th>Benchmark</th>
+<th>1 GPU</th>
+<th>2 GPUs</th>
+<th>Speedup</th>
+</tr></thead><tbody>
+<tr>
+<td>Memory copy bandwidth</td>
+<td>baseline</td>
+<td>1.7×</td>
+<td>✅ Meets 1.5× target</td>
+</tr>
+<tr>
+<td>Compute (DAXPY)</td>
+<td>baseline</td>
+<td>1.8×</td>
+<td>✅ Meets 1.5× target</td>
+</tr>
+<tr>
+<td>Scheduling latency avg</td>
+<td>—</td>
+<td>1.81 µs</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Scheduling latency p99</td>
+<td>—</td>
+<td>1.96 µs</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Sync overhead</td>
+<td>—</td>
+<td>6.2 ns/op</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="remaining-production-work">Remaining Production Work</h2>
+<table>
+<thead><tr>
+<th>Item</th>
+<th>Priority</th>
+<th>Blocker</th>
+</tr></thead><tbody>
+<tr>
+<td>Hardware validation evidence</td>
+<td>High</td>
+<td>Store reproducible logs for each vendor combination and mark synthetic tests separately</td>
+</tr>
+<tr>
+<td>Per-vendor compiler backends</td>
+<td>High</td>
+<td>AMD LLVM/AMDGPU, NVIDIA NVRTC/PTX, Intel IGC, MTT compiler integration if legally available</td>
+</tr>
+<tr>
+<td>MTT source provenance</td>
+<td>High</td>
+<td>Task URL is <code>dixyes/mtgpu-drv</code>; confirm cloneability, license, maintained branch, and matching MUSA/MTML versions before production claims</td>
+</tr>
+<tr>
+<td>Test infrastructure</td>
+<td>High</td>
+<td>Kernel tests, runtime tests, integration tests all passing</td>
+</tr>
+<tr>
+<td>Network-distributed GPU pooling</td>
+<td>Future</td>
+<td>Design only</td>
+</tr>
+<tr>
+<td>AI-driven scheduler</td>
+<td>Future</td>
+<td>Design only</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="test-infrastructure">Test Infrastructure</h2>
+<h3 id="kernel-tests">Kernel Tests</h3>
+<table>
+<thead><tr>
+<th>File</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>kernel/tests/mvgal_test.h</code></td>
+<td>Test framework header</td>
+</tr>
+<tr>
+<td><code>kernel/tests/mvgal_test.c</code></td>
+<td>Test framework implementation</td>
+</tr>
+</tbody></table>
+<h3 id="test-categories">Test Categories</h3>
+<table>
+<thead><tr>
+<th>Category</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td>Kernel Module Tests</td>
+<td>Module load/unload, GPU enumeration, PCI topology</td>
+</tr>
+<tr>
+<td>Memory Tests</td>
+<td>Allocation, DMA-BUF export/import, P2P transfer, migration</td>
+</tr>
+<tr>
+<td>Scheduler Tests</td>
+<td>Workload submission, GPU selection, priority handling</td>
+</tr>
+<tr>
+<td>Sync Tests</td>
+<td>Fence creation, signal/wait, timeline synchronization</td>
+</tr>
+<tr>
+<td>Power Tests</td>
+<td>DVFS modes, thermal throttling</td>
+</tr>
+<tr>
+<td>Integration Tests</td>
+<td>Cross-vendor memory, API interception layers</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="ci-status">CI Status</h2>
+<table>
+<thead><tr>
+<th>Workflow</th>
+<th>Triggers</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>CI</code></td>
+<td><code>push</code> (main/develop), <code>pull_request</code> (main), <code>workflow_dispatch</code></td>
+<td>Build matrix (Ubuntu 22.04/24.04, GCC/Clang), tests, clang-tidy, Rust checks</td>
+</tr>
+<tr>
+<td><code>Build on Fedora COPR</code></td>
+<td><code>push</code> tags (<code>v*</code>), <code>workflow_dispatch</code></td>
+<td>RPM build and COPR submission</td>
+</tr>
+</tbody></table>
+<table>
+<thead><tr>
+<th>Workflow</th>
+<th>Description</th>
+</tr></thead><tbody>
+</tbody></table>
+<h3 id="verified-build-commands">Verified Build Commands</h3>
+<pre><code class="language-bash">cmake -B build_full -DCMAKE_BUILD_TYPE=Release \
+  -DMVGAL_BUILD_KERNEL=ON \
+  -DMVGAL_BUILD_RUNTIME=ON \
+  -DMVGAL_BUILD_API=ON \
+  -DMVGAL_BUILD_TOOLS=ON \
+  -DMVGAL_BUILD_TESTS=ON \
+  -DWITH_VULKAN=ON
+cmake --build build_full -j$(nproc)
+ctest --test-dir build_full</code></pre>
+<p>Full build (kernel + userspace + tests):</p>
+<pre><code class="language-bash">cmake -B build_test -DCMAKE_BUILD_TYPE=Release \
+  -DMVGAL_BUILD_KERNEL=OFF \
+  -DMVGAL_BUILD_RUNTIME=ON \
+  -DMVGAL_BUILD_API=ON \
+  -DMVGAL_BUILD_TOOLS=ON \
+  -DMVGAL_BUILD_TESTS=ON \
+  -DWITH_VULKAN=ON
+cmake --build build_test -j$(nproc)
+ctest --test-dir build_test</code></pre>
+<p>Test-only build (no kernel headers needed):</p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

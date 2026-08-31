@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troubleshooting — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html" class="active">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-troubleshooting-guide">MVGAL Troubleshooting Guide</h1>
+<blockquote>
+<p><strong>Version</strong>: 0.5.0</p>
+<p><strong>Last Updated</strong>: 2026-06-06</p>
+</blockquote>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#diagnostic-commands">Diagnostic Commands</a></li>
+<li><a href="#installation-issues">Installation Issues</a></li>
+<li><a href="#gpu-not-detected">GPU Not Detected</a></li>
+<li><a href="#kernel-module-issues">Kernel Module Issues</a></li>
+<li><a href="#performance-issues">Performance Issues</a></li>
+<li><a href="#steam--proton-integration">Steam / Proton Integration</a></li>
+<li><a href="#daemon--runtime-issues">Daemon & Runtime Issues</a></li>
+<li><a href="#multi-gpu-issues">Multi-GPU Issues</a></li>
+<li><a href="#collecting-logs--reporting-bugs">Collecting Logs & Reporting Bugs</a></li>
+</ol>
+<hr>
+<h2 id="diagnostic-commands">Diagnostic Commands</h2>
+<p>MVGAL provides several diagnostic tools. Run these first when troubleshooting:</p>
+<pre><code class="language-bash"># System-wide health check
+mvgal-info --all
+
+# Daemon status
+mvgald --status
+
+# Connected GPUs
+mvgal-info --devices
+
+# Scheduler status
+mvgal-sched status
+
+# Power state
+mvgal-powercurve --status
+
+# Configuration
+mvgal-config --dump
+
+# Full system report (for bug reports)
+mvgal-info --report &gt; mvgal-report.txt</code></pre>
+<hr>
+<h2 id="installation-issues">Installation Issues</h2>
+<h3 id="package-not-found">Package Not Found</h3>
+<p><strong>Problem</strong>: <code>dnf install mvgal</code> fails with "package not found".</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Enable the COPR repository:</li>
+<pre><code class="language-bash">   dnf copr enable mvgal/mvgal
+   dnf install mvgal</code></pre>
+<li>Verify your Fedora version (<code>mvgal</code> requires Fedora 40+):</li>
+<pre><code class="language-bash">   cat /etc/fedora-release</code></pre>
+<li>For other distributions, build from source (see <code>docs/KERNEL_MODULE.md</code>).</li>
+</ol>
+<h3 id="dependency-conflicts">Dependency Conflicts</h3>
+<p><strong>Problem</strong>: <code>dpkg</code> / <code>rpm</code> reports conflicting dependencies.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Ensure your kernel headers are installed:</li>
+<pre><code class="language-bash">   # Fedora/RHEL
+   dnf install kernel-devel kernel-headers
+
+   # Ubuntu/Debian
+   apt install linux-headers-$(uname -r)</code></pre>
+<li>Verify Vulkan SDK ≥ 1.3 is installed:</li>
+<pre><code class="language-bash">   vulkaninfo --summary</code></pre>
+<li>For Rust components, ensure <code>rustc</code> ≥ 1.70:</li>
+<pre><code class="language-bash">   rustc --version</code></pre>
+</ol>
+<h3 id="build-fails-from-source">Build Fails from Source</h3>
+<p><strong>Problem</strong>: <code>cmake --build build</code> fails.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check CMake output for missing dependencies.</li>
+<li>Ensure you have the full build chain:</li>
+<pre><code class="language-bash">   # Fedora/RHEL
+   dnf builddep mvgal
+
+   # Ubuntu/Debian
+   apt build-dep mvgal</code></pre>
+<li>For kernel module, verify DKMS:</li>
+<pre><code class="language-bash">   dkms status</code></pre>
+</ol>
+<hr>
+<h2 id="gpu-not-detected">GPU Not Detected</h2>
+<h3 id="no-gpus-listed">No GPUs Listed</h3>
+<p><strong>Problem</strong>: <code>mvgal-info --devices</code> returns empty.</p>
+<p><strong>Checks</strong>:</p>
+<ol>
+<li>Verify GPUs are visible to Linux:</li>
+<pre><code class="language-bash">   lspci | grep -E "VGA|3D|Display"</code></pre>
+<li>Check the daemon is running:</li>
+<pre><code class="language-bash">   systemctl status mvgald</code></pre>
+<li>Check dmesg for MVGAL messages:</li>
+<pre><code class="language-bash">   dmesg | grep -i mvgal</code></pre>
+<li>Verify the NVIDIA/AMD driver is loaded:</li>
+<pre><code class="language-bash">   lsmod | grep -E "nvidia|amdgpu|i915"</code></pre>
+</ol>
+<h3 id="vendor-specific-gpu-not-showing">Vendor-Specific GPU Not Showing</h3>
+<p><strong>NVIDIA</strong>:</p>
+<ul>
+<li>Ensure <code>nvidia-drm</code> is loaded with <code>modeset=1</code>:</li>
+<pre><code class="language-bash">  cat /sys/module/nvidia_drm/parameters/modeset
+  # should output: Y</code></pre>
+<li>Check NVML is accessible:</li>
+<pre><code class="language-bash">  nvidia-smi</code></pre>
+</ul>
+<p><strong>AMD</strong>:</p>
+<ul>
+<li>Ensure <code>amdgpu</code> supports your GPU:</li>
+<pre><code class="language-bash">  dmesg | grep amdgpu | head -20</code></pre>
+<li>Check for P2P support (needed for multi-GPU):</li>
+<pre><code class="language-bash">  cat /sys/kernel/debug/dri/*/p2p_support</code></pre>
+</ul>
+<p><strong>Intel</strong>:</p>
+<ul>
+<li>Ensure <code>i915</code> is loaded:</li>
+<pre><code class="language-bash">  lsmod | grep i915</code></pre>
+<li>For discrete Arc GPUs, verify firmware:</li>
+<pre><code class="language-bash">  ls /lib/firmware/i915/</code></pre>
+</ul>
+<p><strong>Moore Threads</strong>:</p>
+<ul>
+<li>Ensure <code>mtgpu</code> driver is installed (vendor-provided).</li>
+<li>Beta status: some P2P features may not work.</li>
+</ul>
+<hr>
+<h2 id="kernel-module-issues">Kernel Module Issues</h2>
+<h3 id="module-fails-to-load">Module Fails to Load</h3>
+<p><strong>Problem</strong>: <code>modprobe mvgal</code> fails.</p>
+<pre><code class="language-bash"># Check kernel version compatibility
+uname -r
+
+# Check module file
+modinfo mvgal
+
+# Try loading with verbose output
+insmod /lib/modules/$(uname -r)/extra/mvgal/mvgal.ko 2&gt;&amp;1
+
+# Check dmesg
+dmesg | tail -50 | grep -i mvgal</code></pre>
+<p><strong>Diagnostic</strong>:</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Kernel too old: MVGAL requires 5.15 LTS minimum.</li>
+<li>Missing symbols: Rebuild against current kernel headers.</li>
+<li>Secure Boot: The packaged modules are signed with a per-install key.</li>
+</ol>
+<pre><code class="language-bash">   sudo mvgal-enroll-mok
+   sudo reboot
+   # At the blue MOK Manager screen after reboot, choose
+   # 'Enroll key from disk' -&gt; /usr/lib/mvgal/keys/mvgal-signing.der
+   # and confirm with the one-time password you chose.</code></pre>
+<p>Enroll it with the firmware MOK database (do NOT disable Secure Boot): After enrollment, <code>modprobe mvgal</code> works and <code>Key was rejected by service</code> no longer appears.  DKMS-rebuilt modules are signed with the same key automatically.</p>
+<ol>
+<li>SELinux: Check for AVC denials:</li>
+<pre><code class="language-bash">   ausearch -m avc -ts recent | grep mvgal</code></pre>
+</ol>
+<h3 id="dkms-build-fails">DKMS Build Fails</h3>
+<p><strong>Problem</strong>: <code>dkms build mvgal</code> fails.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Ensure kernel-devel matches running kernel:</li>
+<pre><code class="language-bash">   dnf list installed kernel-devel
+   uname -r</code></pre>
+<li>Check DKMS logs:</li>
+<pre><code class="language-bash">   cat /var/lib/dkms/mvgal/*/build/make.log</code></pre>
+</ol>
+<h3 id="ioctl-returns--enotty">IOCTL Returns -ENOTTY</h3>
+<p><strong>Problem</strong>: Application reports "Invalid argument" on IOCTL.</p>
+<p><strong>Checks</strong>:</p>
+<ol>
+<li>Verify device node exists:</li>
+<pre><code class="language-bash">   ls -l /dev/mvgal*</code></pre>
+<li>Check device permissions (should be <code>crw-rw----</code>):</li>
+<pre><code class="language-bash">   getfacl /dev/mvgal0</code></pre>
+<li>Ensure udev rules are installed:</li>
+<pre><code class="language-bash">   cat /etc/udev/rules.d/99-mvgal.rules</code></pre>
+</ol>
+<hr>
+<h2 id="performance-issues">Performance Issues</h2>
+<h3 id="below-expected-fps">Below Expected FPS</h3>
+<pre><code class="language-bash"># Check GPU utilisation
+mvgal-info --utilization
+
+# Check scheduler
+mvgal-sched status
+mvgal-sched analyze
+
+# Check power state (may be throttling)
+mvgal-powercurve --status
+
+# Check VRAM usage
+mvgal-info --memory</code></pre>
+<p><strong>Diagnostic</strong>:</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>VRAM pressure</strong>: Reduce texture quality or resolution.</li>
+<li><strong>Thermal throttling</strong>: Check GPU temperatures:</li>
+<pre><code class="language-bash">   mvgal-info --temperature</code></pre>
+<li><strong>Scheduler mismatch</strong>: Try a different strategy:</li>
+<pre><code class="language-bash">   mvgal-sched setpolicy &lt;appname&gt; rld</code></pre>
+<li><strong>Power state</strong>: Ensure gamemode is active:</li>
+<pre><code class="language-bash">   gamemoded -s</code></pre>
+</ol>
+<h3 id="stuttering--frame-pacing">Stuttering / Frame Pacing</h3>
+<pre><code class="language-bash"># Check frame time variance
+mvgal-info --frametimes
+
+# Check for compositor interference
+mvgal-info --compositor</code></pre>
+<p><strong>Diagnostic</strong>:</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Disable compositor for full-screen apps.</li>
+<li>Use <code>AFF</code> scheduler strategy to pin the app to one GPU:</li>
+<pre><code class="language-bash">   mvgal-sched setpolicy &lt;appname&gt; aff</code></pre>
+<li>Check NTSYNC is working (for Windows games):</li>
+<pre><code class="language-bash">   cat /proc/sys/kernel/ntsync</code></pre>
+</ol>
+<hr>
+<h2 id="steam--proton-integration">Steam / Proton Integration</h2>
+<h3 id="steam-games-not-detected">Steam Games Not Detected</h3>
+<p><strong>Problem</strong>: Games launch but MVGAL is not intercepting.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Verify the Steam runtime hook is active:</li>
+<pre><code class="language-bash">   ls ~/.steam/steam/steamapps/common/MVGAL/</code></pre>
+<li>Set Proton environment variables:</li>
+<pre><code class="language-bash">   # In Steam launch options for the game:
+   MVGAL_ENABLE=1 PROTON_ENABLE_NVAPI=1 %command%</code></pre>
+<li>Check the frame pacer is running:</li>
+<pre><code class="language-bash">   ps aux | grep mvgal-pacer</code></pre>
+</ol>
+<h3 id="proton-fps-lower-than-native">Proton FPS Lower Than Native</h3>
+<p><strong>Problem</strong>: Proton games underperform native Linux games.</p>
+<pre><code class="language-bash"># Check which WCL shims are loaded
+mvgal-info --wcl
+
+# Check DXVK/VKD3D-Proton integration
+mvgal-info --vulkan-layers</code></pre>
+<p><strong>Diagnostic</strong>:</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Ensure VKD3D-Proton is up to date.</li>
+<li>Enable NVAPI translation for NVIDIA GPUs:</li>
+<pre><code class="language-bash">   PROTON_ENABLE_NVAPI=1</code></pre>
+<li>Try different scheduler strategies — some games benefit from <code>PRI</code>.</li>
+</ol>
+<hr>
+<h2 id="daemon--runtime-issues">Daemon & Runtime Issues</h2>
+<h3 id="daemon-wont-start">Daemon Won't Start</h3>
+<p><strong>Problem</strong>: <code>systemctl start mvgald</code> fails.</p>
+<pre><code class="language-bash"># Check daemon status
+systemctl status mvgald
+
+# Check journal
+journalctl -u mvgald -n 50
+
+# Try running manually as root
+sudo mvgald --foreground</code></pre>
+<p><strong>Diagnostic</strong>:</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>D-Bus service not installed:</li>
+<pre><code class="language-bash">   sudo cp runtime/daemon/org.mvgal.daemon.conf /etc/dbus-1/system.d/</code></pre>
+<li>Socket conflict: Check port 8080 (REST API) is free:</li>
+<pre><code class="language-bash">   ss -tlnp | grep 8080</code></pre>
+<li>Permission denied on <code>/dev/mvgal*</code>:</li>
+<pre><code class="language-bash">   sudo chmod 666 /dev/mvgal0</code></pre>
+</ol>
+<h3 id="ipc-connection-failure">IPC Connection Failure</h3>
+<p><strong>Problem</strong>: Tools can't connect to daemon.</p>
+<pre><code class="language-bash"># Test D-Bus
+dbus-send --system --dest=org.mvgal.daemon --print-reply /org/mvgal/daemon org.freedesktop.DBus.Ping
+
+# Check Unix socket
+ls -l /run/mvgald.sock</code></pre>
+<p><strong>Diagnostic</strong>:</p>
+<hr>
+<h2 id="multi-gpu-issues">Multi-GPU Issues</h2>
+<h3 id="only-one-gpu-used">Only One GPU Used</h3>
+<p><strong>Problem</strong>: All work lands on a single GPU.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Check scheduler strategy — default is <code>PRI</code> which prefers fastest:</li>
+<pre><code class="language-bash">   mvgal-sched getpolicy &lt;appname&gt;</code></pre>
+<li>Force load balancing:</li>
+<pre><code class="language-bash">   mvgal-sched setpolicy &lt;appname&gt; rr</code></pre>
+<li>Verify P2P connectivity between GPUs:</li>
+<pre><code class="language-bash">   mvgal-info --topology</code></pre>
+</ol>
+<h3 id="p2p-transfer-slow">P2P Transfer Slow</h3>
+<p><strong>Problem</strong>: Inter-GPU transfers bottleneck performance.</p>
+<pre><code class="language-bash"># Check topology
+mvgal-info --topology
+
+# Measure bandwidth
+mvgal-info --benchmark-p2p</code></pre>
+<p><strong>Checks</strong>:</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>Use NVLink/XGMI devices when available.</li>
+<li>For PCIe-connected GPUs, ensure PCIe Gen4+.</li>
+<li>The <code>GA</code> strategy prefers NVLink peers.</li>
+<li>Consider <code>PPL</code> for pipeline workloads — reduces cross-GPU transfers.</li>
+</ol>
+<hr>
+<h2 id="collecting-logs--reporting-bugs">Collecting Logs & Reporting Bugs</h2>
+<h3 id="gather-system-info">Gather System Info</h3>
+<pre><code class="language-bash"># Comprehensive report
+mvgal-info --report &gt; mvgal-report.txt
+
+# Daemon logs
+journalctl -u mvgald &gt; mvgald.log
+
+# Kernel messages
+dmesg | grep -i mvgal &gt; mvgal-kernel.log
+
+# Configuration
+mvgal-config --dump &gt; mvgal-config.txt</code></pre>
+<h3 id="debug-mode">Debug Mode</h3>
+<p>Enable debug logging for more detail:</p>
+<pre><code class="language-bash"># Daemon
+sudo mvgald --foreground --log-level=debug
+
+# Per-app
+MVGAL_LOG_LEVEL=debug ./myapp</code></pre>
+<h3 id="report-a-bug">Report a Bug</h3>
+<p>Report issues at: https://github.com/your-org/mvgal/issues</p>
+<p>Include:</p>
+<ul>
+<li><code>mvgal-info --report</code> output</li>
+<li><code>dmesg | grep -i mvgal</code></li>
+<li><code>mvgald.log</code></li>
+<li>Steps to reproduce</li>
+<li>GPU model and driver version</li>
+</ul>
+<hr>
+<p><em>See <code>docs/ARCHITECTURE.md</code> for system architecture. See <code>docs/KERNEL_MODULE.md</code> for module build/install. See <code>docs/HARDWARE_COMPATIBILITY.md</code> for supported hardware.</em></p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

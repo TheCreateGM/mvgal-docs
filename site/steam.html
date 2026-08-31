@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steam / Proton — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html" class="active">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-steamproton-integration">MVGAL Steam/Proton Integration</h1>
+<p><strong>Version:</strong> 1.0 <strong>Date:</strong> 2026-06-02</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-overview">Overview</a></li>
+<li><a href="#2-integration-methods">Integration Methods</a></li>
+<li><a href="#3-vulkan-layer-integration">Vulkan Layer Integration</a></li>
+<li><a href="#4-frame-pacer">Frame Pacer</a></li>
+<li><a href="#5-alternate-frame-rendering-afr">Alternate Frame Rendering (AFR)</a></li>
+<li><a href="#6-ntsync-like-improvements">NTSYNC-like Improvements</a></li>
+<li><a href="#7-wow64-support">WoW64 Support</a></li>
+<li><a href="#8-configuration">Configuration</a></li>
+<li><a href="#9-troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr>
+<h2 id="1-overview">1. Overview</h2>
+<p>MVGAL integrates with Steam and Proton to enable multi-GPU gaming on Linux. The integration consists of:</p>
+<ol>
+<li><strong>Vulkan Implicit Layer</strong> (<code>VK_LAYER_MVGAL</code>) - Automatically intercepts Vulkan calls</li>
+<li><strong>Frame Pacer</strong> - Ensures consistent frame timing for AFR</li>
+<li><strong>Proton Hook</strong> - Environment setup for Steam games</li>
+<li><strong>Compatibility Tool</strong> - Native Steam integration</li>
+</ol>
+<hr>
+<h2 id="2-integration-methods">2. Integration Methods</h2>
+<h3 id="21-steam-launch-options">2.1 Steam Launch Options</h3>
+<p>Add to game properties → Launch Options:</p>
+<pre><code class="language-bash">ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%</code></pre>
+<h3 id="22-steam-compatibility-tool">2.2 Steam Compatibility Tool</h3>
+<p>Install MVGAL as a Steam compatibility tool:</p>
+<ol>
+<li>Download the compatibility tool archive</li>
+<li>Extract to <code>steamapps/common/Proton - MVGAL/</code></li>
+<li>Select in game properties → Compatibility → "Proton - MVGAL"</li>
+</ol>
+<h3 id="23-environment-variables">2.3 Environment Variables</h3>
+<table>
+<thead><tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ENABLE_MVGAL</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>Enable/disable MVGAL</td>
+</tr>
+<tr>
+<td><code>MVGAL_STRATEGY</code></td>
+<td><code>afr</code>, <code>sfr</code>, <code>hybrid</code>, <code>single</code></td>
+<td>Scheduling strategy</td>
+</tr>
+<tr>
+<td><code>MVGAL_FRAME_PACING</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>Enable frame pacing</td>
+</tr>
+<tr>
+<td><code>MVGAL_GPU_MASK</code></td>
+<td>hex bitmask</td>
+<td>GPU selection (e.g., <code>0x3</code> = GPUs 0+1)</td>
+</tr>
+<tr>
+<td><code>MVGAL_VULKAN_DEBUG</code></td>
+<td><code>0</code> / <code>1</code></td>
+<td>Enable Vulkan layer debug</td>
+</tr>
+<tr>
+<td><code>MVGAL_LOG_PATH</code></td>
+<td>path</td>
+<td>Write logs to file</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-vulkan-layer-integration">3. Vulkan Layer Integration</h2>
+<h3 id="31-layer-discovery">3.1 Layer Discovery</h3>
+<p>MVGAL registers as a Vulkan implicit layer:</p>
+<pre><code class="language-json">// /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
+{
+    "file_format_version": "1.0.0",
+    "chain_as_layer_as_is": true,
+    "layer": {
+        "name": "VK_LAYER_MVGAL_aggregation",
+        "description": "MVGAL multi-vendor GPU aggregation",
+        "type": "IMPLICIT",
+        "library_path": "libVK_LAYER_MVGAL.so",
+        "apis": [{"version": "1.3.0", "name": "VK_API_VERSION"}]
+    }
+}</code></pre>
+<h3 id="32-intercepted-functions">3.2 Intercepted Functions</h3>
+<p>The layer intercepts:</p>
+<p><strong>Instance Level:</strong></p>
+<ul>
+<li><code>vkCreateInstance</code></li>
+<li><code>vkDestroyInstance</code></li>
+<li><code>vkEnumeratePhysicalDevices</code></li>
+</ul>
+<p><strong>Device Level:</strong></p>
+<ul>
+<li><code>vkCreateDevice</code></li>
+<li><code>vkDestroyDevice</code></li>
+<li><code>vkGetDeviceQueue</code></li>
+<li><code>vkGetDeviceQueue2</code></li>
+</ul>
+<p><strong>Queue Level:</strong></p>
+<ul>
+<li><code>vkQueueSubmit</code></li>
+<li><code>vkQueueSubmit2</code></li>
+<li><code>vkQueueWaitIdle</code></li>
+</ul>
+<p><strong>Physical Device:</strong></p>
+<ul>
+<li><code>vkGetPhysicalDeviceProperties</code></li>
+<li><code>vkGetPhysicalDeviceMemoryProperties</code></li>
+<li><code>vkGetPhysicalDeviceQueueFamilyProperties</code></li>
+</ul>
+<h3 id="33-layer-implementation">3.3 Layer Implementation</h3>
+<pre><code class="language-c">// Simplified layer dispatch
+VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(
+    VkQueue queue,
+    uint32_t submitCount,
+    const VkSubmitInfo* const pSubmits,
+    VkFence fence)
+{
+    // Get MVGAL context
+    mvgal_context_t *ctx = mvgal_layer_get_context();
+    
+    // Determine which GPU to use based on strategy
+    uint32_t gpu_index = mvgal_scheduler_select_gpu(ctx, queue);
+    
+    // Log telemetry
+    mvgal_ipc_send_submit(queue, gpu_index, pSubmits, submitCount);
+    
+    // Forward to next layer
+    return ctx-&gt;next_vkQueueSubmit(queue, submitCount, pSubmits, fence);
+}</code></pre>
+<hr>
+<h2 id="4-frame-pacer">4. Frame Pacer</h2>
+<h3 id="41-purpose">4.1 Purpose</h3>
+<p>Multi-GPU AFR can cause microstutter if frames are delivered at uneven intervals. The frame pacer holds completed frames and releases them at consistent vsync-aligned times.</p>
+<h3 id="42-architecture">4.2 Architecture</h3>
+<pre><code>Game (via DXVK/VKD3D)
+    │
+    ▼
+vkQueuePresentKHR
+    │
+    ▼
+VK_LAYER_MVGAL (intercepts)
+    │
+    ▼
+mvgal_frame_pacer_submit(frame_id, gpu_index)
+    │
+    ▼
+Frame Pacer Thread (background)
+    │
+    ├── Wait for next vsync boundary
+    │
+    └── Signal presentation semaphore</code></pre>
+<h3 id="43-configuration">4.3 Configuration</h3>
+<pre><code class="language-bash"># Enable frame pacing (default: on for AFR)
+export MVGAL_FRAME_PACING=1
+
+# Set refresh rate (default: 60 Hz)
+export MVGAL_REFRESH_HZ=144
+
+# Debug output
+export MVGAL_FRAME_PACING_DEBUG=1</code></pre>
+<h3 id="44-frame-pacer-api">4.4 Frame Pacer API</h3>
+<pre><code class="language-c">/* Initialize frame pacer */
+mvgal_frame_pacer_t *pacer = mvgal_fp_create(144);  /* 144 Hz */
+
+/* Submit a completed frame */
+mvgal_fp_submit_frame(pacer, frame_id, gpu_index);
+
+/* Get statistics */
+uint64_t frames_paced, frames_dropped;
+double avg_jitter_us;
+mvgal_fp_get_stats(pacer, &amp;frames_paced, &amp;frames_dropped, &amp;avg_jitter_us);</code></pre>
+<hr>
+<h2 id="5-alternate-frame-rendering-afr">5. Alternate Frame Rendering (AFR)</h2>
+<h3 id="51-how-afr-works-with-mvgal">5.1 How AFR Works with MVGAL</h3>
+<pre><code>Frame 0: GPU 0 renders
+Frame 1: GPU 1 renders
+Frame 2: GPU 0 renders
+Frame 3: GPU 1 renders
+...</code></pre>
+<h3 id="52-frame-synchronization">5.2 Frame Synchronization</h3>
+<p>AFR requires synchronization between GPUs:</p>
+<pre><code class="language-c">struct afr_sync {
+    uint64_t frame_counter;
+    VkSemaphore present_semaphores[2];  /* GPU 0, GPU 1 */
+    VkSemaphore render_semaphores[2];
+};
+
+void afr_submit_frame(struct afr_sync *sync, uint32_t frame_index) {
+    uint32_t gpu_index = frame_index % 2;
+    uint32_t wait_gpu = (gpu_index + 1) % 2;
+    
+    /* Wait for previous frame on other GPU */
+    vkWaitForFences(device, 1, &amp;sync-&gt;fences[wait_gpu], VK_TRUE, UINT64_MAX);
+    
+    /* Submit to GPU */
+    vkQueueSubmit(queue[gpu_index], 1, &amp;submit_info, sync-&gt;fences[gpu_index]);
+}</code></pre>
+<h3 id="53-afr-configuration">5.3 AFR Configuration</h3>
+<pre><code class="language-ini"># /etc/mvgal/mvgal.conf
+[afr]
+enable_sync = true
+sync_timeout_ms = 16
+max_latency = 3</code></pre>
+<hr>
+<h2 id="6-ntsync-like-improvements">6. NTSYNC-like Improvements</h2>
+<h3 id="61-windows-nt-synchronization">6.1 Windows NT Synchronization</h3>
+<p>NTSYNC is a Wine synchronization mechanism that maps Windows NT kernel objects to Linux. MVGAL provides similar functionality for better Windows compatibility.</p>
+<h3 id="62-ntsync-features-in-mvgal">6.2 NTSYNC Features in MVGAL</h3>
+<pre><code class="language-c">/* Event object (manual/manual reset) */
+struct mvgal_event {
+    bool manual_reset;
+    bool signaled;
+    wait_queue_head_t wait_queue;
+};
+
+/* Semaphore object */
+struct mvgal_semaphore {
+    uint32_t count;
+    uint32_t max_count;
+    wait_queue_head_t wait_queue;
+};
+
+/* Mutex object with owner tracking */
+struct mvgal_mutex {
+    struct task_struct *owner;
+    atomic_t count;
+    wait_queue_head_t wait_queue;
+};</code></pre>
+<h3 id="63-integration-points">6.3 Integration Points</h3>
+<ol>
+<li><strong>Wine</strong>: NTSYNC driver in <code>dlls/ntsync/</code></li>
+<li><strong>Proton</strong>: Pre-launch hook sets environment</li>
+<li><strong>MVGAL Kernel</strong>: NTSYNC syscall translation layer</li>
+</ol>
+<hr>
+<h2 id="7-wow64-support">7. WoW64 Support</h2>
+<h3 id="71-wow64-windows-on-windows-64-bit">7.1 WoW64 (Windows-on-Windows 64-bit)</h3>
+<p>WoW64 allows 32-bit Windows applications to run on 64-bit Windows. Under Proton, this requires special handling for GPU API calls.</p>
+<h3 id="72-mvgal-wow64-support">7.2 MVGAL WoW64 Support</h3>
+<pre><code class="language-c">/* Detect WoW64 process */
+bool is_wow64_process(pid_t pid) {
+    struct task_struct *task;
+    /* Check if process is 32-bit running on 64-bit kernel */
+    return is_32bit_task(task);
+}
+
+/* WoW64 layer routing */
+void wow64_redirect_api(VkInstance inst, VkPhysicalDevice phys_dev) {
+    /* Translate 32-bit pointers */
+    /* Map to correct 64-bit structures */
+}</code></pre>
+<h3 id="73-wow64-configuration">7.3 WoW64 Configuration</h3>
+<pre><code class="language-bash"># Enable WoW64 support
+export MVGAL_WOW64=1
+
+# WoW64-specific debug
+export MVGAL_WOW64_DEBUG=1</code></pre>
+<hr>
+<h2 id="8-configuration">8. Configuration</h2>
+<h3 id="81-steam-integration-setup">8.1 Steam Integration Setup</h3>
+<pre><code class="language-bash"># Run the Steam setup tool
+mvgal-steam-setup
+
+# This creates:
+# ~/.local/share/Steam/steamapps/common/Proton - MVGAL/
+# ~/.local/share/Steam/steamapps/compat_tools.d/mvgal.json</code></pre>
+<h3 id="82-compatibility-tool-manifest">8.2 Compatibility Tool Manifest</h3>
+<pre><code class="language-json">{
+    "Name": "Proton - MVGAL",
+    "Version": "0.7.0",
+    "VersionString": "Proton 9.0 with MVGAL 0.7.0",
+    "Architectures": "x86_64,i686",
+    "Priority": 100,
+    "Enabled": true
+}</code></pre>
+<hr>
+<h2 id="9-troubleshooting">9. Troubleshooting</h2>
+<h3 id="91-common-issues">9.1 Common Issues</h3>
+<pre><code class="language-bash"># Solution: Disable frame pacing
+export MVGAL_FRAME_PACING=0
+
+# Or use single-GPU mode
+export MVGAL_STRATEGY=single</code></pre>
+<p><strong>Issue: Game shows black screen</strong></p>
+<pre><code class="language-bash"># Check layer discovery
+vulkaninfo | grep -i mvgal
+
+# Verify JSON manifest location
+ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code></pre>
+<p><strong>Issue: Layer not loaded</strong></p>
+<pre><code class="language-bash"># Some games block Vulkan layers
+# Solution: Use compatibility mode
+export MVGAL_STRATEGY=single</code></pre>
+<p><strong>Issue: Anti-cheat blocked</strong></p>
+<h3 id="92-debug-commands">9.2 Debug Commands</h3>
+<pre><code class="language-bash"># Enable verbose logging
+export MVGAL_VULKAN_DEBUG=1
+export MVGAL_LOG_PATH=/tmp/mvgal.log
+
+# View current state
+mvgal-status --verbose
+
+# Check GPU status
+mvgal-info --json</code></pre>
+<h3 id="93-log-analysis">9.3 Log Analysis</h3>
+<pre><code class="language-bash"># Find frame timing issues
+grep -i "jitter\|drop" /var/log/mvgal/mvgald.log
+
+# Check GPU assignments
+grep "submit.*gpu" /tmp/mvgal.log
+
+# Power management logs
+journalctl -u mvgald -f</code></pre>
+<hr>
+<h2 id="10-known-limitations">10. Known Limitations</h2>
+<ol>
+<li><strong>Anti-cheat</strong>: EasyAntiCheat and BattlEye block Vulkan layers</li>
+<li><strong>Ray tracing</strong>: Not split across GPUs in current implementation</li>
+<li><strong>DX12</strong>: May have synchronization issues with aggressive fences</li>
+<li><strong>VR</strong>: SteamVR requires special handling for multi-GPU</li>
+</ol>
+<hr>
+<h2 id="11-performance-tips">11. Performance Tips</h2>
+<ol>
+<li><strong>Use frame pacing for AFR</strong>: Reduces microstutter</li>
+<li><strong>Monitor temperatures</strong>: Multi-GPU can thermal-throttle</li>
+<li><strong>Check PCIe topology</strong>: P2P transfers need same root complex</li>
+<li><strong>Match workloads</strong>: Don't mix high/low intensity on different GPUs</li>
+</ol>
+<hr>
+<h2 id="12-future-improvements">12. Future Improvements</h2>
+<ol>
+<li><strong>DXVK integration</strong>: Direct hook into DXVK for lower latency</li>
+<li><strong>VK_KHX_multivendor</strong>: Experimental Vulkan extension</li>
+<li><strong>Game-specific profiles</strong>: Auto-detect and optimize for known titles</li>
+<li><strong>AI-based scheduling</strong>: Learn optimal strategies per game</li>
+</ol>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

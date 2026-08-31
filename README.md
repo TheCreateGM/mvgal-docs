@@ -2,6 +2,24 @@
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
+> **v0.7.0** — Multi-vendor OpenCL ICD aggregation, unified VRAM heap, PCIe P2P, AI scheduler, Proton bridge.
+
+## 📚 Documentation
+
+- **HTML site** — [Open the full documentation site](site/index.html) (self-contained, works on GitHub Pages / Gitea Pages)
+- **Markdown source** — [`docs/`](docs/) contains the raw documentation files
+- **Quick Start** — [`docs/QUICKSTART.md`](docs/QUICKSTART.md)
+- **Installation** — [`docs/INSTALL.md`](docs/INSTALL.md)
+- **Architecture** — [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- **API Reference** — [`docs/API.md`](docs/API.md)
+- **Scheduling Strategies** — [`docs/STRATEGIES.md`](docs/STRATEGIES.md)
+- **Memory Management** — [`docs/MEMORY.md`](docs/MEMORY.md)
+- **Hardware Compatibility** — [`docs/HARDWARE_COMPATIBILITY.md`](docs/HARDWARE_COMPATIBILITY.md)
+- **Steam / Proton** — [`docs/STEAM_INTEGRATION.md`](docs/STEAM_INTEGRATION.md)
+- **Power Management** — [`docs/POWER_MANAGEMENT.md`](docs/POWER_MANAGEMENT.md)
+- **Troubleshooting** — [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md)
+- **Project Status** — [`docs/STATUS.md`](docs/STATUS.md)
+
 ## What is MVGAL?
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
@@ -40,7 +58,7 @@ flowchart TD
 
 - **Heterogeneous multi-GPU** — AMD, NVIDIA, Intel, and Moore Threads GPUs in any combination
 - **Transparent interception** — Vulkan layer, OpenCL ICD, CUDA shim; no application changes needed
-- **7 scheduling strategies** — Round-robin, AFR, SFR, Task-based, Compute offload, Hybrid, Single-GPU
+- **10 scheduling strategies** — Round-robin, Least-Load, Priority, Affinity, Bin-Packing, GPU-Aware, Hybrid, RLD, REP, PPL
 - **Unified memory manager** — DMA-BUF zero-copy, PCIe P2P, host-RAM staging fallback
 - **GPU health monitoring** — Temperature, utilization, VRAM pressure with configurable thresholds
 - **Steam/Proton integration** — Frame pacing, AFR for games, DXVK and VKD3D-Proton compatible
@@ -96,13 +114,18 @@ mvgal-compat --system   # check readiness
 
 | Strategy | Best For |
 |----------|----------|
-| Round-robin | Even distribution, general compute |
-| Alternate Frame Rendering (AFR) | Gaming — odd/even frames on different GPUs |
-| Split Frame Rendering (SFR) | Gaming — horizontal/vertical tile split |
-| Task-based | Mixed graphics + compute workloads |
-| Compute offload | AI/HPC — route compute to best GPU |
-| Hybrid adaptive | Automatic selection based on workload metrics |
-| Single GPU | Fallback / compatibility mode |
+| Round-Robin (RR) | Even distribution, general compute |
+| Least-Load (LL) | Route work to the least-busy GPU |
+| Priority (PRI) | High-priority work to fastest device |
+| Affinity (AFF) | Pin workloads to specific GPUs |
+| Bin-Packing (BP) | Fill GPUs to capacity before next |
+| GPU-Aware (GA) | Match workload to GPU capabilities |
+| Hybrid (HYB) | Automatic selection based on workload metrics |
+| RLD — Render Layer Distribution | Multi-GPU VR — split eye renders |
+| REP — Replication Mode | ML training (data-parallel) — identical model per GPU |
+| PPL — Pipeline Parallelism | Video transcoding — stream through pipeline |
+
+See [`docs/STRATEGIES.md`](docs/STRATEGIES.md) for full details.
 
 ## Steam / Proton Integration
 

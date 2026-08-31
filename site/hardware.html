@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hardware Compatibility — MVGAL Documentation</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+nav.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+@media (max-width: 800px) {
+  body { flex-direction: column; }
+  nav.sidebar { width: 100%; height: auto; position: static; }
+  main { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+  </div>
+  <a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html" class="active">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+</nav>
+<main>
+<h1 id="mvgal-hardware-compatibility">MVGAL Hardware Compatibility</h1>
+<blockquote>
+<p><strong>Version</strong>: 0.7.0</p>
+<p><strong>Last Updated</strong>: 2026-06-06</p>
+</blockquote>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#supported-gpu-vendors">Supported GPU Vendors</a></li>
+<li><a href="#feature-matrix">Feature Matrix</a></li>
+<li><a href="#gpu-architecture-support">GPU Architecture Support</a></li>
+<li><a href="#kernel-version-requirements">Kernel Version Requirements</a></li>
+<li><a href="#vram--bandwidth-recommendations">VRAM & Bandwidth Recommendations</a></li>
+<li><a href="#vulkan-version-requirements">Vulkan Version Requirements</a></li>
+<li><a href="#platform-support">Platform Support</a></li>
+</ol>
+<hr>
+<h2 id="supported-gpu-vendors">Supported GPU Vendors</h2>
+<p>MVGAL supports four GPU vendors through the vendor ops interface defined in <code>kernel/vendors/</code>. Each vendor provides a <code>mvgal_vendor_ops</code> struct that implements device initialization, memory management, and submission functions.</p>
+<table>
+<thead><tr>
+<th>Vendor</th>
+<th>PCI VID</th>
+<th>Kernel Module</th>
+<th>Vendor Ops</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td>NVIDIA</td>
+<td><code>0x10DE</code></td>
+<td><code>nvidia</code> + nouveau</td>
+<td><code>mvgal_nvidia_ops</code></td>
+<td>Production</td>
+</tr>
+<tr>
+<td>AMD</td>
+<td><code>0x1002</code></td>
+<td><code>amdgpu</code></td>
+<td><code>mvgal_amd_ops</code></td>
+<td>Production</td>
+</tr>
+<tr>
+<td>Intel</td>
+<td><code>0x8086</code></td>
+<td><code>i915</code></td>
+<td><code>mvgal_intel_ops</code></td>
+<td>Production</td>
+</tr>
+<tr>
+<td>Moore Threads</td>
+<td><code>0x1ED5</code></td>
+<td><code>mtgpu</code></td>
+<td><code>mvgal_mtt_ops</code></td>
+<td>Beta</td>
+</tr>
+</tbody></table>
+<h3 id="nvidia">NVIDIA</h3>
+<ul>
+<li><strong>Driver</strong>: Proprietary <code>nvidia</code> (recommended), open <code>nvidia-open</code> (Turing+),</li>
+</ul>
+<p><code>nouveau</code> (community, limited reclocking)</p>
+<ul>
+<li><strong>Vendor Ops File</strong>: <code>kernel/vendors/mvgal_nvidia.c</code></li>
+<li><strong>Capabilities</strong>: Full VRAM management via NVML, NVLink peer detection,</li>
+</ul>
+<p>MIG partition discovery (A100/H100)</p>
+<ul>
+<li><strong>DMA-BUF</strong>: Supported via <code>nvidia-drm</code> (≥ 515.48.07)</li>
+</ul>
+<h3 id="amd">AMD</h3>
+<ul>
+<li><strong>Driver</strong>: <code>amdgpu</code> (in-kernel, upstream)</li>
+<li><strong>Vendor Ops File</strong>: <code>kernel/vendors/mvgal_amd.c</code></li>
+<li><strong>Capabilities</strong>: Full VRAM management, XGMI peer detection (RX 7000 series),</li>
+</ul>
+<p>ROCm compatibility layer</p>
+<ul>
+<li><strong>DMA-BUF</strong>: Native via <code>amdgpu</code> DRM driver</li>
+</ul>
+<h3 id="intel">Intel</h3>
+<ul>
+<li><strong>Driver</strong>: <code>i915</code> (in-kernel, upstream)</li>
+<li><strong>Vendor Ops File</strong>: <code>kernel/vendors/mvgal_intel.c</code></li>
+<li><strong>Capabilities</strong>: VRAM management for discrete (DG2/Alchemist+), integrated</li>
+</ul>
+<p>GPU sharing via i915</p>
+<ul>
+<li><strong>DMA-BUF</strong>: Native via <code>i915</code> DRM driver</li>
+</ul>
+<h3 id="moore-threads-mtt">Moore Threads (MTT)</h3>
+<ul>
+<li><strong>Driver</strong>: <code>mtgpu</code> (proprietary, vendor-provided)</li>
+<li><strong>Vendor Ops File</strong>: <code>kernel/vendors/mvgal_mtt.c</code></li>
+<li><strong>Device IDs</strong>: MTT S2000 (<code>0x4000</code>), S3000</li>
+<li><strong>Capabilities</strong>: VRAM management, limited peer-to-peer</li>
+<li><strong>Status</strong>: Beta — P2P and MIG equivalents under development</li>
+</ul>
+<hr>
+<h2 id="feature-matrix">Feature Matrix</h2>
+<table>
+<thead><tr>
+<th>Feature</th>
+<th style="text-align:center">NVIDIA</th>
+<th style="text-align:center">AMD</th>
+<th style="text-align:center">Intel (dGPU)</th>
+<th style="text-align:center">Intel (iGPU)</th>
+<th style="text-align:center">MTT</th>
+</tr></thead><tbody>
+<tr>
+<td>VRAM Discovery</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">✓</td>
+</tr>
+<tr>
+<td>P2P DMA-BUF</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓*</td>
+<td style="text-align:center">partial</td>
+</tr>
+<tr>
+<td>NVLink/XGMI</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+</tr>
+<tr>
+<td>MIG/SRU Partition</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">planned</td>
+</tr>
+<tr>
+<td>Power Management</td>
+<td style="text-align:center">✓ (NVML)</td>
+<td style="text-align:center">✓ (hwmon)</td>
+<td style="text-align:center">✓ (hwmon)</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+</tr>
+<tr>
+<td>GPU Metrics</td>
+<td style="text-align:center">✓ (NVML)</td>
+<td style="text-align:center">✓ (fdinfo)</td>
+<td style="text-align:center">✓ (fdinfo)</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">manual</td>
+</tr>
+<tr>
+<td>Reclocking</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">partial</td>
+</tr>
+<tr>
+<td>Resizable BAR</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+</tr>
+<tr>
+<td>PCIe Atomics</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+<td style="text-align:center">✓</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>\* Intel integrated GPU P2P works via shared system memory (no physical P2P</p>
+<p>over PCIe needed).</p>
+</blockquote>
+<hr>
+<h2 id="gpu-architecture-support">GPU Architecture Support</h2>
+<h3 id="nvidia">NVIDIA</h3>
+<table>
+<thead><tr>
+<th>Architecture</th>
+<th>Generation</th>
+<th style="text-align:center">Compute Cap.</th>
+<th style="text-align:center">Vulkan</th>
+<th style="text-align:center">ML Perf</th>
+<th style="text-align:center">Status</th>
+</tr></thead><tbody>
+<tr>
+<td>Tesla</td>
+<td>V100</td>
+<td style="text-align:center">7.0</td>
+<td style="text-align:center">1.1</td>
+<td style="text-align:center">High</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Turing</td>
+<td>T4/RTX 20xx</td>
+<td style="text-align:center">7.5</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">High</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Ampere</td>
+<td>A100/RTX 30xx</td>
+<td style="text-align:center">8.0</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">Very High</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Hopper</td>
+<td>H100</td>
+<td style="text-align:center">9.0</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">Very High</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Ada Lovelace</td>
+<td>RTX 40xx</td>
+<td style="text-align:center">8.9</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">High</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Blackwell</td>
+<td>B100/B200</td>
+<td style="text-align:center">10.0</td>
+<td style="text-align:center">1.4</td>
+<td style="text-align:center">Very High</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Pre-Tesla</td>
+<td>GTX 9xx/10xx</td>
+<td style="text-align:center">≤5.x</td>
+<td style="text-align:center">1.0–1.1</td>
+<td style="text-align:center">Low</td>
+<td style="text-align:center">Limited</td>
+</tr>
+</tbody></table>
+<h3 id="amd">AMD</h3>
+<table>
+<thead><tr>
+<th>Architecture</th>
+<th>GPUs</th>
+<th style="text-align:center">ROCm</th>
+<th style="text-align:center">Vulkan</th>
+<th style="text-align:center">Status</th>
+</tr></thead><tbody>
+<tr>
+<td>GCN 4/5 (Polaris/Vega)</td>
+<td>RX 4xx–5xx, Vega</td>
+<td style="text-align:center">5.x</td>
+<td style="text-align:center">1.1–1.2</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>RDNA 1</td>
+<td>RX 5000</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>RDNA 2</td>
+<td>RX 6000</td>
+<td style="text-align:center">N/A</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>RDNA 3</td>
+<td>RX 7000</td>
+<td style="text-align:center">6.x</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>CDNA 2</td>
+<td>MI200</td>
+<td style="text-align:center">5.x</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>CDNA 3</td>
+<td>MI300</td>
+<td style="text-align:center">6.x</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Pre-GCN</td>
+<td>HD 7000–8000</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">1.0</td>
+<td style="text-align:center">Limited</td>
+</tr>
+</tbody></table>
+<h3 id="intel">Intel</h3>
+<table>
+<thead><tr>
+<th>Architecture</th>
+<th>GPUs</th>
+<th style="text-align:center">Vulkan</th>
+<th style="text-align:center">Status</th>
+</tr></thead><tbody>
+<tr>
+<td>Xe-LP (Tiger Lake)</td>
+<td>Integrated</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Xe-HPG (DG2/Alchemist)</td>
+<td>Arc A3/A5/A7</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Xe-HPG (Battlemage)</td>
+<td>Arc B-series</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">Supported</td>
+</tr>
+<tr>
+<td>Xe² (Celestial)</td>
+<td>Next-gen</td>
+<td style="text-align:center">1.4 (planned)</td>
+<td style="text-align:center">Planned</td>
+</tr>
+<tr>
+<td>Pre-Xe</td>
+<td>UHD 6xx</td>
+<td style="text-align:center">1.0–1.1</td>
+<td style="text-align:center">Limited</td>
+</tr>
+</tbody></table>
+<h3 id="moore-threads">Moore Threads</h3>
+<table>
+<thead><tr>
+<th>GPU</th>
+<th style="text-align:center">Vulkan</th>
+<th style="text-align:center">VRAM</th>
+<th style="text-align:center">Status</th>
+</tr></thead><tbody>
+<tr>
+<td>MTT S2000</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">32 GB</td>
+<td style="text-align:center">Beta</td>
+</tr>
+<tr>
+<td>MTT S3000</td>
+<td style="text-align:center">1.3</td>
+<td style="text-align:center">48 GB</td>
+<td style="text-align:center">Beta</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="kernel-version-requirements">Kernel Version Requirements</h2>
+<table>
+<thead><tr>
+<th>Requirement</th>
+<th style="text-align:center">Minimum</th>
+<th style="text-align:center">Recommended</th>
+</tr></thead><tbody>
+<tr>
+<td>LTS Branch</td>
+<td style="text-align:center">5.15 LTS</td>
+<td style="text-align:center">6.6 LTS</td>
+</tr>
+<tr>
+<td>Stable Branch</td>
+<td style="text-align:center">6.1</td>
+<td style="text-align:center">6.8+</td>
+</tr>
+<tr>
+<td>DRM/KMS</td>
+<td style="text-align:center">5.10+</td>
+<td style="text-align:center">6.6+</td>
+</tr>
+<tr>
+<td>DMA-BUF</td>
+<td style="text-align:center">5.6+</td>
+<td style="text-align:center">6.0+</td>
+</tr>
+<tr>
+<td>NVLink support</td>
+<td style="text-align:center">5.8+</td>
+<td style="text-align:center">6.0+</td>
+</tr>
+<tr>
+<td>MIG discovery</td>
+<td style="text-align:center">5.16+</td>
+<td style="text-align:center">6.4+</td>
+</tr>
+<tr>
+<td>amdgpu P2P</td>
+<td style="text-align:center">5.18+</td>
+<td style="text-align:center">6.6+</td>
+</tr>
+<tr>
+<td>i915 DG2/Alchemist</td>
+<td style="text-align:center">6.0+</td>
+<td style="text-align:center">6.6+</td>
+</tr>
+</tbody></table>
+<p><strong>Note</strong>: MVGAL kernel module is verified on Fedora kernel 7.0.10. DKMS builds are supported for custom kernels.</p>
+<hr>
+<h2 id="vram--bandwidth-recommendations">VRAM & Bandwidth Recommendations</h2>
+<h3 id="per-use-case">Per Use Case</h3>
+<table>
+<thead><tr>
+<th>Use Case</th>
+<th style="text-align:center">Min VRAM</th>
+<th style="text-align:center">Recommended VRAM</th>
+<th style="text-align:center">Min Bandwidth</th>
+<th style="text-align:center">Recommended</th>
+</tr></thead><tbody>
+<tr>
+<td>1080p Gaming</td>
+<td style="text-align:center">4 GB</td>
+<td style="text-align:center">8 GB</td>
+<td style="text-align:center">200 GB/s</td>
+<td style="text-align:center">400 GB/s</td>
+</tr>
+<tr>
+<td>1440p Gaming</td>
+<td style="text-align:center">6 GB</td>
+<td style="text-align:center">12 GB</td>
+<td style="text-align:center">300 GB/s</td>
+<td style="text-align:center">600 GB/s</td>
+</tr>
+<tr>
+<td>4K Gaming</td>
+<td style="text-align:center">8 GB</td>
+<td style="text-align:center">16 GB</td>
+<td style="text-align:center">500 GB/s</td>
+<td style="text-align:center">800 GB/s</td>
+</tr>
+<tr>
+<td>VR (per eye)</td>
+<td style="text-align:center">4 GB</td>
+<td style="text-align:center">8 GB ea.</td>
+<td style="text-align:center">400 GB/s</td>
+<td style="text-align:center">800 GB/s</td>
+</tr>
+<tr>
+<td>ML Inference</td>
+<td style="text-align:center">8 GB</td>
+<td style="text-align:center">24 GB</td>
+<td style="text-align:center">500 GB/s</td>
+<td style="text-align:center">900 GB/s</td>
+</tr>
+<tr>
+<td>ML Training</td>
+<td style="text-align:center">16 GB</td>
+<td style="text-align:center">80 GB</td>
+<td style="text-align:center">900 GB/s</td>
+<td style="text-align:center">2 TB/s</td>
+</tr>
+<tr>
+<td>Video Transcoding</td>
+<td style="text-align:center">2 GB</td>
+<td style="text-align:center">4 GB</td>
+<td style="text-align:center">100 GB/s</td>
+<td style="text-align:center">200 GB/s</td>
+</tr>
+<tr>
+<td>Multi-GPU Compositing</td>
+<td style="text-align:center">4 GB ea.</td>
+<td style="text-align:center">8 GB ea.</td>
+<td style="text-align:center">200 GB/s</td>
+<td style="text-align:center">400 GB/s</td>
+</tr>
+</tbody></table>
+<h3 id="multi-gpu-topology">Multi-GPU Topology</h3>
+<table>
+<thead><tr>
+<th>Topology</th>
+<th style="text-align:center">Aggregate Bandwidth</th>
+<th style="text-align:center">Latency</th>
+<th>Recommended Strategies</th>
+</tr></thead><tbody>
+<tr>
+<td>NVLink (NVIDIA)</td>
+<td style="text-align:center">600 GB/s (A100)</td>
+<td style="text-align:center">~200 ns</td>
+<td>GA, RLD, PPL</td>
+</tr>
+<tr>
+<td>XGMI (AMD)</td>
+<td style="text-align:center">448 GB/s (MI300)</td>
+<td style="text-align:center">~300 ns</td>
+<td>GA, RLD, PPL</td>
+</tr>
+<tr>
+<td>PCIe 5.0 x16</td>
+<td style="text-align:center">64 GB/s</td>
+<td style="text-align:center">~1 µs</td>
+<td>RR, LL, RLD</td>
+</tr>
+<tr>
+<td>PCIe 4.0 x16</td>
+<td style="text-align:center">32 GB/s</td>
+<td style="text-align:center">~1.5 µs</td>
+<td>RR, LL, BP</td>
+</tr>
+<tr>
+<td>PCIe 3.0 x16</td>
+<td style="text-align:center">16 GB/s</td>
+<td style="text-align:center">~3 µs</td>
+<td>AFF, BP</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="vulkan-version-requirements">Vulkan Version Requirements</h2>
+<h3 id="per-gpu-family">Per GPU Family</h3>
+<table>
+<thead><tr>
+<th>Family</th>
+<th style="text-align:center">Vulkan Min</th>
+<th style="text-align:center">Vulkan Recommended</th>
+<th>Extensions Required</th>
+</tr></thead><tbody>
+<tr>
+<td>NVIDIA Ampere+</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">1.3</td>
+<td><code>VK_KHR_timeline_semaphore</code>, <code>VK_KHR_buffer_device_address</code></td>
+</tr>
+<tr>
+<td>NVIDIA Turing</td>
+<td style="text-align:center">1.1</td>
+<td style="text-align:center">1.2</td>
+<td><code>VK_KHR_external_memory_fd</code></td>
+</tr>
+<tr>
+<td>AMD RDNA 2+</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">1.3</td>
+<td><code>VK_KHR_synchronization2</code></td>
+</tr>
+<tr>
+<td>AMD GCN</td>
+<td style="text-align:center">1.0</td>
+<td style="text-align:center">1.1</td>
+<td><code>VK_KHR_external_memory_fd</code></td>
+</tr>
+<tr>
+<td>Intel Xe-HPG+</td>
+<td style="text-align:center">1.2</td>
+<td style="text-align:center">1.3</td>
+<td><code>VK_KHR_timeline_semaphore</code></td>
+</tr>
+<tr>
+<td>Intel Xe-LP</td>
+<td style="text-align:center">1.1</td>
+<td style="text-align:center">1.2</td>
+<td><code>VK_EXT_external_memory_dma_buf</code></td>
+</tr>
+<tr>
+<td>MTT S2000</td>
+<td style="text-align:center">1.1</td>
+<td style="text-align:center">1.2</td>
+<td><code>VK_KHR_external_memory_fd</code></td>
+</tr>
+</tbody></table>
+<h3 id="mvgal-vulkan-extensions">MVGAL Vulkan Extensions</h3>
+<p>MVGAL exposes vendor extensions through <code>VkPhysicalDeviceMVGAL</code> properties. See <code>docs/ARCHITECTURE.md §7—Intercept Layer</code> for extension details.</p>
+<hr>
+<h2 id="platform-support">Platform Support</h2>
+<table>
+<thead><tr>
+<th>Platform</th>
+<th style="text-align:center">Status</th>
+<th>Notes</th>
+</tr></thead><tbody>
+<tr>
+<td>Fedora 40+</td>
+<td style="text-align:center">Tier 1</td>
+<td>Primary development target</td>
+</tr>
+<tr>
+<td>RHEL 9 / Rocky 9</td>
+<td style="text-align:center">Tier 1</td>
+<td>Kernel 5.14+ with DKMS</td>
+</tr>
+<tr>
+<td>Ubuntu 22.04 LTS</td>
+<td style="text-align:center">Tier 2</td>
+<td>Requires DKMS or PPA</td>
+</tr>
+<tr>
+<td>Ubuntu 24.04 LTS</td>
+<td style="text-align:center">Tier 2</td>
+<td>Kernel 6.8+, native DKMS</td>
+</tr>
+<tr>
+<td>Arch Linux</td>
+<td style="text-align:center">Tier 2</td>
+<td>AUR package</td>
+</tr>
+<tr>
+<td>Debian 12</td>
+<td style="text-align:center">Tier 2</td>
+<td>Kernel 6.1 LTS</td>
+</tr>
+<tr>
+<td>openSUSE Tumbleweed</td>
+<td style="text-align:center">Tier 3</td>
+<td>Rolling kernel, DKMS</td>
+</tr>
+<tr>
+<td>SteamOS 3.x</td>
+<td style="text-align:center">Tier 3</td>
+<td>Deck-specific tuning (WIP)</td>
+</tr>
+</tbody></table>
+<p><strong>Tier definitions</strong>:</p>
+<ul>
+<li><strong>Tier 1</strong>: CI-tested, official packages in COPR, full support</li>
+<li><strong>Tier 2</strong>: Community packages, automated build tests</li>
+<li><strong>Tier 3</strong>: Manual build, best-effort support</li>
+</ul>
+<hr>
+<p><em>For installation instructions, see <code>docs/TROUBLESHOOTING.md</code>. For kernel module build, see <code>docs/KERNEL_MODULE.md</code>.</em></p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>
