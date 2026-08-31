@@ -142,51 +142,35 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border
 <table>
 <thead><tr>
 <th>Package</th>
-<th>Ubuntu/Debian</th>
 <th>Fedora/RHEL</th>
-<th>Arch</th>
 </tr></thead><tbody>
 <tr>
 <td>CMake ≥ 3.16</td>
-<td><code>cmake</code></td>
-<td><code>cmake</code></td>
 <td><code>cmake</code></td>
 </tr>
 <tr>
 <td>Ninja</td>
 <td><code>ninja-build</code></td>
-<td><code>ninja-build</code></td>
-<td><code>ninja</code></td>
 </tr>
 <tr>
 <td>GCC ≥ 11 or Clang ≥ 13</td>
-<td><code>gcc g++</code></td>
 <td><code>gcc-c++</code></td>
-<td><code>gcc</code></td>
 </tr>
 <tr>
 <td>libdrm</td>
-<td><code>libdrm-dev</code></td>
 <td><code>libdrm-devel</code></td>
-<td><code>libdrm</code></td>
 </tr>
 <tr>
 <td>libpci / pciaccess</td>
-<td><code>libpci-dev</code></td>
 <td><code>pciutils-devel</code></td>
-<td><code>pciutils</code></td>
 </tr>
 <tr>
 <td>libudev</td>
-<td><code>libudev-dev</code></td>
 <td><code>systemd-devel</code></td>
-<td><code>systemd</code></td>
 </tr>
 <tr>
 <td>pkg-config</td>
-<td><code>pkg-config</code></td>
 <td><code>pkgconfig</code></td>
-<td><code>pkgconf</code></td>
 </tr>
 </tbody></table>
 <h3 id="optional">Optional</h3>
@@ -194,17 +178,17 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border
 <thead><tr>
 <th>Package</th>
 <th>Purpose</th>
-<th>Ubuntu/Debian</th>
+<th>Fedora/RHEL</th>
 </tr></thead><tbody>
 <tr>
 <td>Vulkan SDK</td>
 <td>Vulkan layer build</td>
-<td><code>libvulkan-dev vulkan-tools</code></td>
+<td><code>vulkan-devel vulkan-tools</code></td>
 </tr>
 <tr>
 <td>OpenCL headers</td>
 <td>OpenCL layer build</td>
-<td><code>opencl-headers ocl-icd-dev</code></td>
+<td><code>opencl-headers ocl-icd-devel</code></td>
 </tr>
 <tr>
 <td>Rust ≥ 1.75</td>
@@ -219,12 +203,12 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border
 <tr>
 <td>Qt5 or Qt6</td>
 <td>Dashboard</td>
-<td><code>qtbase5-dev</code> or <code>qt6-base-dev</code></td>
+<td><code>qt5-qtbase-devel</code> or <code>qt6-qtbase-devel</code></td>
 </tr>
 <tr>
 <td>Linux kernel headers</td>
 <td>Kernel module</td>
-<td><code>linux-headers-$(uname -r)</code></td>
+<td><code>kernel-devel</code></td>
 </tr>
 </tbody></table>
 <h3 id="automated-install">Automated install</h3>
@@ -449,21 +433,14 @@ pkexec make install   # or: pkexec cmake --install .</code></pre>
   -DCMAKE_BUILD_TYPE=Release \
   -DMVGAL_BUILD_KERNEL=OFF   # kernel module requires native build
 make -j$(nproc)</code></pre>
-<pre><code class="language-bash">sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu</code></pre>
+<pre><code class="language-bash">sudo dnf install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu</code></pre>
 <p>Requires <code>aarch64-linux-gnu-gcc</code> cross-compiler:</p>
 <hr>
 <h2 id="packaging">Packaging</h2>
-<h3 id="debian--ubuntu">Debian / Ubuntu</h3>
-<pre><code class="language-bash">cd packaging &amp;&amp; bash build_deb.sh
-# Output: packaging/build/mvgal_0.2.2_amd64.deb
-pkexec dpkg -i packaging/build/mvgal_0.2.2_amd64.deb</code></pre>
 <h3 id="rpm-fedora--rhel--opensuse">RPM (Fedora / RHEL / openSUSE)</h3>
 <pre><code class="language-bash">rpmbuild -bb packaging/rpm/mvgal.spec
 # Output: ~/rpmbuild/RPMS/x86_64/mvgal-0.2.2-1.x86_64.rpm
 pkexec rpm -ivh ~/rpmbuild/RPMS/x86_64/mvgal-0.2.2-1.x86_64.rpm</code></pre>
-<h3 id="arch-linux">Arch Linux</h3>
-<pre><code class="language-bash">cd packaging/arch
-makepkg -si</code></pre>
 <hr>
 <h2 id="ci--github-actions">CI / GitHub Actions</h2>
 <p>Both workflows are <strong>manual-only</strong> (<code>workflow_dispatch</code>). To run:</p>
@@ -474,7 +451,7 @@ makepkg -si</code></pre>
 </ol>
 <p>The CI workflow runs:</p>
 <ul>
-<li>Build matrix: Ubuntu 22.04 + 24.04, GCC + Clang</li>
+<li>Build matrix: Fedora 40 + 41, GCC + Clang</li>
 <li>Unit tests via CTest</li>
 <li>Vulkan layer smoke test (lavapipe)</li>
 <li>clang-tidy static analysis</li>
@@ -486,10 +463,9 @@ makepkg -si</code></pre>
 <hr>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="libdrm-not-found"><code>libdrm not found</code></h3>
-<pre><code class="language-bash">sudo apt install libdrm-dev   # Ubuntu
-sudo dnf install libdrm-devel  # Fedora</code></pre>
+<pre><code class="language-bash">sudo dnf install libdrm-devel  # Fedora</code></pre>
 <h3 id="vulkanvulkanh-not-found"><code>vulkan/vulkan.h not found</code></h3>
-<pre><code class="language-bash">sudo apt install libvulkan-dev
+<pre><code class="language-bash">sudo dnf install vulkan-devel
 cmake .. -DMVGAL_BUILD_API=ON</code></pre>
 <h3 id="kernel-module-fails-to-load--ebusy">Kernel module fails to load: <code>-EBUSY</code></h3>
 <pre><code class="language-bash">pkexec rmmod mvgal

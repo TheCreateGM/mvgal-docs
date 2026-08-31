@@ -221,9 +221,7 @@ SET_GPU_AFFINITY.
 
 | Format | Files | Build Command |
 |--------|-------|---------------|
-| Debian | `deb/DEBIAN/control`, `postinst`, `prerm`, `conffiles` | `bash packaging/build_deb.sh` |
 | RPM | `rpm/mvgal.spec` | `rpmbuild -bb packaging/rpm/mvgal.spec` |
-| Arch Linux | `arch/PKGBUILD` | `cd packaging/arch && makepkg -si` |
 
 ---
 
@@ -295,7 +293,7 @@ These are project-reported test counts. Hardware-backed claims must include repr
 
 | Workflow | Triggers | Description |
 |----------|----------|-------------|
-| `CI` | `push` (main/develop), `pull_request` (main), `workflow_dispatch` | Build matrix (Ubuntu 22.04/24.04, GCC/Clang), tests, clang-tidy, Rust checks |
+| `CI` | `push` (main/develop), `pull_request` (main), `workflow_dispatch` | Build matrix (Fedora 40/41, GCC/Clang), tests, clang-tidy, Rust checks |
 | `Build on Fedora COPR` | `push` tags (`v*`), `workflow_dispatch` | RPM build and COPR submission |
 
 | Workflow | Description |

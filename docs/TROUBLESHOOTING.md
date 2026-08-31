@@ -75,9 +75,6 @@ mvgal-info --report > mvgal-report.txt
    ```bash
    # Fedora/RHEL
    dnf install kernel-devel kernel-headers
-
-   # Ubuntu/Debian
-   apt install linux-headers-$(uname -r)
    ```
 2. Verify Vulkan SDK ≥ 1.3 is installed:
    ```bash
@@ -98,9 +95,6 @@ mvgal-info --report > mvgal-report.txt
    ```bash
    # Fedora/RHEL
    dnf builddep mvgal
-
-   # Ubuntu/Debian
-   apt build-dep mvgal
    ```
 3. For kernel module, verify DKMS:
    ```bash

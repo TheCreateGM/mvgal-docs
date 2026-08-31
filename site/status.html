@@ -697,19 +697,9 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border
 <th>Build Command</th>
 </tr></thead><tbody>
 <tr>
-<td>Debian</td>
-<td><code>deb/DEBIAN/control</code>, <code>postinst</code>, <code>prerm</code>, <code>conffiles</code></td>
-<td><code>bash packaging/build_deb.sh</code></td>
-</tr>
-<tr>
 <td>RPM</td>
 <td><code>rpm/mvgal.spec</code></td>
 <td><code>rpmbuild -bb packaging/rpm/mvgal.spec</code></td>
-</tr>
-<tr>
-<td>Arch Linux</td>
-<td><code>arch/PKGBUILD</code></td>
-<td><code>cd packaging/arch &amp;&amp; makepkg -si</code></td>
 </tr>
 </tbody></table>
 <hr>
@@ -909,7 +899,7 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border
 <tr>
 <td><code>CI</code></td>
 <td><code>push</code> (main/develop), <code>pull_request</code> (main), <code>workflow_dispatch</code></td>
-<td>Build matrix (Ubuntu 22.04/24.04, GCC/Clang), tests, clang-tidy, Rust checks</td>
+<td>Build matrix (Fedora 40/41, GCC/Clang), tests, clang-tidy, Rust checks</td>
 </tr>
 <tr>
 <td><code>Build on Fedora COPR</code></td>

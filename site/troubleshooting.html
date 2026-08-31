@@ -194,10 +194,7 @@ mvgal-info --report &gt; mvgal-report.txt</code></pre>
 <ol>
 <li>Ensure your kernel headers are installed:</li>
 <pre><code class="language-bash">   # Fedora/RHEL
-   dnf install kernel-devel kernel-headers
-
-   # Ubuntu/Debian
-   apt install linux-headers-$(uname -r)</code></pre>
+   dnf install kernel-devel kernel-headers</code></pre>
 <li>Verify Vulkan SDK ≥ 1.3 is installed:</li>
 <pre><code class="language-bash">   vulkaninfo --summary</code></pre>
 <li>For Rust components, ensure <code>rustc</code> ≥ 1.70:</li>
@@ -210,10 +207,7 @@ mvgal-info --report &gt; mvgal-report.txt</code></pre>
 <li>Check CMake output for missing dependencies.</li>
 <li>Ensure you have the full build chain:</li>
 <pre><code class="language-bash">   # Fedora/RHEL
-   dnf builddep mvgal
-
-   # Ubuntu/Debian
-   apt build-dep mvgal</code></pre>
+   dnf builddep mvgal</code></pre>
 <li>For kernel module, verify DKMS:</li>
 <pre><code class="language-bash">   dkms status</code></pre>
 </ol>

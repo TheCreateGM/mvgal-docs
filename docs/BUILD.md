@@ -8,26 +8,26 @@
 
 ### Required
 
-| Package | Ubuntu/Debian | Fedora/RHEL | Arch |
-|---------|--------------|-------------|------|
-| CMake ≥ 3.16 | `cmake` | `cmake` | `cmake` |
-| Ninja | `ninja-build` | `ninja-build` | `ninja` |
-| GCC ≥ 11 or Clang ≥ 13 | `gcc g++` | `gcc-c++` | `gcc` |
-| libdrm | `libdrm-dev` | `libdrm-devel` | `libdrm` |
-| libpci / pciaccess | `libpci-dev` | `pciutils-devel` | `pciutils` |
-| libudev | `libudev-dev` | `systemd-devel` | `systemd` |
-| pkg-config | `pkg-config` | `pkgconfig` | `pkgconf` |
+| Package | Fedora/RHEL |
+|---------|-------------|
+| CMake ≥ 3.16 | `cmake` |
+| Ninja | `ninja-build` |
+| GCC ≥ 11 or Clang ≥ 13 | `gcc-c++` |
+| libdrm | `libdrm-devel` |
+| libpci / pciaccess | `pciutils-devel` |
+| libudev | `systemd-devel` |
+| pkg-config | `pkgconfig` |
 
 ### Optional
 
-| Package | Purpose | Ubuntu/Debian |
-|---------|---------|--------------|
-| Vulkan SDK | Vulkan layer build | `libvulkan-dev vulkan-tools` |
-| OpenCL headers | OpenCL layer build | `opencl-headers ocl-icd-dev` |
+| Package | Purpose | Fedora/RHEL |
+|---------|---------|-------------|
+| Vulkan SDK | Vulkan layer build | `vulkan-devel vulkan-tools` |
+| OpenCL headers | OpenCL layer build | `opencl-headers ocl-icd-devel` |
 | Rust ≥ 1.75 | Safety crates | `rustup` |
 | Go ≥ 1.21 | REST API server | `golang` |
-| Qt5 or Qt6 | Dashboard | `qtbase5-dev` or `qt6-base-dev` |
-| Linux kernel headers | Kernel module | `linux-headers-$(uname -r)` |
+| Qt5 or Qt6 | Dashboard | `qt5-qtbase-devel` or `qt6-qtbase-devel` |
+| Linux kernel headers | Kernel module | `kernel-devel` |
 
 ### Automated install
 
@@ -249,20 +249,12 @@ make -j$(nproc)
 
 Requires `aarch64-linux-gnu-gcc` cross-compiler:
 ```bash
-sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+sudo dnf install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 ```
 
 ---
 
 ## Packaging
-
-### Debian / Ubuntu
-
-```bash
-cd packaging && bash build_deb.sh
-# Output: packaging/build/mvgal_0.2.2_amd64.deb
-pkexec dpkg -i packaging/build/mvgal_0.2.2_amd64.deb
-```
 
 ### RPM (Fedora / RHEL / openSUSE)
 
@@ -270,13 +262,6 @@ pkexec dpkg -i packaging/build/mvgal_0.2.2_amd64.deb
 rpmbuild -bb packaging/rpm/mvgal.spec
 # Output: ~/rpmbuild/RPMS/x86_64/mvgal-0.2.2-1.x86_64.rpm
 pkexec rpm -ivh ~/rpmbuild/RPMS/x86_64/mvgal-0.2.2-1.x86_64.rpm
-```
-
-### Arch Linux
-
-```bash
-cd packaging/arch
-makepkg -si
 ```
 
 ---
@@ -290,7 +275,7 @@ Both workflows are **manual-only** (`workflow_dispatch`). To run:
 3. Click **Run workflow**
 
 The CI workflow runs:
-- Build matrix: Ubuntu 22.04 + 24.04, GCC + Clang
+- Build matrix: Fedora 40 + 41, GCC + Clang
 - Unit tests via CTest
 - Vulkan layer smoke test (lavapipe)
 - clang-tidy static analysis
@@ -305,13 +290,12 @@ The CI workflow runs:
 
 ### `libdrm not found`
 ```bash
-sudo apt install libdrm-dev   # Ubuntu
 sudo dnf install libdrm-devel  # Fedora
 ```
 
 ### `vulkan/vulkan.h not found`
 ```bash
-sudo apt install libvulkan-dev
+sudo dnf install vulkan-devel
 cmake .. -DMVGAL_BUILD_API=ON
 ```
 
