@@ -19,30 +19,6 @@ sudo dnf install mvgal mvgal-dkms
 sudo systemctl enable --now mvgald
 ```
 
-### Debian / Ubuntu
-
-```bash
-# Add PPA
-sudo add-apt-repository ppa:mvgal/stable
-sudo apt update
-
-# Install
-sudo apt install mvgal mvgal-dkms
-
-# Start daemon
-sudo systemctl enable --now mvgald
-```
-
-### Arch Linux
-
-```bash
-# Install from AUR
-yay -S mvgal-dkms mvgal
-
-# Start daemon
-sudo systemctl enable --now mvgald
-```
-
 ---
 
 ## Prerequisites
@@ -78,7 +54,6 @@ Install vendor drivers **before** installing MVGAL:
 
 # NVIDIA (proprietary)
 sudo dnf install akmod-nvidia  # Fedora
-sudo apt install nvidia-driver  # Debian/Ubuntu
 
 # Intel (open-source, included in kernel)
 # No additional installation needed
@@ -381,8 +356,6 @@ sudo dkms remove mvgal/0.2.2 --all
 
 # Remove packages
 sudo dnf remove mvgal mvgal-dkms  # Fedora
-sudo apt remove mvgal mvgal-dkms  # Debian/Ubuntu
-sudo pacman -R mvgal mvgal-dkms   # Arch
 
 # Remove configuration
 sudo rm -rf /etc/mvgal/

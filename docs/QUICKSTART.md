@@ -17,40 +17,20 @@ You need at least 2 GPUs. MVGAL supports AMD, NVIDIA, Intel, and Moore Threads i
 
 ## 2. Install dependencies
 
-```bash
-# Ubuntu / Debian
-sudo apt install cmake ninja-build libdrm-dev libpci-dev libudev-dev \
-                 libvulkan-dev pkg-config gcc g++
-
-# Fedora / RHEL
-sudo dnf install cmake ninja-build libdrm-devel pciutils-devel \
-                 systemd-devel vulkan-devel gcc-c++
-
-# Arch Linux
-sudo pacman -S cmake ninja libdrm pciutils systemd vulkan-devel gcc
-```
+No manual build dependencies are needed — the COPR package pulls in all runtime dependencies automatically. Just make sure your GPU drivers are installed (see [Hardware Compatibility](hardware.html)).
 
 ---
 
-## 3. Build
+## 3. Install from COPR
+
+MVGAL is available as a pre-built package via Fedora COPR — no need to compile from source.
 
 ```bash
-git clone https://github.com/TheCreateGM/mvgal.git
-cd mvgal
-
-mkdir -p build_output && cd build_output
-cmake .. -DCMAKE_BUILD_TYPE=Release -DMVGAL_BUILD_RUNTIME=ON -DMVGAL_BUILD_TOOLS=ON
-make -j$(nproc)
+sudo dnf copr enable axogm/mvgal
+sudo dnf install mvgal
 ```
 
----
-
-## 4. Install
-
-```bash
-# From the repo root — uses pkexec for privileged steps
-bash build/install.sh
-```
+Supported targets: Fedora 40+ · RHEL/AlmaLinux/Rocky 9 & 10 · CentOS Stream 9 & 10 · openSUSE Tumbleweed · Amazon Linux 2023
 
 This installs:
 - `mvgald` daemon → `/usr/bin/mvgald`
@@ -62,7 +42,7 @@ This installs:
 
 ---
 
-## 5. Start the daemon
+## 4. Start the daemon
 
 ```bash
 pkexec systemctl start mvgald
@@ -71,7 +51,7 @@ pkexec systemctl enable mvgald   # auto-start on boot
 
 ---
 
-## 6. Verify
+## 5. Verify
 
 ```bash
 mvgal-info
@@ -114,7 +94,7 @@ Expected output:
 
 ---
 
-## 7. Use with applications
+## 6. Use with applications
 
 ### Any Vulkan application
 
@@ -153,7 +133,7 @@ MESA_LOADER_DRIVER_OVERRIDE=zink ENABLE_MVGAL=1 glxgears
 
 ---
 
-## 8. Monitor in real time
+## 7. Monitor in real time
 
 ```bash
 # One-shot status
@@ -172,7 +152,7 @@ mvgal-compat --system
 
 ---
 
-## 9. Change scheduling strategy
+## 8. Change scheduling strategy
 
 ```bash
 # Alternate Frame Rendering (best for gaming)
@@ -187,14 +167,13 @@ mvgal-config show-config
 
 ---
 
-## 10. Load the kernel module (optional)
+## 9. Load the kernel module (optional)
 
-The kernel module enables deeper integration (DMA-BUF at kernel level, `/dev/mvgal0`). It is optional — MVGAL works without it via user-space interception.
+The kernel module enables deeper integration (DMA-BUF at kernel level, `/dev/mvgal0`). It is optional — MVGAL works without it via user-space interception. The module ships pre-built with the COPR package.
 
 ```bash
-cd kernel
-make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
-pkexec insmod mvgal.ko
+pkexec modprobe mvgal
+pkexec insmod /lib/modules/$(uname -r)/extra/mvgal/mvgal.ko 2>/dev/null || true
 dmesg | grep MVGAL
 ```
 
@@ -221,7 +200,7 @@ mvgald --no-daemon
 ```bash
 ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
 # If missing, reinstall:
-bash build/install.sh --no-kernel --no-daemon
+sudo dnf reinstall mvgal
 ```
 
 **Permission denied on socket:**
