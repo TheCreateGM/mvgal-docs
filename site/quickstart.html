@@ -143,28 +143,13 @@ ls /sys/class/drm/card*/device/vendor 2&gt;/dev/null | xargs -I{} sh -c 'echo {}
 <p>You need at least 2 GPUs. MVGAL supports AMD, NVIDIA, Intel, and Moore Threads in any combination.</p>
 <hr>
 <h2 id="2-install-dependencies">2. Install dependencies</h2>
-<pre><code class="language-bash"># Ubuntu / Debian
-sudo apt install cmake ninja-build libdrm-dev libpci-dev libudev-dev \
-                 libvulkan-dev pkg-config gcc g++
-
-# Fedora / RHEL
-sudo dnf install cmake ninja-build libdrm-devel pciutils-devel \
-                 systemd-devel vulkan-devel gcc-c++
-
-# Arch Linux
-sudo pacman -S cmake ninja libdrm pciutils systemd vulkan-devel gcc</code></pre>
+<p>No manual build dependencies are needed — the COPR package pulls in all runtime dependencies automatically. Just make sure your GPU drivers are installed (see <a href="hardware.html">Hardware Compatibility</a>).</p>
 <hr>
-<h2 id="3-build">3. Build</h2>
-<pre><code class="language-bash">git clone https://github.com/TheCreateGM/mvgal.git
-cd mvgal
-
-mkdir -p build_output &amp;&amp; cd build_output
-cmake .. -DCMAKE_BUILD_TYPE=Release -DMVGAL_BUILD_RUNTIME=ON -DMVGAL_BUILD_TOOLS=ON
-make -j$(nproc)</code></pre>
-<hr>
-<h2 id="4-install">4. Install</h2>
-<pre><code class="language-bash"># From the repo root — uses pkexec for privileged steps
-bash build/install.sh</code></pre>
+<h2 id="3-install-from-copr">3. Install from COPR</h2>
+<p>MVGAL is available as a pre-built package via Fedora COPR — no need to compile from source.</p>
+<pre><code class="language-bash">sudo dnf copr enable axogm/mvgal
+sudo dnf install mvgal</code></pre>
+<p>Supported targets: Fedora 40+ · RHEL/AlmaLinux/Rocky 9 &amp; 10 · CentOS Stream 9 &amp; 10 · openSUSE Tumbleweed · Amazon Linux 2023</p>
 <p>This installs:</p>
 <ul>
 <li><code>mvgald</code> daemon → <code>/usr/bin/mvgald</code></li>
@@ -175,11 +160,11 @@ bash build/install.sh</code></pre>
 <li>Systemd service → <code>/etc/systemd/system/mvgald.service</code></li>
 </ul>
 <hr>
-<h2 id="5-start-the-daemon">5. Start the daemon</h2>
+<h2 id="4-start-the-daemon">4. Start the daemon</h2>
 <pre><code class="language-bash">pkexec systemctl start mvgald
 pkexec systemctl enable mvgald   # auto-start on boot</code></pre>
 <hr>
-<h2 id="6-verify">6. Verify</h2>
+<h2 id="5-verify">5. Verify</h2>
 <pre><code class="language-bash">mvgal-info</code></pre>
 <pre><code>========================================================================
   MVGAL — Multi-Vendor GPU Aggregation Layer  |  mvgal-info
@@ -214,7 +199,7 @@ pkexec systemctl enable mvgald   # auto-start on boot</code></pre>
   Daemon socket            : /run/mvgal/mvgal.sock (present)</code></pre>
 <p>Expected output:</p>
 <hr>
-<h2 id="7-use-with-applications">7. Use with applications</h2>
+<h2 id="6-use-with-applications">6. Use with applications</h2>
 <h3 id="any-vulkan-application">Any Vulkan application</h3>
 <p>The Vulkan layer is implicit — it activates automatically for all Vulkan apps. No changes needed.</p>
 <pre><code class="language-bash"># Verify the layer is in the chain
@@ -230,7 +215,7 @@ clinfo | grep -A3 MVGAL</code></pre>
 <h3 id="opengl-applications-via-zink">OpenGL applications (via Zink)</h3>
 <pre><code class="language-bash">MESA_LOADER_DRIVER_OVERRIDE=zink ENABLE_MVGAL=1 glxgears</code></pre>
 <hr>
-<h2 id="8-monitor-in-real-time">8. Monitor in real time</h2>
+<h2 id="7-monitor-in-real-time">7. Monitor in real time</h2>
 <pre><code class="language-bash"># One-shot status
 mvgal-status
 
@@ -244,7 +229,7 @@ mvgal-bench all
 mvgal-compat "doom"
 mvgal-compat --system</code></pre>
 <hr>
-<h2 id="9-change-scheduling-strategy">9. Change scheduling strategy</h2>
+<h2 id="8-change-scheduling-strategy">8. Change scheduling strategy</h2>
 <pre><code class="language-bash"># Alternate Frame Rendering (best for gaming)
 mvgal-config set-strategy afr
 
@@ -254,11 +239,11 @@ mvgal-config set-strategy compute_offload
 # Show current config
 mvgal-config show-config</code></pre>
 <hr>
-<h2 id="10-load-the-kernel-module-optional">10. Load the kernel module (optional)</h2>
+<h2 id="9-load-the-kernel-module-optional">9. Load the kernel module (optional)</h2>
 <p>The kernel module enables deeper integration (DMA-BUF at kernel level, <code>/dev/mvgal0</code>). It is optional — MVGAL works without it via user-space interception.</p>
-<pre><code class="language-bash">cd kernel
-make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
-pkexec insmod mvgal.ko
+<pre><code class="language-bash"># The module ships pre-built with the COPR package
+pkexec modprobe mvgal
+pkexec insmod /lib/modules/$(uname -r)/extra/mvgal/mvgal.ko 2&gt;/dev/null || true
 dmesg | grep MVGAL</code></pre>
 <hr>
 <h2 id="troubleshooting">Troubleshooting</h2>
@@ -273,7 +258,7 @@ mvgald --no-daemon</code></pre>
 <p><strong>Daemon not starting:</strong></p>
 <pre><code class="language-bash">ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
 # If missing, reinstall:
-bash build/install.sh --no-kernel --no-daemon</code></pre>
+sudo dnf reinstall mvgal</code></pre>
 <p><strong>Vulkan layer not active:</strong></p>
 <pre><code class="language-bash"># Add yourself to the video group
 pkexec usermod -aG video $USER
