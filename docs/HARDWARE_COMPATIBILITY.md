@@ -1,6 +1,6 @@
 # MVGAL Hardware Compatibility
 
-> **Version**: 0.7.0  
+> **Version**: 0.7.3  
 > **Last Updated**: 2026-06-06
 
 ---
@@ -202,6 +202,8 @@ See `docs/ARCHITECTURE.md §7—Intercept Layer` for extension details.
 |----------|:------:|-------|
 | Fedora 40+ | Tier 1 | Primary development target |
 | RHEL 9 / Rocky 9 | Tier 1 | Kernel 5.14+ with DKMS |
+| Ubuntu 22.04 LTS | Tier 2 | Requires DKMS or PPA |
+| Ubuntu 24.04 LTS | Tier 2 | Kernel 6.8+, native DKMS |
 | openSUSE Tumbleweed | Tier 3 | Rolling kernel, DKMS |
 | SteamOS 3.x | Tier 3 | Deck-specific tuning (WIP) |
 

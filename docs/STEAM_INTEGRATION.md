@@ -330,8 +330,8 @@ mvgal-steam-setup
 ```json
 {
     "Name": "Proton - MVGAL",
-    "Version": "0.7.0",
-    "VersionString": "Proton 9.0 with MVGAL 0.7.0",
+    "Version": "0.7.3",
+    "VersionString": "Proton 9.0 with MVGAL 0.7.3",
     "Architectures": "x86_64,i686",
     "Priority": 100,
     "Enabled": true

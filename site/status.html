@@ -50,7 +50,7 @@
 <nav class="sidebar">
   <div class="brand">
     <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.0</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.3</div>
   </div>
   <a href="index.html">Home</a>
 <a href="quickstart.html">Quick Start</a>
@@ -69,7 +69,7 @@
 </nav>
 <main>
 <h1 id="mvgal-project-status">MVGAL Project Status</h1>
-<p><strong>Version:</strong> 0.7.0 "Cross-Vendor Aggregation" | <strong>Updated:</strong> August 2026</p>
+<p><strong>Version:</strong> 0.7.3 "Cross-Vendor Aggregation" | <strong>Updated:</strong> August 2026</p>
 <hr>
 <h2 id="overall-implementation-phase-production-ready-components">Overall: Implementation Phase (Production-Ready Components)</h2>
 <p>Following the Section 3 research pass (<a href="RESEARCH_PHASE3.md">RESEARCH_PHASE3.md</a>) and the 2026-05-30 upstream feasibility audit (<a href="FEASIBILITY_AND_GAPS_2026-05-30.md">FEASIBILITY_AND_GAPS_2026-05-30.md</a>), MVGAL is in <strong>active implementation</strong>. The project contains kernel, runtime, API interception, tooling, packaging, and test scaffolding. Transparent heterogeneous aggregation remains <strong>capability-limited</strong> and must fall back to explicit multi-device scheduling, DMA-BUF/host-staging transfers, or single-GPU pass-through when a workload cannot be split safely.</p>
@@ -833,7 +833,7 @@
 <tr>
 <td><code>CI</code></td>
 <td><code>push</code> (main/develop), <code>pull_request</code> (main), <code>workflow_dispatch</code></td>
-<td>Build matrix (Fedora 40/41, GCC/Clang), tests, clang-tidy, Rust checks</td>
+<td>Build matrix (Ubuntu 22.04/24.04, GCC/Clang), tests, clang-tidy, Rust checks</td>
 </tr>
 <tr>
 <td><code>Build on Fedora COPR</code></td>
@@ -868,7 +868,7 @@ ctest --test-dir build_full</code></pre>
 cmake --build build_test -j$(nproc)
 ctest --test-dir build_test</code></pre>
 <p>Test-only build (no kernel headers needed):</p>
-<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.0 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.3 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
 </main>
 </body>
 </html>
