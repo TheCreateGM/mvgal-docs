@@ -1,0 +1,211 @@
+:root {
+  --bg: #0f1117;
+  --bg-side: #161a23;
+  --bg-card: #1b202b;
+  --fg: #d7dce4;
+  --fg-dim: #9aa3b2;
+  --accent: #76b900;
+  --accent2: #4a9eff;
+  --border: #2a3040;
+  --code-bg: #0a0c12;
+  --sidebar-w: 260px;
+  --content-max: 960px;
+  --content-max-wide: 1280px;
+  --content-max-4k: 1600px;
+  --font-base: 16px;
+  --font-scale: 1;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+  font-size: var(--font-base);
+}
+nav.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.sidebar .brand {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+nav.sidebar .brand .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+nav.sidebar .brand .sub { font-size: 12px; color: var(--fg-dim); }
+nav.sidebar a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 3px solid transparent;
+}
+nav.sidebar a:hover { color: var(--fg); background: rgba(255,255,255,0.03); }
+nav.sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(118,185,0,0.08); }
+main {
+  flex: 1;
+  padding: 40px 48px;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  min-width: 0;
+}
+main h1 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+main h2 { color: var(--accent2); margin-top: 32px; }
+main h3 { color: var(--fg); margin-top: 24px; }
+main h4 { color: var(--fg-dim); }
+main a { color: var(--accent2); }
+main code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+main pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+main pre code { background: none; border: none; padding: 0; }
+main table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+main th, main td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+main th { background: var(--bg-card); color: var(--accent2); }
+main tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+main blockquote {
+  border-left: 4px solid var(--accent);
+  margin: 16px 0;
+  padding: 4px 16px;
+  background: rgba(118,185,0,0.06);
+  color: var(--fg-dim);
+}
+main hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+main ul, main ol { padding-left: 24px; }
+main li { margin: 4px 0; }
+.badge { display:inline-block; background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:2px 12px; font-size:12px; color:var(--fg-dim); margin-right:6px; }
+.hero { background: linear-gradient(135deg, rgba(118,185,0,0.12), rgba(74,158,255,0.08)); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:28px; }
+.hero h1 { border:none; padding:0; margin:0 0 8px; }
+.hero p { color: var(--fg-dim); margin:0; }
+.card-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:16px; margin:24px 0; }
+.card { background: var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:18px; text-decoration:none; color:var(--fg); transition: border-color .15s; }
+.card:hover { border-color: var(--accent); }
+.card h3 { margin:0 0 6px; color: var(--accent2); font-size:16px; }
+.card p { margin:0; font-size:13px; color: var(--fg-dim); }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--fg-dim); font-size: 13px; }
+
+/* Mobile menu toggle button (hidden on desktop) */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  background: var(--bg-side);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.menu-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Table scroll wrapper for small screens */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* ---------- Mobile (< 768px) ---------- */
+@media (max-width: 767px) {
+  body { flex-direction: column; }
+  .menu-toggle { display: block; }
+  nav.sidebar {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    padding-top: 56px;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  nav.sidebar.open { transform: translateX(0); }
+  main { padding: 56px 16px 24px; }
+  main h1 { font-size: 1.5rem; }
+  main h2 { font-size: 1.25rem; }
+  main h3 { font-size: 1.1rem; }
+  .hero { padding: 20px; }
+  .card-grid { grid-template-columns: 1fr; }
+  main pre { padding: 12px; font-size: 0.85em; }
+  /* Make wide tables horizontally scrollable on mobile without markup changes */
+  main table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; }
+  footer { font-size: 12px; }
+}
+
+/* ---------- Tablet (768 - 1024px) ---------- */
+@media (min-width: 768px) and (max-width: 1024px) {
+  nav.sidebar { width: 220px; }
+  main { padding: 32px 28px; }
+  main h1 { font-size: 1.6rem; }
+  main h2 { font-size: 1.3rem; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); }
+}
+
+/* ---------- Desktop (1024 - 1280px) ---------- */
+@media (min-width: 1025px) and (max-width: 1279px) {
+  main { padding: 40px 40px; }
+}
+
+/* ---------- Large desktop / TV (1280 - 1920px) ---------- */
+@media (min-width: 1280px) and (max-width: 1919px) {
+  main { max-width: var(--content-max-wide); padding: 48px 56px; }
+  body { font-size: calc(var(--font-base) * 1.05); }
+  nav.sidebar { width: 280px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); }
+}
+
+/* ---------- 4K TV / Ultra-wide (1920px+) ---------- */
+@media (min-width: 1920px) {
+  main { max-width: var(--content-max-4k); padding: 56px 72px; }
+  body { font-size: calc(var(--font-base) * 1.15); }
+  nav.sidebar { width: 320px; }
+  nav.sidebar a { font-size: 16px; padding: 10px 24px; }
+  nav.sidebar .brand .logo { font-size: 24px; }
+  nav.sidebar .brand .sub { font-size: 14px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); }
+  main h1 { font-size: 2rem; }
+  main h2 { font-size: 1.6rem; }
+  main h3 { font-size: 1.3rem; }
+  main pre { font-size: 1em; }
+  main th, main td { padding: 10px 16px; }
+  .badge { font-size: 14px; }
+  .hero { padding: 36px; }
+}
+
+/* ---------- Very large 4K (2560px+) ---------- */
+@media (min-width: 2560px) {
+  main { max-width: 1800px; }
+  body { font-size: calc(var(--font-base) * 1.25); }
+  nav.sidebar { width: 360px; }
+}
