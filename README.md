@@ -1,8 +1,13 @@
+---
+tags: [mvgal, docs, index]
+aliases: [Home, Index]
+---
+
 # mvgal-docs
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **v0.7.0** — Multi-vendor OpenCL ICD aggregation, unified VRAM heap, PCIe P2P, AI scheduler, Proton bridge.
+> **v0.7.8** — Multi-vendor OpenCL ICD aggregation, unified VRAM heap, PCIe P2P, AI scheduler, Proton bridge, Secure Boot MOK enrollment, hardened daemon.
 
 ## 📚 Documentation
 
@@ -19,6 +24,8 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 - **Power Management** — [`docs/POWER_MANAGEMENT.md`](docs/POWER_MANAGEMENT.md)
 - **Troubleshooting** — [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md)
 - **Project Status** — [`docs/STATUS.md`](docs/STATUS.md)
+- **Changelog** — [`docs/CHANGELOG.md`](docs/CHANGELOG.md)
+- **Secure Boot / MOK** — [`docs/SECURE_BOOT.md`](docs/SECURE_BOOT.md)
 
 ## What is MVGAL?
 
@@ -65,6 +72,9 @@ flowchart TD
 - **Power management** — Idle detection, GPU parking, dynamic frequency scaling
 - **Memory-safe subsystems** — Fence manager, memory tracker, capability model written in Rust
 - **Qt dashboard + REST API** — Real-time monitoring, scheduler control, log viewer
+- **Secure Boot support** — Kernel modules signed at install time; per-machine MOK enrollment via `mvgal-enroll-mok`
+- **Hardened daemon** — Drops capabilities after init, prunes bounding set, restricted D-Bus policy
+- **Degraded-mode reporting** — Clear warnings when the kernel module is not loaded (e.g. MOK not enrolled)
 
 ## Supported Hardware
 
@@ -99,16 +109,32 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
+## What's New in v0.7.8
+
+- **Secure Boot hardening** — DKMS modules are signed with a per-machine MVGAL key and `mvgal-enroll-mok` verifies enrollment via `mokutil --list-new` (no more false success).
+- **Daemon capability dropping** — `mvgald` clears its capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO`.
+- **Restricted D-Bus policy** — `org.mvgal.MVGAL` is now limited to root and the `mvgal` group.
+- **Real Vulkan driver version** — the ICD reports `apiVersion`/`driverVersion` from the MVGAL version macros instead of `0.0.0`.
+- **Degraded-mode reporting** — `mvgal-status` prints `Kernel Module: NOT LOADED (degraded userspace-only mode)` with a MOK hint and a real load-balance estimate.
+- **Vulkan ICD fixes** — WSI entry points (v0.7.5), device dispatch for `vkCreateImage` (v0.7.7), and queue-family overflow fix (v0.7.7).
+
+See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the full history and [`docs/SECURE_BOOT.md`](docs/SECURE_BOOT.md) for MOK enrollment.
+
 ## CLI Tools
 
 | Tool | Description |
 |------|-------------|
+| `mvgal` | Main CLI: start/stop daemon, set strategy, show stats |
 | `mvgal-info` | Print all detected GPUs, VRAM, temperature, utilization |
-| `mvgal-status` | Real-time GPU utilization/VRAM bars; `--watch` for continuous refresh |
+| `mvgal-status` | Real-time GPU utilization/VRAM bars; `--watch` for continuous refresh; degraded-mode warnings |
 | `mvgal-bench` | Memory bandwidth, compute FLOPS, scheduling latency |
 | `mvgal-compat` | System readiness check + per-app compatibility database |
 | `mvgal-config` | Configure scheduler mode, idle thresholds, GPU enable/disable |
-| `mvgal` | Main CLI: start/stop daemon, set strategy, show stats |
+| `mvgal-probe` | PCI topology + kernel UAPI probe (`/dev/mvgal0` ioctls) |
+| `mvgal-enum` | Enumerate GPUs and capabilities |
+| `mvgal-hw-validate` | Hardware validation with actionable failure hints |
+| `mvgal-steam-setup` | Steam/Proton integration helper |
+| `mvgal-enroll-mok` | Enroll the MVGAL signing key for Secure Boot (MOK) |
 
 ## Scheduling Strategies
 

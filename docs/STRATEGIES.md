@@ -1,9 +1,14 @@
+---
+tags: [mvgal, strategies, reference]
+aliases: [Scheduling Strategies, Strategies]
+---
+
 # MVGAL Scheduling & Memory Strategies
 
-> **Version**: 0.5.0  
+> **Version**: 0.7.8  
 > **Layer**: 5 — WDE (Workload Distribution Engine)  
 > **Status**: Comprehensive  
-> **Last Updated**: 2026-06-06
+> **Last Updated**: September 2026
 
 ---
 
@@ -175,8 +180,9 @@ and `include/mvgal/mvgal_memory.h`.
 
 The WDE selects a strategy based on workload characteristics:
 
-```
-Workload Type ──→ Strategy Selection ──→ Heap Assignment ──→ GPU Mapping
+```mermaid
+flowchart LR
+    WT["Workload Type"] --> SS["Strategy Selection"] --> HA["Heap Assignment"] --> GM["GPU Mapping"]
 ```
 
 ### Selection Criteria

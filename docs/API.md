@@ -1,6 +1,45 @@
+---
+tags: [mvgal, api, reference]
+aliases: [API Reference, API]
+---
+
 # MVGAL Public API Reference
 
-**Version:** 0.2.2 | **Header:** `#include <mvgal/mvgal.h>`
+**Version:** 0.7.8 | **Header:** `#include <mvgal/mvgal.h>`
+
+---
+
+## Public C Headers
+
+MVGAL exposes 26 public C headers under `include/mvgal/`. The main header `mvgal.h` includes all core subsystem headers.
+
+| Header | Description |
+|--------|-------------|
+| `mvgal.h` | Main API — init, shutdown, device query |
+| `mvgal_types.h` | Core type definitions, enums, error codes |
+| `mvgal_version.h` | Version macros (generated from `.h.in`) |
+| `mvgal_uapi.h` | Kernel/userspace UAPI — IOCTL structs + commands |
+| `mvgal_gpu.h` | GPU enumeration, properties, topology |
+| `mvgal_memory.h` | Memory allocation, flags, placement |
+| `mvgal_unified_heap.h` | Unified heap abstraction (Heaps 0–3) |
+| `mvgal_scheduler.h` | Scheduler strategy, policy control |
+| `mvgal_execution.h` | Frame sessions, migration plans |
+| `mvgal_power.h` | Power management, DVFS, thermal |
+| `mvgal_config.h` | Configuration file parsing |
+| `mvgal_log.h` | Logging subsystem |
+| `mvgal_ipc.h` | IPC client/server — Unix domain socket protocol |
+| `mvgal_intercept.h` | API intercept layer interface |
+| `mvgal_p2p_dma.h` | P2P DMA transfer API |
+| `mvgal_pool.h` | Memory pool management |
+| `mvgal_fork.h` | GPU fork/clone support |
+| `mvgal_ai.h` | AI/ML scheduling hint API |
+| `mvgal_coherency.h` | Cache coherency management |
+| `mvgal_barrier_translate.h` | Barrier translation (Vulkan ↔ CUDA ↔ OpenCL) |
+| `mvgal_cmd_dag.h` | Command DAG analysis |
+| `mvgal_shader_backend.h` | Shader backend interface (SPIR-V routing) |
+| `mvgal_sycl.h` | SYCL backend support |
+| `mvgal_network.h` | Network pooling / RDMA |
+| `mvgal_wow64.h` | WoW64 filesystem redirection types |
 
 ---
 
@@ -227,6 +266,25 @@ mvgal_error_t mvgal_memory_get_stats(mvgal_context_t ctx, mvgal_memory_stats_t *
 
 ---
 
+## Power Management API (`mvgal_power.h`)
+
+```c
+mvgal_error_t mvgal_power_get_state(mvgal_gpu_index_t gpu, mvgal_power_state_t *state);
+mvgal_error_t mvgal_power_get_temperature(mvgal_gpu_index_t gpu, int32_t *temperature_c);
+mvgal_error_t mvgal_power_get_metrics(mvgal_gpu_index_t gpu, mvgal_power_metrics_t *metrics);
+```
+
+---
+
+## P2P DMA API (`mvgal_p2p_dma.h`)
+
+```c
+mvgal_error_t mvgal_p2p_transfer(mvgal_p2p_context_t ctx, const mvgal_p2p_transfer_info_t *info);
+mvgal_error_t mvgal_p2p_get_caps(mvgal_gpu_index_t src, mvgal_gpu_index_t dst, mvgal_p2p_caps_t *caps);
+```
+
+---
+
 ## Scheduler API (`mvgal_scheduler.h`)
 
 ### Workload Submission
@@ -349,6 +407,56 @@ mvgal_error_t mvgal_ipc_receive(mvgal_ipc_message_type_t *type,
 
 ---
 
+## IOCTL Interface (`mvgal_uapi.h`)
+
+MVGAL exposes a character device at `/dev/mvgal0`. Magic number: `'M'` (0x4D).
+
+| IOCTL | Code | Direction | Description |
+|-------|:----:|:---------:|-------------|
+| `MVGAL_IOC_QUERY_VERSION` | `0x00` | Read | Query UAPI version |
+| `MVGAL_IOC_GET_GPU_COUNT` | `0x01` | Read | Get number of GPUs |
+| `MVGAL_IOC_GET_GPU_INFO` | `0x02` | Write-Read | Get GPU info by index |
+| `MVGAL_IOC_ENABLE` | `0x03` | None | Enable MVGAL |
+| `MVGAL_IOC_DISABLE` | `0x04` | None | Disable MVGAL |
+| `MVGAL_IOC_GET_STATS` | `0x05` | Read | Get driver statistics |
+| `MVGAL_IOC_GET_CAPS` | `0x06` | Read | Get capabilities |
+| `MVGAL_IOC_RESCAN` | `0x07` | None | Trigger GPU rescan |
+| `MVGAL_IOC_EXPORT_DMABUF` | `0x10` | Write-Read | Export DMA-BUF |
+| `MVGAL_IOC_IMPORT_DMABUF` | `0x11` | Write-Read | Import DMA-BUF |
+| `MVGAL_IOC_ALLOC_CROSS_VENDOR` | `0x12` | Write-Read | Cross-vendor allocation |
+| `MVGAL_IOC_FREE_CROSS_VENDOR` | `0x13` | Write | Free cross-vendor alloc |
+
+---
+
+## D-Bus API
+
+| Property | Value |
+|----------|-------|
+| Bus name | `org.mvgal.MVGAL` |
+| Object path | `/org/mvgal/daemon` |
+| Interface | `org.mvgal.MVGAL` |
+
+**Methods:** `GetGPUCount`, `GetGPUInfo`, `GetStats`, `GetScheduler`, `SetScheduler`, `GetPowerState`, `GetTemperature`, `RescanGPUs`, `Ping`
+
+**Signals:** `GPUHotplug` (gpu_index, added), `TemperatureWarning` (gpu_index, temperature), `PowerLimitReached` (gpu_index)
+
+> **Security (v0.7.8):** the D-Bus policy restricts `org.mvgal.MVGAL` to root and the `mvgal` group — all other users are denied.
+
+---
+
+## Vulkan Extensions
+
+| Extension Name | Version | Description |
+|---------------|:-------:|-------------|
+| `VK_MVGAL_aggregation_device` | 1 | Query MVGAL virtual device properties |
+| `VK_MVGAL_memory_heaps` | 1 | Unified heap (Heaps 0–3) enumeration |
+| `VK_MVGAL_multi_gpu_submit` | 1 | Multi-GPU command buffer submission |
+| `VK_MVGAL_scheduler_hint` | 1 | Per-submission scheduling hint |
+| `VK_MVGAL_frame_pacing` | 1 | Frame pacing control via Vulkan |
+| `VK_MVGAL_p2p_transfer` | 1 | P2P transfer between MVGAL GPUs |
+
+---
+
 ## Logging API (`mvgal_log.h`)
 
 ```c
@@ -417,6 +525,15 @@ void          mvgal_config_print(void);
 | `MVGAL_ERROR_GPU_NOT_FOUND` | 12 | No GPU found |
 | `MVGAL_ERROR_NOT_SUPPORTED` | 13 | Feature not supported |
 | `MVGAL_ERROR_DRIVER` | 14 | Driver error |
+| `MVGAL_ERROR_MEMORY` | 15 | Memory subsystem error |
+| `MVGAL_ERROR_INITIALIZATION` | 16 | Initialization failed |
+| `MVGAL_ERROR_IPC` | 17 | IPC error |
+| `MVGAL_ERROR_NO_GPUS` | 18 | No GPUs available |
+| `MVGAL_ERROR_UNKNOWN` | 19 | Unknown error |
+| `MVGAL_ERROR_INTERRUPTED` | 20 | Operation interrupted |
+| `MVGAL_ERROR_SCHEDULER` | 21 | Scheduler error |
+| `MVGAL_ERROR_CANCELLED` | 22 | Operation cancelled |
+| `MVGAL_ERROR_QUEUE_FULL` | 23 | Queue or buffer at capacity |
 
 ---
 
@@ -446,6 +563,10 @@ MVGAL_STRATEGY_COMPUTE_OFFLOAD = 4
 MVGAL_STRATEGY_HYBRID          = 5
 MVGAL_STRATEGY_SINGLE_GPU      = 6
 MVGAL_STRATEGY_TASK            = 7
+MVGAL_STRATEGY_AI_DRIVEN       = 8
+MVGAL_STRATEGY_RLD             = 9
+MVGAL_STRATEGY_REP             = 10
+MVGAL_STRATEGY_PPL             = 11
 MVGAL_STRATEGY_CUSTOM          = 100
 ```
 
@@ -518,7 +639,10 @@ Base URL: `http://localhost:7474`
 | GET | `/api/v1/scheduler` | Current scheduler mode and GPU count |
 | PUT | `/api/v1/scheduler` | Set scheduler mode |
 | GET | `/api/v1/stats` | Aggregate stats (VRAM, utilization, daemon status) |
+| GET | `/api/v1/power` | Power state summary |
+| GET | `/api/v1/temperature` | GPU temperatures |
 | GET | `/api/v1/logs` | Last 100 lines of daemon log |
+| GET | `/api/v1/health` | Health check |
 | GET | `/` | Service info and endpoint list |
 
 ### Example: `GET /api/v1/gpus`

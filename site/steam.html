@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="Steam / Proton — MVGAL Documentation">
 <meta name="twitter:description" content="Use MVGAL with Steam and Proton for multi-GPU gaming: Vulkan layer, frame pacer, alternate frame rendering, NTSYNC and environment variables.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Steam / Proton \u2014 MVGAL Documentation", "name": "Steam / Proton \u2014 MVGAL Documentation", "description": "Use MVGAL with Steam and Proton for multi-GPU gaming: Vulkan layer, frame pacer, alternate frame rendering, NTSYNC and environment variables.", "url": "https://thecreategm.github.io/mvgal-docs/site/steam.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY", "datePublished": "2026-08-31", "dateModified": "2026-08-31", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Steam / Proton \u2014 MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/steam.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Steam / Proton — MVGAL Documentation", "name": "Steam / Proton — MVGAL Documentation", "description": "Use MVGAL with Steam and Proton for multi-GPU gaming: Vulkan layer, frame pacer, alternate frame rendering, NTSYNC and environment variables.", "url": "https://thecreategm.github.io/mvgal-docs/site/steam.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Steam / Proton — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/steam.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -50,11 +50,12 @@
 <nav class="sidebar">
   <div class="brand">
     <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.3</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.8</div>
   </div>
-  <a href="index.html">Home</a>
+<a href="index.html">Home</a>
 <a href="quickstart.html">Quick Start</a>
 <a href="install.html">Installation</a>
+<a href="secure_boot.html">Secure Boot</a>
 <a href="build.html">Building</a>
 <a href="architecture.html">Architecture</a>
 <a href="design.html">Design</a>
@@ -66,10 +67,12 @@
 <a href="power.html">Power Management</a>
 <a href="troubleshooting.html">Troubleshooting</a>
 <a href="status.html">Project Status</a>
+<a href="changelog.html">Changelog</a>
 </nav>
 <main>
 <h1 id="mvgal-steamproton-integration">MVGAL Steam/Proton Integration</h1>
-<p><strong>Version:</strong> 1.0 <strong>Date:</strong> 2026-06-02</p>
+<p><strong>Version:</strong> 0.7.8<br>
+<strong>Date:</strong> September 2026</p>
 <hr>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
@@ -96,7 +99,8 @@
 <h2 id="2-integration-methods">2. Integration Methods</h2>
 <h3 id="21-steam-launch-options">2.1 Steam Launch Options</h3>
 <p>Add to game properties → Launch Options:</p>
-<pre><code class="language-bash">ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%</code></pre>
+<pre><code class="language-bash">ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
+</code></pre>
 <h3 id="22-steam-compatibility-tool">2.2 Steam Compatibility Tool</h3>
 <p>Install MVGAL as a Steam compatibility tool:</p>
 <ol>
@@ -106,11 +110,14 @@
 </ol>
 <h3 id="23-environment-variables">2.3 Environment Variables</h3>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Variable</th>
 <th>Values</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>ENABLE_MVGAL</code></td>
 <td><code>0</code> / <code>1</code></td>
@@ -141,50 +148,44 @@
 <td>path</td>
 <td>Write logs to file</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="3-vulkan-layer-integration">3. Vulkan Layer Integration</h2>
 <h3 id="31-layer-discovery">3.1 Layer Discovery</h3>
 <p>MVGAL registers as a Vulkan implicit layer:</p>
 <pre><code class="language-json">// /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
 {
-    "file_format_version": "1.0.0",
-    "chain_as_layer_as_is": true,
-    "layer": {
-        "name": "VK_LAYER_MVGAL_aggregation",
-        "description": "MVGAL multi-vendor GPU aggregation",
-        "type": "IMPLICIT",
-        "library_path": "libVK_LAYER_MVGAL.so",
-        "apis": [{"version": "1.3.0", "name": "VK_API_VERSION"}]
+    &quot;file_format_version&quot;: &quot;1.0.0&quot;,
+    &quot;chain_as_layer_as_is&quot;: true,
+    &quot;layer&quot;: {
+        &quot;name&quot;: &quot;VK_LAYER_MVGAL_aggregation&quot;,
+        &quot;description&quot;: &quot;MVGAL multi-vendor GPU aggregation&quot;,
+        &quot;type&quot;: &quot;IMPLICIT&quot;,
+        &quot;library_path&quot;: &quot;libVK_LAYER_MVGAL.so&quot;,
+        &quot;apis&quot;: [{&quot;version&quot;: &quot;1.3.0&quot;, &quot;name&quot;: &quot;VK_API_VERSION&quot;}]
     }
-}</code></pre>
+}
+</code></pre>
 <h3 id="32-intercepted-functions">3.2 Intercepted Functions</h3>
 <p>The layer intercepts:</p>
-<p><strong>Instance Level:</strong></p>
-<ul>
-<li><code>vkCreateInstance</code></li>
-<li><code>vkDestroyInstance</code></li>
-<li><code>vkEnumeratePhysicalDevices</code></li>
-</ul>
-<p><strong>Device Level:</strong></p>
-<ul>
-<li><code>vkCreateDevice</code></li>
-<li><code>vkDestroyDevice</code></li>
-<li><code>vkGetDeviceQueue</code></li>
-<li><code>vkGetDeviceQueue2</code></li>
-</ul>
-<p><strong>Queue Level:</strong></p>
-<ul>
-<li><code>vkQueueSubmit</code></li>
-<li><code>vkQueueSubmit2</code></li>
-<li><code>vkQueueWaitIdle</code></li>
-</ul>
-<p><strong>Physical Device:</strong></p>
-<ul>
-<li><code>vkGetPhysicalDeviceProperties</code></li>
-<li><code>vkGetPhysicalDeviceMemoryProperties</code></li>
-<li><code>vkGetPhysicalDeviceQueueFamilyProperties</code></li>
-</ul>
+<p><strong>Instance Level:</strong>
+- <code>vkCreateInstance</code>
+- <code>vkDestroyInstance</code>
+- <code>vkEnumeratePhysicalDevices</code></p>
+<p><strong>Device Level:</strong>
+- <code>vkCreateDevice</code>
+- <code>vkDestroyDevice</code>
+- <code>vkGetDeviceQueue</code>
+- <code>vkGetDeviceQueue2</code></p>
+<p><strong>Queue Level:</strong>
+- <code>vkQueueSubmit</code>
+- <code>vkQueueSubmit2</code>
+- <code>vkQueueWaitIdle</code></p>
+<p><strong>Physical Device:</strong>
+- <code>vkGetPhysicalDeviceProperties</code>
+- <code>vkGetPhysicalDeviceMemoryProperties</code>
+- <code>vkGetPhysicalDeviceQueueFamilyProperties</code></p>
 <h3 id="33-layer-implementation">3.3 Layer Implementation</h3>
 <pre><code class="language-c">// Simplified layer dispatch
 VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(
@@ -195,38 +196,30 @@ VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(
 {
     // Get MVGAL context
     mvgal_context_t *ctx = mvgal_layer_get_context();
-    
+
     // Determine which GPU to use based on strategy
     uint32_t gpu_index = mvgal_scheduler_select_gpu(ctx, queue);
-    
+
     // Log telemetry
     mvgal_ipc_send_submit(queue, gpu_index, pSubmits, submitCount);
-    
+
     // Forward to next layer
     return ctx-&gt;next_vkQueueSubmit(queue, submitCount, pSubmits, fence);
-}</code></pre>
+}
+</code></pre>
 <hr>
 <h2 id="4-frame-pacer">4. Frame Pacer</h2>
 <h3 id="41-purpose">4.1 Purpose</h3>
 <p>Multi-GPU AFR can cause microstutter if frames are delivered at uneven intervals. The frame pacer holds completed frames and releases them at consistent vsync-aligned times.</p>
 <h3 id="42-architecture">4.2 Architecture</h3>
-<pre><code>Game (via DXVK/VKD3D)
-    │
-    ▼
-vkQueuePresentKHR
-    │
-    ▼
-VK_LAYER_MVGAL (intercepts)
-    │
-    ▼
-mvgal_frame_pacer_submit(frame_id, gpu_index)
-    │
-    ▼
-Frame Pacer Thread (background)
-    │
-    ├── Wait for next vsync boundary
-    │
-    └── Signal presentation semaphore</code></pre>
+<pre><code class="language-mermaid">flowchart TD
+    Game[&quot;Game (via DXVK/VKD3D)&quot;] --&gt; VK[&quot;vkQueuePresentKHR&quot;]
+    VK --&gt; LAYER[&quot;VK_LAYER_MVGAL (intercepts)&quot;]
+    LAYER --&gt; SUBMIT[&quot;mvgal_frame_pacer_submit(frame_id, gpu_index)&quot;]
+    SUBMIT --&gt; THREAD[&quot;Frame Pacer Thread (background)&quot;]
+    THREAD --&gt; VSYNC[&quot;Wait for next vsync boundary&quot;]
+    THREAD --&gt; SEM[&quot;Signal presentation semaphore&quot;]
+</code></pre>
 <h3 id="43-configuration">4.3 Configuration</h3>
 <pre><code class="language-bash"># Enable frame pacing (default: on for AFR)
 export MVGAL_FRAME_PACING=1
@@ -235,7 +228,8 @@ export MVGAL_FRAME_PACING=1
 export MVGAL_REFRESH_HZ=144
 
 # Debug output
-export MVGAL_FRAME_PACING_DEBUG=1</code></pre>
+export MVGAL_FRAME_PACING_DEBUG=1
+</code></pre>
 <h3 id="44-frame-pacer-api">4.4 Frame Pacer API</h3>
 <pre><code class="language-c">/* Initialize frame pacer */
 mvgal_frame_pacer_t *pacer = mvgal_fp_create(144);  /* 144 Hz */
@@ -246,7 +240,8 @@ mvgal_fp_submit_frame(pacer, frame_id, gpu_index);
 /* Get statistics */
 uint64_t frames_paced, frames_dropped;
 double avg_jitter_us;
-mvgal_fp_get_stats(pacer, &amp;frames_paced, &amp;frames_dropped, &amp;avg_jitter_us);</code></pre>
+mvgal_fp_get_stats(pacer, &amp;frames_paced, &amp;frames_dropped, &amp;avg_jitter_us);
+</code></pre>
 <hr>
 <h2 id="5-alternate-frame-rendering-afr">5. Alternate Frame Rendering (AFR)</h2>
 <h3 id="51-how-afr-works-with-mvgal">5.1 How AFR Works with MVGAL</h3>
@@ -254,7 +249,8 @@ mvgal_fp_get_stats(pacer, &amp;frames_paced, &amp;frames_dropped, &amp;avg_jitte
 Frame 1: GPU 1 renders
 Frame 2: GPU 0 renders
 Frame 3: GPU 1 renders
-...</code></pre>
+...
+</code></pre>
 <h3 id="52-frame-synchronization">5.2 Frame Synchronization</h3>
 <p>AFR requires synchronization between GPUs:</p>
 <pre><code class="language-c">struct afr_sync {
@@ -266,19 +262,21 @@ Frame 3: GPU 1 renders
 void afr_submit_frame(struct afr_sync *sync, uint32_t frame_index) {
     uint32_t gpu_index = frame_index % 2;
     uint32_t wait_gpu = (gpu_index + 1) % 2;
-    
+
     /* Wait for previous frame on other GPU */
     vkWaitForFences(device, 1, &amp;sync-&gt;fences[wait_gpu], VK_TRUE, UINT64_MAX);
-    
+
     /* Submit to GPU */
     vkQueueSubmit(queue[gpu_index], 1, &amp;submit_info, sync-&gt;fences[gpu_index]);
-}</code></pre>
+}
+</code></pre>
 <h3 id="53-afr-configuration">5.3 AFR Configuration</h3>
 <pre><code class="language-ini"># /etc/mvgal/mvgal.conf
 [afr]
 enable_sync = true
 sync_timeout_ms = 16
-max_latency = 3</code></pre>
+max_latency = 3
+</code></pre>
 <hr>
 <h2 id="6-ntsync-like-improvements">6. NTSYNC-like Improvements</h2>
 <h3 id="61-windows-nt-synchronization">6.1 Windows NT Synchronization</h3>
@@ -303,7 +301,8 @@ struct mvgal_mutex {
     struct task_struct *owner;
     atomic_t count;
     wait_queue_head_t wait_queue;
-};</code></pre>
+};
+</code></pre>
 <h3 id="63-integration-points">6.3 Integration Points</h3>
 <ol>
 <li><strong>Wine</strong>: NTSYNC driver in <code>dlls/ntsync/</code></li>
@@ -326,13 +325,15 @@ bool is_wow64_process(pid_t pid) {
 void wow64_redirect_api(VkInstance inst, VkPhysicalDevice phys_dev) {
     /* Translate 32-bit pointers */
     /* Map to correct 64-bit structures */
-}</code></pre>
+}
+</code></pre>
 <h3 id="73-wow64-configuration">7.3 WoW64 Configuration</h3>
 <pre><code class="language-bash"># Enable WoW64 support
 export MVGAL_WOW64=1
 
 # WoW64-specific debug
-export MVGAL_WOW64_DEBUG=1</code></pre>
+export MVGAL_WOW64_DEBUG=1
+</code></pre>
 <hr>
 <h2 id="8-configuration">8. Configuration</h2>
 <h3 id="81-steam-integration-setup">8.1 Steam Integration Setup</h3>
@@ -341,35 +342,40 @@ mvgal-steam-setup
 
 # This creates:
 # ~/.local/share/Steam/steamapps/common/Proton - MVGAL/
-# ~/.local/share/Steam/steamapps/compat_tools.d/mvgal.json</code></pre>
+# ~/.local/share/Steam/steamapps/compat_tools.d/mvgal.json
+</code></pre>
 <h3 id="82-compatibility-tool-manifest">8.2 Compatibility Tool Manifest</h3>
 <pre><code class="language-json">{
-    "Name": "Proton - MVGAL",
-    "Version": "0.7.3",
-    "VersionString": "Proton 9.0 with MVGAL 0.7.3",
-    "Architectures": "x86_64,i686",
-    "Priority": 100,
-    "Enabled": true
-}</code></pre>
+    &quot;Name&quot;: &quot;Proton - MVGAL&quot;,
+    &quot;Version&quot;: &quot;0.7.3&quot;,
+    &quot;VersionString&quot;: &quot;Proton 9.0 with MVGAL 0.7.3&quot;,
+    &quot;Architectures&quot;: &quot;x86_64,i686&quot;,
+    &quot;Priority&quot;: 100,
+    &quot;Enabled&quot;: true
+}
+</code></pre>
 <hr>
 <h2 id="9-troubleshooting">9. Troubleshooting</h2>
 <h3 id="91-common-issues">9.1 Common Issues</h3>
+<p><strong>Issue: Game shows black screen</strong></p>
 <pre><code class="language-bash"># Solution: Disable frame pacing
 export MVGAL_FRAME_PACING=0
 
 # Or use single-GPU mode
-export MVGAL_STRATEGY=single</code></pre>
-<p><strong>Issue: Game shows black screen</strong></p>
+export MVGAL_STRATEGY=single
+</code></pre>
+<p><strong>Issue: Layer not loaded</strong></p>
 <pre><code class="language-bash"># Check layer discovery
 vulkaninfo | grep -i mvgal
 
 # Verify JSON manifest location
-ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code></pre>
-<p><strong>Issue: Layer not loaded</strong></p>
+ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
+</code></pre>
+<p><strong>Issue: Anti-cheat blocked</strong></p>
 <pre><code class="language-bash"># Some games block Vulkan layers
 # Solution: Use compatibility mode
-export MVGAL_STRATEGY=single</code></pre>
-<p><strong>Issue: Anti-cheat blocked</strong></p>
+export MVGAL_STRATEGY=single
+</code></pre>
 <h3 id="92-debug-commands">9.2 Debug Commands</h3>
 <pre><code class="language-bash"># Enable verbose logging
 export MVGAL_VULKAN_DEBUG=1
@@ -379,16 +385,18 @@ export MVGAL_LOG_PATH=/tmp/mvgal.log
 mvgal-status --verbose
 
 # Check GPU status
-mvgal-info --json</code></pre>
+mvgal-info --json
+</code></pre>
 <h3 id="93-log-analysis">9.3 Log Analysis</h3>
 <pre><code class="language-bash"># Find frame timing issues
-grep -i "jitter\|drop" /var/log/mvgal/mvgald.log
+grep -i &quot;jitter\|drop&quot; /var/log/mvgal/mvgald.log
 
 # Check GPU assignments
-grep "submit.*gpu" /tmp/mvgal.log
+grep &quot;submit.*gpu&quot; /tmp/mvgal.log
 
 # Power management logs
-journalctl -u mvgald -f</code></pre>
+journalctl -u mvgald -f
+</code></pre>
 <hr>
 <h2 id="10-known-limitations">10. Known Limitations</h2>
 <ol>
@@ -413,7 +421,7 @@ journalctl -u mvgald -f</code></pre>
 <li><strong>Game-specific profiles</strong>: Auto-detect and optimize for known titles</li>
 <li><strong>AI-based scheduling</strong>: Learn optimal strategies per game</li>
 </ol>
-<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.3 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.8 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
 </main>
 </body>
 </html>

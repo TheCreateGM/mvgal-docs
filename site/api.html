@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="API Reference — MVGAL Documentation">
 <meta name="twitter:description" content="Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference \u2014 MVGAL Documentation", "name": "API Reference \u2014 MVGAL Documentation", "description": "Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-08-31", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference \u2014 MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -50,11 +50,12 @@
 <nav class="sidebar">
   <div class="brand">
     <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.3</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.8</div>
   </div>
-  <a href="index.html">Home</a>
+<a href="index.html">Home</a>
 <a href="quickstart.html">Quick Start</a>
 <a href="install.html">Installation</a>
+<a href="secure_boot.html">Secure Boot</a>
 <a href="build.html">Building</a>
 <a href="architecture.html">Architecture</a>
 <a href="design.html">Design</a>
@@ -66,10 +67,124 @@
 <a href="power.html">Power Management</a>
 <a href="troubleshooting.html">Troubleshooting</a>
 <a href="status.html">Project Status</a>
+<a href="changelog.html">Changelog</a>
 </nav>
 <main>
 <h1 id="mvgal-public-api-reference">MVGAL Public API Reference</h1>
-<p><strong>Version:</strong> 0.2.2 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
+<p><strong>Version:</strong> 0.7.8 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
+<hr>
+<h2 id="public-c-headers">Public C Headers</h2>
+<p>MVGAL exposes 26 public C headers under <code>include/mvgal/</code>. The main header <code>mvgal.h</code> includes all core subsystem headers.</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mvgal.h</code></td>
+<td>Main API — init, shutdown, device query</td>
+</tr>
+<tr>
+<td><code>mvgal_types.h</code></td>
+<td>Core type definitions, enums, error codes</td>
+</tr>
+<tr>
+<td><code>mvgal_version.h</code></td>
+<td>Version macros (generated from <code>.h.in</code>)</td>
+</tr>
+<tr>
+<td><code>mvgal_uapi.h</code></td>
+<td>Kernel/userspace UAPI — IOCTL structs + commands</td>
+</tr>
+<tr>
+<td><code>mvgal_gpu.h</code></td>
+<td>GPU enumeration, properties, topology</td>
+</tr>
+<tr>
+<td><code>mvgal_memory.h</code></td>
+<td>Memory allocation, flags, placement</td>
+</tr>
+<tr>
+<td><code>mvgal_unified_heap.h</code></td>
+<td>Unified heap abstraction (Heaps 0–3)</td>
+</tr>
+<tr>
+<td><code>mvgal_scheduler.h</code></td>
+<td>Scheduler strategy, policy control</td>
+</tr>
+<tr>
+<td><code>mvgal_execution.h</code></td>
+<td>Frame sessions, migration plans</td>
+</tr>
+<tr>
+<td><code>mvgal_power.h</code></td>
+<td>Power management, DVFS, thermal</td>
+</tr>
+<tr>
+<td><code>mvgal_config.h</code></td>
+<td>Configuration file parsing</td>
+</tr>
+<tr>
+<td><code>mvgal_log.h</code></td>
+<td>Logging subsystem</td>
+</tr>
+<tr>
+<td><code>mvgal_ipc.h</code></td>
+<td>IPC client/server — Unix domain socket protocol</td>
+</tr>
+<tr>
+<td><code>mvgal_intercept.h</code></td>
+<td>API intercept layer interface</td>
+</tr>
+<tr>
+<td><code>mvgal_p2p_dma.h</code></td>
+<td>P2P DMA transfer API</td>
+</tr>
+<tr>
+<td><code>mvgal_pool.h</code></td>
+<td>Memory pool management</td>
+</tr>
+<tr>
+<td><code>mvgal_fork.h</code></td>
+<td>GPU fork/clone support</td>
+</tr>
+<tr>
+<td><code>mvgal_ai.h</code></td>
+<td>AI/ML scheduling hint API</td>
+</tr>
+<tr>
+<td><code>mvgal_coherency.h</code></td>
+<td>Cache coherency management</td>
+</tr>
+<tr>
+<td><code>mvgal_barrier_translate.h</code></td>
+<td>Barrier translation (Vulkan ↔ CUDA ↔ OpenCL)</td>
+</tr>
+<tr>
+<td><code>mvgal_cmd_dag.h</code></td>
+<td>Command DAG analysis</td>
+</tr>
+<tr>
+<td><code>mvgal_shader_backend.h</code></td>
+<td>Shader backend interface (SPIR-V routing)</td>
+</tr>
+<tr>
+<td><code>mvgal_sycl.h</code></td>
+<td>SYCL backend support</td>
+</tr>
+<tr>
+<td><code>mvgal_network.h</code></td>
+<td>Network pooling / RDMA</td>
+</tr>
+<tr>
+<td><code>mvgal_wow64.h</code></td>
+<td>WoW64 filesystem redirection types</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <h2 id="core-api-mvgalh">Core API (<code>mvgal.h</code>)</h2>
 <h3 id="initialization">Initialization</h3>
@@ -87,27 +202,33 @@ bool mvgal_is_initialized(void);
 
 // Version information
 const char *mvgal_get_version(void);
-void        mvgal_get_version_numbers(uint32_t *major, uint32_t *minor, uint32_t *patch);</code></pre>
+void        mvgal_get_version_numbers(uint32_t *major, uint32_t *minor, uint32_t *patch);
+</code></pre>
 <h3 id="context-management">Context Management</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_context_create(mvgal_context_t *context);
 void          mvgal_context_destroy(mvgal_context_t context);
-mvgal_error_t mvgal_context_set_current(mvgal_context_t context);</code></pre>
+mvgal_error_t mvgal_context_set_current(mvgal_context_t context);
+</code></pre>
 <h3 id="execution-control">Execution Control</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_flush(mvgal_context_t context);
 mvgal_error_t mvgal_finish(mvgal_context_t context);
 mvgal_error_t mvgal_wait_idle(mvgal_context_t context);
 mvgal_error_t mvgal_set_enabled(mvgal_context_t context, bool enabled);
-bool          mvgal_is_enabled(mvgal_context_t context);</code></pre>
+bool          mvgal_is_enabled(mvgal_context_t context);
+</code></pre>
 <h3 id="strategy-control">Strategy Control</h3>
 <pre><code class="language-c">mvgal_error_t                mvgal_set_strategy(mvgal_context_t ctx, mvgal_distribution_strategy_t strategy);
-mvgal_distribution_strategy_t mvgal_get_strategy(mvgal_context_t ctx);</code></pre>
+mvgal_distribution_strategy_t mvgal_get_strategy(mvgal_context_t ctx);
+</code></pre>
 <h3 id="statistics">Statistics</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_get_stats(mvgal_context_t context, mvgal_stats_t *stats);
-mvgal_error_t mvgal_reset_stats(mvgal_context_t context);</code></pre>
+mvgal_error_t mvgal_reset_stats(mvgal_context_t context);
+</code></pre>
 <h3 id="custom-splitters">Custom Splitters</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_register_custom_splitter(mvgal_context_t ctx,
                                               const mvgal_workload_splitter_t *splitter);
-mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx);</code></pre>
+mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx);
+</code></pre>
 <h3 id="synchronization-primitives">Synchronization Primitives</h3>
 <pre><code class="language-c">// Fences
 mvgal_error_t mvgal_fence_create(mvgal_context_t ctx, mvgal_fence_t *fence);
@@ -121,30 +242,35 @@ mvgal_error_t mvgal_semaphore_create(mvgal_context_t ctx, mvgal_semaphore_t *sem
 void          mvgal_semaphore_destroy(mvgal_semaphore_t sem);
 mvgal_error_t mvgal_semaphore_signal(mvgal_semaphore_t sem, uint64_t value);
 mvgal_error_t mvgal_semaphore_wait(mvgal_semaphore_t sem, uint64_t value, uint64_t timeout_ns);
-uint64_t      mvgal_semaphore_get_value(mvgal_semaphore_t sem);</code></pre>
+uint64_t      mvgal_semaphore_get_value(mvgal_semaphore_t sem);
+</code></pre>
 <hr>
-<h2 id="gpu-management-api-mvgalgpuh">GPU Management API (<code>mvgal_gpu.h</code>)</h2>
+<h2 id="gpu-management-api-mvgal_gpuh">GPU Management API (<code>mvgal_gpu.h</code>)</h2>
 <h3 id="enumeration">Enumeration</h3>
 <pre><code class="language-c">int32_t       mvgal_gpu_get_count(void);
 mvgal_error_t mvgal_gpu_enumerate(mvgal_gpu_descriptor_t *descriptors, uint32_t *count);
-mvgal_error_t mvgal_gpu_get_descriptor(int32_t index, mvgal_gpu_descriptor_t *desc);</code></pre>
+mvgal_error_t mvgal_gpu_get_descriptor(int32_t index, mvgal_gpu_descriptor_t *desc);
+</code></pre>
 <h3 id="discovery">Discovery</h3>
 <pre><code class="language-c">mvgal_gpu_t mvgal_gpu_find_by_pci(uint16_t vendor_id, uint16_t device_id);
 mvgal_gpu_t mvgal_gpu_find_by_node(const char *drm_node);
 mvgal_gpu_t mvgal_gpu_find_by_vendor(mvgal_vendor_t vendor);
 mvgal_gpu_t mvgal_gpu_select_best(const mvgal_gpu_selection_criteria_t *criteria);
-mvgal_gpu_t mvgal_gpu_get_primary(void);</code></pre>
+mvgal_gpu_t mvgal_gpu_get_primary(void);
+</code></pre>
 <h3 id="control">Control</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_gpu_enable(int32_t index, bool enabled);
 bool          mvgal_gpu_is_enabled(int32_t index);
 mvgal_error_t mvgal_gpu_enable_all(void);
-mvgal_error_t mvgal_gpu_disable_all(void);</code></pre>
+mvgal_error_t mvgal_gpu_disable_all(void);
+</code></pre>
 <h3 id="capabilities">Capabilities</h3>
 <pre><code class="language-c">bool          mvgal_gpu_has_feature(mvgal_gpu_t gpu, mvgal_feature_flags_t feature);
 bool          mvgal_gpu_has_api(mvgal_gpu_t gpu, mvgal_api_type_t api);
 mvgal_error_t mvgal_gpu_get_memory_stats(mvgal_gpu_t gpu, uint64_t *total, uint64_t *free);
 float         mvgal_gpu_get_utilization(mvgal_gpu_t gpu);
-float         mvgal_gpu_get_temperature(mvgal_gpu_t gpu);</code></pre>
+float         mvgal_gpu_get_temperature(mvgal_gpu_t gpu);
+</code></pre>
 <h3 id="health-monitoring">Health Monitoring</h3>
 <pre><code class="language-c">mvgal_error_t          mvgal_gpu_get_health_status(mvgal_gpu_t gpu, mvgal_gpu_health_status_t *status);
 mvgal_gpu_health_level_t mvgal_gpu_get_health_level(mvgal_gpu_t gpu);
@@ -153,14 +279,18 @@ mvgal_error_t          mvgal_gpu_get_health_thresholds(mvgal_gpu_health_threshol
 mvgal_error_t          mvgal_gpu_set_health_thresholds(const mvgal_gpu_health_thresholds_t *thresholds);
 mvgal_error_t          mvgal_gpu_register_health_callback(mvgal_gpu_health_callback_t cb, void *user_data);
 void                   mvgal_gpu_unregister_health_callback(mvgal_gpu_health_callback_t cb);
-mvgal_error_t          mvgal_gpu_enable_health_monitoring(bool enable);</code></pre>
+mvgal_error_t          mvgal_gpu_enable_health_monitoring(bool enable);
+</code></pre>
 <p><strong>Default health thresholds:</strong></p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Metric</th>
 <th>Warning</th>
 <th>Critical</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Temperature</td>
 <td>80 °C</td>
@@ -176,15 +306,17 @@ mvgal_error_t          mvgal_gpu_enable_health_monitoring(bool enable);</code></
 <td>85 %</td>
 <td>95 %</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h3 id="logical-device">Logical Device</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_device_create(const mvgal_gpu_t *gpus, uint32_t count,
                                    mvgal_logical_device_t *device);
 void          mvgal_device_destroy(mvgal_logical_device_t device);
 mvgal_error_t mvgal_device_get_descriptor(mvgal_logical_device_t device,
-                                           mvgal_logical_device_descriptor_t *desc);</code></pre>
+                                           mvgal_logical_device_descriptor_t *desc);
+</code></pre>
 <hr>
-<h2 id="memory-management-api-mvgalmemoryh">Memory Management API (<code>mvgal_memory.h</code>)</h2>
+<h2 id="memory-management-api-mvgal_memoryh">Memory Management API (<code>mvgal_memory.h</code>)</h2>
 <h3 id="allocation">Allocation</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_allocate(mvgal_context_t ctx,
                                      const mvgal_memory_alloc_info_t *info,
@@ -194,7 +326,8 @@ mvgal_error_t mvgal_memory_allocate_simple(mvgal_context_t ctx, size_t size,
                                             mvgal_buffer_t *buffer);
 void          mvgal_memory_free(mvgal_buffer_t buffer);
 mvgal_error_t mvgal_memory_get_descriptor(mvgal_buffer_t buffer,
-                                           mvgal_memory_descriptor_t *desc);</code></pre>
+                                           mvgal_memory_descriptor_t *desc);
+</code></pre>
 <h3 id="cpu-access">CPU Access</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_map(mvgal_buffer_t buffer, void **ptr);
 void          mvgal_memory_unmap(mvgal_buffer_t buffer);
@@ -203,31 +336,47 @@ void         *mvgal_memory_get_pointer(mvgal_buffer_t buffer);
 mvgal_error_t mvgal_memory_write(mvgal_buffer_t buffer, uint64_t offset,
                                   const void *data, size_t size);
 mvgal_error_t mvgal_memory_read(mvgal_buffer_t buffer, uint64_t offset,
-                                 void *data, size_t size);</code></pre>
+                                 void *data, size_t size);
+</code></pre>
 <h3 id="gpu-transfers">GPU Transfers</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_copy(mvgal_context_t ctx,
                                  const mvgal_memory_copy_region_t *region);
 mvgal_error_t mvgal_memory_copy_gpu(mvgal_context_t ctx,
                                      mvgal_buffer_t src, uint32_t src_gpu,
                                      mvgal_buffer_t dst, uint32_t dst_gpu,
-                                     size_t size);</code></pre>
+                                     size_t size);
+</code></pre>
 <h3 id="dma-buf">DMA-BUF</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_export_dmabuf(mvgal_buffer_t buffer, int *fd);
 mvgal_error_t mvgal_memory_import_dmabuf(mvgal_context_t ctx, int fd,
-                                          size_t size, mvgal_buffer_t *buffer);</code></pre>
+                                          size_t size, mvgal_buffer_t *buffer);
+</code></pre>
 <h3 id="synchronization">Synchronization</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_flush(mvgal_buffer_t buffer);
 mvgal_error_t mvgal_memory_invalidate(mvgal_buffer_t buffer);
-mvgal_error_t mvgal_memory_sync(mvgal_buffer_t buffer, uint32_t gpu_mask);</code></pre>
+mvgal_error_t mvgal_memory_sync(mvgal_buffer_t buffer, uint32_t gpu_mask);
+</code></pre>
 <h3 id="advanced">Advanced</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_replicate(mvgal_buffer_t buffer, uint32_t gpu_mask);
 uint64_t      mvgal_memory_get_gpu_address(mvgal_buffer_t buffer, uint32_t gpu_index);
 bool          mvgal_memory_is_accessible(mvgal_buffer_t buffer, uint32_t gpu_index);
 mvgal_error_t mvgal_memory_create_shared(mvgal_context_t ctx, size_t size,
                                           uint32_t gpu_mask, mvgal_buffer_t *buffer);
-mvgal_error_t mvgal_memory_get_stats(mvgal_context_t ctx, mvgal_memory_stats_t *stats);</code></pre>
+mvgal_error_t mvgal_memory_get_stats(mvgal_context_t ctx, mvgal_memory_stats_t *stats);
+</code></pre>
 <hr>
-<h2 id="scheduler-api-mvgalschedulerh">Scheduler API (<code>mvgal_scheduler.h</code>)</h2>
+<h2 id="power-management-api-mvgal_powerh">Power Management API (<code>mvgal_power.h</code>)</h2>
+<pre><code class="language-c">mvgal_error_t mvgal_power_get_state(mvgal_gpu_index_t gpu, mvgal_power_state_t *state);
+mvgal_error_t mvgal_power_get_temperature(mvgal_gpu_index_t gpu, int32_t *temperature_c);
+mvgal_error_t mvgal_power_get_metrics(mvgal_gpu_index_t gpu, mvgal_power_metrics_t *metrics);
+</code></pre>
+<hr>
+<h2 id="p2p-dma-api-mvgal_p2p_dmah">P2P DMA API (<code>mvgal_p2p_dma.h</code>)</h2>
+<pre><code class="language-c">mvgal_error_t mvgal_p2p_transfer(mvgal_p2p_context_t ctx, const mvgal_p2p_transfer_info_t *info);
+mvgal_error_t mvgal_p2p_get_caps(mvgal_gpu_index_t src, mvgal_gpu_index_t dst, mvgal_p2p_caps_t *caps);
+</code></pre>
+<hr>
+<h2 id="scheduler-api-mvgal_schedulerh">Scheduler API (<code>mvgal_scheduler.h</code>)</h2>
 <h3 id="workload-submission">Workload Submission</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_workload_submit(mvgal_context_t ctx,
                                      const mvgal_workload_submit_info_t *info,
@@ -236,7 +385,8 @@ mvgal_error_t mvgal_workload_submit_with_callback(mvgal_context_t ctx,
                                                    const mvgal_workload_submit_info_t *info,
                                                    mvgal_workload_callback_t callback,
                                                    void *user_data,
-                                                   mvgal_workload_t *workload);</code></pre>
+                                                   mvgal_workload_t *workload);
+</code></pre>
 <h3 id="workload-control">Workload Control</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_workload_wait(mvgal_workload_t workload, uint64_t timeout_ns);
 bool          mvgal_workload_is_completed(mvgal_workload_t workload);
@@ -246,7 +396,8 @@ mvgal_error_t mvgal_workload_get_descriptor(mvgal_workload_t workload,
 mvgal_error_t mvgal_workload_cancel(mvgal_workload_t workload);
 void          mvgal_workload_destroy(mvgal_workload_t workload);
 mvgal_error_t mvgal_workload_set_priority(mvgal_workload_t workload, uint32_t priority);
-mvgal_error_t mvgal_workload_assign_gpus(mvgal_workload_t workload, uint32_t gpu_mask);</code></pre>
+mvgal_error_t mvgal_workload_assign_gpus(mvgal_workload_t workload, uint32_t gpu_mask);
+</code></pre>
 <h3 id="scheduler-configuration">Scheduler Configuration</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_scheduler_configure(const mvgal_scheduler_config_t *config);
 mvgal_error_t mvgal_scheduler_get_config(mvgal_scheduler_config_t *config);
@@ -258,15 +409,17 @@ mvgal_error_t mvgal_scheduler_set_gpu_priority(uint32_t gpu_index, int32_t prior
 int32_t       mvgal_scheduler_get_gpu_priority(uint32_t gpu_index);
 mvgal_error_t mvgal_scheduler_pause(void);
 mvgal_error_t mvgal_scheduler_resume(void);
-bool          mvgal_scheduler_is_paused(void);</code></pre>
+bool          mvgal_scheduler_is_paused(void);
+</code></pre>
 <h3 id="distribution-functions">Distribution Functions</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_distribute_afr(mvgal_workload_t workload, uint32_t frame_number,
                                     uint32_t *gpu_index);
 mvgal_error_t mvgal_distribute_sfr(mvgal_workload_t workload, float split_ratio,
                                     bool horizontal, uint32_t *gpu_indices);
-mvgal_error_t mvgal_distribute_task(mvgal_workload_t workload, uint32_t *gpu_index);</code></pre>
+mvgal_error_t mvgal_distribute_task(mvgal_workload_t workload, uint32_t *gpu_index);
+</code></pre>
 <hr>
-<h2 id="execution-engine-api-mvgalexecutionh">Execution Engine API (<code>mvgal_execution.h</code>)</h2>
+<h2 id="execution-engine-api-mvgal_executionh">Execution Engine API (<code>mvgal_execution.h</code>)</h2>
 <pre><code class="language-c">// Begin a new frame session
 mvgal_error_t mvgal_execution_begin_frame(const mvgal_execution_frame_begin_info_t *info,
                                            uint64_t *frame_id);
@@ -288,9 +441,10 @@ mvgal_error_t mvgal_execution_migrate_memory(const mvgal_execution_migration_inf
 
 // Generate a Steam/Proton scheduling profile
 mvgal_error_t mvgal_execution_get_steam_profile(const mvgal_steam_profile_request_t *request,
-                                                  mvgal_steam_profile_t *profile);</code></pre>
+                                                  mvgal_steam_profile_t *profile);
+</code></pre>
 <hr>
-<h2 id="ipc-api-mvgalipch">IPC API (<code>mvgal_ipc.h</code>)</h2>
+<h2 id="ipc-api-mvgal_ipch">IPC API (<code>mvgal_ipc.h</code>)</h2>
 <pre><code class="language-c">// Server
 mvgal_error_t mvgal_ipc_server_init(const char *socket_path);
 void          mvgal_ipc_server_cleanup(void);
@@ -303,14 +457,18 @@ void          mvgal_ipc_client_disconnect(void);
 mvgal_error_t mvgal_ipc_send(mvgal_ipc_message_type_t type,
                               const void *payload, size_t payload_size);
 mvgal_error_t mvgal_ipc_receive(mvgal_ipc_message_type_t *type,
-                                 void *payload, size_t *payload_size);</code></pre>
+                                 void *payload, size_t *payload_size);
+</code></pre>
 <p><strong>IPC Message Types:</strong></p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Type</th>
 <th>Value</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>MVGAL_IPC_MSG_PING</code></td>
 <td>0</td>
@@ -366,9 +524,169 @@ mvgal_error_t mvgal_ipc_receive(mvgal_ipc_message_type_t *type,
 <td>10</td>
 <td>Error response</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
-<h2 id="logging-api-mvgallogh">Logging API (<code>mvgal_log.h</code>)</h2>
+<h2 id="ioctl-interface-mvgal_uapih">IOCTL Interface (<code>mvgal_uapi.h</code>)</h2>
+<p>MVGAL exposes a character device at <code>/dev/mvgal0</code>. Magic number: <code>'M'</code> (0x4D).</p>
+<table>
+<thead>
+<tr>
+<th>IOCTL</th>
+<th style="text-align: center;">Code</th>
+<th style="text-align: center;">Direction</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MVGAL_IOC_QUERY_VERSION</code></td>
+<td style="text-align: center;"><code>0x00</code></td>
+<td style="text-align: center;">Read</td>
+<td>Query UAPI version</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_GET_GPU_COUNT</code></td>
+<td style="text-align: center;"><code>0x01</code></td>
+<td style="text-align: center;">Read</td>
+<td>Get number of GPUs</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_GET_GPU_INFO</code></td>
+<td style="text-align: center;"><code>0x02</code></td>
+<td style="text-align: center;">Write-Read</td>
+<td>Get GPU info by index</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_ENABLE</code></td>
+<td style="text-align: center;"><code>0x03</code></td>
+<td style="text-align: center;">None</td>
+<td>Enable MVGAL</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_DISABLE</code></td>
+<td style="text-align: center;"><code>0x04</code></td>
+<td style="text-align: center;">None</td>
+<td>Disable MVGAL</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_GET_STATS</code></td>
+<td style="text-align: center;"><code>0x05</code></td>
+<td style="text-align: center;">Read</td>
+<td>Get driver statistics</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_GET_CAPS</code></td>
+<td style="text-align: center;"><code>0x06</code></td>
+<td style="text-align: center;">Read</td>
+<td>Get capabilities</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_RESCAN</code></td>
+<td style="text-align: center;"><code>0x07</code></td>
+<td style="text-align: center;">None</td>
+<td>Trigger GPU rescan</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_EXPORT_DMABUF</code></td>
+<td style="text-align: center;"><code>0x10</code></td>
+<td style="text-align: center;">Write-Read</td>
+<td>Export DMA-BUF</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_IMPORT_DMABUF</code></td>
+<td style="text-align: center;"><code>0x11</code></td>
+<td style="text-align: center;">Write-Read</td>
+<td>Import DMA-BUF</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_ALLOC_CROSS_VENDOR</code></td>
+<td style="text-align: center;"><code>0x12</code></td>
+<td style="text-align: center;">Write-Read</td>
+<td>Cross-vendor allocation</td>
+</tr>
+<tr>
+<td><code>MVGAL_IOC_FREE_CROSS_VENDOR</code></td>
+<td style="text-align: center;"><code>0x13</code></td>
+<td style="text-align: center;">Write</td>
+<td>Free cross-vendor alloc</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="d-bus-api">D-Bus API</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bus name</td>
+<td><code>org.mvgal.MVGAL</code></td>
+</tr>
+<tr>
+<td>Object path</td>
+<td><code>/org/mvgal/daemon</code></td>
+</tr>
+<tr>
+<td>Interface</td>
+<td><code>org.mvgal.MVGAL</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Methods:</strong> <code>GetGPUCount</code>, <code>GetGPUInfo</code>, <code>GetStats</code>, <code>GetScheduler</code>, <code>SetScheduler</code>, <code>GetPowerState</code>, <code>GetTemperature</code>, <code>RescanGPUs</code>, <code>Ping</code></p>
+<p><strong>Signals:</strong> <code>GPUHotplug</code> (gpu_index, added), <code>TemperatureWarning</code> (gpu_index, temperature), <code>PowerLimitReached</code> (gpu_index)</p>
+<blockquote>
+<p><strong>Security (v0.7.8):</strong> the D-Bus policy restricts <code>org.mvgal.MVGAL</code> to root and the <code>mvgal</code> group — all other users are denied.</p>
+</blockquote>
+<hr>
+<h2 id="vulkan-extensions">Vulkan Extensions</h2>
+<table>
+<thead>
+<tr>
+<th>Extension Name</th>
+<th style="text-align: center;">Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VK_MVGAL_aggregation_device</code></td>
+<td style="text-align: center;">1</td>
+<td>Query MVGAL virtual device properties</td>
+</tr>
+<tr>
+<td><code>VK_MVGAL_memory_heaps</code></td>
+<td style="text-align: center;">1</td>
+<td>Unified heap (Heaps 0–3) enumeration</td>
+</tr>
+<tr>
+<td><code>VK_MVGAL_multi_gpu_submit</code></td>
+<td style="text-align: center;">1</td>
+<td>Multi-GPU command buffer submission</td>
+</tr>
+<tr>
+<td><code>VK_MVGAL_scheduler_hint</code></td>
+<td style="text-align: center;">1</td>
+<td>Per-submission scheduling hint</td>
+</tr>
+<tr>
+<td><code>VK_MVGAL_frame_pacing</code></td>
+<td style="text-align: center;">1</td>
+<td>Frame pacing control via Vulkan</td>
+</tr>
+<tr>
+<td><code>VK_MVGAL_p2p_transfer</code></td>
+<td style="text-align: center;">1</td>
+<td>P2P transfer between MVGAL GPUs</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="logging-api-mvgal_logh">Logging API (<code>mvgal_log.h</code>)</h2>
 <pre><code class="language-c">void mvgal_log_init(mvgal_log_level_t level, mvgal_log_callback_t callback, void *user_data);
 void mvgal_log_shutdown(void);
 void mvgal_log_set_level(mvgal_log_level_t level);
@@ -386,11 +704,12 @@ void mvgal_log_disable_file(void);
 void mvgal_log_enable_syslog(const char *ident);
 void mvgal_log_disable_syslog(void);
 void mvgal_log_enable_colors(bool enable);
-void mvgal_log_flush(void);</code></pre>
+void mvgal_log_flush(void);
+</code></pre>
 <p><strong>Log levels:</strong> <code>MVGAL_LOG_LEVEL_ERROR=0</code>, <code>WARN=1</code>, <code>INFO=2</code>, <code>DEBUG=3</code>, <code>TRACE=4</code></p>
 <p><strong>Convenience macros:</strong> <code>MVGAL_LOG_ERROR(fmt, ...)</code>, <code>MVGAL_LOG_WARN</code>, <code>MVGAL_LOG_INFO</code>, <code>MVGAL_LOG_DEBUG</code>, <code>MVGAL_LOG_TRACE</code></p>
 <hr>
-<h2 id="configuration-api-mvgalconfigh">Configuration API (<code>mvgal_config.h</code>)</h2>
+<h2 id="configuration-api-mvgal_configh">Configuration API (<code>mvgal_config.h</code>)</h2>
 <pre><code class="language-c">mvgal_error_t mvgal_config_init(void);
 void          mvgal_config_shutdown(void);
 mvgal_error_t mvgal_config_load(const char *path);
@@ -403,15 +722,19 @@ mvgal_error_t mvgal_config_set_by_name(const char *name, const mvgal_config_valu
 mvgal_error_t mvgal_config_reset(void);
 mvgal_error_t mvgal_config_validate(const mvgal_config_t *config);
 const char   *mvgal_config_get_default_path(void);
-void          mvgal_config_print(void);</code></pre>
+void          mvgal_config_print(void);
+</code></pre>
 <hr>
 <h2 id="error-codes">Error Codes</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Code</th>
 <th>Value</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>MVGAL_SUCCESS</code></td>
 <td>0</td>
@@ -487,10 +810,56 @@ void          mvgal_config_print(void);</code></pre>
 <td>14</td>
 <td>Driver error</td>
 </tr>
-</tbody></table>
+<tr>
+<td><code>MVGAL_ERROR_MEMORY</code></td>
+<td>15</td>
+<td>Memory subsystem error</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_INITIALIZATION</code></td>
+<td>16</td>
+<td>Initialization failed</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_IPC</code></td>
+<td>17</td>
+<td>IPC error</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_NO_GPUS</code></td>
+<td>18</td>
+<td>No GPUs available</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_UNKNOWN</code></td>
+<td>19</td>
+<td>Unknown error</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_INTERRUPTED</code></td>
+<td>20</td>
+<td>Operation interrupted</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_SCHEDULER</code></td>
+<td>21</td>
+<td>Scheduler error</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_CANCELLED</code></td>
+<td>22</td>
+<td>Operation cancelled</td>
+</tr>
+<tr>
+<td><code>MVGAL_ERROR_QUEUE_FULL</code></td>
+<td>23</td>
+<td>Queue or buffer at capacity</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <h2 id="type-reference">Type Reference</h2>
-<h3 id="mvgalvendort"><code>mvgal_vendor_t</code></h3>
+<h3 id="mvgal_vendor_t"><code>mvgal_vendor_t</code></h3>
 <pre><code class="language-c">MVGAL_VENDOR_UNKNOWN       = 0
 MVGAL_VENDOR_AMD           = 0x1002
 MVGAL_VENDOR_NVIDIA        = 0x10DE
@@ -498,8 +867,9 @@ MVGAL_VENDOR_INTEL         = 0x8086
 MVGAL_VENDOR_MOORE_THREADS = 0x1ED5
 MVGAL_VENDOR_QUALCOMM      = 0x5143
 MVGAL_VENDOR_ARM           = 0x13B5
-MVGAL_VENDOR_BROADCOM      = 0x14E4</code></pre>
-<h3 id="mvgaldistributionstrategyt"><code>mvgal_distribution_strategy_t</code></h3>
+MVGAL_VENDOR_BROADCOM      = 0x14E4
+</code></pre>
+<h3 id="mvgal_distribution_strategy_t"><code>mvgal_distribution_strategy_t</code></h3>
 <pre><code class="language-c">MVGAL_STRATEGY_ROUND_ROBIN     = 0
 MVGAL_STRATEGY_AFR             = 1
 MVGAL_STRATEGY_SFR             = 2
@@ -508,27 +878,35 @@ MVGAL_STRATEGY_COMPUTE_OFFLOAD = 4
 MVGAL_STRATEGY_HYBRID          = 5
 MVGAL_STRATEGY_SINGLE_GPU      = 6
 MVGAL_STRATEGY_TASK            = 7
-MVGAL_STRATEGY_CUSTOM          = 100</code></pre>
-<h3 id="mvgalapitypet-api-flags"><code>mvgal_api_type_t</code> (API flags)</h3>
+MVGAL_STRATEGY_AI_DRIVEN       = 8
+MVGAL_STRATEGY_RLD             = 9
+MVGAL_STRATEGY_REP             = 10
+MVGAL_STRATEGY_PPL             = 11
+MVGAL_STRATEGY_CUSTOM          = 100
+</code></pre>
+<h3 id="mvgal_api_type_t-api-flags"><code>mvgal_api_type_t</code> (API flags)</h3>
 <pre><code class="language-c">MVGAL_API_VULKAN   MVGAL_API_OPENGL   MVGAL_API_OPENCL
 MVGAL_API_CUDA     MVGAL_API_D3D11    MVGAL_API_D3D12
-MVGAL_API_METAL    MVGAL_API_WEBGPU   MVGAL_API_VA_API</code></pre>
-<h3 id="mvgalfeatureflagst"><code>mvgal_feature_flags_t</code></h3>
+MVGAL_API_METAL    MVGAL_API_WEBGPU   MVGAL_API_VA_API
+</code></pre>
+<h3 id="mvgal_feature_flags_t"><code>mvgal_feature_flags_t</code></h3>
 <pre><code class="language-c">MVGAL_FEATURE_DMA_BUF         MVGAL_FEATURE_CROSS_VENDOR
 MVGAL_FEATURE_UNIFIED_MEMORY  MVGAL_FEATURE_P2P_TRANSFER
 MVGAL_FEATURE_GRAPHICS        MVGAL_FEATURE_COMPUTE
 MVGAL_FEATURE_VIDEO_DECODE    MVGAL_FEATURE_VIDEO_ENCODE
-MVGAL_FEATURE_AI_ACCEL        MVGAL_FEATURE_RAY_TRACING</code></pre>
+MVGAL_FEATURE_AI_ACCEL        MVGAL_FEATURE_RAY_TRACING
+</code></pre>
 <hr>
 <h2 id="rust-ffi-reference">Rust FFI Reference</h2>
-<h3 id="fencemanager"><code>fence_manager</code></h3>
+<h3 id="fence_manager"><code>fence_manager</code></h3>
 <pre><code class="language-c">uint64_t mvgal_fence_create(uint32_t gpu_index);
 void     mvgal_fence_submit(uint64_t handle);
 void     mvgal_fence_signal(uint64_t handle);
 uint32_t mvgal_fence_state(uint64_t handle);
 void     mvgal_fence_reset(uint64_t handle);
-void     mvgal_fence_destroy(uint64_t handle);</code></pre>
-<h3 id="memorysafety"><code>memory_safety</code></h3>
+void     mvgal_fence_destroy(uint64_t handle);
+</code></pre>
+<h3 id="memory_safety"><code>memory_safety</code></h3>
 <pre><code class="language-c">uint64_t mvgal_mem_track(uint64_t size, uint32_t placement);
 void     mvgal_mem_retain(uint64_t handle);
 void     mvgal_mem_release(uint64_t handle);
@@ -536,22 +914,27 @@ void     mvgal_mem_set_dmabuf(uint64_t handle, int32_t fd);
 uint64_t mvgal_mem_size(uint64_t handle);
 uint32_t mvgal_mem_placement(uint64_t handle);
 uint64_t mvgal_mem_total_system_bytes(void);
-uint64_t mvgal_mem_total_gpu_bytes(void);</code></pre>
-<h3 id="capabilitymodel"><code>capability_model</code></h3>
+uint64_t mvgal_mem_total_gpu_bytes(void);
+</code></pre>
+<h3 id="capability_model"><code>capability_model</code></h3>
 <pre><code class="language-c">uint64_t    mvgal_cap_compute(const GpuCapability *caps, uint32_t count);
 void        mvgal_cap_free(uint64_t handle);
 uint64_t    mvgal_cap_total_vram(uint64_t handle);
 uint32_t    mvgal_cap_tier(uint64_t handle);
-const char *mvgal_cap_to_json(uint64_t handle);</code></pre>
+const char *mvgal_cap_to_json(uint64_t handle);
+</code></pre>
 <hr>
-<h2 id="rest-api-uimvgalrestservergo">REST API (<code>ui/mvgal_rest_server.go</code>)</h2>
+<h2 id="rest-api-uimvgal_rest_servergo">REST API (<code>ui/mvgal_rest_server.go</code>)</h2>
 <p>Base URL: <code>http://localhost:7474</code></p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Method</th>
 <th>Endpoint</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>GET</td>
 <td><code>/api/v1/gpus</code></td>
@@ -579,33 +962,50 @@ const char *mvgal_cap_to_json(uint64_t handle);</code></pre>
 </tr>
 <tr>
 <td>GET</td>
+<td><code>/api/v1/power</code></td>
+<td>Power state summary</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/temperature</code></td>
+<td>GPU temperatures</td>
+</tr>
+<tr>
+<td>GET</td>
 <td><code>/api/v1/logs</code></td>
 <td>Last 100 lines of daemon log</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/health</code></td>
+<td>Health check</td>
 </tr>
 <tr>
 <td>GET</td>
 <td><code>/</code></td>
 <td>Service info and endpoint list</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h3 id="example-get-apiv1gpus">Example: <code>GET /api/v1/gpus</code></h3>
 <pre><code class="language-json">[
   {
-    "index": 0,
-    "name": "AMD GPU [0000:03:00.0]",
-    "vendor": "AMD",
-    "pci_slot": "0000:03:00.0",
-    "drm_node": "/dev/dri/card2",
-    "utilization_pct": 12,
-    "vram_total_bytes": 4278190080,
-    "vram_used_bytes": 847249408,
-    "temperature_c": 56,
-    "power_w": 45.2,
-    "clock_mhz": 1800,
-    "enabled": true
+    &quot;index&quot;: 0,
+    &quot;name&quot;: &quot;AMD GPU [0000:03:00.0]&quot;,
+    &quot;vendor&quot;: &quot;AMD&quot;,
+    &quot;pci_slot&quot;: &quot;0000:03:00.0&quot;,
+    &quot;drm_node&quot;: &quot;/dev/dri/card2&quot;,
+    &quot;utilization_pct&quot;: 12,
+    &quot;vram_total_bytes&quot;: 4278190080,
+    &quot;vram_used_bytes&quot;: 847249408,
+    &quot;temperature_c&quot;: 56,
+    &quot;power_w&quot;: 45.2,
+    &quot;clock_mhz&quot;: 1800,
+    &quot;enabled&quot;: true
   }
-]</code></pre>
-<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.3 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+]
+</code></pre>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.8 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
 </main>
 </body>
 </html>

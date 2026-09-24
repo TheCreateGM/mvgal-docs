@@ -1,6 +1,25 @@
+---
+tags: [mvgal, status, reference]
+aliases: [Project Status, Status]
+---
+
 # MVGAL Project Status
 
-**Version:** 0.7.3 "Cross-Vendor Aggregation" | **Updated:** August 2026
+**Version:** 0.7.8 "Cross-Vendor Aggregation" | **Updated:** September 2026
+
+---
+
+## Release History (v0.7.4 → v0.7.8)
+
+| Version | Date | Highlights |
+|---------|------|------------|
+| **v0.7.8** | 2026-09-22 | Daemon drops capabilities after init (bounding set pruned to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO`); D-Bus policy restricted to root + `mvgal` group; `mvgal-enroll-mok` verifies enrollment via `mokutil --list-new`; Vulkan ICD reports real driver version; `mvgal-status` degraded-mode reporting with real load-balance estimate; `mvgal-info` DRM fallback reads `enabled` from config; `custom_strategy.lua` shipped as no-op stub |
+| **v0.7.7** | 2026-09-21 | Vulkan ICD device dispatch fixed (`vkCreateImage`/`vkGetImageMemoryRequirements`/`vkDestroyImage` registered — fixes `vulkaninfo` SIGSEGV); `vkGetPhysicalDeviceQueueFamilyProperties2` overflow fixed |
+| **v0.7.6** | 2026-09-17 | Vulkan layer no longer returns `VK_ERROR_LAYER_NOT_PRESENT` for unwrapped devices; `mvgal-status` DEGRADED MODE warning; `mvgal-config -c` writes to requested file; atomic SET_CONFIG writes |
+| **v0.7.5** | 2026-09-15 | DKMS `BUILT_MODULE_LOCATION=/kernel` fix; **Secure Boot**: DKMS modules signed with per-machine MVGAL key; Vulkan ICD WSI entry points implemented |
+| **v0.7.4** | 2026-09-07 | DKMS build layout fix; Vulkan ICD placeholder device; OpenCL CMake propagation; `--check`/`--self-test` flags; pkexec self-escalation for `mvgal-load`/`mvgal-unload` |
+
+See [CHANGELOG.md](CHANGELOG.md) for the full changelog.
 
 ---
 
@@ -37,15 +56,22 @@ Following the Section 3 research pass ([RESEARCH_PHASE3.md](RESEARCH_PHASE3.md))
 
 ### Kernel Module (`kernel/`)
 
-**Status: ✅ Builds and links** — foundational UAPI present; production vendor operation paths still require hardware validation
+**Status: ✅ Builds and links** — 7 modules (`mvgal`, `mvgal_amd`, `mvgal_nvidia`, `mvgal_intel`, `mvgal_mtt`, `mvgal_adreno`, `mvgal_ntsync`); signed + MOK-enrollable for Secure Boot; production vendor operation paths still require hardware validation
 
 | File | Lines | Description |
 |------|-------|-------------|
 | `mvgal_core.c` | ~250 | DRM registration, `/dev/mvgal0`, PCI table, module init/exit |
 | `mvgal_device.c` | ~300 | Logical device, GPU enumeration, capability profile |
 | `mvgal_memory.c` | ~280 | DMA-BUF integration, unified virtual address space |
+| `mvgal_dmabuf.c` | — | DMA-BUF export/import helpers |
+| `mvgal_p2p.c` | — | PCIe P2P DMA support |
+| `mvgal_power.c` | — | Power management hooks (DVFS, idle) |
 | `mvgal_scheduler.c` | ~320 | 16-level priority queue, workload dispatch |
 | `mvgal_sync.c` | ~280 | Cross-vendor fences, timeline semaphores |
+| `mvgal_ntsync.c` | — | NTSYNC cross-device synchronization ioctls |
+| `mvgal_sysfs.c` | — | Sysfs reporting |
+| `mvgal_trace.c` | — | Tracing support |
+| `mvgal_virt.c` | — | Virtualization helpers |
 | `vendors/mvgal_amd.c` | ~200 | AMD amdgpu integration, TTM, DPM |
 | `vendors/mvgal_nvidia.c` | ~200 | NVIDIA open-kernel-module shim |
 | `vendors/mvgal_intel.c` | ~200 | Intel i915 + xe integration |
@@ -158,12 +184,24 @@ SET_GPU_AFFINITY.
 
 | Tool | LOC | Description |
 |------|-----|-------------|
+| `mvgal.c` | ~350 | Main CLI: start/stop, status, load-module |
 | `mvgal-info.c` | ~372 | GPU info, VRAM, temp, utilization, JSON output |
-| `mvgal-status.c` | ~373 | Real-time bars, daemon check, `--watch` mode |
+| `mvgal-status.c` | ~373 | Real-time bars, daemon check, `--watch` mode, degraded-mode warnings |
 | `mvgal-bench.c` | ~463 | Memory BW, compute FLOPS, latency, sync overhead |
 | `mvgal-compat.c` | ~366 | System check + 15+ app compatibility database |
 | `mvgal-config.c` | ~400 | Strategy, GPU enable/disable, stats, reload |
-| `mvgal.c` | ~350 | Main CLI: start/stop, status, load-module |
+| `mvgal-probe` | — | PCI topology + kernel UAPI probe (`/dev/mvgal0` ioctls) |
+| `mvgal-enum.c` | — | Enumerate GPUs and capabilities |
+| `mvgal-hw-validate.c` | — | Hardware validation with actionable failure hints |
+| `mvgal-steam-setup.c` | — | Steam/Proton integration helper |
+| `mvgal-enroll-mok.sh` | — | Secure Boot MOK enrollment (config/) |
+
+### Security Hardening (v0.7.8)
+
+- **Daemon capability dropping** — `mvgald` clears effective/permitted/inheritable capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO`; the systemd unit adds `CapabilityBoundingSet`/`AmbientCapabilities`/`NoNewPrivileges`.
+- **Restricted D-Bus policy** — `org.mvgal.MVGAL` is owned by root; only members of the `mvgal` group may talk to it; everyone else is denied.
+- **Atomic config writes** — the daemon `SET_CONFIG` IPC handler validates payloads (printable ASCII + at least one `[section]`) and writes atomically (temp file + rename).
+- **Secure Boot** — DKMS-installed modules are signed with a per-machine MVGAL key; `mvgal-enroll-mok` feeds the password via stdin and verifies with `mokutil --list-new` before claiming success.
 
 ---
 

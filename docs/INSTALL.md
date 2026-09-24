@@ -1,23 +1,66 @@
+---
+tags: [mvgal, install, guide]
+aliases: [Installation, Install]
+---
+
 # MVGAL Installation Guide
 
-**Version:** 0.2.2 | **Date:** May 2026
+**Version:** 0.7.8 | **Updated:** September 2026
 
 ---
 
-## Quick Install
+## Quick Install (COPR — no build needed)
 
-### Fedora / RHEL / CentOS
+MVGAL is available as a pre-built package via Fedora COPR.
 
 ```bash
-# Enable COPR repository
-sudo dnf copr enable mvgal/mvgal
-
-# Install
-sudo dnf install mvgal mvgal-dkms
-
-# Start daemon
-sudo systemctl enable --now mvgald
+sudo dnf copr enable axogm/mvgal
+sudo dnf install mvgal
 ```
+
+Supported targets: **Fedora 40+** · **RHEL/AlmaLinux/Rocky 9 & 10** · **CentOS Stream 9 & 10** · **openSUSE Tumbleweed** · **Amazon Linux 2023**
+
+This installs:
+
+- `mvgald` daemon → `/usr/bin/mvgald`
+- CLI tools → `/usr/bin/mvgal-{info,status,bench,compat,config,probe,enum,hw-validate,steam-setup}`
+- Vulkan layer → `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json`
+- OpenCL ICD → `/etc/OpenCL/vendors/mvgal.icd`
+- Config → `/etc/mvgal/mvgal.conf`
+- Systemd service → `/etc/systemd/system/mvgald.service`
+- Kernel modules → DKMS (`/lib/modules/*/updates/dkms`), signed for Secure Boot
+- MOK enrollment helper → `/usr/bin/mvgal-enroll-mok`
+
+---
+
+## Start the Daemon
+
+```bash
+pkexec systemctl start mvgald
+pkexec systemctl enable mvgald   # auto-start on boot
+```
+
+Verify:
+
+```bash
+mvgal-info          # list detected GPUs
+mvgal-status        # real-time utilization
+mvgal-compat --system   # check readiness
+```
+
+---
+
+## Secure Boot (UEFI systems)
+
+If Secure Boot is enabled, enroll the MVGAL signing key once:
+
+```bash
+mvgal-enroll-mok
+```
+
+Then **reboot** and complete enrollment in the MOK Manager (blue screen). See [SECURE_BOOT.md](SECURE_BOOT.md) for details.
+
+If the kernel module is not loaded, `mvgal-status` reports **degraded userspace-only mode** with a MOK hint.
 
 ---
 
@@ -27,319 +70,190 @@ sudo systemctl enable --now mvgald
 
 - **Minimum**: 2 GPUs from any supported vendor
 - **Recommended**: GPUs on same PCIe root complex for P2P support
-- **Supported vendors**: AMD (RDNA 1/2/3), NVIDIA (Turing/Ampere/Hopper/Ada), Intel (Xe/Arc), Moore Threads (S2000/S3000/S4000)
-
-### Software
-
-| Component | Version | Required |
-|-----------|---------|----------|
-| Linux kernel | 6.1+ | Yes |
-| GCC | 11+ | Yes (C11) |
-| CMake | 3.16+ | Yes |
-| Rust | 1.75+ | Yes (safety crates) |
-| Go | 1.21+ | Optional (REST server, exporter) |
-| Qt5/Qt6 | 5.15+ / 6.2+ | Optional (dashboard) |
-| Vulkan SDK | 1.3+ | Optional (Vulkan layer) |
-| CUDA Toolkit | 12.0+ | Optional (CUDA wrapper) |
-| ROCm | 5.0+ | Optional (AMD compute) |
-| oneAPI | 2024.0+ | Optional (Intel compute) |
+- **Supported vendors**: AMD (RDNA 1/2/3, GCN, APU), NVIDIA (Turing/Ampere/Ada/Pascal), Intel (Gen 9–12, Xe/Arc), Moore Threads (S60/S80/S2000)
 
 ### Vendor Drivers
 
 Install vendor drivers **before** installing MVGAL:
 
 ```bash
-# AMD (open-source, included in kernel)
-# No additional installation needed
-
+# AMD (open-source, included in kernel) — nothing to install
 # NVIDIA (proprietary)
 sudo dnf install akmod-nvidia  # Fedora
+# Intel (open-source, included in kernel) — nothing to install
+# Moore Threads — install mtgpu-drv from vendor
+```
 
-# Intel (open-source, included in kernel)
-# No additional installation needed
+---
 
-# Moore Threads
-# Install mtgpu-drv from vendor
+## Configuration
+
+The daemon reads `/etc/mvgal/mvgal.conf`:
+
+```ini
+[core]
+enabled = true
+debug_level = info
+gpu_count = 0                 # 0 = auto-detect
+default_strategy = single     # single, round_robin, afr, sfr, hybrid, task, compute_offload, auto, custom
+enable_memory_migration = true
+enable_dmabuf = true
+enable_kernel_names = true
+stats_interval = 1
+enable_stats = true
+
+[gpu_0]
+type = auto                   # amd, nvidia, intel, auto
+priority = 50
+memory_limit_mb = 0           # 0 = unlimited
+enabled = true
+
+[gpu_1]
+priority = 1
+enabled = false               # disabled by default on single-GPU systems
+
+[afr]
+enable_sync = true
+sync_timeout_ms = 16
+
+[sfr]
+split_mode = horizontal
+split_ratio = 0.5
+
+[hybrid]
+primary_gpu = 0
+fallback_gpu = 1
+threshold_percent = 80
+
+[custom]
+script_path = /etc/mvgal/custom_strategy.lua   # shipped as a no-op stub
+
+[cuda]
+enabled = true
+intercept_driver = true
+intercept_runtime = true
+enable_launch_intercept = true
+track_memory = true
+
+[direct3d]
+enabled = true                # via Wine/Proton
+
+[metal]
+enabled = false
+
+[webgpu]
+enabled = true
+
+[opencl]
+enabled = true
+
+[dri]
+device_pattern = /dev/dri/card*
+enable_prime = true
+
+[power]
+idle_timeout_ms = 5000
+sustained_timeout_ms = 10000
+park_timeout_ms = 30000
+thermal_threshold = 85
+critical_threshold = 95
+power_curve = 0:30,25:50,50:70,75:90,100:100
+enable_dvfs = true
+
+[debug]
+cuda_debug = false
+d3d_debug = false
+dump_calls = false
+dump_file = /tmp/mvgal_dump.log
+
+[network]
+enabled = false
+discovery_port = 49500
+listen_addr = 0.0.0.0
+heartbeat_interval_s = 5
+peer_timeout_s = 30
+
+[ai_scheduler]
+model_path = /etc/mvgal/models/scheduler.onnx
+enabled = false
+inference_timeout_ms = 10
+confidence_threshold = 0.6
+```
+
+Edit with:
+
+```bash
+sudo nano /etc/mvgal/mvgal.conf
+# or
+mvgal-config   # CLI configuration tool
 ```
 
 ---
 
 ## Build from Source
 
-### CMake (Recommended)
+See [BUILD.md](BUILD.md) for the full build guide (CMake, Meson, Zig, DKMS).
+
+Quick CMake build:
 
 ```bash
 git clone https://github.com/axogm/mvgal.git
 cd mvgal
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
-sudo make install
-```
-
-### Meson
-
-```bash
-meson setup build --buildtype=release
-ninja -C build
-sudo ninja -C build install
-```
-
-### Zig
-
-```bash
-zig build -Doptimize=ReleaseSafe
-sudo zig build install
-```
-
-### Build Options
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `-DMVGAL_BUILD_TESTS=ON` | ON | Build test suite |
-| `-DMVGAL_BUILD_BENCHMARKS=ON` | ON | Build benchmarks |
-| `-DMVGAL_BUILD_VULKAN_LAYER=ON` | ON | Build Vulkan layer |
-| `-DMVGAL_BUILD_CUDA_WRAPPER=ON` | ON | Build CUDA wrapper |
-| `-DMVGAL_BUILD_OPENCL_ICD=ON` | ON | Build OpenCL ICD |
-| `-DMVGAL_BUILD_D3D_WRAPPER=ON` | ON | Build D3D wrapper |
-| `-DMVGAL_BUILD_METAL_WRAPPER=ON` | ON | Build Metal wrapper |
-| `-DMVGAL_BUILD_WEBGPU_WRAPPER=ON` | ON | Build WebGPU wrapper |
-| `-DMVGAL_BUILD_UI=ON` | ON | Build Qt dashboard |
-| `-DMVGAL_BUILD_REST_SERVER=ON` | ON | Build Go REST server |
-| `-DMVGAL_BUILD_PROMETHEUS_EXPORTER=ON` | ON | Build Prometheus exporter |
-| `-DMVGAL_BUILD_STEAM_LAYER=ON` | ON | Build Steam compatibility layer |
-| `-DMVGAL_BUILD_OPENGL_LAYER=ON` | ON | Build OpenGL preload shim |
-| `-DMVGAL_BUILD_BINDINGS=ON` | ON | Build language bindings |
-
-### Kernel Module
-
-```bash
-# Build
-cd kernel
-make
-
-# Install
-sudo make install
-
-# Load
-sudo modprobe mvgal
-
-# Verify
-ls -l /dev/mvgal*
-ls /sys/class/mvgal/
-```
-
-### DKMS (Auto-rebuild on kernel update)
-
-```bash
-sudo dkms add ./kernel
-sudo dkms build mvgal/0.2.2
-sudo dkms install mvgal/0.2.2
-```
-
-### Rust Crates
-
-```bash
-cd safe
-cargo build --release
-cargo test
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+sudo cmake --install build
 ```
 
 ---
 
 ## Post-Installation
 
-### 1. Verify Installation
+### Verify Installation
 
 ```bash
-# Check kernel module
-lsmod | grep mvgal
-
-# Check device
-ls -l /dev/mvgal*
-
-# Check sysfs
-ls /sys/class/mvgal/
-
-# Check daemon
-systemctl status mvgald
-
-# Run info tool
-mvgal-info
+lsmod | grep mvgal            # kernel modules loaded
+ls -l /dev/mvgal*             # device node
+systemctl status mvgald       # daemon status
+mvgal-info                    # GPU info
+mvgal-status                  # real-time utilization
 ```
 
-### 2. Configure
+### Enable Vulkan Layer
+
+The layer is installed system-wide at `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json` — no action needed. Verify with:
 
 ```bash
-# Edit configuration
-sudo nano /etc/mvgal/mvgal.conf
-
-# Set scheduling strategy
-mvgal-config strategy set auto
-
-# Enable GPUs
-mvgal-config gpu enable 0
-mvgal-config gpu enable 1
+vulkaninfo | grep -i mvgal
 ```
 
-### 3. Enable Vulkan Layer
+### Enable OpenCL ICD
+
+Registered at `/etc/OpenCL/vendors/mvgal.icd` — no action needed. Verify with:
 
 ```bash
-# System-wide
-sudo cp src/userspace/vulkan_layer/MVGAL_VkLayer_mvgal.json \
-  /etc/vulkan/implicit_layer.d/
-
-# Or per-user
-mkdir -p ~/.local/share/vulkan/implicit_layer.d/
-cp src/userspace/vulkan_layer/MVGAL_VkLayer_mvgal.json \
-  ~/.local/share/vulkan/implicit_layer.d/
+clinfo | grep -i mvgal
 ```
 
-### 4. Enable CUDA Wrapper
+### Steam / Proton
 
-```bash
-# Add to /etc/ld.so.preload
-echo "/usr/lib/mvgal/libmvgal_cuda.so" | sudo tee -a /etc/ld.so.preload
+See [STEAM_INTEGRATION.md](STEAM_INTEGRATION.md). Add to Steam launch options:
 
-# Or per-application
-LD_PRELOAD=/usr/lib/mvgal/libmvgal_cuda.so your_app
 ```
-
-### 5. Enable OpenCL ICD
-
-```bash
-# Register ICD
-echo "/usr/lib/mvgal/libmvgal_opencl.so" | sudo tee /etc/OpenCL/vendors/mvgal.icd
-```
-
-### 6. Enable OpenGL Layer
-
-```bash
-# Per-application
-LD_PRELOAD=/usr/lib/mvgal/libmvgal_gl.so your_app
-```
-
-### 7. Enable Steam Layer
-
-```bash
-# Copy to Steam compatibility tools
-cp -r steam ~/.steam/root/compatibilitytools.d/mvgal
-
-# Or system-wide
-sudo cp -r steam /usr/share/steam/compatibilitytools.d/mvgal
-```
-
----
-
-## Configuration Reference
-
-### `/etc/mvgal/mvgal.conf`
-
-```ini
-[daemon]
-log_level = info
-log_file = /var/log/mvgal/mvgald.log
-pid_file = /var/run/mvgal/mvgald.pid
-ipc_socket = /var/run/mvgal/mvgald.sock
-
-[scheduler]
-strategy = auto
-frame_timeout_ms = 16
-migration_threshold = 3
-work_stealing = true
-
-[memory]
-allocation_policy = best_fit
-transfer_policy = dma_buf
-staging_buffer_size_mb = 256
-
-[power]
-idle_timeout_ms = 5000
-sustained_timeout_ms = 30000
-park_timeout_ms = 60000
-dvfs_enabled = true
-thermal_threshold_c = 85
-
-[metrics]
-poll_interval_ms = 1000
-telemetry_enabled = true
-prometheus_enabled = true
-prometheus_port = 9100
-
-[rest]
-enabled = true
-port = 7474
-bind = 127.0.0.1
+ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
 ```
 
 ---
 
 ## Troubleshooting
 
-### Kernel Module Not Loading
+| Symptom | Fix |
+|---------|-----|
+| `mvgal-status` shows degraded mode | Kernel module not loaded — enroll MOK (see [SECURE_BOOT.md](SECURE_BOOT.md)) or `sudo modprobe mvgal` |
+| Daemon won't start | `journalctl -u mvgald -f` for logs |
+| No GPUs detected | `lspci \| grep -i vga`; check `/etc/mvgal/mvgal.conf` `enabled` flags |
+| Vulkan app crashes | Update to v0.7.7+ (device dispatch fix); check `vulkaninfo` |
 
-```bash
-# Check dmesg
-dmesg | grep mvgal
-
-# Check for conflicts
-lsmod | grep -E "nvidia|amdgpu|i915"
-
-# Force load
-sudo modprobe mvgal
-```
-
-### Daemon Not Starting
-
-```bash
-# Check logs
-journalctl -u mvgald -f
-
-# Check socket
-ls -l /var/run/mvgal/mvgald.sock
-
-# Run manually
-sudo mvgald --foreground --log-level debug
-```
-
-### Vulkan Layer Not Working
-
-```bash
-# Check layer discovery
-vulkaninfo | grep -i mvgal
-
-# Check layer JSON
-cat /etc/vulkan/implicit_layer.d/MVGAL_VkLayer_mvgal.json
-
-# Enable validation
-export VK_LAYER_MVGAL_DEBUG=1
-```
-
-### CUDA Wrapper Not Intercepting
-
-```bash
-# Check preload
-cat /etc/ld.so.preload
-
-# Check library
-ldd /usr/lib/mvgal/libmvgal_cuda.so
-
-# Test with verbose
-LD_PRELOAD=/usr/lib/mvgal/libmvgal_cuda.so LD_DEBUG=libs your_app
-```
-
-### No GPUs Detected
-
-```bash
-# Check PCI devices
-lspci | grep -i vga
-
-# Check sysfs
-ls /sys/class/mvgal/mvgal0/
-
-# Rescan
-echo 1 | sudo tee /sys/class/mvgal/mvgal0/rescan
-```
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for the full guide.
 
 ---
 
@@ -350,28 +264,9 @@ echo 1 | sudo tee /sys/class/mvgal/mvgal0/rescan
 sudo systemctl stop mvgald
 sudo systemctl disable mvgald
 
-# Remove kernel module
-sudo rmmod mvgal
-sudo dkms remove mvgal/0.2.2 --all
-
 # Remove packages
-sudo dnf remove mvgal mvgal-dkms  # Fedora
+sudo dnf remove mvgal
 
 # Remove configuration
 sudo rm -rf /etc/mvgal/
-sudo rm -rf /var/log/mvgal/
-sudo rm -rf /var/run/mvgal/
-
-# Remove Vulkan layer
-sudo rm /etc/vulkan/implicit_layer.d/MVGAL_VkLayer_mvgal.json
-
-# Remove CUDA wrapper
-sudo sed -i '/mvgal_cuda/d' /etc/ld.so.preload
-
-# Remove OpenCL ICD
-sudo rm /etc/OpenCL/vendors/mvgal.icd
-
-# Remove Steam layer
-rm -rf ~/.steam/root/compatibilitytools.d/mvgal
-sudo rm -rf /usr/share/steam/compatibilitytools.d/mvgal
 ```

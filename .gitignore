@@ -1,0 +1,30 @@
+# ── Obsidian ──────────────────────────────────────────────────────────────
+# Personal workspace state (machine-specific, changes constantly)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian
+
+# Plugin binaries (reinstallable via Community plugins — keep manifest + data.json)
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+
+# ── Session / scratch ─────────────────────────────────────────────────────
+.tmp/
+
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ── OS / editor cruft ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# ── Logs ──────────────────────────────────────────────────────────────────
+*.log

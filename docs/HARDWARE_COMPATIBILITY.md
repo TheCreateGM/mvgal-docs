@@ -1,7 +1,12 @@
+---
+tags: [mvgal, hardware, compatibility, reference]
+aliases: [Hardware Compatibility, Hardware]
+---
+
 # MVGAL Hardware Compatibility
 
-> **Version**: 0.7.3  
-> **Last Updated**: 2026-06-06
+> **Version**: 0.7.8  
+> **Last Updated**: September 2026
 
 ---
 
@@ -204,6 +209,8 @@ See `docs/ARCHITECTURE.md §7—Intercept Layer` for extension details.
 | RHEL 9 / Rocky 9 | Tier 1 | Kernel 5.14+ with DKMS |
 | Ubuntu 22.04 LTS | Tier 2 | Requires DKMS or PPA |
 | Ubuntu 24.04 LTS | Tier 2 | Kernel 6.8+, native DKMS |
+| Arch Linux | Tier 2 | AUR package |
+| Debian 12 | Tier 2 | Kernel 6.1 LTS |
 | openSUSE Tumbleweed | Tier 3 | Rolling kernel, DKMS |
 | SteamOS 3.x | Tier 3 | Deck-specific tuning (WIP) |
 

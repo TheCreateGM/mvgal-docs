@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="Project Status — MVGAL Documentation">
 <meta name="twitter:description" content="Current MVGAL milestone and component status: kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, memory manager, scheduler and packaging.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Project Status \u2014 MVGAL Documentation", "name": "Project Status \u2014 MVGAL Documentation", "description": "Current MVGAL milestone and component status: kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, memory manager, scheduler and packaging.", "url": "https://thecreategm.github.io/mvgal-docs/site/status.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL status, milestone, component status, roadmap, kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, packaging", "datePublished": "2026-08-31", "dateModified": "2026-08-31", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Project Status \u2014 MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/status.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Project Status — MVGAL Documentation", "name": "Project Status — MVGAL Documentation", "description": "Current MVGAL milestone and component status: kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, memory manager, scheduler and packaging.", "url": "https://thecreategm.github.io/mvgal-docs/site/status.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL status, milestone, component status, roadmap, kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, packaging", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Project Status — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/status.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -50,11 +50,12 @@
 <nav class="sidebar">
   <div class="brand">
     <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.3</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.8</div>
   </div>
-  <a href="index.html">Home</a>
+<a href="index.html">Home</a>
 <a href="quickstart.html">Quick Start</a>
 <a href="install.html">Installation</a>
+<a href="secure_boot.html">Secure Boot</a>
 <a href="build.html">Building</a>
 <a href="architecture.html">Architecture</a>
 <a href="design.html">Design</a>
@@ -66,20 +67,63 @@
 <a href="power.html">Power Management</a>
 <a href="troubleshooting.html">Troubleshooting</a>
 <a href="status.html" class="active">Project Status</a>
+<a href="changelog.html">Changelog</a>
 </nav>
 <main>
 <h1 id="mvgal-project-status">MVGAL Project Status</h1>
-<p><strong>Version:</strong> 0.7.3 "Cross-Vendor Aggregation" | <strong>Updated:</strong> August 2026</p>
+<p><strong>Version:</strong> 0.7.8 "Cross-Vendor Aggregation" | <strong>Updated:</strong> September 2026</p>
+<hr>
+<h2 id="release-history-v074-v078">Release History (v0.7.4 → v0.7.8)</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Highlights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v0.7.8</strong></td>
+<td>2026-09-22</td>
+<td>Daemon drops capabilities after init (bounding set pruned to <code>CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO</code>); D-Bus policy restricted to root + <code>mvgal</code> group; <code>mvgal-enroll-mok</code> verifies enrollment via <code>mokutil --list-new</code>; Vulkan ICD reports real driver version; <code>mvgal-status</code> degraded-mode reporting with real load-balance estimate; <code>mvgal-info</code> DRM fallback reads <code>enabled</code> from config; <code>custom_strategy.lua</code> shipped as no-op stub</td>
+</tr>
+<tr>
+<td><strong>v0.7.7</strong></td>
+<td>2026-09-21</td>
+<td>Vulkan ICD device dispatch fixed (<code>vkCreateImage</code>/<code>vkGetImageMemoryRequirements</code>/<code>vkDestroyImage</code> registered — fixes <code>vulkaninfo</code> SIGSEGV); <code>vkGetPhysicalDeviceQueueFamilyProperties2</code> overflow fixed</td>
+</tr>
+<tr>
+<td><strong>v0.7.6</strong></td>
+<td>2026-09-17</td>
+<td>Vulkan layer no longer returns <code>VK_ERROR_LAYER_NOT_PRESENT</code> for unwrapped devices; <code>mvgal-status</code> DEGRADED MODE warning; <code>mvgal-config -c</code> writes to requested file; atomic SET_CONFIG writes</td>
+</tr>
+<tr>
+<td><strong>v0.7.5</strong></td>
+<td>2026-09-15</td>
+<td>DKMS <code>BUILT_MODULE_LOCATION=/kernel</code> fix; <strong>Secure Boot</strong>: DKMS modules signed with per-machine MVGAL key; Vulkan ICD WSI entry points implemented</td>
+</tr>
+<tr>
+<td><strong>v0.7.4</strong></td>
+<td>2026-09-07</td>
+<td>DKMS build layout fix; Vulkan ICD placeholder device; OpenCL CMake propagation; <code>--check</code>/<code>--self-test</code> flags; pkexec self-escalation for <code>mvgal-load</code>/<code>mvgal-unload</code></td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="CHANGELOG.md">CHANGELOG.md</a> for the full changelog.</p>
 <hr>
 <h2 id="overall-implementation-phase-production-ready-components">Overall: Implementation Phase (Production-Ready Components)</h2>
 <p>Following the Section 3 research pass (<a href="RESEARCH_PHASE3.md">RESEARCH_PHASE3.md</a>) and the 2026-05-30 upstream feasibility audit (<a href="FEASIBILITY_AND_GAPS_2026-05-30.md">FEASIBILITY_AND_GAPS_2026-05-30.md</a>), MVGAL is in <strong>active implementation</strong>. The project contains kernel, runtime, API interception, tooling, packaging, and test scaffolding. Transparent heterogeneous aggregation remains <strong>capability-limited</strong> and must fall back to explicit multi-device scheduling, DMA-BUF/host-staging transfers, or single-GPU pass-through when a workload cannot be split safely.</p>
 <h3 id="milestone-gates">Milestone Gates</h3>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Milestone</th>
 <th>Status</th>
 <th>Gate</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>M0 — PCI topology UAPI</td>
 <td>✅ Done</td>
@@ -120,14 +164,18 @@
 <td>🔄 Required</td>
 <td>Reproducible AMD+NVIDIA+Intel+MTT logs needed</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h3 id="remaining-production-work">Remaining Production Work</h3>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Item</th>
 <th>Priority</th>
 <th>Notes</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Hardware validation evidence</td>
 <td>High</td>
@@ -153,17 +201,21 @@
 <td>Future</td>
 <td>Design only</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="component-status">Component Status</h2>
 <h3 id="kernel-module-kernel">Kernel Module (<code>kernel/</code>)</h3>
-<p><strong>Status: ✅ Builds and links</strong> — foundational UAPI present; production vendor operation paths still require hardware validation</p>
+<p><strong>Status: ✅ Builds and links</strong> — 7 modules (<code>mvgal</code>, <code>mvgal_amd</code>, <code>mvgal_nvidia</code>, <code>mvgal_intel</code>, <code>mvgal_mtt</code>, <code>mvgal_adreno</code>, <code>mvgal_ntsync</code>); signed + MOK-enrollable for Secure Boot; production vendor operation paths still require hardware validation</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>File</th>
 <th>Lines</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>mvgal_core.c</code></td>
 <td>~250</td>
@@ -180,6 +232,21 @@
 <td>DMA-BUF integration, unified virtual address space</td>
 </tr>
 <tr>
+<td><code>mvgal_dmabuf.c</code></td>
+<td>—</td>
+<td>DMA-BUF export/import helpers</td>
+</tr>
+<tr>
+<td><code>mvgal_p2p.c</code></td>
+<td>—</td>
+<td>PCIe P2P DMA support</td>
+</tr>
+<tr>
+<td><code>mvgal_power.c</code></td>
+<td>—</td>
+<td>Power management hooks (DVFS, idle)</td>
+</tr>
+<tr>
 <td><code>mvgal_scheduler.c</code></td>
 <td>~320</td>
 <td>16-level priority queue, workload dispatch</td>
@@ -188,6 +255,26 @@
 <td><code>mvgal_sync.c</code></td>
 <td>~280</td>
 <td>Cross-vendor fences, timeline semaphores</td>
+</tr>
+<tr>
+<td><code>mvgal_ntsync.c</code></td>
+<td>—</td>
+<td>NTSYNC cross-device synchronization ioctls</td>
+</tr>
+<tr>
+<td><code>mvgal_sysfs.c</code></td>
+<td>—</td>
+<td>Sysfs reporting</td>
+</tr>
+<tr>
+<td><code>mvgal_trace.c</code></td>
+<td>—</td>
+<td>Tracing support</td>
+</tr>
+<tr>
+<td><code>mvgal_virt.c</code></td>
+<td>—</td>
+<td>Virtualization helpers</td>
 </tr>
 <tr>
 <td><code>vendors/mvgal_amd.c</code></td>
@@ -209,16 +296,22 @@
 <td>~180</td>
 <td>Moore Threads mtgpu-drv integration</td>
 </tr>
-</tbody></table>
-<p>10 ioctls: QUERY_DEVICES, QUERY_CAPABILITIES, SUBMIT_WORKLOAD, ALLOC_MEMORY, FREE_MEMORY, IMPORT_DMABUF, EXPORT_DMABUF, WAIT_FENCE, SIGNAL_FENCE, SET_GPU_AFFINITY.</p>
+</tbody>
+</table>
+<p>10 ioctls: QUERY_DEVICES, QUERY_CAPABILITIES, SUBMIT_WORKLOAD, ALLOC_MEMORY,
+FREE_MEMORY, IMPORT_DMABUF, EXPORT_DMABUF, WAIT_FENCE, SIGNAL_FENCE,
+SET_GPU_AFFINITY.</p>
 <hr>
 <h3 id="runtime-daemon-runtimedaemon">Runtime Daemon (<code>runtime/daemon/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong> — C++20, all subsystems implemented</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>File</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>main.cpp</code></td>
 <td>Entry point, signal handling, daemonization, PID file</td>
@@ -255,17 +348,21 @@
 <td><code>dbus_service.cpp/hpp</code></td>
 <td>D-Bus API for scheduling mode, GPU rescan</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h3 id="rust-safety-crates-safe">Rust Safety Crates (<code>safe/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong> — 12/12 unit tests pass</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Crate</th>
 <th>LOC</th>
 <th>Tests</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>fence_manager</code></td>
 <td>~248</td>
@@ -284,16 +381,20 @@
 <td>6</td>
 <td>GPU capability normalization, JSON serialization</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h3 id="userspace-library-srcuserspace">Userspace Library (<code>src/userspace/</code>)</h3>
 <p><strong>Status: 🔄 Implemented scaffolding</strong> — API surface exists; production behavior depends on capability probes and backend validation</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Module</th>
 <th>LOC</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>api/mvgal_api.c</code></td>
 <td>~800</td>
@@ -389,16 +490,20 @@
 <td>~238</td>
 <td>Hybrid adaptive</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h3 id="api-interception-layers-srcuserspaceintercept">API Interception Layers (<code>src/userspace/intercept/</code>)</h3>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Layer</th>
 <th>Status</th>
 <th>LOC</th>
 <th>Notes</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Vulkan (<code>vk_layer.c</code> + <code>vk_layer.h</code>)</td>
 <td>🔄 Implemented</td>
@@ -453,16 +558,20 @@
 <td>~3,500</td>
 <td>Virtual VkPhysicalDevice path; needs conformance/fallback validation</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h3 id="public-api-headers-includemvgal">Public API Headers (<code>include/mvgal/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong> — 13 headers, all documented</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Header</th>
 <th>Lines</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>mvgal.h</code></td>
 <td>~330</td>
@@ -523,16 +632,25 @@
 <td>~40</td>
 <td>Version constants</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h3 id="cli-tools-tools">CLI Tools (<code>tools/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong> — all compile with <code>-Wall -Wextra -Werror</code> on GCC 16</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Tool</th>
 <th>LOC</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mvgal.c</code></td>
+<td>~350</td>
+<td>Main CLI: start/stop, status, load-module</td>
+</tr>
 <tr>
 <td><code>mvgal-info.c</code></td>
 <td>~372</td>
@@ -541,7 +659,7 @@
 <tr>
 <td><code>mvgal-status.c</code></td>
 <td>~373</td>
-<td>Real-time bars, daemon check, <code>--watch</code> mode</td>
+<td>Real-time bars, daemon check, <code>--watch</code> mode, degraded-mode warnings</td>
 </tr>
 <tr>
 <td><code>mvgal-bench.c</code></td>
@@ -559,19 +677,50 @@
 <td>Strategy, GPU enable/disable, stats, reload</td>
 </tr>
 <tr>
-<td><code>mvgal.c</code></td>
-<td>~350</td>
-<td>Main CLI: start/stop, status, load-module</td>
+<td><code>mvgal-probe</code></td>
+<td>—</td>
+<td>PCI topology + kernel UAPI probe (<code>/dev/mvgal0</code> ioctls)</td>
 </tr>
-</tbody></table>
+<tr>
+<td><code>mvgal-enum.c</code></td>
+<td>—</td>
+<td>Enumerate GPUs and capabilities</td>
+</tr>
+<tr>
+<td><code>mvgal-hw-validate.c</code></td>
+<td>—</td>
+<td>Hardware validation with actionable failure hints</td>
+</tr>
+<tr>
+<td><code>mvgal-steam-setup.c</code></td>
+<td>—</td>
+<td>Steam/Proton integration helper</td>
+</tr>
+<tr>
+<td><code>mvgal-enroll-mok.sh</code></td>
+<td>—</td>
+<td>Secure Boot MOK enrollment (config/)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="security-hardening-v078">Security Hardening (v0.7.8)</h3>
+<ul>
+<li><strong>Daemon capability dropping</strong> — <code>mvgald</code> clears effective/permitted/inheritable capability sets after init and prunes the bounding set to <code>CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO</code>; the systemd unit adds <code>CapabilityBoundingSet</code>/<code>AmbientCapabilities</code>/<code>NoNewPrivileges</code>.</li>
+<li><strong>Restricted D-Bus policy</strong> — <code>org.mvgal.MVGAL</code> is owned by root; only members of the <code>mvgal</code> group may talk to it; everyone else is denied.</li>
+<li><strong>Atomic config writes</strong> — the daemon <code>SET_CONFIG</code> IPC handler validates payloads (printable ASCII + at least one <code>[section]</code>) and writes atomically (temp file + rename).</li>
+<li><strong>Secure Boot</strong> — DKMS-installed modules are signed with a per-machine MVGAL key; <code>mvgal-enroll-mok</code> feeds the password via stdin and verifies with <code>mokutil --list-new</code> before claiming success.</li>
+</ul>
 <hr>
-<h3 id="steam--proton-layer-steam">Steam / Proton Layer (<code>steam/</code>)</h3>
+<h3 id="steam-proton-layer-steam">Steam / Proton Layer (<code>steam/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong></p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>File</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>mvgal_frame_pacer.c/h</code></td>
 <td>Vsync-aligned frame pacing, ring buffer depth 8, background thread</td>
@@ -592,7 +741,8 @@
 <td><code>README.md</code></td>
 <td>AFR, DXVK/VKD3D-Proton notes, env var reference</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h3 id="opengl-layer-opengl">OpenGL Layer (<code>opengl/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong></p>
@@ -602,7 +752,7 @@
 <li>Actual OpenGL→Vulkan translation via Zink (Mesa)</li>
 </ul>
 <hr>
-<h3 id="qt-dashboard--rest-api-ui">Qt Dashboard + REST API (<code>ui/</code>)</h3>
+<h3 id="qt-dashboard-rest-api-ui">Qt Dashboard + REST API (<code>ui/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong></p>
 <ul>
 <li><code>mvgal_dashboard.cpp/h</code> — Qt5/Qt6, 4 tabs: Overview, Scheduler, Logs, Config</li>
@@ -625,27 +775,34 @@
 <h3 id="packaging-packaging">Packaging (<code>packaging/</code>)</h3>
 <p><strong>Status: ✅ Complete</strong></p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Format</th>
 <th>Files</th>
 <th>Build Command</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>RPM</td>
 <td><code>rpm/mvgal.spec</code></td>
 <td><code>rpmbuild -bb packaging/rpm/mvgal.spec</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="test-results">Test Results</h2>
 <p>These are project-reported test counts. Hardware-backed claims must include reproducible logs before they are used as release criteria.</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Suite</th>
 <th>Pass</th>
 <th>Total</th>
 <th>Notes</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>C unit tests</td>
 <td>6</td>
@@ -694,16 +851,20 @@
 <td><strong>88</strong></td>
 <td><strong>100%</strong></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
-<h2 id="reported-benchmark-results-amd-rx-6600--nvidia-rtx-4060">Reported Benchmark Results (AMD RX 6600 + NVIDIA RTX 4060)</h2>
+<h2 id="reported-benchmark-results-amd-rx-6600-nvidia-rtx-4060">Reported Benchmark Results (AMD RX 6600 + NVIDIA RTX 4060)</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Benchmark</th>
 <th>1 GPU</th>
 <th>2 GPUs</th>
 <th>Speedup</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Memory copy bandwidth</td>
 <td>baseline</td>
@@ -734,15 +895,19 @@
 <td>6.2 ns/op</td>
 <td>—</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
-<h2 id="remaining-production-work">Remaining Production Work</h2>
+<h2 id="remaining-production-work_1">Remaining Production Work</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Item</th>
 <th>Priority</th>
 <th>Blocker</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Hardware validation evidence</td>
 <td>High</td>
@@ -773,15 +938,19 @@
 <td>Future</td>
 <td>Design only</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="test-infrastructure">Test Infrastructure</h2>
 <h3 id="kernel-tests">Kernel Tests</h3>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>File</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>kernel/tests/mvgal_test.h</code></td>
 <td>Test framework header</td>
@@ -790,13 +959,17 @@
 <td><code>kernel/tests/mvgal_test.c</code></td>
 <td>Test framework implementation</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h3 id="test-categories">Test Categories</h3>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Category</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Kernel Module Tests</td>
 <td>Module load/unload, GPU enumeration, PCI topology</td>
@@ -821,15 +994,19 @@
 <td>Integration Tests</td>
 <td>Cross-vendor memory, API interception layers</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <hr>
 <h2 id="ci-status">CI Status</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Workflow</th>
 <th>Triggers</th>
 <th>Description</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>CI</code></td>
 <td><code>push</code> (main/develop), <code>pull_request</code> (main), <code>workflow_dispatch</code></td>
@@ -840,14 +1017,23 @@
 <td><code>push</code> tags (<code>v*</code>), <code>workflow_dispatch</code></td>
 <td>RPM build and COPR submission</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Workflow</th>
 <th>Description</th>
-</tr></thead><tbody>
-</tbody></table>
-<h3 id="verified-build-commands">Verified Build Commands</h3>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>### Verified Build Commands</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Full build (kernel + userspace + tests):</p>
 <pre><code class="language-bash">cmake -B build_full -DCMAKE_BUILD_TYPE=Release \
   -DMVGAL_BUILD_KERNEL=ON \
   -DMVGAL_BUILD_RUNTIME=ON \
@@ -856,8 +1042,9 @@
   -DMVGAL_BUILD_TESTS=ON \
   -DWITH_VULKAN=ON
 cmake --build build_full -j$(nproc)
-ctest --test-dir build_full</code></pre>
-<p>Full build (kernel + userspace + tests):</p>
+ctest --test-dir build_full
+</code></pre>
+<p>Test-only build (no kernel headers needed):</p>
 <pre><code class="language-bash">cmake -B build_test -DCMAKE_BUILD_TYPE=Release \
   -DMVGAL_BUILD_KERNEL=OFF \
   -DMVGAL_BUILD_RUNTIME=ON \
@@ -866,9 +1053,9 @@ ctest --test-dir build_full</code></pre>
   -DMVGAL_BUILD_TESTS=ON \
   -DWITH_VULKAN=ON
 cmake --build build_test -j$(nproc)
-ctest --test-dir build_test</code></pre>
-<p>Test-only build (no kernel headers needed):</p>
-<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.3 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+ctest --test-dir build_test
+</code></pre>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.8 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
 </main>
 </body>
 </html>

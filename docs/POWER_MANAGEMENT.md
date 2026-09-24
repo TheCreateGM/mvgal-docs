@@ -1,7 +1,12 @@
+---
+tags: [mvgal, power, reference]
+aliases: [Power Management, Power]
+---
+
 # MVGAL Power Management
 
-> **Version**: 0.5.0  
-> **Last Updated**: 2026-06-06
+> **Version**: 0.7.8  
+> **Last Updated**: September 2026
 
 ---
 
@@ -102,28 +107,18 @@ Users can define custom curves in JSON (`/etc/mvgal/powercurve.json`):
 GPUs transition through four power states, defined in
 `runtime/daemon/power_manager.hpp`:
 
-```
-          ┌──────────────────────────────────────────────┐
-          │                                              │
-          ▼                                              │
-   ┌──────────┐    timeout    ┌───────────┐              │
-   │  ACTIVE  │ ────────────→ │SUSTAINED  │              │
-   │  (D0)    │               │  (D0-low)  │              │
-   └──────────┘               └───────────┘              │
-        ↑                           │                    │
-        │                     timeout│                    │
-        │                           ▼                    │
-        │                    ┌───────────┐    timeout    │
-        │                    │   IDLE    │ ─────────────  │
-        │                    │  (D3hot)  │                │
-        │                    └───────────┘                │
-        │                           │                    │
-        │                     timeout│                    │
-        │                           ▼                    │
-        │                    ┌───────────┐               │
-        └────────────────────│   PARK    │               │
-        activity wakes        │  (D3cold) │               │
-                             └───────────┘
+```mermaid
+stateDiagram-v2
+    [*] --> ACTIVE
+    ACTIVE: ACTIVE (D0)
+    SUSTAINED: SUSTAINED (D0-low)
+    IDLE: IDLE (D3hot)
+    PARK: PARK (D3cold)
+
+    ACTIVE --> SUSTAINED: timeout
+    SUSTAINED --> IDLE: timeout
+    IDLE --> PARK: timeout
+    PARK --> ACTIVE: activity wakes
 ```
 
 ### State Descriptions

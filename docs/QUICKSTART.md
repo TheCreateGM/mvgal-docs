@@ -1,4 +1,11 @@
+---
+tags: [mvgal, quickstart, guide]
+aliases: [Quick Start, Quickstart]
+---
+
 # MVGAL Quick Start
+
+**Version:** 0.7.8 | **Updated:** September 2026
 
 Get MVGAL running in 5 minutes.
 
@@ -34,15 +41,29 @@ Supported targets: Fedora 40+ · RHEL/AlmaLinux/Rocky 9 & 10 · CentOS Stream 9 
 
 This installs:
 - `mvgald` daemon → `/usr/bin/mvgald`
-- CLI tools → `/usr/bin/mvgal-{info,status,bench,compat,config}`
+- CLI tools → `/usr/bin/mvgal-{info,status,bench,compat,config,probe,enum,hw-validate,steam-setup}`
 - Vulkan layer → `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json`
 - OpenCL ICD → `/etc/OpenCL/vendors/mvgal.icd`
 - Config → `/etc/mvgal/mvgal.conf`
 - Systemd service → `/etc/systemd/system/mvgald.service`
+- Kernel modules → DKMS, signed for Secure Boot
+- MOK helper → `/usr/bin/mvgal-enroll-mok`
 
 ---
 
-## 4. Start the daemon
+## 4. Enroll Secure Boot key (UEFI only)
+
+If Secure Boot is enabled, enroll the MVGAL signing key once, then reboot and confirm in the MOK Manager:
+
+```bash
+mvgal-enroll-mok
+```
+
+See [SECURE_BOOT.md](SECURE_BOOT.md) for details.
+
+---
+
+## 5. Start the daemon
 
 ```bash
 pkexec systemctl start mvgald
@@ -51,7 +72,7 @@ pkexec systemctl enable mvgald   # auto-start on boot
 
 ---
 
-## 5. Verify
+## 6. Verify
 
 ```bash
 mvgal-info
@@ -94,7 +115,7 @@ Expected output:
 
 ---
 
-## 6. Use with applications
+## 7. Use with applications
 
 ### Any Vulkan application
 
@@ -133,7 +154,7 @@ MESA_LOADER_DRIVER_OVERRIDE=zink ENABLE_MVGAL=1 glxgears
 
 ---
 
-## 7. Monitor in real time
+## 8. Monitor in real time
 
 ```bash
 # One-shot status
@@ -152,7 +173,7 @@ mvgal-compat --system
 
 ---
 
-## 8. Change scheduling strategy
+## 9. Change scheduling strategy
 
 ```bash
 # Alternate Frame Rendering (best for gaming)
@@ -167,15 +188,18 @@ mvgal-config show-config
 
 ---
 
-## 9. Load the kernel module (optional)
+## 10. Load the kernel module (optional)
 
-The kernel module enables deeper integration (DMA-BUF at kernel level, `/dev/mvgal0`). It is optional — MVGAL works without it via user-space interception. The module ships pre-built with the COPR package.
+The kernel module enables deeper integration (DMA-BUF at kernel level, `/dev/mvgal0`). It is optional — MVGAL works without it via user-space interception (degraded mode). The module ships pre-built with the COPR package and is installed via DKMS.
 
 ```bash
 pkexec modprobe mvgal
-pkexec insmod /lib/modules/$(uname -r)/extra/mvgal/mvgal.ko 2>/dev/null || true
+# or use the helper (self-escalates via pkexec)
+mvgal-load
 dmesg | grep MVGAL
 ```
+
+If the module fails to load on a Secure Boot system, enroll the MOK key first (step 4).
 
 ---
 

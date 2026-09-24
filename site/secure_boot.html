@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secure Boot &amp; MOK Enrollment — MVGAL Documentation</title>
+<meta name="description" content="Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.">
+<meta name="keywords" content="MVGAL Secure Boot, MOK enrollment, mvgal-enroll-mok, mokutil, DKMS signing, UEFI, kernel module signing">
+<meta name="author" content="MVGAL Project">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="generator" content="MVGAL docs site generator">
+<link rel="canonical" href="https://thecreategm.github.io/mvgal-docs/site/secure_boot.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="MVGAL Documentation">
+<meta property="og:title" content="Secure Boot &amp; MOK Enrollment — MVGAL Documentation">
+<meta property="og:description" content="Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.">
+<meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/secure_boot.html">
+<meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
+<meta property="og:locale" content="en_US">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Secure Boot &amp; MOK Enrollment — MVGAL Documentation">
+<meta name="twitter:description" content="Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.">
+<meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Secure Boot & MOK Enrollment — MVGAL Documentation", "name": "Secure Boot & MOK Enrollment — MVGAL Documentation", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.", "url": "https://thecreategm.github.io/mvgal-docs/site/secure_boot.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Secure Boot, MOK enrollment, mvgal-enroll-mok, mokutil, DKMS signing, UEFI, kernel module signing", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Secure Boot & MOK Enrollment — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/secure_boot.html"}]}}</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+<script>
+(function(){
+  var toggle = document.querySelector('.menu-toggle');
+  var sidebar = document.querySelector('nav.sidebar');
+  if (!toggle || !sidebar) return;
+  toggle.addEventListener('click', function(){
+    var open = sidebar.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Close menu when a nav link is clicked (mobile)
+  sidebar.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      sidebar.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+</script>
+<nav class="sidebar">
+  <div class="brand">
+    <div class="logo">MVGAL</div>
+    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.8</div>
+  </div>
+<a href="index.html">Home</a>
+<a href="quickstart.html">Quick Start</a>
+<a href="install.html">Installation</a>
+<a href="secure_boot.html" class="active">Secure Boot</a>
+<a href="build.html">Building</a>
+<a href="architecture.html">Architecture</a>
+<a href="design.html">Design</a>
+<a href="api.html">API Reference</a>
+<a href="strategies.html">Scheduling Strategies</a>
+<a href="memory.html">Memory Management</a>
+<a href="hardware.html">Hardware Compatibility</a>
+<a href="steam.html">Steam / Proton</a>
+<a href="power.html">Power Management</a>
+<a href="troubleshooting.html">Troubleshooting</a>
+<a href="status.html">Project Status</a>
+<a href="changelog.html">Changelog</a>
+</nav>
+<main>
+<h1 id="mvgal-secure-boot-mok-enrollment">MVGAL Secure Boot &amp; MOK Enrollment</h1>
+<p><strong>Version:</strong> 0.7.8 | <strong>Updated:</strong> September 2026</p>
+<p>MVGAL ships kernel modules (<code>mvgal.ko</code>, <code>mvgal_amd.ko</code>, <code>mvgal_nvidia.ko</code>, <code>mvgal_intel.ko</code>, <code>mvgal_mtt.ko</code>, <code>mvgal_adreno.ko</code>, <code>mvgal_ntsync.ko</code>). On systems with <strong>UEFI Secure Boot</strong> enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with <strong>per-machine key signing</strong> and <strong>MOK (Machine Owner Key) enrollment</strong>.</p>
+<hr>
+<h2 id="how-it-works">How It Works</h2>
+<ol>
+<li><strong>Install time</strong> — the RPM <code>%post</code> script generates a per-machine MVGAL signing key and signs the DKMS-installed modules in <code>/lib/modules/*/updates/dkms</code> (v0.7.5+). Kernel-tree modules are signed as well.</li>
+<li><strong>Enrollment</strong> — the per-machine key must be enrolled into the machine's MOK list so the kernel trusts it. This is a one-time, interactive step (requires a reboot into the MOK manager).</li>
+<li><strong>Verification</strong> — <code>mvgal-enroll-mok</code> verifies the pending MOK list with <code>mokutil --list-new</code> before reporting success (v0.7.8+ — no more false positives).</li>
+</ol>
+<hr>
+<h2 id="enrolling-the-mvgal-key-recommended">Enrolling the MVGAL Key (Recommended)</h2>
+<p>After installing MVGAL, run:</p>
+<pre><code class="language-bash">mvgal-enroll-mok
+</code></pre>
+<p>What happens:</p>
+<ul>
+<li>If no password is supplied, a <strong>one-time password</strong> is generated and shown.</li>
+<li>The password is fed to <code>mokutil --import</code> <strong>via stdin</strong> (the <code>-p</code> flag is rejected by mokutil 0.7.2).</li>
+<li>The pending MOK list is verified with <code>mokutil --list-new</code>.</li>
+<li><strong>Reboot</strong> — the MOK Manager (blue screen) appears during boot; select <strong>Enroll MOK → Continue → Yes</strong> and enter the one-time password.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> <code>mvgal-enroll-mok</code> works through <code>pkexec</code> without a TTY. If you prefer to supply the password yourself, use <code>mvgal-enroll-mok -p 'your-password'</code>.</p>
+</blockquote>
+<h3 id="manual-enrollment-alternative">Manual enrollment (alternative)</h3>
+<pre><code class="language-bash"># Generate a key (if not already present)
+sudo mokutil --import /etc/pki/mvgal/MVGal-MOK.der
+# Or with a password
+sudo mokutil --import /etc/pki/mvgal/MVGal-MOK.der --password 'your-password'
+</code></pre>
+<p>Then reboot and complete enrollment in the MOK Manager.</p>
+<hr>
+<h2 id="verifying-enrollment">Verifying Enrollment</h2>
+<pre><code class="language-bash">mokutil --list-enrolled | grep -i mvgal   # enrolled keys
+mokutil --list-new | grep -i mvgal        # pending keys (should be empty after reboot)
+</code></pre>
+<p>If the module still fails to load, check:</p>
+<pre><code class="language-bash">sudo dmesg | grep -i &quot;module verification\|mvgal&quot;
+</code></pre>
+<hr>
+<h2 id="degraded-mode-module-not-loaded">Degraded Mode (Module Not Loaded)</h2>
+<p>If the <code>mvgal</code> kernel module is <strong>not loaded</strong> (e.g. MOK not yet enrolled, or Secure Boot rejected the module), MVGAL runs in <strong>degraded userspace-only mode</strong>:</p>
+<ul>
+<li><code>mvgal-status</code> prints:</li>
+</ul>
+<p><code>Kernel Module: NOT LOADED (degraded userspace-only mode)</code></p>
+<p>with a MOK enrollment hint, and exits non-zero (v0.7.6+).
+- The load-balance figure is a real estimate, or <code>N/A</code> when fewer than 2 enabled GPUs / no workload data (v0.7.8+).
+- <code>mvgal-hw-validate</code> attributes device-node failures to "kernel module not loaded" with a load hint (v0.7.8+).</p>
+<p>To load the module manually:</p>
+<pre><code class="language-bash">sudo modprobe mvgal
+# or
+mvgal-load        # self-escalates via pkexec
+</code></pre>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause / Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mvgal-enroll-mok</code> reports success but module still rejected</td>
+<td>Pre-v0.7.8 false positive. Update to v0.7.8+, or verify with <code>mokutil --list-enrolled</code>.</td>
+</tr>
+<tr>
+<td><code>mokutil --import</code> fails with <code>-p</code> flag</td>
+<td>mokutil 0.7.2 rejects <code>-p</code>. Use v0.7.8+ <code>mvgal-enroll-mok</code> (password via stdin) or omit the flag.</td>
+</tr>
+<tr>
+<td>MOK Manager doesn't appear on reboot</td>
+<td>Secure Boot may be disabled, or the key was already enrolled. Check <code>mokutil --list-enrolled</code>.</td>
+</tr>
+<tr>
+<td><code>modprobe mvgal</code> → "Required key not available"</td>
+<td>The key is not enrolled. Run <code>mvgal-enroll-mok</code> and reboot.</td>
+</tr>
+<tr>
+<td>DKMS modules rejected but kernel-tree modules load</td>
+<td>Pre-v0.7.5 behavior. Update to v0.7.5+ so DKMS modules are signed too.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="security-notes-v078">Security Notes (v0.7.8)</h2>
+<ul>
+<li>The daemon <strong>drops capabilities after init</strong> — effective/permitted/inheritable sets are cleared and the bounding set is pruned to <code>CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO</code>.</li>
+<li>The systemd unit adds <code>CapabilityBoundingSet</code> / <code>AmbientCapabilities</code> / <code>NoNewPrivileges</code>.</li>
+<li>The D-Bus policy for <code>org.mvgal.MVGAL</code> is restricted to <strong>root</strong> and the <strong><code>mvgal</code> group</strong> — other users are denied.</li>
+</ul>
+<p>See <a href="TROUBLESHOOTING.md">TROUBLESHOOTING.md</a> for more issues and <a href="STATUS.md">STATUS.md</a> for the release history.</p>
+<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.8 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
+</main>
+</body>
+</html>

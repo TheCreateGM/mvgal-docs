@@ -1,6 +1,11 @@
+---
+tags: [mvgal, design, reference]
+aliases: [Design Document, Design]
+---
+
 # MVGAL Design Document
 
-**Version:** 0.7.3 | **Last Updated:** August 2026
+**Version:** 0.7.8 | **Last Updated:** September 2026
 
 ---
 
@@ -110,35 +115,24 @@
 
 ## Data Flow
 
-```
-Application
-    │
-    ▼
-Interception Layer (Vulkan/CL/CUDA/GL)
-    │ serialize workload descriptor
-    ▼
-IPC Client ──── Unix Socket ────▶ IPC Server (mvgald)
-                                       │
-                                       ▼
-                                  Scheduler
-                                  ├─ Select GPU(s) based on strategy
-                                  ├─ Check memory availability
-                                  └─ Assign priority
-                                       │
-                                       ▼
-                                  Memory Manager
-                                  ├─ Allocate VRAM on target GPU(s)
-                                  ├─ Import/export DMA-BUF
-                                  └─ Fallback to host-RAM if needed
-                                       │
-                                       ▼
-                                  Kernel Module (/dev/mvgal0)
-                                  ├─ DRM ioctl submission
-                                  ├─ Vendor-specific dispatch (VGDD)
-                                  └─ Fence signaling
-                                       │
-                                       ▼
-                                  GPU Hardware
+```mermaid
+flowchart TD
+    App["Application"] --> IL["Interception Layer (Vulkan/CL/CUDA/GL)"]
+    IL -->|"serialize workload descriptor"| IPC["IPC Client"]
+    IPC -->|"Unix Socket"| SRV["IPC Server (mvgald)"]
+    SRV --> SCH["Scheduler"]
+    SCH --> SCH1["Select GPU(s) based on strategy"]
+    SCH1 --> SCH2["Check memory availability"]
+    SCH2 --> SCH3["Assign priority"]
+    SCH3 --> MM["Memory Manager"]
+    MM --> MM1["Allocate VRAM on target GPU(s)"]
+    MM1 --> MM2["Import/export DMA-BUF"]
+    MM2 --> MM3["Fallback to host-RAM if needed"]
+    MM3 --> KM["Kernel Module (/dev/mvgal0)"]
+    KM --> KM1["DRM ioctl submission"]
+    KM1 --> KM2["Vendor-specific dispatch (VGDD)"]
+    KM2 --> KM3["Fence signaling"]
+    KM3 --> HW["GPU Hardware"]
 ```
 
 ---

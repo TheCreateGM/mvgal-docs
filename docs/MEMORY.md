@@ -1,6 +1,11 @@
+---
+tags: [mvgal, memory, reference]
+aliases: [Memory Management, Memory]
+---
+
 # MVGAL Memory Management
 
-**Version:** 0.2.2
+**Version:** 0.7.8 | **Updated:** September 2026
 
 ---
 
@@ -12,26 +17,13 @@ MVGAL implements a unified memory manager that abstracts over physically separat
 
 ## Memory Architecture
 
-```
-Application virtual address space
-         │
-         ▼
-┌─────────────────────────────────────────────────────┐
-│           Unified Virtual Memory (UVM)               │
-│   Single address space spanning all GPU VRAM pools   │
-└──────────────┬──────────────┬───────────────────────┘
-               │              │
-    ┌──────────▼──┐    ┌──────▼──────────┐
-    │  GPU 0 VRAM │    │  GPU 1 VRAM     │
-    │  (AMD 4 GiB)│    │  (NVIDIA 8 GiB) │
-    └─────────────┘    └─────────────────┘
-               │              │
-               └──────┬───────┘
-                      │
-              ┌───────▼───────┐
-              │  Host RAM     │
-              │  (staging)    │
-              └───────────────┘
+```mermaid
+flowchart TD
+    App["Application virtual address space"] --> UVM["Unified Virtual Memory (UVM)<br/>Single address space spanning all GPU VRAM pools"]
+    UVM --> G0["GPU 0 VRAM (AMD 4 GiB)"]
+    UVM --> G1["GPU 1 VRAM (NVIDIA 8 GiB)"]
+    G0 --> HR["Host RAM (staging)"]
+    G1 --> HR
 ```
 
 ---
@@ -40,21 +32,22 @@ Application virtual address space
 
 MVGAL selects the optimal transfer path automatically:
 
-```
-1. DMA-BUF zero-copy
-   ├─ Kernel-supported (Linux 5.6+)
-   ├─ Works: AMD↔AMD, Intel↔Intel, AMD↔Intel
-   └─ Requires: both drivers export DMA-BUF
+```mermaid
+flowchart TD
+    Start["Transfer Path Selection"] --> D1["1. DMA-BUF zero-copy"]
+    D1 --> D1a["Kernel-supported (Linux 5.6+)"]
+    D1 --> D1b["Works: AMD↔AMD, Intel↔Intel, AMD↔Intel"]
+    D1 --> D1c["Requires: both drivers export DMA-BUF"]
 
-2. PCIe Peer-to-Peer (P2P)
-   ├─ Direct GPU-to-GPU over PCIe
-   ├─ Requires: same PCIe root complex, kernel 5.10+
-   └─ Works: AMD↔NVIDIA (with nvidia-drm.modeset=1)
+    Start --> P2["2. PCIe Peer-to-Peer (P2P)"]
+    P2 --> P2a["Direct GPU-to-GPU over PCIe"]
+    P2 --> P2b["Requires: same PCIe root complex, kernel 5.10+"]
+    P2 --> P2c["Works: AMD↔NVIDIA (with nvidia-drm.modeset=1)"]
 
-3. Host-RAM staging
-   ├─ Always available
-   ├─ Highest latency (~2× PCIe bandwidth)
-   └─ Used when DMA-BUF and P2P are unavailable
+    Start --> H3["3. Host-RAM staging"]
+    H3 --> H3a["Always available"]
+    H3 --> H3b["Highest latency (~2× PCIe bandwidth)"]
+    H3 --> H3c["Used when DMA-BUF and P2P are unavailable"]
 ```
 
 ### Measured bandwidth (typical PCIe 4.0 x16)
@@ -88,20 +81,12 @@ MVGAL selects the optimal transfer path automatically:
 
 ## Allocation Policy
 
-```
-Request size < 64 MB
-  └─ Allocate on GPU with most free VRAM
-
-Render target
-  └─ Allocate on GPU that will write first
-     (determined from workload history)
-
-Large buffer (> 64 MB)
-  └─ Allocate on GPU most likely to use it
-     (determined from access pattern history)
-
-Shared buffer (gpu_mask has multiple bits set)
-  └─ Allocate on primary GPU, DMA-BUF export to others
+```mermaid
+flowchart TD
+    A["Request size < 64 MB"] --> A1["Allocate on GPU with most free VRAM"]
+    B["Render target"] --> B1["Allocate on GPU that will write first<br/>(determined from workload history)"]
+    C["Large buffer (> 64 MB)"] --> C1["Allocate on GPU most likely to use it<br/>(determined from access pattern history)"]
+    D["Shared buffer (gpu_mask has multiple bits set)"] --> D1["Allocate on primary GPU, DMA-BUF export to others"]
 ```
 
 ---
@@ -225,16 +210,24 @@ Allocations with `MVGAL_MEMORY_FLAG_PERSISTENT` are never evicted.
 In `/etc/mvgal/mvgal.conf`:
 
 ```ini
-[memory]
+[core]
+# Enable cross-GPU memory migration
+enable_memory_migration = true
+
 # Enable DMA-BUF sharing
 enable_dmabuf = true
 
-# Enable PCIe P2P transfers
-p2p_enabled = true
+# Statistics collection interval (seconds)
+stats_interval = 1
 
-# Replicate small buffers (< threshold) to all GPUs
-replicate_threshold = 67108864   # 64 MB
+[gpu_0]
+# Per-GPU memory limit in MB (0 = unlimited)
+memory_limit_mb = 0
 
-# Preferred copy method: dmabuf, p2p, host
-preferred_copy_method = dmabuf
+[dri]
+# DRM/DRI devices to enumerate
+device_pattern = /dev/dri/card*
+
+# Enable PRIME support
+enable_prime = true
 ```

@@ -1,6 +1,11 @@
+---
+tags: [mvgal, architecture, reference]
+aliases: [Architecture]
+---
+
 # MVGAL Architecture
 
-**Version:** 0.7.3 | **Last Updated:** August 2026
+**Version:** 0.7.8 | **Last Updated:** September 2026
 
 ---
 
@@ -8,55 +13,64 @@
 
 MVGAL (Multi-Vendor GPU Aggregation Layer for Linux) is an **eight-layer** system that presents two or more heterogeneous GPUs from different vendors as a single logical device to all applications without requiring application changes.
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                        Applications                              │
-│          (Games, Blender, PyTorch, OpenCL programs)              │
-├──────────────────────────────────────────────────────────────────┤
-│                Layer 8: Tooling & Bindings                        │
-│  CLI (mvgal-info/status/bench) · Qt Dashboard · REST API ·      │
-│  Steam Frame Pacer · Language Bindings (Java, C#, D, Nim, V,    │
-│  Crystal, Haxe)                                                  │
-├──────────────────────────────────────────────────────────────────┤
-│                Layer 7: API Interception                          │
-│  VK_LAYER_MVGAL · libmvgal_opencl.so · libmvgal_cuda.so ·       │
-│  libmvgal_gl.so (OpenGL LD_PRELOAD) · D3D9/11/12 shims ·        │
-│  Metal shim · WebGPU shim · SPIR-V Routing                       │
-├──────────────────────────────────────────────────────────────────┤
-│                Layer 6: Safety Subsystems (Rust)                  │
-│  fence_manager · memory_safety · capability_model                │
-│  Memory-safe FFI boundary between C/C++ and Rust                 │
-├──────────────────────────────────────────────────────────────────┤
-│          Layer 5: Work Distribution Engine (WDE)                  │
-│  7+3 Scheduling Strategies · Memory Heap Hierarchy               │
-│  (Heaps 0-4) · Workload Analysis → Strategy Selection            │
-│  RLD (Render Layer Dist.) · REP (Replication) · PPL (Pipeline)   │
-├──────────────────────────────────────────────────────────────────┤
-│          Layer 4: Intermediate Framing Layer (IMFL)               │
-│  Frame Sessions · Cross-GPU Migration Plans · Steam Profiles   │
-│  Execution Context Lifecycle · Migration Path Selection           │
-├──────────────────────────────────────────────────────────────────┤
-│                Layer 3: Runtime Daemon (mvgald)                   │
-│  Scheduler · MemoryManager · PowerManager · MetricsCollector ·   │
-│  IpcServer · DeviceRegistry · D-Bus API · Daemon State Machine   │
-├──────────────────────────────────────────────────────────────────┤
-│          Layer 2: Vendor GPU Driver Dispatch (VGDD)               │
-│  struct mvgal_vendor_ops · amdgpu / nvidia / intel / mtt        │
-│  Per-vendor command submission · VRAM alloc · power mgmt         │
-│  DMA-BUF export/import · PCIe P2P · Utilization query            │
-├──────────────────────────────────────────────────────────────────┤
-│          Layer 1: Hardware Abstraction Layer (HAL)                │
-│  mvgal.ko (char dev → DRM migration path) · PCI enumeration ·   │
-│  GPU topology · IOCTL interface · NTSYNC · Cross-GPU DMA-BUF    │
-│  /dev/mvgal0 · sysfs interface                                   │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│   │ amdgpu.ko│  │nvidia.ko │  │i915/xe.ko│  │mtgpu-drv │       │
-│   │  (AMD)   │  │ (NVIDIA) │  │ (Intel)  │  │  (MTT)   │       │
-│   └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
-│                    Vendor Kernel Drivers                          │
-└──────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Apps["Applications"]
+        A1["Games, Blender, PyTorch, OpenCL programs"]
+    end
+
+    subgraph L8["Layer 8: Tooling & Bindings"]
+        T1["CLI (mvgal-info/status/bench) · Qt Dashboard · REST API"]
+        T2["Steam Frame Pacer · Language Bindings (Java, C#, D, Nim, V, Crystal, Haxe)"]
+    end
+
+    subgraph L7["Layer 7: API Interception"]
+        I1["VK_LAYER_MVGAL · libmvgal_opencl.so · libmvgal_cuda.so"]
+        I2["libmvgal_gl.so (OpenGL LD_PRELOAD) · D3D9/11/12 shims"]
+        I3["Metal shim · WebGPU shim · SPIR-V Routing"]
+    end
+
+    subgraph L6["Layer 6: Safety Subsystems (Rust)"]
+        S1["fence_manager · memory_safety · capability_model"]
+        S2["Memory-safe FFI boundary between C/C++ and Rust"]
+    end
+
+    subgraph L5["Layer 5: Work Distribution Engine (WDE)"]
+        W1["7+3 Scheduling Strategies · Memory Heap Hierarchy (Heaps 0-4)"]
+        W2["Workload Analysis → Strategy Selection"]
+        W3["RLD (Render Layer Dist.) · REP (Replication) · PPL (Pipeline)"]
+    end
+
+    subgraph L4["Layer 4: Intermediate Framing Layer (IMFL)"]
+        F1["Frame Sessions · Cross-GPU Migration Plans · Steam Profiles"]
+        F2["Execution Context Lifecycle · Migration Path Selection"]
+    end
+
+    subgraph L3["Layer 3: Runtime Daemon (mvgald)"]
+        D1["Scheduler · MemoryManager · PowerManager · MetricsCollector"]
+        D2["IpcServer · DeviceRegistry · D-Bus API · Daemon State Machine"]
+    end
+
+    subgraph L2["Layer 2: Vendor GPU Driver Dispatch (VGDD)"]
+        V1["struct mvgal_vendor_ops · amdgpu / nvidia / intel / mtt"]
+        V2["Per-vendor command submission · VRAM alloc · power mgmt"]
+        V3["DMA-BUF export/import · PCIe P2P · Utilization query"]
+    end
+
+    subgraph L1["Layer 1: Hardware Abstraction Layer (HAL)"]
+        H1["mvgal.ko (char dev → DRM migration path) · PCI enumeration"]
+        H2["GPU topology · IOCTL interface · NTSYNC · Cross-GPU DMA-BUF"]
+        H3["/dev/mvgal0 · sysfs interface"]
+    end
+
+    subgraph VK["Vendor Kernel Drivers"]
+        K1["amdgpu.ko (AMD)"]
+        K2["nvidia.ko (NVIDIA)"]
+        K3["i915/xe.ko (Intel)"]
+        K4["mtgpu-drv (MTT)"]
+    end
+
+    Apps --> L8 --> L7 --> L6 --> L5 --> L4 --> L3 --> L2 --> L1 --> VK
 ```
 
 ### Layer Summary
@@ -264,13 +278,10 @@ Exposes telemetry subscription API for clients.
 
 Unix domain socket server. Binary message format:
 
-```
-┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
-│  magic   │ version  │  type    │ reqId    │ payloadSz│  flags   │ reserved │
-│ 'MVGL'   │    1     │ uint32   │ uint32   │ uint32   │ uint32   │ uint32   │
-│ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │ 4 bytes  │
-└──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘
-```
+| magic | version | type | reqId | payloadSz | flags | reserved |
+|-------|---------|------|-------|-----------|-------|----------|
+| `'MVGL'` | 1 | uint32 | uint32 | uint32 | uint32 | uint32 |
+| 4 bytes | 4 bytes | 4 bytes | 4 bytes | 4 bytes | 4 bytes | 4 bytes |
 
 Message types: `HELLO`, `GOODBYE`, `QUERY_DEVICES`, `QUERY_DEVICE_CAPABILITIES`, `QUERY_UNIFIED_CAPABILITIES`, `ALLOC_MEMORY`, `FREE_MEMORY`, `IMPORT_DMABUF`, `EXPORT_DMABUF`, `SUBMIT_WORKLOAD`, `WAIT_WORKLOAD`, `SET_SCHEDULING_MODE`, `SET_GPU_PRIORITY`, `SET_GPU_ENABLED`, `GET_STATISTICS`, `SUBSCRIBE_TELEMETRY`, `UNSUBSCRIBE_TELEMETRY`, `GET_CONFIG`, `SET_CONFIG`, `LOAD_CONFIG`, `SAVE_CONFIG`, `ERROR`.
 
@@ -463,24 +474,27 @@ const char *mvgal_cap_to_json(uint64_t handle);
 
 The FFI boundary between Rust safety crates (Layer 6) and the C++ daemon (Layer 3) is defined as follows:
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                   C++ Daemon (mvgald)                    │
-│  #include "fence_manager.h"  // C FFI declarations       │
-│  #include "memory_safety.h"  // C FFI declarations       │
-│  #include "capability_model.h"  // C FFI declarations    │
-├──────────────────────────────────────────────────────────┤
-│                    extern "C" {                           │
-│  mvgal_fence_create()  →  fence_manager::Fence::new()    │
-│  mvgal_mem_track()     →  memory_safety::TrackedAlloc    │
-│  mvgal_cap_compute()   →  capability_model::compute()    │
-│                    }                                      │
-├──────────────────────────────────────────────────────────┤
-│                Rust Crates (safe/)                        │
-│  fence_manager   →  #[no_mangle] extern "C" fn ...       │
-│  memory_safety   →  #[no_mangle] extern "C" fn ...       │
-│  capability_model  →  #[no_mangle] extern "C" fn ...     │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph CPP["C++ Daemon (mvgald)"]
+        C1["#include \"fence_manager.h\"  // C FFI declarations"]
+        C2["#include \"memory_safety.h\"  // C FFI declarations"]
+        C3["#include \"capability_model.h\"  // C FFI declarations"]
+    end
+
+    subgraph FFI["extern \"C\" boundary"]
+        F1["mvgal_fence_create() → fence_manager::Fence::new()"]
+        F2["mvgal_mem_track() → memory_safety::TrackedAlloc"]
+        F3["mvgal_cap_compute() → capability_model::compute()"]
+    end
+
+    subgraph RUST["Rust Crates (safe/)"]
+        R1["fence_manager → #[no_mangle] extern \"C\" fn ..."]
+        R2["memory_safety → #[no_mangle] extern \"C\" fn ..."]
+        R3["capability_model → #[no_mangle] extern \"C\" fn ..."]
+    end
+
+    CPP --> FFI --> RUST
 ```
 
 **Rules:**
@@ -622,69 +636,38 @@ LD_PRELOAD shim intercepting `glXSwapBuffers` and `eglSwapBuffers`. Injects fram
 
 ## Data Flow: Gaming Workload (AFR)
 
-```
-Game (via Proton/DXVK)
-  │
-  │ vkQueueSubmit (frame N)
-  ▼
-VK_LAYER_MVGAL (Layer 7 — Intercept)
-  │ intercepts submit, increments atomic counter, logs telemetry
-  │ forwards to next layer in dispatch chain
-  ▼
-Physical ICD (AMD / NVIDIA / Intel)
-  │
-  │ (parallel) mvgald AFR scheduler
-  │   ├─ Frame N   → GPU 0  (even)
-  │   └─ Frame N+1 → GPU 1  (odd)
-  ▼
-Frame pacer (steam/mvgal_frame_pacer.c) [Layer 8 — Tooling]
-  │ ring buffer depth 8, background thread
-  │ sleep_until_ns(next_vsync_boundary)
-  ▼
-vkQueuePresentKHR on display-connected GPU
+```mermaid
+flowchart TD
+    Game["Game (via Proton/DXVK)"] -->|"vkQueueSubmit (frame N)"| LAYER["VK_LAYER_MVGAL (Layer 7 — Intercept)"]
+    LAYER -->|"intercepts submit, increments atomic counter, logs telemetry<br/>forwards to next layer in dispatch chain"| ICD["Physical ICD (AMD / NVIDIA / Intel)"]
+    ICD -->|"(parallel) mvgald AFR scheduler"| SCH["Frame N → GPU 0 (even)<br/>Frame N+1 → GPU 1 (odd)"]
+    SCH --> PACER["Frame pacer (steam/mvgal_frame_pacer.c) [Layer 8 — Tooling]"]
+    PACER -->|"ring buffer depth 8, background thread<br/>sleep_until_ns(next_vsync_boundary)"| PRESENT["vkQueuePresentKHR on display-connected GPU"]
 ```
 
 ## Data Flow: AI Compute Workload
 
-```
-PyTorch / TensorFlow
-  │
-  │ CUDA kernel launch (cudaLaunchKernel)
-  ▼
-MVGAL CUDA shim (Layer 7 — Intercept, LD_PRELOAD)
-  │ intercepts, translates to MVGAL workload submission
-  ▼
-mvgald Compute Offload scheduler (Layer 3 — Runtime)
-  │ shards batch dimension across N GPUs
-  │ allocates input tensors via unified memory manager
-  │ issues DMA-BUF transfers for cross-GPU data
-  ▼
-GPU 0 … GPU N-1 (parallel execution)
-  │
-  │ results collected via write-combined system
-  ▼
-Application receives aggregated result
+```mermaid
+flowchart TD
+    PT["PyTorch / TensorFlow"] -->|"CUDA kernel launch (cudaLaunchKernel)"| SHIM["MVGAL CUDA shim (Layer 7 — Intercept, LD_PRELOAD)"]
+    SHIM -->|"intercepts, translates to MVGAL workload submission"| SCHED["mvgald Compute Offload scheduler (Layer 3 — Runtime)"]
+    SCHED -->|"shards batch dimension across N GPUs<br/>allocates input tensors via unified memory manager<br/>issues DMA-BUF transfers for cross-GPU data"| GPUS["GPU 0 … GPU N-1 (parallel execution)"]
+    GPUS -->|"results collected via write-combined system"| RESULT["Application receives aggregated result"]
 ```
 
 ## Data Flow: Render Layer Distribution (RLD)
 
-```
-Game with separable UI / world / post-fx layers
-  │
-  │ vkQueueSubmit (multiple command buffers per frame)
-  ▼
-VK_LAYER_MVGAL (Layer 7 — Intercept)
-  │ identifies layer boundaries from render passes
-  ▼
-WDE RLD strategy (Layer 5)
-  │   ├─ UI layer       → GPU 0 (simple, latency-sensitive)
-  │   ├─ World layer    → GPU 1 (complex geometry, high FLOPS)
-  │   └─ Post-FX layer  → GPU 2 (compute-heavy, low VRAM need)
-  ▼
-IMFL (Layer 4) produces composite plan
-  │ DMA-BUF transfer for final composite
-  ▼
-Display-connected GPU presents final frame
+```mermaid
+flowchart TD
+    GAME["Game with separable UI / world / post-fx layers"] -->|"vkQueueSubmit (multiple command buffers per frame)"| LAYER["VK_LAYER_MVGAL (Layer 7 — Intercept)"]
+    LAYER -->|"identifies layer boundaries from render passes"| WDE["WDE RLD strategy (Layer 5)"]
+    WDE --> UI["UI layer → GPU 0 (simple, latency-sensitive)"]
+    WDE --> WORLD["World layer → GPU 1 (complex geometry, high FLOPS)"]
+    WDE --> POSTFX["Post-FX layer → GPU 2 (compute-heavy, low VRAM need)"]
+    UI --> IMFL["IMFL (Layer 4) produces composite plan"]
+    WORLD --> IMFL
+    POSTFX --> IMFL
+    IMFL -->|"DMA-BUF transfer for final composite"| DISPLAY["Display-connected GPU presents final frame"]
 ```
 
 ---
@@ -693,27 +676,25 @@ Display-connected GPU presents final frame
 
 ### Allocation Policy
 
-```
-Request size < 64 MB          → Heap 0 (GPU local VRAM)
-Render target                 → Heap 0 (write GPU)
-Read-only texture             → Heap 1 (replicate to peers)
-Large buffer >1 GB            → Heap 2 (host staging → stream to Heap 0)
-Persistent/cold data          → Heap 3 (remote NUMA)
-Memory oversubscription       → Heap 4 (SSD swap)
+```mermaid
+flowchart LR
+    A["Request size < 64 MB"] --> H0["Heap 0 (GPU local VRAM)"]
+    B["Render target"] --> H0
+    C["Read-only texture"] --> H1["Heap 1 (replicate to peers)"]
+    D["Large buffer >1 GB"] --> H2["Heap 2 (host staging → stream to Heap 0)"]
+    E["Persistent/cold data"] --> H3["Heap 3 (remote NUMA)"]
+    F["Memory oversubscription"] --> H4["Heap 4 (SSD swap)"]
 ```
 
 ### Transfer Path
 
-```
-Source GPU export
-  │
-  ├─ DMA-BUF viable?  →  dma_buf_map_attachment (zero-copy, kernel-supported)
-  │
-  └─ DMA-BUF not viable
-       │
-       ├─ PCIe P2P viable?  →  pci_p2pdma (requires same root complex, kernel 5.10+)
-       │
-       └─ Fallback  →  mmap source + DMA to host staging buffer + upload to dest GPU
+```mermaid
+flowchart TD
+    SRC["Source GPU export"] --> DMABUF{"DMA-BUF viable?"}
+    DMABUF -->|"yes"| ZC["dma_buf_map_attachment (zero-copy, kernel-supported)"]
+    DMABUF -->|"no"| P2P{"PCIe P2P viable?"}
+    P2P -->|"yes"| P2PDMA["pci_p2pdma (requires same root complex, kernel 5.10+)"]
+    P2P -->|"no"| FALLBACK["mmap source + DMA to host staging buffer + upload to dest GPU"]
 ```
 
 ### Memory Flags

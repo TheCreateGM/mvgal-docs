@@ -1,7 +1,12 @@
+---
+tags: [mvgal, troubleshooting, guide]
+aliases: [Troubleshooting, FAQ]
+---
+
 # MVGAL Troubleshooting Guide
 
-> **Version**: 0.5.0  
-> **Last Updated**: 2026-06-06
+> **Version**: 0.7.8  
+> **Last Updated**: September 2026
 
 ---
 
@@ -75,6 +80,9 @@ mvgal-info --report > mvgal-report.txt
    ```bash
    # Fedora/RHEL
    dnf install kernel-devel kernel-headers
+
+   # Ubuntu/Debian
+   apt install linux-headers-$(uname -r)
    ```
 2. Verify Vulkan SDK ≥ 1.3 is installed:
    ```bash
@@ -95,6 +103,9 @@ mvgal-info --report > mvgal-report.txt
    ```bash
    # Fedora/RHEL
    dnf builddep mvgal
+
+   # Ubuntu/Debian
+   apt build-dep mvgal
    ```
 3. For kernel module, verify DKMS:
    ```bash
@@ -181,7 +192,7 @@ uname -r
 modinfo mvgal
 
 # Try loading with verbose output
-insmod /lib/modules/$(uname -r)/extra/mvgal/mvgal.ko 2>&1
+insmod "$(modinfo -n mvgal)" 2>&1
 
 # Check dmesg
 dmesg | tail -50 | grep -i mvgal

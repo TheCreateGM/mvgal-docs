@@ -1,7 +1,12 @@
+---
+tags: [mvgal, steam, proton, guide]
+aliases: [Steam Integration, Steam, Proton]
+---
+
 # MVGAL Steam/Proton Integration
 
-**Version:** 1.0  
-**Date:** 2026-06-02
+**Version:** 0.7.8  
+**Date:** September 2026
 
 ---
 
@@ -141,24 +146,14 @@ Multi-GPU AFR can cause microstutter if frames are delivered at uneven intervals
 
 ### 4.2 Architecture
 
-```
-Game (via DXVK/VKD3D)
-    │
-    ▼
-vkQueuePresentKHR
-    │
-    ▼
-VK_LAYER_MVGAL (intercepts)
-    │
-    ▼
-mvgal_frame_pacer_submit(frame_id, gpu_index)
-    │
-    ▼
-Frame Pacer Thread (background)
-    │
-    ├── Wait for next vsync boundary
-    │
-    └── Signal presentation semaphore
+```mermaid
+flowchart TD
+    Game["Game (via DXVK/VKD3D)"] --> VK["vkQueuePresentKHR"]
+    VK --> LAYER["VK_LAYER_MVGAL (intercepts)"]
+    LAYER --> SUBMIT["mvgal_frame_pacer_submit(frame_id, gpu_index)"]
+    SUBMIT --> THREAD["Frame Pacer Thread (background)"]
+    THREAD --> VSYNC["Wait for next vsync boundary"]
+    THREAD --> SEM["Signal presentation semaphore"]
 ```
 
 ### 4.3 Configuration
