@@ -25,8 +25,14 @@ SITE_NAME = "MVGAL Documentation"
 ABOUT = "Multi-Vendor GPU Aggregation Layer for Linux"
 PUBLISHED = "2026-08-31"
 MODIFIED = "2026-09-24"
+OWNER = "TheCreateGM"
+REPO = "mvgal-docs"
 
-# (filename, nav label, title, description, keywords, md source)
+OCTICONS_CSS = (
+    '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
+    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@20.8.4/dist/primer.css" crossorigin="anonymous">'
+)
+
 PAGES = [
     ("quickstart.html", "Quick Start", "Quick Start — MVGAL Documentation",
      "Get MVGAL running in 5 minutes: install from COPR, start the daemon, verify your GPUs, and use it with applications on Fedora, RHEL and CentOS Stream.",
@@ -77,20 +83,56 @@ PAGES = [
      "MVGAL power, power management, DVFS, idle states, GPU parking, thermal throttling, gamemode, power curve, mvgal-powercurve",
      "POWER_MANAGEMENT.md"),
     ("troubleshooting.html", "Troubleshooting", "Troubleshooting — MVGAL Documentation",
-     "Diagnose and fix common MVGAL issues: installation, GPU not detected, kernel module, performance, Steam/Proton, daemon and multi-GPU problems.",
-     "MVGAL troubleshooting, fix, GPU not detected, kernel module, performance, daemon not starting, multi-GPU, diagnostics, log collection",
+     "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.",
+     "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics",
      "TROUBLESHOOTING.md"),
     ("status.html", "Project Status", "Project Status — MVGAL Documentation",
-     "Current MVGAL milestone and component status: kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, memory manager, scheduler and packaging.",
-     "MVGAL status, milestone, component status, roadmap, kernel modules, daemon, Vulkan layer, OpenCL ICD, CUDA shim, packaging",
+     "Current MVGAL v0.7.8 milestone status, roadmap, feature completion tracker, supported interfaces and upcoming releases.",
+     "MVGAL status, project status, roadmap, v0.7.8, milestone, feature tracker, release planning",
      "STATUS.md"),
     ("changelog.html", "Changelog", "Changelog — MVGAL Documentation",
-     "MVGAL release history: all notable changes from v0.7.4 through v0.7.8, including DKMS fixes, Secure Boot support, Vulkan ICD fixes and security hardening.",
+     "MVGAL release history and changelog: all changes between v0.7.4 and v0.7.8, bug fixes, new features, known issues and release notes.",
      "MVGAL changelog, release notes, v0.7.8, v0.7.7, v0.7.6, v0.7.5, v0.7.4, version history, DKMS, Secure Boot",
      "CHANGELOG.md"),
 ]
 
 NAV_LABELS = {f: label for f, label, *_ in PAGES}
+
+NAV_SECTIONS = [
+    ("Getting Started", [
+        ("index.html", "Home", "file-code"),
+        ("quickstart.html", "Quick Start", "rocket"),
+        ("install.html", "Installation", "download"),
+        ("secure_boot.html", "Secure Boot", "shield-lock"),
+        ("build.html", "Building", "tools"),
+    ]),
+    ("Architecture & Design", [
+        ("architecture.html", "Architecture", "stack"),
+        ("design.html", "Design", "book"),
+    ]),
+    ("Core Subsystems", [
+        ("api.html", "API Reference", "terminal"),
+        ("strategies.html", "Scheduling Strategies", "git-branch"),
+        ("memory.html", "Memory Management", "cpu"),
+        ("power.html", "Power Management", "zap"),
+    ]),
+    ("Ecosystem", [
+        ("hardware.html", "Hardware Compatibility", "server"),
+        ("steam.html", "Steam / Proton", "gamepad-2"),
+    ]),
+    ("Project", [
+        ("troubleshooting.html", "Troubleshooting", "bug"),
+        ("status.html", "Project Status", "pulse"),
+        ("changelog.html", "Changelog", "checklist"),
+    ]),
+]
+
+def octicon(name, size=16, extra_class=""):
+    size_class = f"octicon-size-{size}" if size != 16 else ""
+    cls = " ".join(p for p in [f"octicon octicon-{name}", size_class, extra_class] if p)
+    return f'<span class="{cls}" aria-hidden="true"></span>'
+
+NAV_COUNT = len(PAGES) + 1
 
 MD = markdown.Markdown(
     extensions=["fenced_code", "tables", "toc", "attr_list"],
@@ -154,8 +196,197 @@ def json_ld_index() -> str:
     return json.dumps(data, ensure_ascii=False)
 
 
-def head_block(title: str, desc: str, keywords: str, url: str, ld: str, og_type: str = "article") -> str:
-    return f"""<!DOCTYPE html>
+def app_header(active_page: str) -> str:
+    return f"""<header class="app-header">
+  <div class="header-left">
+    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+    <div class="header-repo">
+      <span class="header-repo-owner">{OWNER}</span>
+      <span class="header-repo-slash">/</span>
+      <a class="header-repo-name" href="index.html">{REPO}</a>
+    </div>
+    <span class="badge-accent badge">Public</span>
+  </div>
+  <div class="search-hint" role="search" aria-label="Search documentation">
+    {octicon("search", 16)}
+    <span>Search or jump to...</span>
+    <kbd>/</kbd>
+  </div>
+  <div class="header-actions">
+    <a href="quickstart.html" class="btn btn-primary">
+      {octicon("repo-push", 16)}
+      <span>Get Started</span>
+    </a>
+    <a href="changelog.html" class="btn btn-sm">
+      {octicon("tag", 14)}
+      <span>v{VERSION}</span>
+    </a>
+  </div>
+</header>
+<script>
+(function(){{
+  var TOAST_OK = '{octicon("check", 16, "toast-icon")}';
+  var TOAST_INFO = '{octicon("info", 16, "toast-icon")}';
+  var toastTimer = null;
+  function showToast(msg, kind) {{
+    kind = kind || 'success';
+    var t = document.getElementById('mvgal-toast');
+    if (!t) {{
+      t = document.createElement('div');
+      t.id = 'mvgal-toast';
+      t.className = 'toast';
+      document.body.appendChild(t);
+    }}
+    t.className = 'toast toast-' + kind + ' show';
+    t.innerHTML = (kind === 'success' ? TOAST_OK : TOAST_INFO) + '<span>' + msg + '</span>';
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {{ t.classList.remove('show'); }}, 2200);
+  }}
+  window._showToast = showToast;
+
+  var search = document.querySelector('.search-hint');
+  if (search) {{
+    search.addEventListener('click', function() {{
+      showToast('Tip: Use the sidebar or type a page URL to navigate', 'info');
+    }});
+  }}
+  document.addEventListener('keydown', function(e) {{
+    var inInput = e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    if (e.key === '/' && !inInput) {{
+      e.preventDefault();
+      if (search) search.classList.add('hover');
+      showToast('Press any page title in the sidebar to jump', 'info');
+      setTimeout(function() {{ if (search) search.classList.remove('hover'); }}, 800);
+    }}
+  }});
+
+  var toggle = document.querySelector('.menu-toggle');
+  var sidebar = document.querySelector('nav.sidebar');
+  if (toggle && sidebar) {{
+    toggle.addEventListener('click', function(){{
+      var open = sidebar.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }});
+    sidebar.querySelectorAll('a').forEach(function(a){{
+      a.addEventListener('click', function(){{
+        sidebar.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }});
+    }});
+  }}
+}})();
+</script>
+"""
+
+
+def repo_tabs(active_page: str) -> str:
+    tabs = [
+        ("index.html", "Code", True, "Code"),
+        ("api.html", "API", False, "API"),
+        ("architecture.html", "Architecture", False, "Architecture"),
+        ("status.html", "Status", False, "Status"),
+        ("changelog.html", "Changelog", False, "Changelog"),
+    ]
+    items = []
+    for href, label, is_code, display in tabs:
+        is_active = active_page == href or (is_code and active_page == "index.html")
+        count = ""
+        if is_code:
+            count = f'<span class="tab-count">{NAV_COUNT}</span>'
+        items.append(f'<a class="repo-tab{" active" if is_active else ""}" href="{href}">{label}{count}</a>')
+    return f"""<div class="repo-tabs">
+{chr(10).join(items)}
+</div>
+"""
+
+
+def breadcrumbs(active_page: str, title: str = "") -> str:
+    page_title = title or NAV_LABELS.get(active_page, "Home")
+    md_filename = ""
+    for entry in PAGES:
+        if entry[0] == active_page:
+            md_filename = entry[5]
+            break
+    if active_page == "index.html":
+        md_filename = "README.md"
+    file_label = md_filename or "index.html"
+    return f"""<div class="breadcrumbs">
+  <a class="crumb-link" href="index.html">{OWNER}</a>
+  <span class="crumb-slash">/</span>
+  <a class="crumb-link" href="index.html">{REPO}</a>
+  <span class="crumb-slash">/</span>
+  <span class="crumb" title="{OWNER}/{REPO}/blob/main/{file_label}">blob</span>
+  <span class="crumb-slash">/</span>
+  <span class="crumb" title="{OWNER}/{REPO}/blob/main/{file_label}">main</span>
+  <span class="crumb-slash">/</span>
+  <a class="crumb-current" href="{active_page}">{esc(file_label)}</a>
+</div>
+"""
+
+
+def sidebar(active: str) -> str:
+    links_html = []
+    links_html.append(f'<div class="sidebar-brand">')
+    links_html.append(f'  <div class="sb-title">{octicon("file-directory", 16)} Documentation</div>')
+    links_html.append(f'  <div class="sb-sub">v{VERSION} · GPL-2.0/3.0 · MIT/Apache-2.0</div>')
+    links_html.append(f'</div>')
+
+    for section_name, section_items in NAV_SECTIONS:
+        links_html.append(f'<div class="sidebar-section-title">{section_name}</div>')
+        links_html.append(f'<div class="sidebar-section">')
+        for fname, label, icon in section_items:
+            cls = ' class="active"' if fname == active else ""
+            links_html.append(f'<a href="{fname}"{cls}>{octicon(icon, 16, "nav-icon")}<span>{label}</span></a>')
+        links_html.append(f'</div>')
+        if section_name != NAV_SECTIONS[-1][0]:
+            links_html.append(f'<div class="sidebar-divider"></div>')
+
+    return f"""<nav class="sidebar">
+{chr(10).join(links_html)}
+</nav>
+"""
+
+
+FOOTER = f"""  </main>
+  <footer>
+    <div>© 2026 MVGAL Project · v{VERSION} · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div class="footer-links">
+      <a href="changelog.html">Changelog</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="api.html">API Reference</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="hardware.html">Hardware</a>
+    </div>
+  </footer>
+  </div>
+  </div>
+</body>
+</html>
+"""
+
+
+def page_header_actions(active_page: str) -> str:
+    if active_page == "index.html":
+        return ""
+    return f"""<div class="page-header-actions">
+  <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){{}});}}catch(e){{}}">
+    {octicon("link", 14)}
+    <span>Copy link</span>
+  </button>
+  <a href="quickstart.html" class="btn btn-sm btn-primary">
+    {octicon("check-circle", 14)}
+    <span>Quick Start</span>
+  </a>
+</div>
+"""
+
+
+def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str, md_src: str) -> str:
+    md_text = strip_frontmatter((DOCS / md_src).read_text(encoding="utf-8"))
+    MD.reset()
+    body = MD.convert(md_text)
+    url = BASE_URL + fname
+    html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -168,76 +399,36 @@ def head_block(title: str, desc: str, keywords: str, url: str, ld: str, og_type:
 <meta name="generator" content="MVGAL docs site generator">
 <link rel="canonical" href="{url}">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<!-- Open Graph -->
-<meta property="og:type" content="{og_type}">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="{SITE_NAME}">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{BASE_URL}favicon.svg">
 <meta property="og:locale" content="en_US">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{esc(title)}">
 <meta name="twitter:description" content="{esc(desc)}">
 <meta name="twitter:image" content="{BASE_URL}favicon.svg">
-<script type="application/ld+json">{ld}</script>
+<script type="application/ld+json">{json_ld_doc(title, desc, url, keywords)}</script>
 <link rel="stylesheet" href="styles.css">
+{OCTICONS_CSS}
 </head>
 <body>
-<button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
-<script>
-(function(){{
-  var toggle = document.querySelector('.menu-toggle');
-  var sidebar = document.querySelector('nav.sidebar');
-  if (!toggle || !sidebar) return;
-  toggle.addEventListener('click', function(){{
-    var open = sidebar.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  }});
-  // Close menu when a nav link is clicked (mobile)
-  sidebar.querySelectorAll('a').forEach(function(a){{
-    a.addEventListener('click', function(){{
-      sidebar.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-    }});
-  }});
-}})();
-</script>
+{app_header(fname)}
+<div class="app-shell">
+{sidebar(fname)}
+<div class="content-wrap">
+{repo_tabs(fname)}
+<main>
+{breadcrumbs(fname)}
+<div class="page-header">
+  <div></div>
+  {page_header_actions(fname)}
+</div>
+{body}
 """
-
-
-def sidebar(active: str) -> str:
-    home_cls = ' class="active"' if active == "index.html" else ""
-    links = [f'<a href="index.html"{home_cls}>Home</a>']
-    for fname, label, *_ in PAGES:
-        cls = ' class="active"' if fname == active else ""
-        links.append(f'<a href="{fname}"{cls}>{label}</a>')
-    return f"""<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v{VERSION}</div>
-  </div>
-{chr(10).join(links)}
-</nav>
-"""
-
-
-FOOTER = f"""<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v{VERSION} · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
-</main>
-</body>
-</html>
-"""
-
-
-def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str, md_src: str) -> str:
-    md_text = strip_frontmatter((DOCS / md_src).read_text(encoding="utf-8"))
-    MD.reset()
-    body = MD.convert(md_text)
-    url = BASE_URL + fname
-    html = head_block(title, desc, keywords, url, json_ld_doc(title, desc, url, keywords))
-    html += sidebar(fname)
-    html += "<main>\n" + body + "\n" + FOOTER
+    html += FOOTER
     return html
 
 
@@ -246,40 +437,80 @@ def render_index() -> str:
     desc = "MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling."
     keywords = "MVGAL, multi-GPU, GPU aggregation, heterogeneous GPU, Vulkan layer, OpenCL ICD, CUDA shim, Linux GPU, AMD NVIDIA Intel, unified memory, GPU scheduler"
     url = BASE_URL + "index.html"
-    html = head_block(title, desc, keywords, url, json_ld_index(), og_type="website")
-    html += sidebar("index.html")
+    fname = "index.html"
 
-    cards = [
-        ("quickstart.html", "Quick Start", "Get MVGAL running in 5 minutes."),
-        ("install.html", "Installation", "Install from COPR or build from source."),
-        ("secure_boot.html", "Secure Boot", "Enroll the MOK key for signed modules."),
-        ("build.html", "Building", "Build MVGAL from source with CMake, Meson, or Zig."),
-        ("architecture.html", "Architecture", "The 8-layer system architecture."),
-        ("design.html", "Design", "Design goals and architecture decisions."),
-        ("api.html", "API Reference", "Complete public C API reference."),
-        ("strategies.html", "Scheduling Strategies", "10 workload distribution strategies."),
-        ("memory.html", "Memory Management", "Unified VRAM, DMA-BUF, P2P, and staging."),
-        ("hardware.html", "Hardware Compatibility", "Supported GPUs and drivers."),
-        ("steam.html", "Steam / Proton", "Multi-GPU gaming integration."),
-        ("power.html", "Power Management", "DVFS, idle states, thermal control."),
-        ("troubleshooting.html", "Troubleshooting", "Common issues and solutions."),
-        ("status.html", "Project Status", "Current milestone and component status."),
-        ("changelog.html", "Changelog", "Release history from v0.7.4 to v0.7.8."),
+    cards_spec = [
+        ("quickstart.html", "Quick Start", "Get MVGAL running in 5 minutes.", "rocket", "C++", "3 steps"),
+        ("install.html", "Installation", "Install from COPR or build from source.", "download", "CMake", "2 methods"),
+        ("secure_boot.html", "Secure Boot", "Enroll the MOK key for signed modules.", "shield-lock", "MOK", "UEFI"),
+        ("build.html", "Building", "Build with CMake, Meson, or Zig.", "tools", "Meson", "3 build sys"),
+        ("architecture.html", "Architecture", "The 8-layer system architecture.", "stack", "Rust", "8 layers"),
+        ("design.html", "Design", "Design goals and architecture decisions.", "book", "C++20", "Decisions"),
+        ("api.html", "API Reference", "Complete public C API reference.", "terminal", "C", "26 headers"),
+        ("strategies.html", "Scheduling Strategies", "10 workload distribution strategies.", "git-branch", "Rust", "10 strategies"),
+        ("memory.html", "Memory Management", "Unified VRAM, DMA-BUF, P2P.", "cpu", "DMA-BUF", "4 heaps"),
+        ("hardware.html", "Hardware Compatibility", "Supported GPUs and drivers.", "server", "Vulkan", "4 vendors"),
+        ("steam.html", "Steam / Proton", "Multi-GPU gaming integration.", "gamepad-2", "Proton", "Gaming"),
+        ("power.html", "Power Management", "DVFS, idle states, thermal control.", "zap", "DVFS", "Thermal"),
+        ("troubleshooting.html", "Troubleshooting", "Common issues and solutions.", "bug", "Linux", "Diagnostics"),
+        ("status.html", "Project Status", "Current milestone and status.", "pulse", "Status", "Milestone"),
+        ("changelog.html", "Changelog", "Release history v0.7.4 to v0.7.8.", "checklist", "Releases", "5 versions"),
     ]
+
     card_html = "\n".join(
-        f'<a class="card" href="{f}"><h3>{t}</h3><p>{d}</p></a>' for f, t, d in cards
+        f'''<a class="card" href="{f}">
+  <div class="card-header">
+    {octicon(icon, 16, "card-icon")}
+    <h3>{t}</h3>
+  </div>
+  <p>{d}</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>{lang}</span>
+    <span class="meta-item">
+      {octicon("dot", 12)}
+      {meta}
+    </span>
+  </div>
+</a>'''
+        for f, t, d, icon, lang, meta in cards_spec
     )
 
-    body = f"""<main>
-
+    body = f"""{breadcrumbs(fname)}
+<div class="page-header">
+  <div></div>
+  <div class="page-header-actions">
+    <a href="install.html" class="btn">
+      {octicon("download", 16)}
+      <span>Install</span>
+    </a>
+    <a href="quickstart.html" class="btn btn-primary">
+      {octicon("check-circle", 16)}
+      <span>Quick Start</span>
+    </a>
+  </div>
+</div>
 <div class="hero">
   <h1>MVGAL — Multi-Vendor GPU Aggregation Layer</h1>
   <p>Combine multiple GPUs from different vendors into one logical device — transparently, without modifying your applications.</p>
-  <p style="margin-top:12px">
-    <span class="badge">v{VERSION}</span>
-    <span class="badge">AMD · NVIDIA · Intel · Moore Threads</span>
+  <p style="margin-top:16px">
+    <span class="badge badge-success">v{VERSION}</span>
+    <span class="badge badge-accent">AMD · NVIDIA · Intel · Moore Threads</span>
     <span class="badge">Vulkan · OpenCL · CUDA</span>
   </p>
+  <div class="hero-actions">
+    <a href="quickstart.html" class="btn btn-primary">
+      {octicon("rocket", 16)}
+      Get Started
+    </a>
+    <a href="architecture.html" class="btn">
+      {octicon("stack", 16)}
+      View Architecture
+    </a>
+    <a href="api.html" class="btn">
+      {octicon("book", 16)}
+      API Reference
+    </a>
+  </div>
 </div>
 <h2>Documentation</h2>
 <div class="card-grid">
@@ -303,9 +534,46 @@ mvgal-compat --system   # check readiness</code></pre>
   <li><strong>Userspace components</strong>: GPL-3.0-only</li>
   <li><strong>Rust crates</strong>: MIT OR Apache-2.0</li>
 </ul>
-
 """
-    html += body + FOOTER
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<meta name="keywords" content="{esc(keywords)}">
+<meta name="author" content="MVGAL Project">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="generator" content="MVGAL docs site generator">
+<link rel="canonical" href="{url}">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{SITE_NAME}">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{BASE_URL}favicon.svg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(desc)}">
+<meta name="twitter:image" content="{BASE_URL}favicon.svg">
+<script type="application/ld+json">{json_ld_index()}</script>
+<link rel="stylesheet" href="styles.css">
+{OCTICONS_CSS}
+</head>
+<body>
+{app_header(fname)}
+<div class="app-shell">
+{sidebar(fname)}
+<div class="content-wrap">
+{repo_tabs(fname)}
+<main>
+{body}
+"""
+    html += FOOTER
     return html
 
 
@@ -316,22 +584,31 @@ def render_sitemap() -> str:
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "\n".join(f"  {u}" for u in urls)
+        + "\n".join(urls)
         + "\n</urlset>\n"
     )
 
 
-def main() -> None:
-    SITE.mkdir(exist_ok=True)
-    for fname, label, title, desc, keywords, md_src in PAGES:
-        html = render_doc_page(fname, label, title, desc, keywords, md_src)
-        (SITE / fname).write_text(html, encoding="utf-8")
+def main() -> int:
+    SITE.mkdir(parents=True, exist_ok=True)
+    count = 0
+    for entry in PAGES:
+        fname = entry[0]
+        out = render_doc_page(*entry)
+        (SITE / fname).write_text(out, encoding="utf-8")
+        count += 1
         print(f"  wrote {fname}")
-    (SITE / "index.html").write_text(render_index(), encoding="utf-8")
-    print("  wrote index.html")
-    (SITE / "sitemap.xml").write_text(render_sitemap(), encoding="utf-8")
-    print("  wrote sitemap.xml")
-    print(f"Done. {len(PAGES) + 1} pages at v{VERSION}.")
+
+    idx = render_index()
+    (SITE / "index.html").write_text(idx, encoding="utf-8")
+    count += 1
+    print(f"  wrote index.html")
+
+    sm = render_sitemap()
+    (SITE / "sitemap.xml").write_text(sm, encoding="utf-8")
+    print(f"  wrote sitemap.xml")
+    print(f"Done. {count} pages at v{VERSION}.")
+    return 0
 
 
 if __name__ == "__main__":

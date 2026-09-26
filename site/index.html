@@ -11,7 +11,6 @@
 <meta name="generator" content="MVGAL docs site generator">
 <link rel="canonical" href="https://thecreategm.github.io/mvgal-docs/site/index.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="MVGAL — Multi-Vendor GPU Aggregation Layer for Linux">
@@ -19,84 +18,408 @@
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/index.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MVGAL — Multi-Vendor GPU Aggregation Layer for Linux">
 <meta name="twitter:description" content="MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "headline": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux", "name": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux", "description": "MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL, multi-GPU, GPU aggregation, heterogeneous GPU, Vulkan layer, OpenCL ICD, CUDA shim, Linux GPU, AMD NVIDIA Intel, unified memory, GPU scheduler", "datePublished": "2026-08-31", "dateModified": "2026-09-24"}</script>
 <link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@20.8.4/dist/primer.css" crossorigin="anonymous">
 </head>
 <body>
-<button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+<header class="app-header">
+  <div class="header-left">
+    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+    <div class="header-repo">
+      <span class="header-repo-owner">TheCreateGM</span>
+      <span class="header-repo-slash">/</span>
+      <a class="header-repo-name" href="index.html">mvgal-docs</a>
+    </div>
+    <span class="badge-accent badge">Public</span>
+  </div>
+  <div class="search-hint" role="search" aria-label="Search documentation">
+    <span class="octicon octicon-search" aria-hidden="true"></span>
+    <span>Search or jump to...</span>
+    <kbd>/</kbd>
+  </div>
+  <div class="header-actions">
+    <a href="quickstart.html" class="btn btn-primary">
+      <span class="octicon octicon-repo-push" aria-hidden="true"></span>
+      <span>Get Started</span>
+    </a>
+    <a href="changelog.html" class="btn btn-sm">
+      <span class="octicon octicon-tag octicon-size-14" aria-hidden="true"></span>
+      <span>v0.7.8</span>
+    </a>
+  </div>
+</header>
 <script>
 (function(){
+  var TOAST_OK = '<span class="octicon octicon-check toast-icon" aria-hidden="true"></span>';
+  var TOAST_INFO = '<span class="octicon octicon-info toast-icon" aria-hidden="true"></span>';
+  var toastTimer = null;
+  function showToast(msg, kind) {
+    kind = kind || 'success';
+    var t = document.getElementById('mvgal-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'mvgal-toast';
+      t.className = 'toast';
+      document.body.appendChild(t);
+    }
+    t.className = 'toast toast-' + kind + ' show';
+    t.innerHTML = (kind === 'success' ? TOAST_OK : TOAST_INFO) + '<span>' + msg + '</span>';
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2200);
+  }
+  window._showToast = showToast;
+
+  var search = document.querySelector('.search-hint');
+  if (search) {
+    search.addEventListener('click', function() {
+      showToast('Tip: Use the sidebar or type a page URL to navigate', 'info');
+    });
+  }
+  document.addEventListener('keydown', function(e) {
+    var inInput = e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    if (e.key === '/' && !inInput) {
+      e.preventDefault();
+      if (search) search.classList.add('hover');
+      showToast('Press any page title in the sidebar to jump', 'info');
+      setTimeout(function() { if (search) search.classList.remove('hover'); }, 800);
+    }
+  });
+
   var toggle = document.querySelector('.menu-toggle');
   var sidebar = document.querySelector('nav.sidebar');
-  if (!toggle || !sidebar) return;
-  toggle.addEventListener('click', function(){
-    var open = sidebar.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  // Close menu when a nav link is clicked (mobile)
-  sidebar.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      sidebar.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
+  if (toggle && sidebar) {
+    toggle.addEventListener('click', function(){
+      var open = sidebar.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-  });
+    sidebar.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        sidebar.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
 })();
 </script>
-<nav class="sidebar">
-  <div class="brand">
-    <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.8</div>
-  </div>
-<a href="index.html" class="active">Home</a>
-<a href="quickstart.html">Quick Start</a>
-<a href="install.html">Installation</a>
-<a href="secure_boot.html">Secure Boot</a>
-<a href="build.html">Building</a>
-<a href="architecture.html">Architecture</a>
-<a href="design.html">Design</a>
-<a href="api.html">API Reference</a>
-<a href="strategies.html">Scheduling Strategies</a>
-<a href="memory.html">Memory Management</a>
-<a href="hardware.html">Hardware Compatibility</a>
-<a href="steam.html">Steam / Proton</a>
-<a href="power.html">Power Management</a>
-<a href="troubleshooting.html">Troubleshooting</a>
-<a href="status.html">Project Status</a>
-<a href="changelog.html">Changelog</a>
-</nav>
-<main>
 
+<div class="app-shell">
+<nav class="sidebar">
+<div class="sidebar-brand">
+  <div class="sb-title"><span class="octicon octicon-file-directory" aria-hidden="true"></span> Documentation</div>
+  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+</div>
+<div class="sidebar-section-title">Getting Started</div>
+<div class="sidebar-section">
+<a href="index.html" class="active"><span class="octicon octicon-file-code nav-icon" aria-hidden="true"></span><span>Home</span></a>
+<a href="quickstart.html"><span class="octicon octicon-rocket nav-icon" aria-hidden="true"></span><span>Quick Start</span></a>
+<a href="install.html"><span class="octicon octicon-download nav-icon" aria-hidden="true"></span><span>Installation</span></a>
+<a href="secure_boot.html"><span class="octicon octicon-shield-lock nav-icon" aria-hidden="true"></span><span>Secure Boot</span></a>
+<a href="build.html"><span class="octicon octicon-tools nav-icon" aria-hidden="true"></span><span>Building</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Architecture & Design</div>
+<div class="sidebar-section">
+<a href="architecture.html"><span class="octicon octicon-stack nav-icon" aria-hidden="true"></span><span>Architecture</span></a>
+<a href="design.html"><span class="octicon octicon-book nav-icon" aria-hidden="true"></span><span>Design</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Core Subsystems</div>
+<div class="sidebar-section">
+<a href="api.html"><span class="octicon octicon-terminal nav-icon" aria-hidden="true"></span><span>API Reference</span></a>
+<a href="strategies.html"><span class="octicon octicon-git-branch nav-icon" aria-hidden="true"></span><span>Scheduling Strategies</span></a>
+<a href="memory.html"><span class="octicon octicon-cpu nav-icon" aria-hidden="true"></span><span>Memory Management</span></a>
+<a href="power.html"><span class="octicon octicon-zap nav-icon" aria-hidden="true"></span><span>Power Management</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Ecosystem</div>
+<div class="sidebar-section">
+<a href="hardware.html"><span class="octicon octicon-server nav-icon" aria-hidden="true"></span><span>Hardware Compatibility</span></a>
+<a href="steam.html"><span class="octicon octicon-gamepad-2 nav-icon" aria-hidden="true"></span><span>Steam / Proton</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Project</div>
+<div class="sidebar-section">
+<a href="troubleshooting.html"><span class="octicon octicon-bug nav-icon" aria-hidden="true"></span><span>Troubleshooting</span></a>
+<a href="status.html"><span class="octicon octicon-pulse nav-icon" aria-hidden="true"></span><span>Project Status</span></a>
+<a href="changelog.html"><span class="octicon octicon-checklist nav-icon" aria-hidden="true"></span><span>Changelog</span></a>
+</div>
+</nav>
+
+<div class="content-wrap">
+<div class="repo-tabs">
+<a class="repo-tab active" href="index.html">Code<span class="tab-count">16</span></a>
+<a class="repo-tab" href="api.html">API</a>
+<a class="repo-tab" href="architecture.html">Architecture</a>
+<a class="repo-tab" href="status.html">Status</a>
+<a class="repo-tab" href="changelog.html">Changelog</a>
+</div>
+
+<main>
+<div class="breadcrumbs">
+  <a class="crumb-link" href="index.html">TheCreateGM</a>
+  <span class="crumb-slash">/</span>
+  <a class="crumb-link" href="index.html">mvgal-docs</a>
+  <span class="crumb-slash">/</span>
+  <span class="crumb" title="TheCreateGM/mvgal-docs/blob/main/README.md">blob</span>
+  <span class="crumb-slash">/</span>
+  <span class="crumb" title="TheCreateGM/mvgal-docs/blob/main/README.md">main</span>
+  <span class="crumb-slash">/</span>
+  <a class="crumb-current" href="index.html">README.md</a>
+</div>
+
+<div class="page-header">
+  <div></div>
+  <div class="page-header-actions">
+    <a href="install.html" class="btn">
+      <span class="octicon octicon-download" aria-hidden="true"></span>
+      <span>Install</span>
+    </a>
+    <a href="quickstart.html" class="btn btn-primary">
+      <span class="octicon octicon-check-circle" aria-hidden="true"></span>
+      <span>Quick Start</span>
+    </a>
+  </div>
+</div>
 <div class="hero">
   <h1>MVGAL — Multi-Vendor GPU Aggregation Layer</h1>
   <p>Combine multiple GPUs from different vendors into one logical device — transparently, without modifying your applications.</p>
-  <p style="margin-top:12px">
-    <span class="badge">v0.7.8</span>
-    <span class="badge">AMD · NVIDIA · Intel · Moore Threads</span>
+  <p style="margin-top:16px">
+    <span class="badge badge-success">v0.7.8</span>
+    <span class="badge badge-accent">AMD · NVIDIA · Intel · Moore Threads</span>
     <span class="badge">Vulkan · OpenCL · CUDA</span>
   </p>
+  <div class="hero-actions">
+    <a href="quickstart.html" class="btn btn-primary">
+      <span class="octicon octicon-rocket" aria-hidden="true"></span>
+      Get Started
+    </a>
+    <a href="architecture.html" class="btn">
+      <span class="octicon octicon-stack" aria-hidden="true"></span>
+      View Architecture
+    </a>
+    <a href="api.html" class="btn">
+      <span class="octicon octicon-book" aria-hidden="true"></span>
+      API Reference
+    </a>
+  </div>
 </div>
 <h2>Documentation</h2>
 <div class="card-grid">
-<a class="card" href="quickstart.html"><h3>Quick Start</h3><p>Get MVGAL running in 5 minutes.</p></a>
-<a class="card" href="install.html"><h3>Installation</h3><p>Install from COPR or build from source.</p></a>
-<a class="card" href="secure_boot.html"><h3>Secure Boot</h3><p>Enroll the MOK key for signed modules.</p></a>
-<a class="card" href="build.html"><h3>Building</h3><p>Build MVGAL from source with CMake, Meson, or Zig.</p></a>
-<a class="card" href="architecture.html"><h3>Architecture</h3><p>The 8-layer system architecture.</p></a>
-<a class="card" href="design.html"><h3>Design</h3><p>Design goals and architecture decisions.</p></a>
-<a class="card" href="api.html"><h3>API Reference</h3><p>Complete public C API reference.</p></a>
-<a class="card" href="strategies.html"><h3>Scheduling Strategies</h3><p>10 workload distribution strategies.</p></a>
-<a class="card" href="memory.html"><h3>Memory Management</h3><p>Unified VRAM, DMA-BUF, P2P, and staging.</p></a>
-<a class="card" href="hardware.html"><h3>Hardware Compatibility</h3><p>Supported GPUs and drivers.</p></a>
-<a class="card" href="steam.html"><h3>Steam / Proton</h3><p>Multi-GPU gaming integration.</p></a>
-<a class="card" href="power.html"><h3>Power Management</h3><p>DVFS, idle states, thermal control.</p></a>
-<a class="card" href="troubleshooting.html"><h3>Troubleshooting</h3><p>Common issues and solutions.</p></a>
-<a class="card" href="status.html"><h3>Project Status</h3><p>Current milestone and component status.</p></a>
-<a class="card" href="changelog.html"><h3>Changelog</h3><p>Release history from v0.7.4 to v0.7.8.</p></a>
+<a class="card" href="quickstart.html">
+  <div class="card-header">
+    <span class="octicon octicon-rocket card-icon" aria-hidden="true"></span>
+    <h3>Quick Start</h3>
+  </div>
+  <p>Get MVGAL running in 5 minutes.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>C++</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      3 steps
+    </span>
+  </div>
+</a>
+<a class="card" href="install.html">
+  <div class="card-header">
+    <span class="octicon octicon-download card-icon" aria-hidden="true"></span>
+    <h3>Installation</h3>
+  </div>
+  <p>Install from COPR or build from source.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>CMake</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      2 methods
+    </span>
+  </div>
+</a>
+<a class="card" href="secure_boot.html">
+  <div class="card-header">
+    <span class="octicon octicon-shield-lock card-icon" aria-hidden="true"></span>
+    <h3>Secure Boot</h3>
+  </div>
+  <p>Enroll the MOK key for signed modules.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>MOK</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      UEFI
+    </span>
+  </div>
+</a>
+<a class="card" href="build.html">
+  <div class="card-header">
+    <span class="octicon octicon-tools card-icon" aria-hidden="true"></span>
+    <h3>Building</h3>
+  </div>
+  <p>Build with CMake, Meson, or Zig.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Meson</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      3 build sys
+    </span>
+  </div>
+</a>
+<a class="card" href="architecture.html">
+  <div class="card-header">
+    <span class="octicon octicon-stack card-icon" aria-hidden="true"></span>
+    <h3>Architecture</h3>
+  </div>
+  <p>The 8-layer system architecture.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Rust</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      8 layers
+    </span>
+  </div>
+</a>
+<a class="card" href="design.html">
+  <div class="card-header">
+    <span class="octicon octicon-book card-icon" aria-hidden="true"></span>
+    <h3>Design</h3>
+  </div>
+  <p>Design goals and architecture decisions.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>C++20</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      Decisions
+    </span>
+  </div>
+</a>
+<a class="card" href="api.html">
+  <div class="card-header">
+    <span class="octicon octicon-terminal card-icon" aria-hidden="true"></span>
+    <h3>API Reference</h3>
+  </div>
+  <p>Complete public C API reference.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>C</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      26 headers
+    </span>
+  </div>
+</a>
+<a class="card" href="strategies.html">
+  <div class="card-header">
+    <span class="octicon octicon-git-branch card-icon" aria-hidden="true"></span>
+    <h3>Scheduling Strategies</h3>
+  </div>
+  <p>10 workload distribution strategies.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Rust</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      10 strategies
+    </span>
+  </div>
+</a>
+<a class="card" href="memory.html">
+  <div class="card-header">
+    <span class="octicon octicon-cpu card-icon" aria-hidden="true"></span>
+    <h3>Memory Management</h3>
+  </div>
+  <p>Unified VRAM, DMA-BUF, P2P.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>DMA-BUF</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      4 heaps
+    </span>
+  </div>
+</a>
+<a class="card" href="hardware.html">
+  <div class="card-header">
+    <span class="octicon octicon-server card-icon" aria-hidden="true"></span>
+    <h3>Hardware Compatibility</h3>
+  </div>
+  <p>Supported GPUs and drivers.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Vulkan</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      4 vendors
+    </span>
+  </div>
+</a>
+<a class="card" href="steam.html">
+  <div class="card-header">
+    <span class="octicon octicon-gamepad-2 card-icon" aria-hidden="true"></span>
+    <h3>Steam / Proton</h3>
+  </div>
+  <p>Multi-GPU gaming integration.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Proton</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      Gaming
+    </span>
+  </div>
+</a>
+<a class="card" href="power.html">
+  <div class="card-header">
+    <span class="octicon octicon-zap card-icon" aria-hidden="true"></span>
+    <h3>Power Management</h3>
+  </div>
+  <p>DVFS, idle states, thermal control.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>DVFS</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      Thermal
+    </span>
+  </div>
+</a>
+<a class="card" href="troubleshooting.html">
+  <div class="card-header">
+    <span class="octicon octicon-bug card-icon" aria-hidden="true"></span>
+    <h3>Troubleshooting</h3>
+  </div>
+  <p>Common issues and solutions.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Linux</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      Diagnostics
+    </span>
+  </div>
+</a>
+<a class="card" href="status.html">
+  <div class="card-header">
+    <span class="octicon octicon-pulse card-icon" aria-hidden="true"></span>
+    <h3>Project Status</h3>
+  </div>
+  <p>Current milestone and status.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Status</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      Milestone
+    </span>
+  </div>
+</a>
+<a class="card" href="changelog.html">
+  <div class="card-header">
+    <span class="octicon octicon-checklist card-icon" aria-hidden="true"></span>
+    <h3>Changelog</h3>
+  </div>
+  <p>Release history v0.7.4 to v0.7.8.</p>
+  <div class="card-meta">
+    <span class="meta-item"><span class="lang-dot"></span>Releases</span>
+    <span class="meta-item">
+      <span class="octicon octicon-dot octicon-size-12" aria-hidden="true"></span>
+      5 versions
+    </span>
+  </div>
+</a>
 </div>
 <h2>What is MVGAL?</h2>
 <p>Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.</p>
@@ -117,7 +440,18 @@ mvgal-compat --system   # check readiness</code></pre>
   <li><strong>Rust crates</strong>: MIT OR Apache-2.0</li>
 </ul>
 
-<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.8 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
-</main>
+  </main>
+  <footer>
+    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div class="footer-links">
+      <a href="changelog.html">Changelog</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="api.html">API Reference</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="hardware.html">Hardware</a>
+    </div>
+  </footer>
+  </div>
+  </div>
 </body>
 </html>

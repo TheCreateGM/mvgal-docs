@@ -11,7 +11,6 @@
 <meta name="generator" content="MVGAL docs site generator">
 <link rel="canonical" href="https://thecreategm.github.io/mvgal-docs/site/power.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<!-- Open Graph -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="Power Management — MVGAL Documentation">
@@ -19,57 +18,174 @@
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/power.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Power Management — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL power management: power curve system, idle state machine, DVFS, gamemode integration, thermal throttling and the mvgal-powercurve tool.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Power Management — MVGAL Documentation", "name": "Power Management — MVGAL Documentation", "description": "MVGAL power management: power curve system, idle state machine, DVFS, gamemode integration, thermal throttling and the mvgal-powercurve tool.", "url": "https://thecreategm.github.io/mvgal-docs/site/power.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL power, power management, DVFS, idle states, GPU parking, thermal throttling, gamemode, power curve, mvgal-powercurve", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Power Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/power.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@20.8.4/dist/primer.css" crossorigin="anonymous">
 </head>
 <body>
-<button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+<header class="app-header">
+  <div class="header-left">
+    <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+    <div class="header-repo">
+      <span class="header-repo-owner">TheCreateGM</span>
+      <span class="header-repo-slash">/</span>
+      <a class="header-repo-name" href="index.html">mvgal-docs</a>
+    </div>
+    <span class="badge-accent badge">Public</span>
+  </div>
+  <div class="search-hint" role="search" aria-label="Search documentation">
+    <span class="octicon octicon-search" aria-hidden="true"></span>
+    <span>Search or jump to...</span>
+    <kbd>/</kbd>
+  </div>
+  <div class="header-actions">
+    <a href="quickstart.html" class="btn btn-primary">
+      <span class="octicon octicon-repo-push" aria-hidden="true"></span>
+      <span>Get Started</span>
+    </a>
+    <a href="changelog.html" class="btn btn-sm">
+      <span class="octicon octicon-tag octicon-size-14" aria-hidden="true"></span>
+      <span>v0.7.8</span>
+    </a>
+  </div>
+</header>
 <script>
 (function(){
+  var TOAST_OK = '<span class="octicon octicon-check toast-icon" aria-hidden="true"></span>';
+  var TOAST_INFO = '<span class="octicon octicon-info toast-icon" aria-hidden="true"></span>';
+  var toastTimer = null;
+  function showToast(msg, kind) {
+    kind = kind || 'success';
+    var t = document.getElementById('mvgal-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'mvgal-toast';
+      t.className = 'toast';
+      document.body.appendChild(t);
+    }
+    t.className = 'toast toast-' + kind + ' show';
+    t.innerHTML = (kind === 'success' ? TOAST_OK : TOAST_INFO) + '<span>' + msg + '</span>';
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2200);
+  }
+  window._showToast = showToast;
+
+  var search = document.querySelector('.search-hint');
+  if (search) {
+    search.addEventListener('click', function() {
+      showToast('Tip: Use the sidebar or type a page URL to navigate', 'info');
+    });
+  }
+  document.addEventListener('keydown', function(e) {
+    var inInput = e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    if (e.key === '/' && !inInput) {
+      e.preventDefault();
+      if (search) search.classList.add('hover');
+      showToast('Press any page title in the sidebar to jump', 'info');
+      setTimeout(function() { if (search) search.classList.remove('hover'); }, 800);
+    }
+  });
+
   var toggle = document.querySelector('.menu-toggle');
   var sidebar = document.querySelector('nav.sidebar');
-  if (!toggle || !sidebar) return;
-  toggle.addEventListener('click', function(){
-    var open = sidebar.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  // Close menu when a nav link is clicked (mobile)
-  sidebar.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      sidebar.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
+  if (toggle && sidebar) {
+    toggle.addEventListener('click', function(){
+      var open = sidebar.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-  });
+    sidebar.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        sidebar.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
 })();
 </script>
+
+<div class="app-shell">
 <nav class="sidebar">
-  <div class="brand">
-    <div class="logo">MVGAL</div>
-    <div class="sub">Multi-Vendor GPU Aggregation Layer · v0.7.8</div>
-  </div>
-<a href="index.html">Home</a>
-<a href="quickstart.html">Quick Start</a>
-<a href="install.html">Installation</a>
-<a href="secure_boot.html">Secure Boot</a>
-<a href="build.html">Building</a>
-<a href="architecture.html">Architecture</a>
-<a href="design.html">Design</a>
-<a href="api.html">API Reference</a>
-<a href="strategies.html">Scheduling Strategies</a>
-<a href="memory.html">Memory Management</a>
-<a href="hardware.html">Hardware Compatibility</a>
-<a href="steam.html">Steam / Proton</a>
-<a href="power.html" class="active">Power Management</a>
-<a href="troubleshooting.html">Troubleshooting</a>
-<a href="status.html">Project Status</a>
-<a href="changelog.html">Changelog</a>
+<div class="sidebar-brand">
+  <div class="sb-title"><span class="octicon octicon-file-directory" aria-hidden="true"></span> Documentation</div>
+  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+</div>
+<div class="sidebar-section-title">Getting Started</div>
+<div class="sidebar-section">
+<a href="index.html"><span class="octicon octicon-file-code nav-icon" aria-hidden="true"></span><span>Home</span></a>
+<a href="quickstart.html"><span class="octicon octicon-rocket nav-icon" aria-hidden="true"></span><span>Quick Start</span></a>
+<a href="install.html"><span class="octicon octicon-download nav-icon" aria-hidden="true"></span><span>Installation</span></a>
+<a href="secure_boot.html"><span class="octicon octicon-shield-lock nav-icon" aria-hidden="true"></span><span>Secure Boot</span></a>
+<a href="build.html"><span class="octicon octicon-tools nav-icon" aria-hidden="true"></span><span>Building</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Architecture & Design</div>
+<div class="sidebar-section">
+<a href="architecture.html"><span class="octicon octicon-stack nav-icon" aria-hidden="true"></span><span>Architecture</span></a>
+<a href="design.html"><span class="octicon octicon-book nav-icon" aria-hidden="true"></span><span>Design</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Core Subsystems</div>
+<div class="sidebar-section">
+<a href="api.html"><span class="octicon octicon-terminal nav-icon" aria-hidden="true"></span><span>API Reference</span></a>
+<a href="strategies.html"><span class="octicon octicon-git-branch nav-icon" aria-hidden="true"></span><span>Scheduling Strategies</span></a>
+<a href="memory.html"><span class="octicon octicon-cpu nav-icon" aria-hidden="true"></span><span>Memory Management</span></a>
+<a href="power.html" class="active"><span class="octicon octicon-zap nav-icon" aria-hidden="true"></span><span>Power Management</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Ecosystem</div>
+<div class="sidebar-section">
+<a href="hardware.html"><span class="octicon octicon-server nav-icon" aria-hidden="true"></span><span>Hardware Compatibility</span></a>
+<a href="steam.html"><span class="octicon octicon-gamepad-2 nav-icon" aria-hidden="true"></span><span>Steam / Proton</span></a>
+</div>
+<div class="sidebar-divider"></div>
+<div class="sidebar-section-title">Project</div>
+<div class="sidebar-section">
+<a href="troubleshooting.html"><span class="octicon octicon-bug nav-icon" aria-hidden="true"></span><span>Troubleshooting</span></a>
+<a href="status.html"><span class="octicon octicon-pulse nav-icon" aria-hidden="true"></span><span>Project Status</span></a>
+<a href="changelog.html"><span class="octicon octicon-checklist nav-icon" aria-hidden="true"></span><span>Changelog</span></a>
+</div>
 </nav>
+
+<div class="content-wrap">
+<div class="repo-tabs">
+<a class="repo-tab" href="index.html">Code<span class="tab-count">16</span></a>
+<a class="repo-tab" href="api.html">API</a>
+<a class="repo-tab" href="architecture.html">Architecture</a>
+<a class="repo-tab" href="status.html">Status</a>
+<a class="repo-tab" href="changelog.html">Changelog</a>
+</div>
+
 <main>
+<div class="breadcrumbs">
+  <a class="crumb-link" href="index.html">TheCreateGM</a>
+  <span class="crumb-slash">/</span>
+  <a class="crumb-link" href="index.html">mvgal-docs</a>
+  <span class="crumb-slash">/</span>
+  <span class="crumb" title="TheCreateGM/mvgal-docs/blob/main/POWER_MANAGEMENT.md">blob</span>
+  <span class="crumb-slash">/</span>
+  <span class="crumb" title="TheCreateGM/mvgal-docs/blob/main/POWER_MANAGEMENT.md">main</span>
+  <span class="crumb-slash">/</span>
+  <a class="crumb-current" href="power.html">POWER_MANAGEMENT.md</a>
+</div>
+
+<div class="page-header">
+  <div></div>
+  <div class="page-header-actions">
+  <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){});}catch(e){}">
+    <span class="octicon octicon-link octicon-size-14" aria-hidden="true"></span>
+    <span>Copy link</span>
+  </button>
+  <a href="quickstart.html" class="btn btn-sm btn-primary">
+    <span class="octicon octicon-check-circle octicon-size-14" aria-hidden="true"></span>
+    <span>Quick Start</span>
+  </a>
+</div>
+
+</div>
 <h1 id="mvgal-power-management">MVGAL Power Management</h1>
 <blockquote>
 <p><strong>Version</strong>: 0.7.8<br>
@@ -579,7 +695,18 @@ mvgal-powercurve --fan 60
 <p><em>See <code>docs/ARCHITECTURE.md</code> §3—Runtime Daemon for daemon architecture.<br>
 See <code>runtime/daemon/power_manager.cpp</code> for implementation.<br>
 See <code>kernel/mvgal_power.c</code> for kernel-level DVFS.</em></p>
-<footer>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux · v0.7.8 · GPL-2.0 (kernel) / GPL-3.0 (userspace) / MIT OR Apache-2.0 (Rust)</footer>
-</main>
+  </main>
+  <footer>
+    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div class="footer-links">
+      <a href="changelog.html">Changelog</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="api.html">API Reference</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="hardware.html">Hardware</a>
+    </div>
+  </footer>
+  </div>
+  </div>
 </body>
 </html>
