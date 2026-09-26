@@ -768,26 +768,6 @@ main img {
 .sidebar-section a.active .nav-icon { color: var(--color-accent-fg); }
 .toast-icon { width: 16px; height: 16px; }
 
-.btn .octicon,
-.page-header-actions .octicon,
-.header-actions .octicon,
-.hero-actions .octicon,
-.search-hint .octicon,
-.breadcrumbs .octicon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.card-meta .meta-item .octicon {
-  display: inline-flex;
-  color: var(--color-fg-muted);
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-}
-
 .card-icon {
   color: var(--color-accent-fg);
 }

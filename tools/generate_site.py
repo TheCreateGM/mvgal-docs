@@ -28,10 +28,7 @@ MODIFIED = "2026-09-24"
 OWNER = "TheCreateGM"
 REPO = "mvgal-docs"
 
-OCTICONS_CSS = (
-    '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
-    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@20.8.4/dist/primer.css" crossorigin="anonymous">'
-)
+OCTICONS_CSS = ""
 
 PAGES = [
     ("quickstart.html", "Quick Start", "Quick Start — MVGAL Documentation",
@@ -128,9 +125,7 @@ NAV_SECTIONS = [
 ]
 
 def octicon(name, size=16, extra_class=""):
-    size_class = f"octicon-size-{size}" if size != 16 else ""
-    cls = " ".join(p for p in [f"octicon octicon-{name}", size_class, extra_class] if p)
-    return f'<span class="{cls}" aria-hidden="true"></span>'
+    return ""
 
 NAV_COUNT = len(PAGES) + 1
 
