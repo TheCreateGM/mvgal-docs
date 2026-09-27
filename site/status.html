@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project Status — MVGAL Documentation</title>
-<meta name="description" content="Current MVGAL source version 0.7.13 status, roadmap, feature completion tracker, supported interfaces and upcoming releases.">
+<meta name="description" content="MVGAL source version, release provenance, and verified runtime capability boundaries.">
 <meta name="keywords" content="MVGAL status, source version 0.7.13, release provenance, capability boundaries">
 <meta name="author" content="MVGAL Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -14,15 +14,15 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="Project Status — MVGAL Documentation">
-<meta property="og:description" content="Current MVGAL source version 0.7.13 status, roadmap, feature completion tracker, supported interfaces and upcoming releases.">
+<meta property="og:description" content="MVGAL source version, release provenance, and verified runtime capability boundaries.">
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/status.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Project Status — MVGAL Documentation">
-<meta name="twitter:description" content="Current MVGAL source version 0.7.13 status, roadmap, feature completion tracker, supported interfaces and upcoming releases.">
+<meta name="twitter:description" content="MVGAL source version, release provenance, and verified runtime capability boundaries.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Project Status — MVGAL Documentation", "name": "Project Status — MVGAL Documentation", "description": "Current MVGAL source version 0.7.13 status, roadmap, feature completion tracker, supported interfaces and upcoming releases.", "url": "https://thecreategm.github.io/mvgal-docs/site/status.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL status, source version 0.7.13, release provenance, capability boundaries", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Project Status — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/status.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Project Status — MVGAL Documentation", "name": "Project Status — MVGAL Documentation", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries.", "url": "https://thecreategm.github.io/mvgal-docs/site/status.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL status, source version 0.7.13, release provenance, capability boundaries", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Project Status — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/status.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -37,10 +37,11 @@
     </div>
     <span class="badge-accent badge">Public</span>
   </div>
-  <div class="search-hint" role="search" aria-label="Search documentation">
+  <div class="header-search" role="search" aria-label="Search documentation">
     
-    <span>Search or jump to...</span>
+    <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
+    <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
@@ -74,33 +75,75 @@
   }
   window._showToast = showToast;
 
-  var search = document.querySelector('.search-hint');
-  if (search) {
-    search.addEventListener('click', function() {
-      showToast('Tip: Use the sidebar or type a page URL to navigate', 'info');
+  var searchInput = document.getElementById('docs-search');
+  var searchResults = document.getElementById('docs-search-results');
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.12, bug fixes, new features, known issues and release notes."}];
+  function closeSearch() {
+    if (!searchInput || !searchResults) return;
+    searchResults.hidden = true;
+    searchInput.setAttribute('aria-expanded', 'false');
+  }
+  if (searchInput && searchResults) {
+    searchInput.addEventListener('input', function() {
+      var query = searchInput.value.trim().toLocaleLowerCase();
+      searchResults.replaceChildren();
+      if (!query) { closeSearch(); return; }
+      var matches = searchPages.filter(function(page) {
+        return (page.title + ' ' + page.description).toLocaleLowerCase().includes(query);
+      }).slice(0, 8);
+      matches.forEach(function(page) {
+        var link = document.createElement('a');
+        link.href = page.href;
+        link.setAttribute('role', 'option');
+        link.textContent = page.title;
+        searchResults.appendChild(link);
+      });
+      if (!matches.length) {
+        var empty = document.createElement('p');
+        empty.textContent = 'No matching pages';
+        searchResults.appendChild(empty);
+      }
+      searchResults.hidden = false;
+      searchInput.setAttribute('aria-expanded', 'true');
+    });
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { closeSearch(); searchInput.blur(); }
+      if (e.key === 'Enter' && searchResults.querySelector('a')) {
+        window.location.href = searchResults.querySelector('a').href;
+      }
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.header-search')) closeSearch();
     });
   }
   document.addEventListener('keydown', function(e) {
     var inInput = e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
     if (e.key === '/' && !inInput) {
       e.preventDefault();
-      if (search) search.classList.add('hover');
-      showToast('Press any page title in the sidebar to jump', 'info');
-      setTimeout(function() { if (search) search.classList.remove('hover'); }, 800);
+      if (searchInput) searchInput.focus();
     }
   });
 
   var toggle = document.querySelector('.menu-toggle');
   var sidebar = document.querySelector('nav.sidebar');
+  var backdrop = document.querySelector('.sidebar-backdrop');
+  function setSidebarOpen(open) {
+    if (!sidebar || !toggle) return;
+    sidebar.classList.toggle('open', open);
+    document.body.classList.toggle('sidebar-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (backdrop) backdrop.hidden = !open;
+    if (open) sidebar.querySelector('a')?.focus();
+  }
   if (toggle && sidebar) {
-    toggle.addEventListener('click', function(){
-      var open = sidebar.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.addEventListener('click', function(){ setSidebarOpen(!sidebar.classList.contains('open')); });
+    if (backdrop) backdrop.addEventListener('click', function() { setSidebarOpen(false); toggle.focus(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) { setSidebarOpen(false); toggle.focus(); }
     });
     sidebar.querySelectorAll('a').forEach(function(a){
       a.addEventListener('click', function(){
-        sidebar.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
+        setSidebarOpen(false);
       });
     });
   }
@@ -150,6 +193,7 @@
 </div>
 </nav>
 
+<button class="sidebar-backdrop" type="button" aria-label="Close navigation" hidden></button>
 <div class="content-wrap">
 <div class="repo-tabs">
 <a class="repo-tab" href="index.html">Code<span class="tab-count">16</span></a>

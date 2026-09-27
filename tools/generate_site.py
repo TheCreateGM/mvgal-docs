@@ -49,10 +49,10 @@ PAGES = [
      "BUILD.md"),
     ("architecture.html", "Architecture", "Architecture — MVGAL Documentation",
      "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.",
-     "MVGAL architecture, kernel module, mvgald daemon, Vulkan layer, OpenCL ICD, CUDA interposition, runtime capability probing",
+     "MVGAL architecture, kernel module, read-only GPU discovery, runtime capability probes, userspace APIs",
      "ARCHITECTURE.md"),
     ("design.html", "Design", "Design — MVGAL Documentation",
-     "MVGAL design goals and architecture decisions, with current implementation limits called out.",
+     "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior.",
      "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals",
      "DESIGN.md"),
     ("api.html", "API Reference", "API Reference — MVGAL Documentation",
@@ -60,19 +60,19 @@ PAGES = [
      "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions",
      "API.md"),
     ("strategies.html", "Scheduling Strategies", "Scheduling Strategies — MVGAL Documentation",
-     "The 10 MVGAL scheduling strategies: Round-Robin, Least-Load, Priority, Affinity, Bin-Packing, GPU-Aware, Hybrid, RLD, REP and PPL, plus the memory heap hierarchy.",
+     "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.",
      "MVGAL scheduling, GPU scheduler, round-robin, least-load, bin-packing, GPU-aware, hybrid, RLD, REP, PPL, workload distribution, memory heap",
      "STRATEGIES.md"),
     ("memory.html", "Memory Management", "Memory Management — MVGAL Documentation",
-     "MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.",
+     "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.",
      "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety",
      "MEMORY.md"),
     ("hardware.html", "Hardware Compatibility", "Hardware Compatibility — MVGAL Documentation",
-     "Supported MVGAL GPUs and drivers: AMD RDNA/GCN, NVIDIA Turing/Ampere/Ada, Intel Gen/Xe/Arc and Moore Threads MTT. Feature matrix and kernel requirements.",
+     "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports.",
      "MVGAL hardware, supported GPUs, AMD RDNA, NVIDIA Turing Ampere Ada, Intel Arc, Moore Threads MTT, driver support, kernel requirements, feature matrix",
      "HARDWARE_COMPATIBILITY.md"),
     ("steam.html", "Steam / Proton", "Steam / Proton — MVGAL Documentation",
-     "Use MVGAL with Steam and Proton for multi-GPU gaming: Vulkan layer, frame pacer, alternate frame rendering, NTSYNC and environment variables.",
+     "Steam and Proton helper components, their environment variables, and capability-dependent behavior.",
      "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY",
      "STEAM_INTEGRATION.md"),
     ("power.html", "Power Management", "Power Management — MVGAL Documentation",
@@ -84,7 +84,7 @@ PAGES = [
      "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics",
      "TROUBLESHOOTING.md"),
     ("status.html", "Project Status", "Project Status — MVGAL Documentation",
-     "Current MVGAL source version 0.7.13 status, roadmap, feature completion tracker, supported interfaces and upcoming releases.",
+     "MVGAL source version, release provenance, and verified runtime capability boundaries.",
      "MVGAL status, source version 0.7.13, release provenance, capability boundaries",
      "STATUS.md"),
     ("changelog.html", "Changelog", "Changelog — MVGAL Documentation",
@@ -202,10 +202,11 @@ def app_header(active_page: str) -> str:
     </div>
     <span class="badge-accent badge">Public</span>
   </div>
-  <div class="search-hint" role="search" aria-label="Search documentation">
+  <div class="header-search" role="search" aria-label="Search documentation">
     {octicon("search", 16)}
-    <span>Search or jump to...</span>
+    <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
+    <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
@@ -239,33 +240,75 @@ def app_header(active_page: str) -> str:
   }}
   window._showToast = showToast;
 
-  var search = document.querySelector('.search-hint');
-  if (search) {{
-    search.addEventListener('click', function() {{
-      showToast('Tip: Use the sidebar or type a page URL to navigate', 'info');
+  var searchInput = document.getElementById('docs-search');
+  var searchResults = document.getElementById('docs-search-results');
+  var searchPages = {json.dumps([{"href": page[0], "title": page[2].split(" — ")[0], "description": page[3]} for page in PAGES], ensure_ascii=False)};
+  function closeSearch() {{
+    if (!searchInput || !searchResults) return;
+    searchResults.hidden = true;
+    searchInput.setAttribute('aria-expanded', 'false');
+  }}
+  if (searchInput && searchResults) {{
+    searchInput.addEventListener('input', function() {{
+      var query = searchInput.value.trim().toLocaleLowerCase();
+      searchResults.replaceChildren();
+      if (!query) {{ closeSearch(); return; }}
+      var matches = searchPages.filter(function(page) {{
+        return (page.title + ' ' + page.description).toLocaleLowerCase().includes(query);
+      }}).slice(0, 8);
+      matches.forEach(function(page) {{
+        var link = document.createElement('a');
+        link.href = page.href;
+        link.setAttribute('role', 'option');
+        link.textContent = page.title;
+        searchResults.appendChild(link);
+      }});
+      if (!matches.length) {{
+        var empty = document.createElement('p');
+        empty.textContent = 'No matching pages';
+        searchResults.appendChild(empty);
+      }}
+      searchResults.hidden = false;
+      searchInput.setAttribute('aria-expanded', 'true');
+    }});
+    searchInput.addEventListener('keydown', function(e) {{
+      if (e.key === 'Escape') {{ closeSearch(); searchInput.blur(); }}
+      if (e.key === 'Enter' && searchResults.querySelector('a')) {{
+        window.location.href = searchResults.querySelector('a').href;
+      }}
+    }});
+    document.addEventListener('click', function(e) {{
+      if (!e.target.closest('.header-search')) closeSearch();
     }});
   }}
   document.addEventListener('keydown', function(e) {{
     var inInput = e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
     if (e.key === '/' && !inInput) {{
       e.preventDefault();
-      if (search) search.classList.add('hover');
-      showToast('Press any page title in the sidebar to jump', 'info');
-      setTimeout(function() {{ if (search) search.classList.remove('hover'); }}, 800);
+      if (searchInput) searchInput.focus();
     }}
   }});
 
   var toggle = document.querySelector('.menu-toggle');
   var sidebar = document.querySelector('nav.sidebar');
+  var backdrop = document.querySelector('.sidebar-backdrop');
+  function setSidebarOpen(open) {{
+    if (!sidebar || !toggle) return;
+    sidebar.classList.toggle('open', open);
+    document.body.classList.toggle('sidebar-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (backdrop) backdrop.hidden = !open;
+    if (open) sidebar.querySelector('a')?.focus();
+  }}
   if (toggle && sidebar) {{
-    toggle.addEventListener('click', function(){{
-      var open = sidebar.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.addEventListener('click', function(){{ setSidebarOpen(!sidebar.classList.contains('open')); }});
+    if (backdrop) backdrop.addEventListener('click', function() {{ setSidebarOpen(false); toggle.focus(); }});
+    document.addEventListener('keydown', function(e) {{
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {{ setSidebarOpen(false); toggle.focus(); }}
     }});
     sidebar.querySelectorAll('a').forEach(function(a){{
       a.addEventListener('click', function(){{
-        sidebar.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
+        setSidebarOpen(false);
       }});
     }});
   }}
@@ -413,6 +456,7 @@ def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str
 {app_header(fname)}
 <div class="app-shell">
 {sidebar(fname)}
+<button class="sidebar-backdrop" type="button" aria-label="Close navigation" hidden></button>
 <div class="content-wrap">
 {repo_tabs(fname)}
 <main>
@@ -444,9 +488,9 @@ def render_index() -> str:
         ("api.html", "API Reference", "Complete public C API reference.", "terminal", "C", "Public headers"),
         ("strategies.html", "Scheduling Strategies", "Scheduling strategy identifiers and availability notes.", "git-branch", "C", "Strategy API"),
         ("memory.html", "Memory Management", "Memory interfaces and capability-dependent support.", "cpu", "DMA-BUF", "Capabilities"),
-        ("hardware.html", "Hardware Compatibility", "Supported GPUs and drivers.", "server", "Vulkan", "4 vendors"),
-        ("steam.html", "Steam / Proton", "Multi-GPU gaming integration.", "gamepad-2", "Proton", "Gaming"),
-        ("power.html", "Power Management", "DVFS, idle states, thermal control.", "zap", "DVFS", "Thermal"),
+        ("hardware.html", "Hardware Compatibility", "GPU discovery and runtime capability reporting.", "server", "Vulkan", "4 vendors"),
+        ("steam.html", "Steam / Proton", "Steam and Proton integration components.", "gamepad-2", "Proton", "Gaming"),
+        ("power.html", "Power Management", "Capability-dependent power controls.", "zap", "DVFS", "Thermal"),
         ("troubleshooting.html", "Troubleshooting", "Common issues and solutions.", "bug", "Linux", "Diagnostics"),
         ("status.html", "Project Status", "Current milestone and status.", "pulse", "Status", "Milestone"),
         ("changelog.html", "Changelog", "Source release history through v0.7.12.", "checklist", "Releases", "release history"),
