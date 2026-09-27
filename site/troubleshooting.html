@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Troubleshooting — MVGAL Documentation">
 <meta name="twitter:description" content="Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Troubleshooting — MVGAL Documentation", "name": "Troubleshooting — MVGAL Documentation", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.", "url": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Troubleshooting — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Troubleshooting — MVGAL Documentation", "name": "Troubleshooting — MVGAL Documentation", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.", "url": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Troubleshooting — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -188,358 +188,56 @@
 </div>
 <h1 id="mvgal-troubleshooting-guide">MVGAL Troubleshooting Guide</h1>
 <blockquote>
-<p><strong>Version</strong>: 0.7.8<br>
-<strong>Last Updated</strong>: September 2026</p>
+<p>Source metadata is <strong>0.7.13</strong>; the source changelog documents releases through <strong>0.7.12</strong>. Unsupported kernel submission and VRAM allocation paths return <code>-EOPNOTSUPP</code>. Diagnose the installed build and the specific capability in question.</p>
 </blockquote>
-<hr>
-<h2 id="table-of-contents">Table of Contents</h2>
-<ol>
-<li><a href="#diagnostic-commands">Diagnostic Commands</a></li>
-<li><a href="#installation-issues">Installation Issues</a></li>
-<li><a href="#gpu-not-detected">GPU Not Detected</a></li>
-<li><a href="#kernel-module-issues">Kernel Module Issues</a></li>
-<li><a href="#performance-issues">Performance Issues</a></li>
-<li><a href="#steam--proton-integration">Steam / Proton Integration</a></li>
-<li><a href="#daemon--runtime-issues">Daemon &amp; Runtime Issues</a></li>
-<li><a href="#multi-gpu-issues">Multi-GPU Issues</a></li>
-<li><a href="#collecting-logs--reporting-bugs">Collecting Logs &amp; Reporting Bugs</a></li>
-</ol>
-<hr>
-<h2 id="diagnostic-commands">Diagnostic Commands</h2>
-<p>MVGAL provides several diagnostic tools. Run these first when troubleshooting:</p>
-<pre><code class="language-bash"># System-wide health check
-mvgal-info --all
-
-# Daemon status
-mvgald --status
-
-# Connected GPUs
-mvgal-info --devices
-
-# Scheduler status
-mvgal-sched status
-
-# Power state
-mvgal-powercurve --status
-
-# Configuration
-mvgal-config --dump
-
-# Full system report (for bug reports)
-mvgal-info --report &gt; mvgal-report.txt
+<h2 id="start-with-supported-diagnostics">Start with supported diagnostics</h2>
+<pre><code class="language-bash">mvgal --help
+mvgal-info --help
+mvgal-status --help
+mvgal-config --help
+mvgal-info
+mvgal-status --once
 </code></pre>
-<hr>
-<h2 id="installation-issues">Installation Issues</h2>
-<h3 id="package-not-found">Package Not Found</h3>
-<p><strong>Problem</strong>: <code>dnf install mvgal</code> fails with "package not found".</p>
-<p><strong>Solutions</strong>:
-1. Enable the COPR repository:
-   <code>bash
-   dnf copr enable mvgal/mvgal
-   dnf install mvgal</code>
-2. Verify your Fedora version (<code>mvgal</code> requires Fedora 40+):
-   <code>bash
-   cat /etc/fedora-release</code>
-3. For other distributions, build from source (see <code>docs/KERNEL_MODULE.md</code>).</p>
-<h3 id="dependency-conflicts">Dependency Conflicts</h3>
-<p><strong>Problem</strong>: <code>dpkg</code> / <code>rpm</code> reports conflicting dependencies.</p>
-<p><strong>Solutions</strong>:
-1. Ensure your kernel headers are installed:
-   ```bash
-   # Fedora/RHEL
-   dnf install kernel-devel kernel-headers</p>
-<p># Ubuntu/Debian
-   apt install linux-headers-$(uname -r)
-   <code>2. Verify Vulkan SDK ≥ 1.3 is installed:</code>bash
-   vulkaninfo --summary
-   <code>3. For Rust components, ensure `rustc` ≥ 1.70:</code>bash
-   rustc --version
-   ```</p>
-<h3 id="build-fails-from-source">Build Fails from Source</h3>
-<p><strong>Problem</strong>: <code>cmake --build build</code> fails.</p>
-<p><strong>Solutions</strong>:
-1. Check CMake output for missing dependencies.
-2. Ensure you have the full build chain:
-   ```bash
-   # Fedora/RHEL
-   dnf builddep mvgal</p>
-<p># Ubuntu/Debian
-   apt build-dep mvgal
-   <code>3. For kernel module, verify DKMS:</code>bash
-   dkms status
-   ```</p>
-<hr>
-<h2 id="gpu-not-detected">GPU Not Detected</h2>
-<h3 id="no-gpus-listed">No GPUs Listed</h3>
-<p><strong>Problem</strong>: <code>mvgal-info --devices</code> returns empty.</p>
-<p><strong>Checks</strong>:
-1. Verify GPUs are visible to Linux:
-   <code>bash
-   lspci | grep -E "VGA|3D|Display"</code>
-2. Check the daemon is running:
-   <code>bash
-   systemctl status mvgald</code>
-3. Check dmesg for MVGAL messages:
-   <code>bash
-   dmesg | grep -i mvgal</code>
-4. Verify the NVIDIA/AMD driver is loaded:
-   <code>bash
-   lsmod | grep -E "nvidia|amdgpu|i915"</code></p>
-<h3 id="vendor-specific-gpu-not-showing">Vendor-Specific GPU Not Showing</h3>
-<p><strong>NVIDIA</strong>:
-- Ensure <code>nvidia-drm</code> is loaded with <code>modeset=1</code>:
-  <code>bash
-  cat /sys/module/nvidia_drm/parameters/modeset
-  # should output: Y</code>
-- Check NVML is accessible:
-  <code>bash
-  nvidia-smi</code></p>
-<p><strong>AMD</strong>:
-- Ensure <code>amdgpu</code> supports your GPU:
-  <code>bash
-  dmesg | grep amdgpu | head -20</code>
-- Check for P2P support (needed for multi-GPU):
-  <code>bash
-  cat /sys/kernel/debug/dri/*/p2p_support</code></p>
-<p><strong>Intel</strong>:
-- Ensure <code>i915</code> is loaded:
-  <code>bash
-  lsmod | grep i915</code>
-- For discrete Arc GPUs, verify firmware:
-  <code>bash
-  ls /lib/firmware/i915/</code></p>
-<p><strong>Moore Threads</strong>:
-- Ensure <code>mtgpu</code> driver is installed (vendor-provided).
-- Beta status: some P2P features may not work.</p>
-<hr>
-<h2 id="kernel-module-issues">Kernel Module Issues</h2>
-<h3 id="module-fails-to-load">Module Fails to Load</h3>
-<p><strong>Problem</strong>: <code>modprobe mvgal</code> fails.</p>
-<p><strong>Diagnostic</strong>:</p>
-<pre><code class="language-bash"># Check kernel version compatibility
-uname -r
-
-# Check module file
+<p>For service and kernel messages:</p>
+<pre><code class="language-bash">systemctl status mvgald
+journalctl -u mvgald -b --no-pager
+journalctl -k -b --no-pager | grep -i mvgal
+</code></pre>
+<p><code>mvgal-status</code> returns a non-zero status if the MVGAL kernel module is not loaded. <code>mvgal-info</code> can still discover GPUs through the system's DRM/sysfs interfaces. Discovery alone does not establish that submission, allocation, DMA-BUF export, or P2P works.</p>
+<h2 id="package-or-command-not-found">Package or command not found</h2>
+<p>Check the artifact matches your distribution and architecture, then inspect its contents with the package manager (<code>rpm -ql &lt;package&gt;</code> or <code>dpkg -L &lt;package&gt;</code>). Package files in this documentation workspace do not establish that a remote COPR repository is currently published. The installed binaries' <code>--help</code> output is authoritative for their command syntax.</p>
+<h2 id="daemon-does-not-start">Daemon does not start</h2>
+<pre><code class="language-bash">systemctl status mvgald
+journalctl -u mvgald -b --no-pager
+</code></pre>
+<p>Check that the unit and daemon were installed by the selected package. Do not create a socket or D-Bus policy manually using paths copied from an older release; compare against the packaged unit and configuration files.</p>
+<h2 id="kernel-module-does-not-load">Kernel module does not load</h2>
+<pre><code class="language-bash">uname -r
 modinfo mvgal
-
-# Try loading with verbose output
-insmod &quot;$(modinfo -n mvgal)&quot; 2&gt;&amp;1
-
-# Check dmesg
-dmesg | tail -50 | grep -i mvgal
+dkms status
+journalctl -k -b --no-pager | grep -Ei 'mvgal|key was rejected|module verification'
 </code></pre>
-<p><strong>Solutions</strong>:
-1. Kernel too old: MVGAL requires 5.15 LTS minimum.
-2. Missing symbols: Rebuild against current kernel headers.
-3. Secure Boot: The packaged modules are signed with a per-install key.
-   Enroll it with the firmware MOK database (do NOT disable Secure Boot):
-   <code>bash
-   sudo mvgal-enroll-mok
-   sudo reboot
-   # At the blue MOK Manager screen after reboot, choose
-   # 'Enroll key from disk' -&gt; /usr/lib/mvgal/keys/mvgal-signing.der
-   # and confirm with the one-time password you chose.</code>
-   After enrollment, <code>modprobe mvgal</code> works and <code>Key was rejected by
-   service</code> no longer appears.  DKMS-rebuilt modules are signed with the
-   same key automatically.
-4. SELinux: Check for AVC denials:
-   <code>bash
-   ausearch -m avc -ts recent | grep mvgal</code></p>
-<h3 id="dkms-build-fails">DKMS Build Fails</h3>
-<p><strong>Problem</strong>: <code>dkms build mvgal</code> fails.</p>
-<p><strong>Solutions</strong>:
-1. Ensure kernel-devel matches running kernel:
-   <code>bash
-   dnf list installed kernel-devel
-   uname -r</code>
-2. Check DKMS logs:
-   <code>bash
-   cat /var/lib/dkms/mvgal/*/build/make.log</code></p>
-<h3 id="ioctl-returns-enotty">IOCTL Returns -ENOTTY</h3>
-<p><strong>Problem</strong>: Application reports "Invalid argument" on IOCTL.</p>
-<p><strong>Checks</strong>:
-1. Verify device node exists:
-   <code>bash
-   ls -l /dev/mvgal*</code>
-2. Check device permissions (should be <code>crw-rw----</code>):
-   <code>bash
-   getfacl /dev/mvgal0</code>
-3. Ensure udev rules are installed:
-   <code>bash
-   cat /etc/udev/rules.d/99-mvgal.rules</code></p>
-<hr>
-<h2 id="performance-issues">Performance Issues</h2>
-<h3 id="below-expected-fps">Below Expected FPS</h3>
-<p><strong>Diagnostic</strong>:</p>
-<pre><code class="language-bash"># Check GPU utilisation
-mvgal-info --utilization
-
-# Check scheduler
-mvgal-sched status
-mvgal-sched analyze
-
-# Check power state (may be throttling)
-mvgal-powercurve --status
-
-# Check VRAM usage
-mvgal-info --memory
+<p>If Secure Boot rejects a signed module, use the package's <code>mvgal-enroll-mok</code> helper when available, complete enrollment in the firmware MOK screen after reboot, and verify with:</p>
+<pre><code class="language-bash">mokutil --sb-state
+mokutil --list-enrolled
 </code></pre>
-<p><strong>Solutions</strong>:
-1. <strong>VRAM pressure</strong>: Reduce texture quality or resolution.
-2. <strong>Thermal throttling</strong>: Check GPU temperatures:
-   <code>bash
-   mvgal-info --temperature</code>
-3. <strong>Scheduler mismatch</strong>: Try a different strategy:
-   <code>bash
-   mvgal-sched setpolicy &lt;appname&gt; rld</code>
-4. <strong>Power state</strong>: Ensure gamemode is active:
-   <code>bash
-   gamemoded -s</code></p>
-<h3 id="stuttering-frame-pacing">Stuttering / Frame Pacing</h3>
-<p><strong>Diagnostic</strong>:</p>
-<pre><code class="language-bash"># Check frame time variance
-mvgal-info --frametimes
-
-# Check for compositor interference
-mvgal-info --compositor
+<p>The module must also have been built for the running kernel. A successful MOK enrollment does not fix a missing or incompatible module build.</p>
+<h2 id="gpu-is-missing-from-mvgal-output">GPU is missing from MVGAL output</h2>
+<pre><code class="language-bash">lspci -nn | grep -Ei 'VGA|3D|Display'
+ls -l /sys/class/drm/
+lsmod | grep -E 'mvgal|amdgpu|nvidia|i915|xe|mtgpu'
+mvgal-info
 </code></pre>
-<p><strong>Solutions</strong>:
-1. Disable compositor for full-screen apps.
-2. Use <code>AFF</code> scheduler strategy to pin the app to one GPU:
-   <code>bash
-   mvgal-sched setpolicy &lt;appname&gt; aff</code>
-3. Check NTSYNC is working (for Windows games):
-   <code>bash
-   cat /proc/sys/kernel/ntsync</code></p>
-<hr>
-<h2 id="steam-proton-integration">Steam / Proton Integration</h2>
-<h3 id="steam-games-not-detected">Steam Games Not Detected</h3>
-<p><strong>Problem</strong>: Games launch but MVGAL is not intercepting.</p>
-<p><strong>Solutions</strong>:
-1. Verify the Steam runtime hook is active:
-   <code>bash
-   ls ~/.steam/steam/steamapps/common/MVGAL/</code>
-2. Set Proton environment variables:
-   <code>bash
-   # In Steam launch options for the game:
-   MVGAL_ENABLE=1 PROTON_ENABLE_NVAPI=1 %command%</code>
-3. Check the frame pacer is running:
-   <code>bash
-   ps aux | grep mvgal-pacer</code></p>
-<h3 id="proton-fps-lower-than-native">Proton FPS Lower Than Native</h3>
-<p><strong>Problem</strong>: Proton games underperform native Linux games.</p>
-<p><strong>Diagnostic</strong>:</p>
-<pre><code class="language-bash"># Check which WCL shims are loaded
-mvgal-info --wcl
-
-# Check DXVK/VKD3D-Proton integration
-mvgal-info --vulkan-layers
-</code></pre>
-<p><strong>Solutions</strong>:
-1. Ensure VKD3D-Proton is up to date.
-2. Enable NVAPI translation for NVIDIA GPUs:
-   <code>bash
-   PROTON_ENABLE_NVAPI=1</code>
-3. Try different scheduler strategies — some games benefit from <code>PRI</code>.</p>
-<hr>
-<h2 id="daemon-runtime-issues">Daemon &amp; Runtime Issues</h2>
-<h3 id="daemon-wont-start">Daemon Won't Start</h3>
-<p><strong>Problem</strong>: <code>systemctl start mvgald</code> fails.</p>
-<p><strong>Diagnostic</strong>:</p>
-<pre><code class="language-bash"># Check daemon status
-systemctl status mvgald
-
-# Check journal
-journalctl -u mvgald -n 50
-
-# Try running manually as root
-sudo mvgald --foreground
-</code></pre>
-<p><strong>Solutions</strong>:
-1. D-Bus service not installed:
-   <code>bash
-   sudo cp runtime/daemon/org.mvgal.daemon.conf /etc/dbus-1/system.d/</code>
-2. Socket conflict: Check port 8080 (REST API) is free:
-   <code>bash
-   ss -tlnp | grep 8080</code>
-3. Permission denied on <code>/dev/mvgal*</code>:
-   <code>bash
-   sudo chmod 666 /dev/mvgal0</code></p>
-<h3 id="ipc-connection-failure">IPC Connection Failure</h3>
-<p><strong>Problem</strong>: Tools can't connect to daemon.</p>
-<p><strong>Diagnostic</strong>:</p>
-<pre><code class="language-bash"># Test D-Bus
-dbus-send --system --dest=org.mvgal.daemon --print-reply /org/mvgal/daemon org.freedesktop.DBus.Ping
-
-# Check Unix socket
-ls -l /run/mvgald.sock
-</code></pre>
-<hr>
-<h2 id="multi-gpu-issues">Multi-GPU Issues</h2>
-<h3 id="only-one-gpu-used">Only One GPU Used</h3>
-<p><strong>Problem</strong>: All work lands on a single GPU.</p>
-<p><strong>Solutions</strong>:
-1. Check scheduler strategy — default is <code>PRI</code> which prefers fastest:
-   <code>bash
-   mvgal-sched getpolicy &lt;appname&gt;</code>
-2. Force load balancing:
-   <code>bash
-   mvgal-sched setpolicy &lt;appname&gt; rr</code>
-3. Verify P2P connectivity between GPUs:
-   <code>bash
-   mvgal-info --topology</code></p>
-<h3 id="p2p-transfer-slow">P2P Transfer Slow</h3>
-<p><strong>Problem</strong>: Inter-GPU transfers bottleneck performance.</p>
-<p><strong>Checks</strong>:</p>
-<pre><code class="language-bash"># Check topology
-mvgal-info --topology
-
-# Measure bandwidth
-mvgal-info --benchmark-p2p
-</code></pre>
-<p><strong>Solutions</strong>:
-1. Use NVLink/XGMI devices when available.
-2. For PCIe-connected GPUs, ensure PCIe Gen4+.
-3. The <code>GA</code> strategy prefers NVLink peers.
-4. Consider <code>PPL</code> for pipeline workloads — reduces cross-GPU transfers.</p>
-<hr>
-<h2 id="collecting-logs-reporting-bugs">Collecting Logs &amp; Reporting Bugs</h2>
-<h3 id="gather-system-info">Gather System Info</h3>
-<pre><code class="language-bash"># Comprehensive report
-mvgal-info --report &gt; mvgal-report.txt
-
-# Daemon logs
-journalctl -u mvgald &gt; mvgald.log
-
-# Kernel messages
-dmesg | grep -i mvgal &gt; mvgal-kernel.log
-
-# Configuration
-mvgal-config --dump &gt; mvgal-config.txt
-</code></pre>
-<h3 id="debug-mode">Debug Mode</h3>
-<p>Enable debug logging for more detail:</p>
-<pre><code class="language-bash"># Daemon
-sudo mvgald --foreground --log-level=debug
-
-# Per-app
-MVGAL_LOG_LEVEL=debug ./myapp
-</code></pre>
-<h3 id="report-a-bug">Report a Bug</h3>
-<p>Report issues at: https://github.com/your-org/mvgal/issues</p>
-<p>Include:
-- <code>mvgal-info --report</code> output
-- <code>dmesg | grep -i mvgal</code>
-- <code>mvgald.log</code>
-- Steps to reproduce
-- GPU model and driver version</p>
-<hr>
-<p><em>See <code>docs/ARCHITECTURE.md</code> for system architecture.<br>
-See <code>docs/KERNEL_MODULE.md</code> for module build/install.<br>
-See <code>docs/HARDWARE_COMPATIBILITY.md</code> for supported hardware.</em></p>
+<p>Confirm the operating system detects the device and its native vendor driver is installed. MVGAL 0.7.12 removed GPU PCI binding so that native drivers retain device ownership. GPU detection is read-only and does not make MVGAL the GPU's kernel driver.</p>
+<h2 id="operation-reports-unsupported">Operation reports unsupported</h2>
+<p>This can be expected. In 0.7.12, runtime capability probing deliberately leaves kernel submission, kernel VRAM allocation, DMA-BUF export, and wait-idle unsupported. Vendor operations that previously returned success without doing work were changed to return <code>-EOPNOTSUPP</code>. Check the source changelog and probed capability information rather than assuming a strategy or API name is implemented for the device.</p>
+<h2 id="steam-proton">Steam / Proton</h2>
+<p>Use <code>mvgal-steam-setup --help</code> to see setup options provided by the installed build. Check game logs and the Vulkan loader's layer discovery output when investigating a layer. Do not use <code>mvgal-sched</code>, <code>mvgal-powercurve</code>, or environment-variable examples unless those commands/variables are present in the installed version; they are not all provided by the current build definitions.</p>
+<h2 id="report-a-reproducible-issue">Report a reproducible issue</h2>
+<p>Include the installed MVGAL version, distribution, kernel version, GPU model and native driver, exact command, full error output, and relevant service or kernel log lines. Separate successful discovery from successful allocation, submission, synchronization, and transfer tests.</p>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

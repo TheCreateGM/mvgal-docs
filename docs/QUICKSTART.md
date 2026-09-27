@@ -5,231 +5,69 @@ aliases: [Quick Start, Quickstart]
 
 # MVGAL Quick Start
 
-**Version:** 0.7.8 | **Updated:** September 2026
+> Source metadata is **0.7.13**; the source changelog documents releases through **0.7.12**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
-Get MVGAL running in 5 minutes.
+This guide covers package discovery, basic diagnostics, and service startup. Package publication and optional components depend on the distribution and build.
 
----
+## 1. Inspect the package or build
 
-## 1. Check your GPUs
+The documentation workspace's `package/` directory contains 0.7.13 artifacts for several package formats. Select the artifact matching your distribution and architecture, or build from the [Build Guide](BUILD.md). The source repository includes package definitions, but availability from a remote COPR repository can change.
 
-```bash
-# See what GPUs the system sees
-ls /sys/class/drm/card*/device/vendor 2>/dev/null | xargs -I{} sh -c 'echo {} && cat {}'
-```
-
-You need at least 2 GPUs. MVGAL supports AMD, NVIDIA, Intel, and Moore Threads in any combination.
-
----
-
-## 2. Install dependencies
-
-No manual build dependencies are needed — the COPR package pulls in all runtime dependencies automatically. Just make sure your GPU drivers are installed (see [Hardware Compatibility](hardware.html)).
-
----
-
-## 3. Install from COPR
-
-MVGAL is available as a pre-built package via Fedora COPR — no need to compile from source.
+## 2. Inspect GPUs
 
 ```bash
-sudo dnf copr enable axogm/mvgal
-sudo dnf install mvgal
+lspci -nn | grep -Ei 'VGA|3D|Display'
+ls /sys/class/drm/
 ```
 
-Supported targets: Fedora 40+ · RHEL/AlmaLinux/Rocky 9 & 10 · CentOS Stream 9 & 10 · openSUSE Tumbleweed · Amazon Linux 2023
-
-This installs:
-- `mvgald` daemon → `/usr/bin/mvgald`
-- CLI tools → `/usr/bin/mvgal-{info,status,bench,compat,config,probe,enum,hw-validate,steam-setup}`
-- Vulkan layer → `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json`
-- OpenCL ICD → `/etc/OpenCL/vendors/mvgal.icd`
-- Config → `/etc/mvgal/mvgal.conf`
-- Systemd service → `/etc/systemd/system/mvgald.service`
-- Kernel modules → DKMS, signed for Secure Boot
-- MOK helper → `/usr/bin/mvgal-enroll-mok`
-
----
-
-## 4. Enroll Secure Boot key (UEFI only)
-
-If Secure Boot is enabled, enroll the MVGAL signing key once, then reboot and confirm in the MOK Manager:
-
-```bash
-mvgal-enroll-mok
-```
-
-See [SECURE_BOOT.md](SECURE_BOOT.md) for details.
-
----
-
-## 5. Start the daemon
-
-```bash
-pkexec systemctl start mvgald
-pkexec systemctl enable mvgald   # auto-start on boot
-```
-
----
-
-## 6. Verify
+If MVGAL is installed, enumerate devices:
 
 ```bash
 mvgal-info
+mvgal-enum --help
 ```
 
-Expected output:
-```
-========================================================================
-  MVGAL — Multi-Vendor GPU Aggregation Layer  |  mvgal-info
-========================================================================
-  Kernel : Linux 6.19.10-300.fc44.x86_64
-  mvgal.ko: not loaded
-  /dev/mvgal0: absent
+GPU discovery reports devices and telemetry available from the installed drivers. It does not mean MVGAL owns those GPUs or can submit workloads to them.
 
-  Detected 2 GPU(s):
+## 3. Check installed commands
 
-  GPU 0 — AMD GPU [1002:743f]
-  ------------------------------------------------------------
-    PCI slot   : 0000:03:00.0
-    Vendor ID  : 0x1002  (AMD)
-    VRAM       : 3.98 GiB total, 0.79 GiB used (20%)
-    Temperature: 56 °C
-    Utilization: 12 %
-
-  GPU 1 — NVIDIA GPU [10de:2584]
-  ------------------------------------------------------------
-    PCI slot   : 0000:04:00.0
-    Vendor ID  : 0x10DE  (NVIDIA)
-    VRAM       : 8.00 GiB total
-
-========================================================================
-  Logical MVGAL Device
-========================================================================
-  Physical GPUs aggregated : 2
-  Vendors present          : AMD NVIDIA
-  Capability tier          : Mixed (heterogeneous)
-  Vulkan layer registered  : yes
-  Daemon socket            : /run/mvgal/mvgal.sock (present)
-```
-
----
-
-## 7. Use with applications
-
-### Any Vulkan application
-
-The Vulkan layer is implicit — it activates automatically for all Vulkan apps. No changes needed.
+Use command help from the installed version rather than relying on examples from older docs:
 
 ```bash
-# Verify the layer is in the chain
-vulkaninfo 2>/dev/null | grep MVGAL
+mvgal --help
+mvgal-info --help
+mvgal-status --help
+mvgal-config --help
+mvgal-steam-setup --help
 ```
 
-### Steam games
+## 4. Start and inspect the daemon
 
-Add to Steam launch options (Properties → Launch Options):
-```
-ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
-```
-
-### OpenCL applications
+If the package installed the systemd unit:
 
 ```bash
-# Check MVGAL platform is visible
-clinfo | grep -A3 MVGAL
+pkexec systemctl start mvgald
+systemctl status mvgald
+journalctl -u mvgald -b --no-pager
 ```
 
-### CUDA applications
+Then inspect current device status:
 
 ```bash
-LD_PRELOAD=/usr/lib/libmvgal_cuda.so your_cuda_app
+mvgal-info
+mvgal-status --once
 ```
 
-### OpenGL applications (via Zink)
+`mvgal-status` may return a non-zero exit status when the MVGAL kernel module is not loaded. That status is a degraded-mode signal, not proof that the userspace daemon failed.
 
-```bash
-MESA_LOADER_DRIVER_OVERRIDE=zink ENABLE_MVGAL=1 glxgears
-```
+## 5. Check capability support
 
----
+Inspect the device capability information exposed by the installed kernel/runtime. In source version 0.7.12, the changelog states that kernel submission, kernel VRAM allocation, DMA-BUF export, and wait-idle are not advertised as supported. Do not interpret a listed strategy, API function, or detected GPU as evidence those operations work.
 
-## 8. Monitor in real time
+## Secure Boot
 
-```bash
-# One-shot status
-mvgal-status
-
-# Continuous refresh every 500ms
-mvgal-status --watch --interval 500
-
-# Run benchmarks
-mvgal-bench all
-
-# Check app compatibility
-mvgal-compat "doom"
-mvgal-compat --system
-```
-
----
-
-## 9. Change scheduling strategy
-
-```bash
-# Alternate Frame Rendering (best for gaming)
-mvgal-config set-strategy afr
-
-# Compute offload (best for AI/HPC)
-mvgal-config set-strategy compute_offload
-
-# Show current config
-mvgal-config show-config
-```
-
----
-
-## 10. Load the kernel module (optional)
-
-The kernel module enables deeper integration (DMA-BUF at kernel level, `/dev/mvgal0`). It is optional — MVGAL works without it via user-space interception (degraded mode). The module ships pre-built with the COPR package and is installed via DKMS.
-
-```bash
-pkexec modprobe mvgal
-# or use the helper (self-escalates via pkexec)
-mvgal-load
-dmesg | grep MVGAL
-```
-
-If the module fails to load on a Secure Boot system, enroll the MOK key first (step 4).
-
----
+For packages that install signed DKMS modules, follow [Secure Boot](SECURE_BOOT.md). Verify package-specific key paths and confirm enrollment with `mokutil --list-enrolled` before diagnosing module loading.
 
 ## Troubleshooting
 
-**No GPUs detected:**
-```bash
-# Check DRM devices exist
-ls /sys/class/drm/card*/device/vendor
-# Check GPU drivers are loaded
-lsmod | grep -E 'amdgpu|nvidia|i915|xe|mtgpu'
-```
-
-**Daemon not starting:**
-```bash
-pkexec journalctl -u mvgald -n 50
-# Or run in foreground
-mvgald --no-daemon
-```
-
-**Vulkan layer not active:**
-```bash
-ls /usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json
-# If missing, reinstall:
-sudo dnf reinstall mvgal
-```
-
-**Permission denied on socket:**
-```bash
-# Add yourself to the video group
-pkexec usermod -aG video $USER
-# Log out and back in
-```
+See [Troubleshooting](TROUBLESHOOTING.md) for supported diagnostic commands. See [Status](STATUS.md) for implementation boundaries and release provenance.

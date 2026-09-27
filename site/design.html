@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Design — MVGAL Documentation</title>
-<meta name="description" content="MVGAL design goals and architecture decisions: DRM meta-driver, C++20 daemon with Unix socket IPC, LD_PRELOAD interception and transparent multi-GPU aggregation.">
+<meta name="description" content="MVGAL design goals and architecture decisions, with current implementation limits called out.">
 <meta name="keywords" content="MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals">
 <meta name="author" content="MVGAL Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -14,15 +14,15 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="Design — MVGAL Documentation">
-<meta property="og:description" content="MVGAL design goals and architecture decisions: DRM meta-driver, C++20 daemon with Unix socket IPC, LD_PRELOAD interception and transparent multi-GPU aggregation.">
+<meta property="og:description" content="MVGAL design goals and architecture decisions, with current implementation limits called out.">
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/design.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Design — MVGAL Documentation">
-<meta name="twitter:description" content="MVGAL design goals and architecture decisions: DRM meta-driver, C++20 daemon with Unix socket IPC, LD_PRELOAD interception and transparent multi-GPU aggregation.">
+<meta name="twitter:description" content="MVGAL design goals and architecture decisions, with current implementation limits called out.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Design — MVGAL Documentation", "name": "Design — MVGAL Documentation", "description": "MVGAL design goals and architecture decisions: DRM meta-driver, C++20 daemon with Unix socket IPC, LD_PRELOAD interception and transparent multi-GPU aggregation.", "url": "https://thecreategm.github.io/mvgal-docs/site/design.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Design — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/design.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Design — MVGAL Documentation", "name": "Design — MVGAL Documentation", "description": "MVGAL design goals and architecture decisions, with current implementation limits called out.", "url": "https://thecreategm.github.io/mvgal-docs/site/design.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Design — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/design.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -187,7 +187,10 @@
 
 </div>
 <h1 id="mvgal-design-document">MVGAL Design Document</h1>
-<p><strong>Version:</strong> 0.7.8 | <strong>Last Updated:</strong> September 2026</p>
+<blockquote>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+</blockquote>
+<p><strong>Source version:</strong> 0.7.13 | <strong>Last Updated:</strong> September 2026</p>
 <hr>
 <h2 id="design-goals">Design Goals</h2>
 <ol>
@@ -292,7 +295,7 @@
 <li><strong>IPC authentication:</strong> SCM_CREDENTIALS on Unix socket; only root or video group members can connect</li>
 <li><strong>Kernel module:</strong> Signed at install time; MOK enrollment for Secure Boot</li>
 <li><strong>Device nodes:</strong> <code>/dev/mvgal*</code> owned by root:video, mode 0660</li>
-<li><strong>pkexec:</strong> All privileged operations use pkexec, never sudo in scripts</li>
+<li><strong>pkexec:</strong> All privileged operations use pkexec, never pkexec in scripts</li>
 <li><strong>No firmware flashing:</strong> Vendor-overriding firmware operations are explicitly excluded</li>
 </ul>
 <hr>
@@ -343,13 +346,13 @@
 <ol>
 <li><strong>No direct upstream kernel integration</strong> — the module must be built and signed per-kernel.</li>
 <li><strong>Anti-cheat compatibility</strong> — LD_PRELOAD interception may be flagged by kernel-level anti-cheat (EAC, BattlEye).</li>
-<li><strong>Network GPU pooling</strong> — remote GPU support is implemented but not yet production-ready.</li>
+<li><strong>Network GPU pooling</strong> — exploratory design only; not a verified production execution path.</li>
 <li><strong>AI scheduling</strong> — the ML-based scheduler requires training data and is not yet deployed.</li>
 <li><strong>Collective communication</strong> — the AllReduce/AllGather/Broadcast library is a stub; no UCX/UCC integration.</li>
 </ol>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

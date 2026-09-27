@@ -5,32 +5,25 @@ aliases: [Installation, Install]
 
 # MVGAL Installation Guide
 
-**Version:** 0.7.8 | **Updated:** September 2026
+> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+
+**Source version:** 0.7.13 | **Updated:** September 2026
 
 ---
 
-## Quick Install (COPR — no build needed)
+## Package installation
 
-MVGAL is available as a pre-built package via Fedora COPR.
+The source tree provides packaging definitions and this documentation repository includes built artifacts. Remote COPR publication may vary; verify repository availability and package version before following distribution-specific installation steps.
 
 ```bash
-sudo dnf copr enable axogm/mvgal
-sudo dnf install mvgal
+dnf info mvgal
+# If your configured repository provides the package:
+# pkexec dnf install mvgal
 ```
 
-Supported targets: **Fedora 40+** · **RHEL/AlmaLinux/Rocky 9 & 10** · **CentOS Stream 9 & 10** · **openSUSE Tumbleweed** · **Amazon Linux 2023**
+Build configurations exist for multiple distributions. A packaging target does not by itself establish publication or runtime validation.
 
-This installs:
-
-- `mvgald` daemon → `/usr/bin/mvgald`
-- CLI tools → `/usr/bin/mvgal-{info,status,bench,compat,config,probe,enum,hw-validate,steam-setup}`
-- Vulkan layer → `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json`
-- OpenCL ICD → `/etc/OpenCL/vendors/mvgal.icd`
-- Config → `/etc/mvgal/mvgal.conf`
-- Systemd service → `/etc/systemd/system/mvgald.service`
-- Kernel modules → DKMS (`/lib/modules/*/updates/dkms`), signed for Secure Boot
-- MOK enrollment helper → `/usr/bin/mvgal-enroll-mok`
-
+Package contents and installation paths depend on the selected recipe. Inspect the package manifest before relying on a particular binary, layer manifest, service, or DKMS module being installed. The source tree's CLI target definitions are in `tools/CMakeLists.txt`; module and service recipes are under `packaging/` and `systemd/`.
 ---
 
 ## Start the Daemon
@@ -79,7 +72,7 @@ Install vendor drivers **before** installing MVGAL:
 ```bash
 # AMD (open-source, included in kernel) — nothing to install
 # NVIDIA (proprietary)
-sudo dnf install akmod-nvidia  # Fedora
+pkexec dnf install akmod-nvidia  # Fedora
 # Intel (open-source, included in kernel) — nothing to install
 # Moore Threads — install mtgpu-drv from vendor
 ```
@@ -183,7 +176,7 @@ confidence_threshold = 0.6
 Edit with:
 
 ```bash
-sudo nano /etc/mvgal/mvgal.conf
+pkexec nano /etc/mvgal/mvgal.conf
 # or
 mvgal-config   # CLI configuration tool
 ```
@@ -201,7 +194,7 @@ git clone https://github.com/axogm/mvgal.git
 cd mvgal
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j$(nproc)
-sudo cmake --install build
+pkexec cmake --install build
 ```
 
 ---
@@ -239,7 +232,7 @@ clinfo | grep -i mvgal
 See [STEAM_INTEGRATION.md](STEAM_INTEGRATION.md). Add to Steam launch options:
 
 ```
-ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
+ENABLE_MVGAL=1 %command%
 ```
 
 ---
@@ -248,7 +241,7 @@ ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
 
 | Symptom | Fix |
 |---------|-----|
-| `mvgal-status` shows degraded mode | Kernel module not loaded — enroll MOK (see [SECURE_BOOT.md](SECURE_BOOT.md)) or `sudo modprobe mvgal` |
+| `mvgal-status` shows degraded mode | Kernel module not loaded — enroll MOK (see [SECURE_BOOT.md](SECURE_BOOT.md)) or `pkexec modprobe mvgal` |
 | Daemon won't start | `journalctl -u mvgald -f` for logs |
 | No GPUs detected | `lspci \| grep -i vga`; check `/etc/mvgal/mvgal.conf` `enabled` flags |
 | Vulkan app crashes | Update to v0.7.7+ (device dispatch fix); check `vulkaninfo` |
@@ -261,12 +254,12 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for the full guide.
 
 ```bash
 # Stop daemon
-sudo systemctl stop mvgald
-sudo systemctl disable mvgald
+pkexec systemctl stop mvgald
+pkexec systemctl disable mvgald
 
 # Remove packages
-sudo dnf remove mvgal
+pkexec dnf remove mvgal
 
 # Remove configuration
-sudo rm -rf /etc/mvgal/
+pkexec rm -rf /etc/mvgal/
 ```

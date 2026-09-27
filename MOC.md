@@ -6,9 +6,9 @@ cssclasses: [moc]
 
 # MVGAL Documentation — Map of Content
 
-> **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux · **v0.7.8** "Cross-Vendor Aggregation"
+> **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux · **source version 0.7.13**; documented releases through 0.7.12
 >
-> Aggregate AMD + NVIDIA + Intel + Moore Threads GPUs into one logical device for Vulkan, OpenCL, CUDA, and more.
+> Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
 ## 🚀 Start Here
 
@@ -17,7 +17,7 @@ cssclasses: [moc]
 | [[QUICKSTART]] | Get MVGAL running in 5 minutes |
 | [[INSTALL]] | Full installation guide (COPR, Secure Boot, config) |
 | [[SECURE_BOOT]] | MOK enrollment for Secure Boot systems |
-| [[CHANGELOG]] | What's new in v0.7.4 → v0.7.8 |
+| [[CHANGELOG]] | Release history through v0.7.12 |
 
 ## 📖 Reference
 

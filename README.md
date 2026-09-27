@@ -7,7 +7,7 @@ aliases: [Home, Index]
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **v0.7.8** — Multi-vendor OpenCL ICD aggregation, unified VRAM heap, PCIe P2P, AI scheduler, Proton bridge, Secure Boot MOK enrollment, hardened daemon.
+> **Source version 0.7.13** (CMake/Cargo metadata); the source changelog documents releases through **0.7.12**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
 
 ## 📚 Documentation
 
@@ -31,7 +31,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
 
-MVGAL solves this by aggregating all available GPUs — regardless of vendor — into a single logical device. Any application, game, or compute workload can use it without modification.
+MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.12, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
 
 ```mermaid
 flowchart TD
@@ -63,15 +63,15 @@ flowchart TD
 
 ## Features
 
-- **Heterogeneous multi-GPU** — AMD, NVIDIA, Intel, and Moore Threads GPUs in any combination
-- **Transparent interception** — Vulkan layer, OpenCL ICD, CUDA shim; no application changes needed
-- **10 scheduling strategies** — Round-robin, Least-Load, Priority, Affinity, Bin-Packing, GPU-Aware, Hybrid, RLD, REP, PPL
-- **Unified memory manager** — DMA-BUF zero-copy, PCIe P2P, host-RAM staging fallback
+- **GPU discovery** — runtime capability probing across supported vendor drivers
+- **Userspace interfaces** — Vulkan, OpenCL, and CUDA interposition components (build and execution support varies by path)
+- **Scheduling APIs** — strategy identifiers are exposed, while actual dispatch depends on verified vendor capabilities
+- **Memory APIs** — DMA-BUF and P2P interfaces; unsupported allocation paths fail explicitly
 - **GPU health monitoring** — Temperature, utilization, VRAM pressure with configurable thresholds
-- **Steam/Proton integration** — Frame pacing, AFR for games, DXVK and VKD3D-Proton compatible
-- **Power management** — Idle detection, GPU parking, dynamic frequency scaling
+- **Steam/Proton integration** — compatibility helpers; game support depends on the driver and selected API path
+- **Power management** — telemetry and controls where a probed vendor capability exists
 - **Memory-safe subsystems** — Fence manager, memory tracker, capability model written in Rust
-- **Qt dashboard + REST API** — Real-time monitoring, scheduler control, log viewer
+- **Qt dashboard** — optional UI target (`MVGAL_BUILD_UI`); the current CMake tree does not define a REST service
 - **Secure Boot support** — Kernel modules signed at install time; per-machine MOK enrollment via `mvgal-enroll-mok`
 - **Hardened daemon** — Drops capabilities after init, prunes bounding set, restricted D-Bus policy
 - **Degraded-mode reporting** — Clear warnings when the kernel module is not loaded (e.g. MOK not enrolled)
@@ -85,16 +85,16 @@ flowchart TD
 | **Intel** | Gen 9–12 (iGPU), Xe / Arc (discrete) | `i915` / `xe` |
 | **Moore Threads** | MTT S60, S80, S2000 | `mtgpu-drv` |
 
-## Install from COPR (no build needed)
+## Packages
 
-MVGAL is available as a pre-built package via Fedora COPR. No need to compile from source.
+This workspace includes package artifacts under `package/`. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
 
 ```bash
-sudo dnf copr enable axogm/mvgal
-sudo dnf install mvgal
+dnf info mvgal
+# Install using the package manager and repository configured for your distribution
 ```
 
-Supported targets: Fedora 40+ · RHEL/AlmaLinux/Rocky 9 & 10 · CentOS Stream 9 & 10 · openSUSE Tumbleweed · Amazon Linux 2023
+Packaging configurations are not a guarantee that every target is currently published or runtime validated.
 
 ## Quick Start
 
@@ -109,14 +109,14 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
-## What's New in v0.7.8
+## Recent source changes (through v0.7.12)
 
 - **Secure Boot hardening** — DKMS modules are signed with a per-machine MVGAL key and `mvgal-enroll-mok` verifies enrollment via `mokutil --list-new` (no more false success).
 - **Daemon capability dropping** — `mvgald` clears its capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO`.
 - **Restricted D-Bus policy** — `org.mvgal.MVGAL` is now limited to root and the `mvgal` group.
 - **Real Vulkan driver version** — the ICD reports `apiVersion`/`driverVersion` from the MVGAL version macros instead of `0.0.0`.
 - **Degraded-mode reporting** — `mvgal-status` prints `Kernel Module: NOT LOADED (degraded userspace-only mode)` with a MOK hint and a real load-balance estimate.
-- **Vulkan ICD fixes** — WSI entry points (v0.7.5), device dispatch for `vkCreateImage` (v0.7.7), and queue-family overflow fix (v0.7.7).
+- **Capability truthfulness** — v0.7.10–v0.7.12 removed synthetic devices, fabricated allocation/submission success, and unverified vendor capability claims. See the source changelog for details.
 
 See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the full history and [`docs/SECURE_BOOT.md`](docs/SECURE_BOOT.md) for MOK enrollment.
 
@@ -136,29 +136,29 @@ See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the full history and [`docs/SEC
 | `mvgal-steam-setup` | Steam/Proton integration helper |
 | `mvgal-enroll-mok` | Enroll the MVGAL signing key for Secure Boot (MOK) |
 
-## Scheduling Strategies
+## Scheduling Strategy Identifiers
 
-| Strategy | Best For |
-|----------|----------|
-| Round-Robin (RR) | Even distribution, general compute |
-| Least-Load (LL) | Route work to the least-busy GPU |
-| Priority (PRI) | High-priority work to fastest device |
-| Affinity (AFF) | Pin workloads to specific GPUs |
-| Bin-Packing (BP) | Fill GPUs to capacity before next |
-| GPU-Aware (GA) | Match workload to GPU capabilities |
-| Hybrid (HYB) | Automatic selection based on workload metrics |
-| RLD — Render Layer Distribution | Multi-GPU VR — split eye renders |
-| REP — Replication Mode | ML training (data-parallel) — identical model per GPU |
-| PPL — Pipeline Parallelism | Video transcoding — stream through pipeline |
+| Identifier | Header description |
+|------------|-------------------|
+| `MVGAL_STRATEGY_ROUND_ROBIN` | Round-robin distribution |
+| `MVGAL_STRATEGY_AFR` | Alternate Frame Rendering |
+| `MVGAL_STRATEGY_SFR` | Split Frame Rendering |
+| `MVGAL_STRATEGY_AUTO` | Auto-detect best strategy |
+| `MVGAL_STRATEGY_COMPUTE_OFFLOAD` | Compute offloading |
+| `MVGAL_STRATEGY_HYBRID` | Hybrid adaptive strategy |
+| `MVGAL_STRATEGY_SINGLE_GPU` | Use single fastest GPU |
+| `MVGAL_STRATEGY_TASK` | Task-based distribution |
+| `MVGAL_STRATEGY_AI_DRIVEN` | AI/ML-driven scheduling strategy |
+| `MVGAL_STRATEGY_RLD` | Radeon LD wrapper strategy |
+| `MVGAL_STRATEGY_REP` | Reproducible build strategy |
+| `MVGAL_STRATEGY_PPL` | AMD Performance Primitives strategy |
+| `MVGAL_STRATEGY_CUSTOM` | Custom strategy (user-defined) |
 
-See [`docs/STRATEGIES.md`](docs/STRATEGIES.md) for full details.
+These enum values are API/configuration identifiers; execution support depends on the backend and probed capabilities. See [`docs/STRATEGIES.md`](docs/STRATEGIES.md).
 
 ## Steam / Proton Integration
 
-Add to Steam launch options:
-```
-ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
-```
+Use the Steam helper and consult its `--help` output for options supported by the installed build. Environment variables differ by integration path; do not assume a variable enables a capability that the runtime has not probed.
 
 | Variable | Values | Description |
 |----------|--------|-------------|
@@ -169,11 +169,11 @@ ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
 
 ## Memory Management
 
-MVGAL uses a three-tier transfer strategy:
+The project contains interfaces for a three-tier transfer strategy. Availability is capability-dependent; the source currently does not claim universal cross-vendor operation:
 
-1. **DMA-BUF zero-copy** (preferred — kernel-supported, all vendors)
-2. **PCIe P2P transfer** (fallback — requires same root complex)
-3. **Host-RAM staging** (last resort — always works, highest latency)
+1. **DMA-BUF** (only where runtime probing confirms support)
+2. **PCIe P2P** (only where the peer path is confirmed)
+3. **Host-RAM staging** (implementation and API path dependent)
 
 ## License
 

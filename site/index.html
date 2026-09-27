@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MVGAL — Multi-Vendor GPU Aggregation Layer for Linux</title>
-<meta name="description" content="MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.">
-<meta name="keywords" content="MVGAL, multi-GPU, GPU aggregation, heterogeneous GPU, Vulkan layer, OpenCL ICD, CUDA shim, Linux GPU, AMD NVIDIA Intel, unified memory, GPU scheduler">
+<meta name="description" content="MVGAL explores cross-vendor GPU discovery and application integration on Linux. Runtime capabilities are probed; unsupported submission and allocation paths fail explicitly.">
+<meta name="keywords" content="MVGAL, Linux GPU discovery, kernel module, userspace runtime, Vulkan, OpenCL, CUDA, runtime capabilities">
 <meta name="author" content="MVGAL Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="generator" content="MVGAL docs site generator">
@@ -14,15 +14,15 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="MVGAL — Multi-Vendor GPU Aggregation Layer for Linux">
-<meta property="og:description" content="MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.">
+<meta property="og:description" content="MVGAL explores cross-vendor GPU discovery and application integration on Linux. Runtime capabilities are probed; unsupported submission and allocation paths fail explicitly.">
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/index.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MVGAL — Multi-Vendor GPU Aggregation Layer for Linux">
-<meta name="twitter:description" content="MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.">
+<meta name="twitter:description" content="MVGAL explores cross-vendor GPU discovery and application integration on Linux. Runtime capabilities are probed; unsupported submission and allocation paths fail explicitly.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "headline": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux", "name": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux", "description": "MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL, multi-GPU, GPU aggregation, heterogeneous GPU, Vulkan layer, OpenCL ICD, CUDA shim, Linux GPU, AMD NVIDIA Intel, unified memory, GPU scheduler", "datePublished": "2026-08-31", "dateModified": "2026-09-24"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "headline": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux", "name": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux", "description": "MVGAL explores cross-vendor GPU discovery and application integration on Linux. Runtime capabilities are probed; unsupported submission and allocation paths fail explicitly.", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL, Linux GPU discovery, kernel module, userspace runtime, Vulkan, OpenCL, CUDA, runtime capabilities", "datePublished": "2026-08-31", "dateModified": "2026-09-27"}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -187,9 +187,9 @@
 </div>
 <div class="hero">
   <h1>MVGAL — Multi-Vendor GPU Aggregation Layer</h1>
-  <p>Combine multiple GPUs from different vendors into one logical device — transparently, without modifying your applications.</p>
+  <p>GPU discovery and integration components for Linux. Runtime capabilities are probed; unsupported operations fail explicitly.</p>
   <p style="margin-top:16px">
-    <span class="badge badge-success">v0.7.8</span>
+    <span class="badge badge-success">v0.7.13</span>
     <span class="badge badge-accent">AMD · NVIDIA · Intel · Moore Threads</span>
     <span class="badge">Vulkan · OpenCL · CUDA</span>
   </p>
@@ -215,12 +215,12 @@
     
     <h3>Quick Start</h3>
   </div>
-  <p>Get MVGAL running in 5 minutes.</p>
+  <p>Inspect GPUs and check daemon status.</p>
   <div class="card-meta">
-    <span class="meta-item"><span class="lang-dot"></span>C++</span>
+    <span class="meta-item"><span class="lang-dot"></span>Linux</span>
     <span class="meta-item">
       
-      3 steps
+      Diagnostics
     </span>
   </div>
 </a>
@@ -229,7 +229,7 @@
     
     <h3>Installation</h3>
   </div>
-  <p>Install from COPR or build from source.</p>
+  <p>Check package availability or build from source.</p>
   <div class="card-meta">
     <span class="meta-item"><span class="lang-dot"></span>CMake</span>
     <span class="meta-item">
@@ -243,7 +243,7 @@
     
     <h3>Secure Boot</h3>
   </div>
-  <p>Enroll the MOK key for signed modules.</p>
+  <p>MOK enrollment for packages that install signed modules.</p>
   <div class="card-meta">
     <span class="meta-item"><span class="lang-dot"></span>MOK</span>
     <span class="meta-item">
@@ -257,12 +257,12 @@
     
     <h3>Building</h3>
   </div>
-  <p>Build with CMake, Meson, or Zig.</p>
+  <p>Build with the repository CMake or Meson configuration.</p>
   <div class="card-meta">
-    <span class="meta-item"><span class="lang-dot"></span>Meson</span>
+    <span class="meta-item"><span class="lang-dot"></span>CMake</span>
     <span class="meta-item">
       
-      3 build sys
+      Build systems
     </span>
   </div>
 </a>
@@ -271,12 +271,12 @@
     
     <h3>Architecture</h3>
   </div>
-  <p>The 8-layer system architecture.</p>
+  <p>Kernel, runtime, APIs, packaging and tools.</p>
   <div class="card-meta">
-    <span class="meta-item"><span class="lang-dot"></span>Rust</span>
+    <span class="meta-item"><span class="lang-dot"></span>C/C++</span>
     <span class="meta-item">
       
-      8 layers
+      Subsystems
     </span>
   </div>
 </a>
@@ -304,7 +304,7 @@
     <span class="meta-item"><span class="lang-dot"></span>C</span>
     <span class="meta-item">
       
-      26 headers
+      Public headers
     </span>
   </div>
 </a>
@@ -313,12 +313,12 @@
     
     <h3>Scheduling Strategies</h3>
   </div>
-  <p>10 workload distribution strategies.</p>
+  <p>Scheduling strategy identifiers and availability notes.</p>
   <div class="card-meta">
-    <span class="meta-item"><span class="lang-dot"></span>Rust</span>
+    <span class="meta-item"><span class="lang-dot"></span>C</span>
     <span class="meta-item">
       
-      10 strategies
+      Strategy API
     </span>
   </div>
 </a>
@@ -327,12 +327,12 @@
     
     <h3>Memory Management</h3>
   </div>
-  <p>Unified VRAM, DMA-BUF, P2P.</p>
+  <p>Memory interfaces and capability-dependent support.</p>
   <div class="card-meta">
     <span class="meta-item"><span class="lang-dot"></span>DMA-BUF</span>
     <span class="meta-item">
       
-      4 heaps
+      Capabilities
     </span>
   </div>
 </a>
@@ -411,19 +411,19 @@
     
     <h3>Changelog</h3>
   </div>
-  <p>Release history v0.7.4 to v0.7.8.</p>
+  <p>Source release history through v0.7.12.</p>
   <div class="card-meta">
     <span class="meta-item"><span class="lang-dot"></span>Releases</span>
     <span class="meta-item">
       
-      5 versions
+      release history
     </span>
   </div>
 </a>
 </div>
 <h2>What is MVGAL?</h2>
 <p>Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.</p>
-<p>MVGAL solves this by aggregating all available GPUs — regardless of vendor — into a single logical device. Any application, game, or compute workload can use it without modification.</p>
+<p>MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration. The kernel module discovers devices without binding them away from native drivers. As of 0.7.12, unsupported kernel submission and VRAM allocation fail with <code>-EOPNOTSUPP</code>, and the Vulkan ICD does not advertise a synthetic aggregate physical device. Verify each API path and probed capability on the target system.</p>
 <h2>Quick Start</h2>
 <pre><code># Start the daemon
 pkexec systemctl start mvgald
@@ -431,7 +431,7 @@ pkexec systemctl enable mvgald   # start on boot
 
 # Verify
 mvgal-info          # list detected GPUs
-mvgal-status        # real-time utilization
+mvgal-status --once # status snapshot
 mvgal-compat --system   # check readiness</code></pre>
 <h2>License</h2>
 <ul>
@@ -442,7 +442,7 @@ mvgal-compat --system   # check readiness</code></pre>
 
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

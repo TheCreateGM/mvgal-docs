@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>API Reference — MVGAL Documentation</title>
-<meta name="description" content="Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
+<meta name="description" content="Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
 <meta name="keywords" content="MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions">
 <meta name="author" content="MVGAL Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -14,15 +14,15 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="API Reference — MVGAL Documentation">
-<meta property="og:description" content="Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
+<meta property="og:description" content="Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/api.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="API Reference — MVGAL Documentation">
-<meta name="twitter:description" content="Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
+<meta name="twitter:description" content="Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -187,10 +187,13 @@
 
 </div>
 <h1 id="mvgal-public-api-reference">MVGAL Public API Reference</h1>
-<p><strong>Version:</strong> 0.7.8 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
+<blockquote>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+</blockquote>
+<p><strong>Source version:</strong> 0.7.13 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
 <hr>
 <h2 id="public-c-headers">Public C Headers</h2>
-<p>MVGAL exposes 26 public C headers under <code>include/mvgal/</code>. The main header <code>mvgal.h</code> includes all core subsystem headers.</p>
+<p>MVGAL currently contains 29 public C headers under <code>include/mvgal/</code>. The main header <code>mvgal.h</code> includes all core subsystem headers.</p>
 <table>
 <thead>
 <tr>
@@ -756,7 +759,7 @@ mvgal_error_t mvgal_ipc_receive(mvgal_ipc_message_type_t *type,
 <p><strong>Methods:</strong> <code>GetGPUCount</code>, <code>GetGPUInfo</code>, <code>GetStats</code>, <code>GetScheduler</code>, <code>SetScheduler</code>, <code>GetPowerState</code>, <code>GetTemperature</code>, <code>RescanGPUs</code>, <code>Ping</code></p>
 <p><strong>Signals:</strong> <code>GPUHotplug</code> (gpu_index, added), <code>TemperatureWarning</code> (gpu_index, temperature), <code>PowerLimitReached</code> (gpu_index)</p>
 <blockquote>
-<p><strong>Security (v0.7.8):</strong> the D-Bus policy restricts <code>org.mvgal.MVGAL</code> to root and the <code>mvgal</code> group — all other users are denied.</p>
+<p><strong>Security (introduced in v0.7.8):</strong> the D-Bus policy restricts <code>org.mvgal.MVGAL</code> to root and the <code>mvgal</code> group — all other users are denied.</p>
 </blockquote>
 <hr>
 <h2 id="vulkan-extensions">Vulkan Extensions</h2>
@@ -1040,90 +1043,9 @@ uint32_t    mvgal_cap_tier(uint64_t handle);
 const char *mvgal_cap_to_json(uint64_t handle);
 </code></pre>
 <hr>
-<h2 id="rest-api-uimvgal_rest_servergo">REST API (<code>ui/mvgal_rest_server.go</code>)</h2>
-<p>Base URL: <code>http://localhost:7474</code></p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Endpoint</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/gpus</code></td>
-<td>All GPUs with current metrics</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/gpus/{id}</code></td>
-<td>Single GPU by index</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/scheduler</code></td>
-<td>Current scheduler mode and GPU count</td>
-</tr>
-<tr>
-<td>PUT</td>
-<td><code>/api/v1/scheduler</code></td>
-<td>Set scheduler mode</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/stats</code></td>
-<td>Aggregate stats (VRAM, utilization, daemon status)</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/power</code></td>
-<td>Power state summary</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/temperature</code></td>
-<td>GPU temperatures</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/logs</code></td>
-<td>Last 100 lines of daemon log</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/health</code></td>
-<td>Health check</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/</code></td>
-<td>Service info and endpoint list</td>
-</tr>
-</tbody>
-</table>
-<h3 id="example-get-apiv1gpus">Example: <code>GET /api/v1/gpus</code></h3>
-<pre><code class="language-json">[
-  {
-    &quot;index&quot;: 0,
-    &quot;name&quot;: &quot;AMD GPU [0000:03:00.0]&quot;,
-    &quot;vendor&quot;: &quot;AMD&quot;,
-    &quot;pci_slot&quot;: &quot;0000:03:00.0&quot;,
-    &quot;drm_node&quot;: &quot;/dev/dri/card2&quot;,
-    &quot;utilization_pct&quot;: 12,
-    &quot;vram_total_bytes&quot;: 4278190080,
-    &quot;vram_used_bytes&quot;: 847249408,
-    &quot;temperature_c&quot;: 56,
-    &quot;power_w&quot;: 45.2,
-    &quot;clock_mhz&quot;: 1800,
-    &quot;enabled&quot;: true
-  }
-]
-</code></pre>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

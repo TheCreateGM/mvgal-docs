@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Installation — MVGAL Documentation</title>
-<meta name="description" content="Install MVGAL from COPR on Fedora, RHEL, AlmaLinux, CentOS Stream and openSUSE. Prerequisites, kernel module, Secure Boot and post-install setup.">
+<meta name="description" content="Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.">
 <meta name="keywords" content="MVGAL install, COPR, dnf install mvgal, Fedora RHEL CentOS, kernel module, Secure Boot, MOK, prerequisites">
 <meta name="author" content="MVGAL Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -14,15 +14,15 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="MVGAL Documentation">
 <meta property="og:title" content="Installation — MVGAL Documentation">
-<meta property="og:description" content="Install MVGAL from COPR on Fedora, RHEL, AlmaLinux, CentOS Stream and openSUSE. Prerequisites, kernel module, Secure Boot and post-install setup.">
+<meta property="og:description" content="Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.">
 <meta property="og:url" content="https://thecreategm.github.io/mvgal-docs/site/install.html">
 <meta property="og:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Installation — MVGAL Documentation">
-<meta name="twitter:description" content="Install MVGAL from COPR on Fedora, RHEL, AlmaLinux, CentOS Stream and openSUSE. Prerequisites, kernel module, Secure Boot and post-install setup.">
+<meta name="twitter:description" content="Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Installation — MVGAL Documentation", "name": "Installation — MVGAL Documentation", "description": "Install MVGAL from COPR on Fedora, RHEL, AlmaLinux, CentOS Stream and openSUSE. Prerequisites, kernel module, Secure Boot and post-install setup.", "url": "https://thecreategm.github.io/mvgal-docs/site/install.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL install, COPR, dnf install mvgal, Fedora RHEL CentOS, kernel module, Secure Boot, MOK, prerequisites", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Installation — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/install.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Installation — MVGAL Documentation", "name": "Installation — MVGAL Documentation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.", "url": "https://thecreategm.github.io/mvgal-docs/site/install.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL install, COPR, dnf install mvgal, Fedora RHEL CentOS, kernel module, Secure Boot, MOK, prerequisites", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Installation — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/install.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -187,26 +187,19 @@
 
 </div>
 <h1 id="mvgal-installation-guide">MVGAL Installation Guide</h1>
-<p><strong>Version:</strong> 0.7.8 | <strong>Updated:</strong> September 2026</p>
+<blockquote>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+</blockquote>
+<p><strong>Source version:</strong> 0.7.13 | <strong>Updated:</strong> September 2026</p>
 <hr>
-<h2 id="quick-install-copr-no-build-needed">Quick Install (COPR — no build needed)</h2>
-<p>MVGAL is available as a pre-built package via Fedora COPR.</p>
-<pre><code class="language-bash">sudo dnf copr enable axogm/mvgal
-sudo dnf install mvgal
+<h2 id="package-installation">Package installation</h2>
+<p>The source tree provides packaging definitions and this documentation repository includes built artifacts. Remote COPR publication may vary; verify repository availability and package version before following distribution-specific installation steps.</p>
+<pre><code class="language-bash">dnf info mvgal
+# If your configured repository provides the package:
+# pkexec dnf install mvgal
 </code></pre>
-<p>Supported targets: <strong>Fedora 40+</strong> · <strong>RHEL/AlmaLinux/Rocky 9 &amp; 10</strong> · <strong>CentOS Stream 9 &amp; 10</strong> · <strong>openSUSE Tumbleweed</strong> · <strong>Amazon Linux 2023</strong></p>
-<p>This installs:</p>
-<ul>
-<li><code>mvgald</code> daemon → <code>/usr/bin/mvgald</code></li>
-<li>CLI tools → <code>/usr/bin/mvgal-{info,status,bench,compat,config,probe,enum,hw-validate,steam-setup}</code></li>
-<li>Vulkan layer → <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code></li>
-<li>OpenCL ICD → <code>/etc/OpenCL/vendors/mvgal.icd</code></li>
-<li>Config → <code>/etc/mvgal/mvgal.conf</code></li>
-<li>Systemd service → <code>/etc/systemd/system/mvgald.service</code></li>
-<li>Kernel modules → DKMS (<code>/lib/modules/*/updates/dkms</code>), signed for Secure Boot</li>
-<li>MOK enrollment helper → <code>/usr/bin/mvgal-enroll-mok</code></li>
-</ul>
-<hr>
+<p>Build configurations exist for multiple distributions. A packaging target does not by itself establish publication or runtime validation.</p>
+<h2 id="package-contents-and-installation-paths-depend-on-the-selected-recipe-inspect-the-package-manifest-before-relying-on-a-particular-binary-layer-manifest-service-or-dkms-module-being-installed-the-source-trees-cli-target-definitions-are-in-toolscmakeliststxt-module-and-service-recipes-are-under-packaging-and-systemd">Package contents and installation paths depend on the selected recipe. Inspect the package manifest before relying on a particular binary, layer manifest, service, or DKMS module being installed. The source tree's CLI target definitions are in <code>tools/CMakeLists.txt</code>; module and service recipes are under <code>packaging/</code> and <code>systemd/</code>.</h2>
 <h2 id="start-the-daemon">Start the Daemon</h2>
 <pre><code class="language-bash">pkexec systemctl start mvgald
 pkexec systemctl enable mvgald   # auto-start on boot
@@ -235,7 +228,7 @@ mvgal-compat --system   # check readiness
 <p>Install vendor drivers <strong>before</strong> installing MVGAL:</p>
 <pre><code class="language-bash"># AMD (open-source, included in kernel) — nothing to install
 # NVIDIA (proprietary)
-sudo dnf install akmod-nvidia  # Fedora
+pkexec dnf install akmod-nvidia  # Fedora
 # Intel (open-source, included in kernel) — nothing to install
 # Moore Threads — install mtgpu-drv from vendor
 </code></pre>
@@ -331,7 +324,7 @@ inference_timeout_ms = 10
 confidence_threshold = 0.6
 </code></pre>
 <p>Edit with:</p>
-<pre><code class="language-bash">sudo nano /etc/mvgal/mvgal.conf
+<pre><code class="language-bash">pkexec nano /etc/mvgal/mvgal.conf
 # or
 mvgal-config   # CLI configuration tool
 </code></pre>
@@ -343,7 +336,7 @@ mvgal-config   # CLI configuration tool
 cd mvgal
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j$(nproc)
-sudo cmake --install build
+pkexec cmake --install build
 </code></pre>
 <hr>
 <h2 id="post-installation">Post-Installation</h2>
@@ -364,7 +357,7 @@ mvgal-status                  # real-time utilization
 </code></pre>
 <h3 id="steam-proton">Steam / Proton</h3>
 <p>See <a href="STEAM_INTEGRATION.md">STEAM_INTEGRATION.md</a>. Add to Steam launch options:</p>
-<pre><code>ENABLE_MVGAL=1 MVGAL_STRATEGY=afr %command%
+<pre><code>ENABLE_MVGAL=1 %command%
 </code></pre>
 <hr>
 <h2 id="troubleshooting">Troubleshooting</h2>
@@ -378,7 +371,7 @@ mvgal-status                  # real-time utilization
 <tbody>
 <tr>
 <td><code>mvgal-status</code> shows degraded mode</td>
-<td>Kernel module not loaded — enroll MOK (see <a href="SECURE_BOOT.md">SECURE_BOOT.md</a>) or <code>sudo modprobe mvgal</code></td>
+<td>Kernel module not loaded — enroll MOK (see <a href="SECURE_BOOT.md">SECURE_BOOT.md</a>) or <code>pkexec modprobe mvgal</code></td>
 </tr>
 <tr>
 <td>Daemon won't start</td>
@@ -398,18 +391,18 @@ mvgal-status                  # real-time utilization
 <hr>
 <h2 id="uninstall">Uninstall</h2>
 <pre><code class="language-bash"># Stop daemon
-sudo systemctl stop mvgald
-sudo systemctl disable mvgald
+pkexec systemctl stop mvgald
+pkexec systemctl disable mvgald
 
 # Remove packages
-sudo dnf remove mvgal
+pkexec dnf remove mvgal
 
 # Remove configuration
-sudo rm -rf /etc/mvgal/
+pkexec rm -rf /etc/mvgal/
 </code></pre>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Memory Management — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Memory Management — MVGAL Documentation", "name": "Memory Management — MVGAL Documentation", "description": "MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.", "url": "https://thecreategm.github.io/mvgal-docs/site/memory.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Memory Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/memory.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Memory Management — MVGAL Documentation", "name": "Memory Management — MVGAL Documentation", "description": "MVGAL unified memory manager: DMA-BUF zero-copy, PCIe P2P transfer, host-RAM staging, memory flags, mirroring, prefetching and the Rust memory-safety layer.", "url": "https://thecreategm.github.io/mvgal-docs/site/memory.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Memory Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/memory.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -187,7 +187,10 @@
 
 </div>
 <h1 id="mvgal-memory-management">MVGAL Memory Management</h1>
-<p><strong>Version:</strong> 0.7.8 | <strong>Updated:</strong> September 2026</p>
+<blockquote>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+</blockquote>
+<p><strong>Source version:</strong> 0.7.13 | <strong>Updated:</strong> September 2026</p>
 <hr>
 <h2 id="overview">Overview</h2>
 <p>MVGAL implements a unified memory manager that abstracts over physically separate GPU VRAM pools. Applications see a single virtual address space; MVGAL handles placement, migration, and synchronization transparently.</p>
@@ -440,7 +443,7 @@ enable_prime = true
 </code></pre>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

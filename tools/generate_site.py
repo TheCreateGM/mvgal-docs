@@ -19,12 +19,12 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 SITE = ROOT / "site"
 
-VERSION = "0.7.8"
+VERSION = "0.7.13"
 BASE_URL = "https://thecreategm.github.io/mvgal-docs/site/"
 SITE_NAME = "MVGAL Documentation"
 ABOUT = "Multi-Vendor GPU Aggregation Layer for Linux"
 PUBLISHED = "2026-08-31"
-MODIFIED = "2026-09-24"
+MODIFIED = "2026-09-27"
 OWNER = "TheCreateGM"
 REPO = "mvgal-docs"
 
@@ -32,11 +32,11 @@ OCTICONS_CSS = ""
 
 PAGES = [
     ("quickstart.html", "Quick Start", "Quick Start — MVGAL Documentation",
-     "Get MVGAL running in 5 minutes: install from COPR, start the daemon, verify your GPUs, and use it with applications on Fedora, RHEL and CentOS Stream.",
+     "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution.",
      "MVGAL quick start, install MVGAL, COPR install, mvgald daemon, mvgal-info, get started, Fedora RHEL CentOS",
      "QUICKSTART.md"),
     ("install.html", "Installation", "Installation — MVGAL Documentation",
-     "Install MVGAL from COPR on Fedora, RHEL, AlmaLinux, CentOS Stream and openSUSE. Prerequisites, kernel module, Secure Boot and post-install setup.",
+     "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.",
      "MVGAL install, COPR, dnf install mvgal, Fedora RHEL CentOS, kernel module, Secure Boot, MOK, prerequisites",
      "INSTALL.md"),
     ("secure_boot.html", "Secure Boot", "Secure Boot & MOK Enrollment — MVGAL Documentation",
@@ -48,15 +48,15 @@ PAGES = [
      "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM",
      "BUILD.md"),
     ("architecture.html", "Architecture", "Architecture — MVGAL Documentation",
-     "The 8-layer MVGAL system architecture: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.",
-     "MVGAL architecture, 8-layer, kernel module, mvgald daemon, Vulkan layer, OpenCL ICD, CUDA shim, DRM meta-driver, vendor ops",
+     "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.",
+     "MVGAL architecture, kernel module, mvgald daemon, Vulkan layer, OpenCL ICD, CUDA interposition, runtime capability probing",
      "ARCHITECTURE.md"),
     ("design.html", "Design", "Design — MVGAL Documentation",
-     "MVGAL design goals and architecture decisions: DRM meta-driver, C++20 daemon with Unix socket IPC, LD_PRELOAD interception and transparent multi-GPU aggregation.",
+     "MVGAL design goals and architecture decisions, with current implementation limits called out.",
      "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals",
      "DESIGN.md"),
     ("api.html", "API Reference", "API Reference — MVGAL Documentation",
-     "Complete public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.",
+     "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.",
      "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions",
      "API.md"),
     ("strategies.html", "Scheduling Strategies", "Scheduling Strategies — MVGAL Documentation",
@@ -76,20 +76,20 @@ PAGES = [
      "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY",
      "STEAM_INTEGRATION.md"),
     ("power.html", "Power Management", "Power Management — MVGAL Documentation",
-     "MVGAL power management: power curve system, idle state machine, DVFS, gamemode integration, thermal throttling and the mvgal-powercurve tool.",
-     "MVGAL power, power management, DVFS, idle states, GPU parking, thermal throttling, gamemode, power curve, mvgal-powercurve",
+     "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.",
+     "MVGAL power management, runtime capability probing, native driver controls",
      "POWER_MANAGEMENT.md"),
     ("troubleshooting.html", "Troubleshooting", "Troubleshooting — MVGAL Documentation",
      "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.",
      "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics",
      "TROUBLESHOOTING.md"),
     ("status.html", "Project Status", "Project Status — MVGAL Documentation",
-     "Current MVGAL v0.7.8 milestone status, roadmap, feature completion tracker, supported interfaces and upcoming releases.",
-     "MVGAL status, project status, roadmap, v0.7.8, milestone, feature tracker, release planning",
+     "Current MVGAL source version 0.7.13 status, roadmap, feature completion tracker, supported interfaces and upcoming releases.",
+     "MVGAL status, source version 0.7.13, release provenance, capability boundaries",
      "STATUS.md"),
     ("changelog.html", "Changelog", "Changelog — MVGAL Documentation",
-     "MVGAL release history and changelog: all changes between v0.7.4 and v0.7.8, bug fixes, new features, known issues and release notes.",
-     "MVGAL changelog, release notes, v0.7.8, v0.7.7, v0.7.6, v0.7.5, v0.7.4, version history, DKMS, Secure Boot",
+     "MVGAL release history and changelog: source release history through v0.7.12, bug fixes, new features, known issues and release notes.",
+     "MVGAL changelog, release notes through v0.7.12, version history, DKMS, Secure Boot",
      "CHANGELOG.md"),
 ]
 
@@ -177,14 +177,14 @@ def json_ld_index() -> str:
         "@type": "WebSite",
         "headline": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux",
         "name": "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux",
-        "description": "MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling.",
+        "description": "MVGAL explores cross-vendor GPU discovery and application integration on Linux. Runtime capabilities are probed; unsupported submission and allocation paths fail explicitly.",
         "url": BASE_URL + "index.html",
         "inLanguage": "en",
         "isPartOf": {"@type": "WebSite", "name": SITE_NAME, "url": BASE_URL + "index.html"},
         "publisher": {"@type": "Organization", "name": "MVGAL",
                       "logo": {"@type": "ImageObject", "url": BASE_URL + "favicon.svg"}},
         "about": ABOUT,
-        "keywords": "MVGAL, multi-GPU, GPU aggregation, heterogeneous GPU, Vulkan layer, OpenCL ICD, CUDA shim, Linux GPU, AMD NVIDIA Intel, unified memory, GPU scheduler",
+        "keywords": "MVGAL, Linux GPU discovery, kernel module, userspace runtime, Vulkan, OpenCL, CUDA, runtime capabilities",
         "datePublished": PUBLISHED,
         "dateModified": MODIFIED,
     }
@@ -429,27 +429,27 @@ def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str
 
 def render_index() -> str:
     title = "MVGAL — Multi-Vendor GPU Aggregation Layer for Linux"
-    desc = "MVGAL aggregates multiple GPUs from different vendors (AMD, NVIDIA, Intel, Moore Threads) into one logical device on Linux. Vulkan layer, OpenCL ICD, CUDA shim, unified memory and scheduling."
-    keywords = "MVGAL, multi-GPU, GPU aggregation, heterogeneous GPU, Vulkan layer, OpenCL ICD, CUDA shim, Linux GPU, AMD NVIDIA Intel, unified memory, GPU scheduler"
+    desc = "MVGAL explores cross-vendor GPU discovery and application integration on Linux. Runtime capabilities are probed; unsupported submission and allocation paths fail explicitly."
+    keywords = "MVGAL, Linux GPU discovery, kernel module, userspace runtime, Vulkan, OpenCL, CUDA, runtime capabilities"
     url = BASE_URL + "index.html"
     fname = "index.html"
 
     cards_spec = [
-        ("quickstart.html", "Quick Start", "Get MVGAL running in 5 minutes.", "rocket", "C++", "3 steps"),
-        ("install.html", "Installation", "Install from COPR or build from source.", "download", "CMake", "2 methods"),
-        ("secure_boot.html", "Secure Boot", "Enroll the MOK key for signed modules.", "shield-lock", "MOK", "UEFI"),
-        ("build.html", "Building", "Build with CMake, Meson, or Zig.", "tools", "Meson", "3 build sys"),
-        ("architecture.html", "Architecture", "The 8-layer system architecture.", "stack", "Rust", "8 layers"),
+        ("quickstart.html", "Quick Start", "Inspect GPUs and check daemon status.", "rocket", "Linux", "Diagnostics"),
+        ("install.html", "Installation", "Check package availability or build from source.", "download", "CMake", "2 methods"),
+        ("secure_boot.html", "Secure Boot", "MOK enrollment for packages that install signed modules.", "shield-lock", "MOK", "UEFI"),
+        ("build.html", "Building", "Build with the repository CMake or Meson configuration.", "tools", "CMake", "Build systems"),
+        ("architecture.html", "Architecture", "Kernel, runtime, APIs, packaging and tools.", "stack", "C/C++", "Subsystems"),
         ("design.html", "Design", "Design goals and architecture decisions.", "book", "C++20", "Decisions"),
-        ("api.html", "API Reference", "Complete public C API reference.", "terminal", "C", "26 headers"),
-        ("strategies.html", "Scheduling Strategies", "10 workload distribution strategies.", "git-branch", "Rust", "10 strategies"),
-        ("memory.html", "Memory Management", "Unified VRAM, DMA-BUF, P2P.", "cpu", "DMA-BUF", "4 heaps"),
+        ("api.html", "API Reference", "Complete public C API reference.", "terminal", "C", "Public headers"),
+        ("strategies.html", "Scheduling Strategies", "Scheduling strategy identifiers and availability notes.", "git-branch", "C", "Strategy API"),
+        ("memory.html", "Memory Management", "Memory interfaces and capability-dependent support.", "cpu", "DMA-BUF", "Capabilities"),
         ("hardware.html", "Hardware Compatibility", "Supported GPUs and drivers.", "server", "Vulkan", "4 vendors"),
         ("steam.html", "Steam / Proton", "Multi-GPU gaming integration.", "gamepad-2", "Proton", "Gaming"),
         ("power.html", "Power Management", "DVFS, idle states, thermal control.", "zap", "DVFS", "Thermal"),
         ("troubleshooting.html", "Troubleshooting", "Common issues and solutions.", "bug", "Linux", "Diagnostics"),
         ("status.html", "Project Status", "Current milestone and status.", "pulse", "Status", "Milestone"),
-        ("changelog.html", "Changelog", "Release history v0.7.4 to v0.7.8.", "checklist", "Releases", "5 versions"),
+        ("changelog.html", "Changelog", "Source release history through v0.7.12.", "checklist", "Releases", "release history"),
     ]
 
     card_html = "\n".join(
@@ -486,7 +486,7 @@ def render_index() -> str:
 </div>
 <div class="hero">
   <h1>MVGAL — Multi-Vendor GPU Aggregation Layer</h1>
-  <p>Combine multiple GPUs from different vendors into one logical device — transparently, without modifying your applications.</p>
+  <p>GPU discovery and integration components for Linux. Runtime capabilities are probed; unsupported operations fail explicitly.</p>
   <p style="margin-top:16px">
     <span class="badge badge-success">v{VERSION}</span>
     <span class="badge badge-accent">AMD · NVIDIA · Intel · Moore Threads</span>
@@ -513,7 +513,7 @@ def render_index() -> str:
 </div>
 <h2>What is MVGAL?</h2>
 <p>Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.</p>
-<p>MVGAL solves this by aggregating all available GPUs — regardless of vendor — into a single logical device. Any application, game, or compute workload can use it without modification.</p>
+<p>MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration. The kernel module discovers devices without binding them away from native drivers. As of 0.7.12, unsupported kernel submission and VRAM allocation fail with <code>-EOPNOTSUPP</code>, and the Vulkan ICD does not advertise a synthetic aggregate physical device. Verify each API path and probed capability on the target system.</p>
 <h2>Quick Start</h2>
 <pre><code># Start the daemon
 pkexec systemctl start mvgald
@@ -521,7 +521,7 @@ pkexec systemctl enable mvgald   # start on boot
 
 # Verify
 mvgal-info          # list detected GPUs
-mvgal-status        # real-time utilization
+mvgal-status --once # status snapshot
 mvgal-compat --system   # check readiness</code></pre>
 <h2>License</h2>
 <ul>

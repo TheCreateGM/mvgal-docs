@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Building — MVGAL Documentation">
 <meta name="twitter:description" content="Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Building — MVGAL Documentation", "name": "Building — MVGAL Documentation", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.", "url": "https://thecreategm.github.io/mvgal-docs/site/build.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM", "datePublished": "2026-08-31", "dateModified": "2026-09-24", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Building — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/build.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Building — MVGAL Documentation", "name": "Building — MVGAL Documentation", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.", "url": "https://thecreategm.github.io/mvgal-docs/site/build.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM", "datePublished": "2026-08-31", "dateModified": "2026-09-27", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Building — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/build.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.8</span>
+      <span>v0.7.13</span>
     </a>
   </div>
 </header>
@@ -111,7 +111,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.8 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.13 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -187,437 +187,106 @@
 
 </div>
 <h1 id="mvgal-build-guide">MVGAL Build Guide</h1>
-<p><strong>Version:</strong> 0.7.8 | <strong>Updated:</strong> September 2026</p>
-<hr>
-<h2 id="prerequisites">Prerequisites</h2>
-<h3 id="required">Required</h3>
-<table>
-<thead>
-<tr>
-<th>Package</th>
-<th>Ubuntu/Debian</th>
-<th>Fedora/RHEL</th>
-<th>Arch</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CMake ≥ 3.16</td>
-<td><code>cmake</code></td>
-<td><code>cmake</code></td>
-<td><code>cmake</code></td>
-</tr>
-<tr>
-<td>Ninja</td>
-<td><code>ninja-build</code></td>
-<td><code>ninja-build</code></td>
-<td><code>ninja</code></td>
-</tr>
-<tr>
-<td>GCC ≥ 11 or Clang ≥ 13</td>
-<td><code>gcc g++</code></td>
-<td><code>gcc-c++</code></td>
-<td><code>gcc</code></td>
-</tr>
-<tr>
-<td>libdrm</td>
-<td><code>libdrm-dev</code></td>
-<td><code>libdrm-devel</code></td>
-<td><code>libdrm</code></td>
-</tr>
-<tr>
-<td>libpci / pciaccess</td>
-<td><code>libpci-dev</code></td>
-<td><code>pciutils-devel</code></td>
-<td><code>pciutils</code></td>
-</tr>
-<tr>
-<td>libudev</td>
-<td><code>libudev-dev</code></td>
-<td><code>systemd-devel</code></td>
-<td><code>systemd</code></td>
-</tr>
-<tr>
-<td>pkg-config</td>
-<td><code>pkg-config</code></td>
-<td><code>pkgconfig</code></td>
-<td><code>pkgconf</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="optional">Optional</h3>
-<table>
-<thead>
-<tr>
-<th>Package</th>
-<th>Purpose</th>
-<th>Ubuntu/Debian</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Vulkan SDK</td>
-<td>Vulkan layer build</td>
-<td><code>libvulkan-dev vulkan-tools</code></td>
-</tr>
-<tr>
-<td>OpenCL headers</td>
-<td>OpenCL layer build</td>
-<td><code>opencl-headers ocl-icd-dev</code></td>
-</tr>
-<tr>
-<td>Rust ≥ 1.75</td>
-<td>Safety crates</td>
-<td><code>rustup</code></td>
-</tr>
-<tr>
-<td>Go ≥ 1.21</td>
-<td>REST API server</td>
-<td><code>golang</code></td>
-</tr>
-<tr>
-<td>Qt5 or Qt6</td>
-<td>Dashboard</td>
-<td><code>qtbase5-dev</code> or <code>qt6-base-dev</code></td>
-</tr>
-<tr>
-<td>Linux kernel headers</td>
-<td>Kernel module</td>
-<td><code>linux-headers-$(uname -r)</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="automated-install">Automated install</h3>
-<pre><code class="language-bash">bash scripts/install_dependencies.sh
+<blockquote>
+<p>Source metadata is <strong>0.7.13</strong>; the source changelog documents releases through <strong>0.7.12</strong>. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.</p>
+</blockquote>
+<h2 id="requirements">Requirements</h2>
+<p>The top-level CMake configuration requires CMake 3.16+, a C and C++ compiler, pkg-config, libdrm, and pciaccess. Additional components are conditional on dependencies. Install the development packages matching your distribution; inspect CMake output for disabled optional targets.</p>
+<p>Rust crates use the workspace manifest in <code>Cargo.toml</code> (edition 2021, Rust 1.75 minimum). Kernel module compilation additionally requires headers for the target kernel and the kernel build system.</p>
+<h2 id="cmake-build">CMake build</h2>
+<p>From the source repository root:</p>
+<pre><code class="language-bash">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
 </code></pre>
-<p>All privileged steps use <code>pkexec</code>.</p>
-<hr>
-<h2 id="cmake-build-primary">CMake Build (Primary)</h2>
-<h3 id="quick-build">Quick build</h3>
-<pre><code class="language-bash">mkdir -p build_output &amp;&amp; cd build_output
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
-</code></pre>
-<h3 id="full-build-with-all-options">Full build with all options</h3>
-<pre><code class="language-bash">cmake .. \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DMVGAL_BUILD_KERNEL=ON \
-  -DMVGAL_BUILD_RUNTIME=ON \
-  -DMVGAL_BUILD_API=ON \
-  -DMVGAL_BUILD_TOOLS=ON \
-  -DMVGAL_ENABLE_RUST=ON \
-  -DMVGAL_BUILD_TESTS=ON \
-  -G Ninja
-ninja -j$(nproc)
-</code></pre>
-<h3 id="cmake-options">CMake Options</h3>
+<p>The top-level options include:</p>
 <table>
 <thead>
 <tr>
 <th>Option</th>
 <th>Default</th>
-<th>Description</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>MVGAL_BUILD_KERNEL</code></td>
 <td>ON</td>
-<td>Build kernel module source</td>
+<td>Kernel module target</td>
 </tr>
 <tr>
 <td><code>MVGAL_BUILD_RUNTIME</code></td>
 <td>ON</td>
-<td>Build C++20 runtime daemon</td>
+<td>Runtime daemon and libraries</td>
 </tr>
 <tr>
 <td><code>MVGAL_BUILD_API</code></td>
 <td>ON</td>
-<td>Build API layers (OpenGL, OpenCL, CUDA, SYCL, Vulkan)</td>
+<td>API components</td>
 </tr>
 <tr>
 <td><code>MVGAL_BUILD_GAMING</code></td>
 <td>ON</td>
-<td>Build gaming integration (Wine, DXVK, Proton)</td>
+<td>Gaming integration components</td>
 </tr>
 <tr>
 <td><code>MVGAL_BUILD_TOOLS</code></td>
 <td>ON</td>
-<td>Build CLI tools</td>
+<td>Tools</td>
 </tr>
 <tr>
 <td><code>MVGAL_ENABLE_RUST</code></td>
 <td>ON</td>
-<td>Build Rust safety crates</td>
+<td>Rust safety components</td>
 </tr>
 <tr>
 <td><code>MVGAL_ENABLE_ZIG</code></td>
 <td>OFF</td>
-<td>Enable Zig components</td>
+<td>Zig components</td>
 </tr>
 <tr>
 <td><code>MVGAL_BUILD_TESTS</code></td>
 <td>ON</td>
-<td>Build test suite</td>
-</tr>
-<tr>
-<td><code>MVGAL_ENABLE_SANITIZERS</code></td>
-<td>OFF</td>
-<td>Enable ASan + UBSan (Debug only)</td>
-</tr>
-<tr>
-<td><code>MVGAL_ENABLE_COVERAGE</code></td>
-<td>OFF</td>
-<td>Enable gcov coverage</td>
-</tr>
-<tr>
-<td><code>MVGAL_USE_CCACHE</code></td>
-<td>ON</td>
-<td>Use ccache if available</td>
-</tr>
-<tr>
-<td><code>MVGAL_INSTALL</code></td>
-<td>ON</td>
-<td>Enable installation</td>
-</tr>
-<tr>
-<td><code>MVGAL_ENABLE_SPIRV_OPT</code></td>
-<td>OFF</td>
-<td>Enable SPIR-V optimization pipeline (SPIRV-Tools + SPIRV-Cross)</td>
-</tr>
-<tr>
-<td><code>MVGAL_ENABLE_FULL_STACK</code></td>
-<td>ON</td>
-<td>Enable full aggregation stack (stubbed features enabled)</td>
-</tr>
-<tr>
-<td><code>MVGAL_BUILD_FULL_STACK</code></td>
-<td>ON</td>
-<td>Build kernel module with full stack (same as <code>MVGAL_ENABLE_FULL_STACK</code>)</td>
+<td>Test targets</td>
 </tr>
 <tr>
 <td><code>MVGAL_BUILD_UI</code></td>
 <td>OFF</td>
-<td>Build UI dashboard</td>
+<td>UI dashboard</td>
+</tr>
+<tr>
+<td><code>MVGAL_ENABLE_SPIRV_OPT</code></td>
+<td>OFF</td>
+<td>SPIR-V optimization dependencies</td>
 </tr>
 </tbody>
 </table>
-<h3 id="build-targets">Build targets</h3>
-<pre><code class="language-bash">cmake --build build_output --target mvgald          # daemon only
-cmake --build build_output --target mvgal-info      # single tool
-cmake --build build_output --target VK_LAYER_MVGAL  # Vulkan layer
-cmake --build build_output --target mvgal_opencl    # OpenCL layer
-</code></pre>
-<hr>
-<h2 id="meson-build-alternative">Meson Build (Alternative)</h2>
-<pre><code class="language-bash">meson setup builddir \
-  -Dwith_vulkan=true \
-  -Dwith_opencl=true \
-  -Dwith_daemon=true \
-  -Dwith_tests=true \
-  -Dbuildtype=release
+<p>Optional Vulkan, OpenCL, Qt, and other targets depend on development headers and libraries. Read configure output to confirm which targets were enabled. The top-level project also defines <code>MVGAL_ENABLE_FULL_STACK</code> and <code>MVGAL_BUILD_FULL_STACK</code>; these options do not certify the backends' hardware capabilities.</p>
+<h2 id="meson-build">Meson build</h2>
+<p>The checked-in <code>meson_options.txt</code> defines these options: <code>with_vulkan</code>, <code>with_opencl</code>, <code>with_cuda</code> (experimental, defaults off), <code>with_daemon</code>, <code>with_tests</code>, <code>with_benchmarks</code>, and <code>with_kernel_module</code> (defaults off).</p>
+<pre><code class="language-bash">meson setup builddir -Dwith_daemon=true -Dwith_tests=true -Dbuildtype=release
 ninja -C builddir
-ninja -C builddir test
 </code></pre>
-<h3 id="meson-options-meson_optionstxt">Meson options (<code>meson_options.txt</code>)</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>with_vulkan</code></td>
-<td>false</td>
-<td>Build Vulkan layer</td>
-</tr>
-<tr>
-<td><code>with_opencl</code></td>
-<td>false</td>
-<td>Build OpenCL layer</td>
-</tr>
-<tr>
-<td><code>with_cuda</code></td>
-<td>false</td>
-<td>Build CUDA shim</td>
-</tr>
-<tr>
-<td><code>with_daemon</code></td>
-<td>true</td>
-<td>Build daemon</td>
-</tr>
-<tr>
-<td><code>with_tests</code></td>
-<td>false</td>
-<td>Build tests</td>
-</tr>
-<tr>
-<td><code>with_benchmarks</code></td>
-<td>false</td>
-<td>Build benchmarks</td>
-</tr>
-<tr>
-<td><code>with_kernel_module</code></td>
-<td>false</td>
-<td>Build kernel module</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="zig-build">Zig Build</h2>
-<pre><code class="language-bash">zig build                                    # build all defaults
-zig build -Dbuild-runtime=true              # daemon + frame pacer
-zig build -Dbuild-tools=true                # CLI tools
-zig build -Dbuild-tests=true test           # run tests
+<h2 id="rust-crates">Rust crates</h2>
+<pre><code class="language-bash">cargo test --workspace
 </code></pre>
-<hr>
-<h2 id="rust-components">Rust Components</h2>
-<pre><code class="language-bash"># Build all crates
-cargo build --release
-
-# Build individual crates
-cargo build --release -p fence_manager
-cargo build --release -p memory_safety
-cargo build --release -p capability_model
-
-# Run tests
-cargo test
-cargo test --release
-
-# Check without building
-cargo check --all
+<p>The workspace includes <code>safe/fence_manager</code>, <code>safe/memory_safety</code>, <code>safe/capability_model</code>, <code>safe/ffi_tests</code>, and <code>runtime/safe</code>.</p>
+<h2 id="kernel-module">Kernel module</h2>
+<p>The kernel module is built through the CMake/Kbuild integration and requires headers for the target kernel. DKMS packaging definitions are under <code>kernel/dkms/</code> and distribution package directories. Loading the module requires appropriate privileges and, when Secure Boot is enabled, a trusted signing key. See <a href="SECURE_BOOT.md">Secure Boot</a>.</p>
+<h2 id="install">Install</h2>
+<p>Use the build's configured install prefix and inspect generated install rules before installing:</p>
+<pre><code class="language-bash">cmake --install build --prefix /usr/local
 </code></pre>
-<hr>
-<h2 id="kernel-module">Kernel Module</h2>
-<p>The kernel module requires kernel headers and must be built with kbuild:</p>
-<pre><code class="language-bash">cd kernel
-make -C /lib/modules/$(uname -r)/build M=$(pwd) modules
-
-# Load (requires pkexec)
-pkexec insmod mvgal.ko
-pkexec insmod mvgal.ko enable_debug=1   # with debug logging
-
-# Verify
-dmesg | grep MVGAL
-ls /dev/mvgal0
-
-# Unload
-pkexec rmmod mvgal
-</code></pre>
-<p>The kernel module is tested on Linux 6.19. It uses <code>class_create</code> compatibility shims for kernels 6.4+.</p>
-<hr>
-<h2 id="qt-dashboard">Qt Dashboard</h2>
-<pre><code class="language-bash">mkdir -p ui/build &amp;&amp; cd ui/build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
-./mvgal-dashboard
-</code></pre>
-<p>Requires Qt5 or Qt6 with Widgets and Network modules.</p>
-<h2 id="go-rest-server">Go REST Server</h2>
-<pre><code class="language-bash">cd ui
-go build -o mvgal-rest-server ./mvgal_rest_server.go
-./mvgal-rest-server --listen :7474
-</code></pre>
-<hr>
-<h2 id="running-tests">Running Tests</h2>
-<pre><code class="language-bash"># C tests (via CTest)
-cd build_output
-ctest --output-on-failure --timeout 60
-
-# Rust tests
-cargo test
-
-# Standalone tool tests
-./tools/mvgal-info
-./tools/mvgal-bench all
-./tools/mvgal-compat --system
-</code></pre>
-<hr>
-<h2 id="installation">Installation</h2>
-<h3 id="generic-installer-recommended">Generic installer (recommended)</h3>
-<pre><code class="language-bash">bash build/install.sh [--prefix /usr] [--no-kernel] [--no-daemon]
-</code></pre>
-<p>All privileged steps use <code>pkexec</code>:
-- Kernel module → <code>/lib/modules/$(uname -r)/extra/mvgal.ko</code>
-- udev rules → <code>/etc/udev/rules.d/99-mvgal.rules</code>
-- Vulkan layer → <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code>
-- OpenCL ICD → <code>/etc/OpenCL/vendors/mvgal.icd</code>
-- Systemd service → <code>/etc/systemd/system/mvgald.service</code>
-- Config → <code>/etc/mvgal/mvgal.conf</code></p>
-<h3 id="cmake-install">CMake install</h3>
-<pre><code class="language-bash">cd build_output
-pkexec make install   # or: pkexec cmake --install .
-</code></pre>
-<hr>
-<h2 id="cross-compilation-arm64">Cross-Compilation (ARM64)</h2>
-<pre><code class="language-bash">cmake .. \
-  -DCMAKE_TOOLCHAIN_FILE=build/cmake/toolchains/aarch64-linux-gnu.cmake \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DMVGAL_BUILD_KERNEL=OFF   # kernel module requires native build
-make -j$(nproc)
-</code></pre>
-<p>Requires <code>aarch64-linux-gnu-gcc</code> cross-compiler:</p>
-<pre><code class="language-bash">sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-</code></pre>
-<hr>
-<h2 id="packaging">Packaging</h2>
-<h3 id="debian-ubuntu">Debian / Ubuntu</h3>
-<pre><code class="language-bash">cd packaging &amp;&amp; bash build_deb.sh
-# Output: packaging/build/mvgal_0.7.8_amd64.deb
-pkexec dpkg -i packaging/build/mvgal_0.7.8_amd64.deb
-</code></pre>
-<h3 id="rpm-fedora-rhel-opensuse">RPM (Fedora / RHEL / openSUSE)</h3>
-<pre><code class="language-bash">rpmbuild -bb packaging/rpm/mvgal.spec
-# Output: ~/rpmbuild/RPMS/x86_64/mvgal-0.7.8-1.x86_64.rpm
-pkexec rpm -ivh ~/rpmbuild/RPMS/x86_64/mvgal-0.7.8-1.x86_64.rpm
-</code></pre>
-<h3 id="arch-linux">Arch Linux</h3>
-<pre><code class="language-bash">cd packaging/arch
-makepkg -si
-</code></pre>
-<hr>
-<h2 id="ci-github-actions">CI / GitHub Actions</h2>
-<p>Both workflows are <strong>manual-only</strong> (<code>workflow_dispatch</code>). To run:</p>
-<ol>
-<li>Go to <strong>Actions</strong> tab on GitHub</li>
-<li>Select <strong>CI</strong> or <strong>Build on Fedora COPR</strong></li>
-<li>Click <strong>Run workflow</strong></li>
-</ol>
-<p>The CI workflow runs:
-- Build matrix: Ubuntu 22.04 + 24.04, GCC + Clang
-- Unit tests via CTest
-- Vulkan layer smoke test (lavapipe)
-- clang-tidy static analysis
-- clang-format check
-- Rust clippy + rustfmt
-- Packaging check
-- shellcheck on all <code>.sh</code> files</p>
-<hr>
-<h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="libdrm-not-found"><code>libdrm not found</code></h3>
-<pre><code class="language-bash">sudo apt install libdrm-dev   # Ubuntu
-sudo dnf install libdrm-devel  # Fedora
-</code></pre>
-<h3 id="vulkanvulkanh-not-found"><code>vulkan/vulkan.h not found</code></h3>
-<pre><code class="language-bash">sudo apt install libvulkan-dev
-cmake .. -DMVGAL_BUILD_API=ON
-</code></pre>
-<h3 id="kernel-module-fails-to-load-ebusy">Kernel module fails to load: <code>-EBUSY</code></h3>
-<p>The module uses <code>alloc_chrdev_region</code> to avoid conflicts. If <code>/dev/mvgal0</code> already exists from a previous load:</p>
-<pre><code class="language-bash">pkexec rmmod mvgal
-pkexec insmod kernel/mvgal.ko
-</code></pre>
-<h3 id="rust-build-fails-msrv">Rust build fails: <code>MSRV</code></h3>
-<p>MVGAL requires Rust 1.75+:</p>
-<pre><code class="language-bash">rustup update stable
-rustup default stable
-</code></pre>
+<p>Distribution packaging definitions are under <code>packaging/</code>; artifact names and install paths depend on the selected package recipe. Do not rely on old hard-coded paths or version numbers in generated examples.</p>
+<h2 id="source-references">Source references</h2>
+<ul>
+<li>Top-level options and targets: source <code>CMakeLists.txt</code></li>
+<li>Meson options and targets: source <code>meson_options.txt</code> and <code>meson.build</code></li>
+<li>Rust workspace: source <code>Cargo.toml</code></li>
+<li>Package recipes: source <code>packaging/</code></li>
+</ul>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.8 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.13 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

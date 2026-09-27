@@ -5,7 +5,9 @@ aliases: [Design Document, Design]
 
 # MVGAL Design Document
 
-**Version:** 0.7.8 | **Last Updated:** September 2026
+> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+
+**Source version:** 0.7.13 | **Last Updated:** September 2026
 
 ---
 
@@ -143,7 +145,7 @@ flowchart TD
 - **IPC authentication:** SCM_CREDENTIALS on Unix socket; only root or video group members can connect
 - **Kernel module:** Signed at install time; MOK enrollment for Secure Boot
 - **Device nodes:** `/dev/mvgal*` owned by root:video, mode 0660
-- **pkexec:** All privileged operations use pkexec, never sudo in scripts
+- **pkexec:** All privileged operations use pkexec, never pkexec in scripts
 - **No firmware flashing:** Vendor-overriding firmware operations are explicitly excluded
 
 ---
@@ -165,6 +167,6 @@ flowchart TD
 
 1. **No direct upstream kernel integration** — the module must be built and signed per-kernel.
 2. **Anti-cheat compatibility** — LD_PRELOAD interception may be flagged by kernel-level anti-cheat (EAC, BattlEye).
-3. **Network GPU pooling** — remote GPU support is implemented but not yet production-ready.
+3. **Network GPU pooling** — exploratory design only; not a verified production execution path.
 4. **AI scheduling** — the ML-based scheduler requires training data and is not yet deployed.
 5. **Collective communication** — the AllReduce/AllGather/Broadcast library is a stub; no UCX/UCC integration.

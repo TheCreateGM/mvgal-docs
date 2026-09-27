@@ -5,7 +5,9 @@ aliases: [Steam Integration, Steam, Proton]
 
 # MVGAL Steam/Proton Integration
 
-**Version:** 0.7.8  
+> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+
+**Source version:** 0.7.13
 **Date:** September 2026
 
 ---
@@ -124,13 +126,13 @@ VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(
 {
     // Get MVGAL context
     mvgal_context_t *ctx = mvgal_layer_get_context();
-    
+
     // Determine which GPU to use based on strategy
     uint32_t gpu_index = mvgal_scheduler_select_gpu(ctx, queue);
-    
+
     // Log telemetry
     mvgal_ipc_send_submit(queue, gpu_index, pSubmits, submitCount);
-    
+
     // Forward to next layer
     return ctx->next_vkQueueSubmit(queue, submitCount, pSubmits, fence);
 }
@@ -212,10 +214,10 @@ struct afr_sync {
 void afr_submit_frame(struct afr_sync *sync, uint32_t frame_index) {
     uint32_t gpu_index = frame_index % 2;
     uint32_t wait_gpu = (gpu_index + 1) % 2;
-    
+
     /* Wait for previous frame on other GPU */
     vkWaitForFences(device, 1, &sync->fences[wait_gpu], VK_TRUE, UINT64_MAX);
-    
+
     /* Submit to GPU */
     vkQueueSubmit(queue[gpu_index], 1, &submit_info, sync->fences[gpu_index]);
 }

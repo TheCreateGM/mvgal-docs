@@ -5,7 +5,9 @@ aliases: [Secure Boot, MOK, MOK Enrollment]
 
 # MVGAL Secure Boot & MOK Enrollment
 
-**Version:** 0.7.8 | **Updated:** September 2026
+> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+
+**Source version:** 0.7.13 | **Updated:** September 2026
 
 MVGAL ships kernel modules (`mvgal.ko`, `mvgal_amd.ko`, `mvgal_nvidia.ko`, `mvgal_intel.ko`, `mvgal_mtt.ko`, `mvgal_adreno.ko`, `mvgal_ntsync.ko`). On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 
@@ -13,7 +15,7 @@ MVGAL ships kernel modules (`mvgal.ko`, `mvgal_amd.ko`, `mvgal_nvidia.ko`, `mvga
 
 ## How It Works
 
-1. **Install time** — the RPM `%post` script generates a per-machine MVGAL signing key and signs the DKMS-installed modules in `/lib/modules/*/updates/dkms` (v0.7.5+). Kernel-tree modules are signed as well.
+1. **Install time** — the RPM `%post` script generates a per-machine MVGAL signing key and signs the DKMS-installed modules in `/var/lib/mvgal/keys` stores the per-machine key material (v0.7.5+). Kernel-tree modules are signed as well.
 2. **Enrollment** — the per-machine key must be enrolled into the machine's MOK list so the kernel trusts it. This is a one-time, interactive step (requires a reboot into the MOK manager).
 3. **Verification** — `mvgal-enroll-mok` verifies the pending MOK list with `mokutil --list-new` before reporting success (v0.7.8+ — no more false positives).
 
@@ -40,9 +42,9 @@ What happens:
 
 ```bash
 # Generate a key (if not already present)
-sudo mokutil --import /etc/pki/mvgal/MVGal-MOK.der
+pkexec mokutil --import /etc/pki/mvgal/MVGal-MOK.der
 # Or with a password
-sudo mokutil --import /etc/pki/mvgal/MVGal-MOK.der --password 'your-password'
+pkexec mokutil --import /etc/pki/mvgal/MVGal-MOK.der --password 'your-password'
 ```
 
 Then reboot and complete enrollment in the MOK Manager.
@@ -59,7 +61,7 @@ mokutil --list-new | grep -i mvgal        # pending keys (should be empty after 
 If the module still fails to load, check:
 
 ```bash
-sudo dmesg | grep -i "module verification\|mvgal"
+journalctl -k -b | grep -i "module verification\|mvgal"
 ```
 
 ---
@@ -81,9 +83,9 @@ If the `mvgal` kernel module is **not loaded** (e.g. MOK not yet enrolled, or Se
 To load the module manually:
 
 ```bash
-sudo modprobe mvgal
+pkexec modprobe mvgal
 # or
-mvgal-load        # self-escalates via pkexec
+pkexec /usr/lib/mvgal/load-module.sh  # if installed by your package
 ```
 
 ---
@@ -92,8 +94,8 @@ mvgal-load        # self-escalates via pkexec
 
 | Symptom | Cause / Fix |
 |---------|-------------|
-| `mvgal-enroll-mok` reports success but module still rejected | Pre-v0.7.8 false positive. Update to v0.7.8+, or verify with `mokutil --list-enrolled`. |
-| `mokutil --import` fails with `-p` flag | mokutil 0.7.2 rejects `-p`. Use v0.7.8+ `mvgal-enroll-mok` (password via stdin) or omit the flag. |
+| `mvgal-enroll-mok` reports success but module still rejected | Complete enrollment in MOK Manager, verify with `mokutil --list-enrolled`, then check module build and kernel logs. |
+| `mokutil --import` fails with `-p` flag | mokutil 0.7.2 rejects `-p`. Use the packaged `mvgal-enroll-mok` helper (password via stdin) or omit the flag. |
 | MOK Manager doesn't appear on reboot | Secure Boot may be disabled, or the key was already enrolled. Check `mokutil --list-enrolled`. |
 | `modprobe mvgal` → "Required key not available" | The key is not enrolled. Run `mvgal-enroll-mok` and reboot. |
 | DKMS modules rejected but kernel-tree modules load | Pre-v0.7.5 behavior. Update to v0.7.5+ so DKMS modules are signed too. |

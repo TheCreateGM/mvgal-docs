@@ -5,13 +5,15 @@ aliases: [API Reference, API]
 
 # MVGAL Public API Reference
 
-**Version:** 0.7.8 | **Header:** `#include <mvgal/mvgal.h>`
+> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+
+**Source version:** 0.7.13 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 
 ## Public C Headers
 
-MVGAL exposes 26 public C headers under `include/mvgal/`. The main header `mvgal.h` includes all core subsystem headers.
+MVGAL currently contains 29 public C headers under `include/mvgal/`. The main header `mvgal.h` includes all core subsystem headers.
 
 | Header | Description |
 |--------|-------------|
@@ -440,7 +442,7 @@ MVGAL exposes a character device at `/dev/mvgal0`. Magic number: `'M'` (0x4D).
 
 **Signals:** `GPUHotplug` (gpu_index, added), `TemperatureWarning` (gpu_index, temperature), `PowerLimitReached` (gpu_index)
 
-> **Security (v0.7.8):** the D-Bus policy restricts `org.mvgal.MVGAL` to root and the `mvgal` group — all other users are denied.
+> **Security (introduced in v0.7.8):** the D-Bus policy restricts `org.mvgal.MVGAL` to root and the `mvgal` group — all other users are denied.
 
 ---
 
@@ -627,41 +629,3 @@ const char *mvgal_cap_to_json(uint64_t handle);
 ```
 
 ---
-
-## REST API (`ui/mvgal_rest_server.go`)
-
-Base URL: `http://localhost:7474`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/gpus` | All GPUs with current metrics |
-| GET | `/api/v1/gpus/{id}` | Single GPU by index |
-| GET | `/api/v1/scheduler` | Current scheduler mode and GPU count |
-| PUT | `/api/v1/scheduler` | Set scheduler mode |
-| GET | `/api/v1/stats` | Aggregate stats (VRAM, utilization, daemon status) |
-| GET | `/api/v1/power` | Power state summary |
-| GET | `/api/v1/temperature` | GPU temperatures |
-| GET | `/api/v1/logs` | Last 100 lines of daemon log |
-| GET | `/api/v1/health` | Health check |
-| GET | `/` | Service info and endpoint list |
-
-### Example: `GET /api/v1/gpus`
-
-```json
-[
-  {
-    "index": 0,
-    "name": "AMD GPU [0000:03:00.0]",
-    "vendor": "AMD",
-    "pci_slot": "0000:03:00.0",
-    "drm_node": "/dev/dri/card2",
-    "utilization_pct": 12,
-    "vram_total_bytes": 4278190080,
-    "vram_used_bytes": 847249408,
-    "temperature_c": 56,
-    "power_w": 45.2,
-    "clock_mhz": 1800,
-    "enabled": true
-  }
-]
-```
