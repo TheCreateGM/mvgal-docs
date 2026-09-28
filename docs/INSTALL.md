@@ -1,13 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: guide
+mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.13 | **Updated:** September 2026
+**Source version:** 0.7.14 | **Updated:** September 2026
 
 ---
 
@@ -88,7 +92,7 @@ The daemon reads `/etc/mvgal/mvgal.conf`:
 enabled = true
 debug_level = info
 gpu_count = 0                 # 0 = auto-detect
-default_strategy = single     # single, round_robin, afr, sfr, hybrid, task, compute_offload, auto, custom
+default_strategy = single     # see "Strategy names" below
 enable_memory_migration = true
 enable_dmabuf = true
 enable_kernel_names = true
@@ -173,6 +177,17 @@ inference_timeout_ms = 10
 confidence_threshold = 0.6
 ```
 
+**Strategy names.** Three vocabularies exist, and they are not the same set:
+
+- **The C enum** `mvgal_distribution_strategy_t` (`include/mvgal/mvgal_types.h`) has **13 members** — 12 auto-numbered `0..11` plus `CUSTOM = 100`: `ROUND_ROBIN`, `AFR`, `SFR`, `AUTO`, `COMPUTE_OFFLOAD`, `HYBRID`, `SINGLE_GPU`, `TASK`, `AI_DRIVEN`, `RLD`, `REP`, `PPL`, `CUSTOM`.
+- **`config/mvgal.conf`** documents 9 valid values for `default_strategy`: `single`, `round_robin`, `afr`, `sfr`, `hybrid`, `task`, `compute_offload`, `auto`, `custom`.
+- **The pkexec helper** (`/usr/lib/mvgal/mvgal-pkexec-helper.sh`) accepts 11: `single`, `single_gpu`, `hybrid`, `task`, `afr`, `sfr`, `compute`, `compute_offload`, `round_robin`, `auto`, `custom`.
+
+Only `single` is a pass-through safe default. Use `afr`, `sfr`, or `hybrid` only after
+`mvgal-compat` reports `COMPAT_SUPPORTED` for the application. See [STRATEGIES.md](STRATEGIES.md).
+
+> **Note on `[ai_scheduler] model_path`:** no package creates `/etc/mvgal/models/`. Since v0.7.14 `mvgal_ai_model_load()` validates the path with `stat()` and returns `NULL` with a diagnostic naming what it found, instead of returning a valid handle for any non-empty string. The daemon reads `$MVGAL_AI_MODEL` if set, otherwise this value, once at startup, and logs plainly that its distribution logic is a built-in heuristic rather than ONNX Runtime inference.
+
 Edit with:
 
 ```bash
@@ -190,7 +205,7 @@ See [BUILD.md](BUILD.md) for the full build guide (CMake, Meson, Zig, DKMS).
 Quick CMake build:
 
 ```bash
-git clone https://github.com/axogm/mvgal.git
+git clone https://github.com/TheCreateGM/mvgal.git
 cd mvgal
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j$(nproc)
@@ -211,17 +226,56 @@ mvgal-info                    # GPU info
 mvgal-status                  # real-time utilization
 ```
 
-### Enable Vulkan Layer
+### Enable Vulkan interception layer
 
-The layer is installed system-wide at `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json` — no action needed. Verify with:
+The layer is registered system-wide at
+`/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json` — no action needed. It is
+registered implicitly because it only intercepts and never stands in for a
+`VkPhysicalDevice`. Verify with:
 
 ```bash
 vulkaninfo | grep -i mvgal
 ```
 
+Toggle it with `MVGAL_VULKAN_ENABLE=1` / `MVGAL_VULKAN_DISABLE=1`, or read the
+manifest at `/usr/share/vulkan/explicit_layer.d/` if you move it.
+
+### Enable the Vulkan ICD (opt-in)
+
+The **ICD** is a separate thing from the layer, and as of v0.7.14 it is **not registered
+globally**. It used to be installed into `share/vulkan/icd.d/`, so every Vulkan application
+on the system loaded it — and since v0.7.12 it reports *zero* physical devices by design.
+With no device handle the loader cannot build a per-device dispatch table, so it printed a
+conformancy error on every startup.
+
+The manifest now lives at `/usr/share/vulkan/mvgal/mvgal_icd.json` and is applied only on
+request:
+
+```bash
+source /usr/share/mvgal/scripts/mvgal-vulkan-env.sh
+# or, equivalently, for a single run:
+MVGAL_ICD_JSON=/usr/share/vulkan/mvgal/mvgal_icd.json vulkaninfo
+```
+
+The script is installed at `/usr/share/mvgal/scripts/mvgal-vulkan-env.sh` (v0.7.14 installs
+it for the first time). The `library_path` in the manifest is absolute, so it no longer
+depends on the loader's `dlopen` search order.
+
+Upgrades remove a stale manifest from `icd.d` **only** when it is recognisably MVGAL's.
+
 ### Enable OpenCL ICD
 
-Registered at `/etc/OpenCL/vendors/mvgal.icd` — no action needed. Verify with:
+`libmvgal_opencl.so` is a real aggregating ICD: it scans `/etc/OpenCL/vendors/`, skips
+itself, and delegates to every peer it finds. The manifest is at
+`/etc/OpenCL/vendors/mvgal.icd`.
+
+Since v0.7.14, if **no peer** OpenCL runtime is installed at first install time, the manifest
+is moved aside to `mvgal.icd.disabled` and the install message names the package that
+provides a peer and the exact command to re-enable it. With nothing to aggregate, leaving it
+registered only produced zero platforms and no explanation. Erasing the MVGAL package
+re-enables it if a peer has since appeared.
+
+Verify with:
 
 ```bash
 clinfo | grep -i mvgal
@@ -245,6 +299,9 @@ ENABLE_MVGAL=1 %command%
 | Daemon won't start | `journalctl -u mvgald -f` for logs |
 | No GPUs detected | `lspci \| grep -i vga`; check `/etc/mvgal/mvgal.conf` `enabled` flags |
 | Vulkan app crashes | Update to v0.7.7+ (device dispatch fix); check `vulkaninfo` |
+| `vulkaninfo` reports the ICD is not conformant | The ICD is opt-in since v0.7.14. Do not register it globally — source `mvgal-vulkan-env.sh` per-run instead. |
+| `clinfo` reports zero platforms | Expected when no peer OpenCL runtime is installed; the manifest is parked as `mvgal.icd.disabled`. Install a vendor OpenCL runtime. |
+| Daemon socket exists but you cannot connect | v0.7.14 chowns it to group `mvgal` (falling back to `video`). Run `mvgal-compat` — it prints the socket's real owner, mode, and your uid. |
 
 See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for the full guide.
 

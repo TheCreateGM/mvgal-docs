@@ -1,11 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: reference
+mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-> Source metadata is **0.7.13**; the source changelog documents releases through **0.7.12**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
+> Source metadata is **0.7.14**; the source changelog documents releases through **0.7.14**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
 
 ## Repository components
 

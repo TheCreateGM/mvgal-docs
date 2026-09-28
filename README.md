@@ -1,13 +1,16 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: index
 ---
 
 # mvgal-docs
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **Source version 0.7.13** (CMake/Cargo metadata); the source changelog documents releases through **0.7.12**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
+> **Source version 0.7.14** (CMake/Cargo metadata); the source changelog documents releases through **0.7.14**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
 
 ## 📚 Documentation
 
@@ -31,7 +34,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
 
-MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.12, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
+MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.14, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
 
 ```mermaid
 flowchart TD
@@ -71,7 +74,7 @@ flowchart TD
 - **Steam/Proton integration** — compatibility helpers; game support depends on the driver and selected API path
 - **Power management** — telemetry and controls where a probed vendor capability exists
 - **Memory-safe subsystems** — Fence manager, memory tracker, capability model written in Rust
-- **Qt dashboard** — optional UI target (`MVGAL_BUILD_UI`); the current CMake tree does not define a REST service
+- **Qt dashboard** — optional UI target (`MVGAL_BUILD_UI`, **OFF by default**); the current CMake tree does not define a REST service
 - **Secure Boot support** — Kernel modules signed at install time; per-machine MOK enrollment via `mvgal-enroll-mok`
 - **Hardened daemon** — Drops capabilities after init, prunes bounding set, restricted D-Bus policy
 - **Degraded-mode reporting** — Clear warnings when the kernel module is not loaded (e.g. MOK not enrolled)
@@ -87,7 +90,7 @@ flowchart TD
 
 ## Packages
 
-This workspace includes package artifacts under `package/`. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
+This workspace includes package artifacts under [`package/`](package/README.md), which currently holds **0.7.14 RPMs** and 0.7.13 builds in the other formats — check the version before installing. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
 
 ```bash
 dnf info mvgal
@@ -99,9 +102,11 @@ Packaging configurations are not a guarantee that every target is currently publ
 ## Quick Start
 
 ```bash
-# Start the daemon
-pkexec systemctl start mvgald
-pkexec systemctl enable mvgald   # start on boot
+# Start the daemon. The installed unit is mvgal-daemon.service; the RPM's
+# %post runs `systemctl enable`, which also creates the mvgald.service and
+# mvgal.service aliases, so the short names work after installation.
+pkexec systemctl start mvgal-daemon
+pkexec systemctl enable mvgal-daemon   # start on boot
 
 # Verify
 mvgal-info          # list detected GPUs
@@ -109,14 +114,16 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
-## Recent source changes (through v0.7.12)
+## Recent source changes (through v0.7.14)
 
 - **Secure Boot hardening** — DKMS modules are signed with a per-machine MVGAL key and `mvgal-enroll-mok` verifies enrollment via `mokutil --list-new` (no more false success).
-- **Daemon capability dropping** — `mvgald` clears its capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO`.
-- **Restricted D-Bus policy** — `org.mvgal.MVGAL` is now limited to root and the `mvgal` group.
+- **Daemon capability dropping** — `mvgald` clears its capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_SYS_MODULE`. `CAP_SYS_MODULE` was added in 0.7.14: without it the unit's `ExecStartPre` `modprobe` could never succeed.
+- **Restricted D-Bus policy** — `org.mvgal.MVGAL` is now limited to root and the `mvgal` group. The shipped `com.mvgal.policy` declares exactly two actions, both `auth_admin`.
 - **Real Vulkan driver version** — the ICD reports `apiVersion`/`driverVersion` from the MVGAL version macros instead of `0.0.0`.
 - **Degraded-mode reporting** — `mvgal-status` prints `Kernel Module: NOT LOADED (degraded userspace-only mode)` with a MOK hint and a real load-balance estimate.
-- **Capability truthfulness** — v0.7.10–v0.7.12 removed synthetic devices, fabricated allocation/submission success, and unverified vendor capability claims. See the source changelog for details.
+- **Shared module inventory** — one list (`/usr/lib/mvgal/modules.sh`) is now sourced by `mvgal-load`, `mvgal-unload`, and the privileged helper, so the three can no longer disagree about which modules exist.
+- **OpenCL ICD no longer registered by default** — the `%post` scriptlet parks `mvgal.icd` when no other ICD is present, because a loader that finds only MVGAL raises a conformancy error.
+- **Capability truthfulness** — v0.7.10–v0.7.14 removed synthetic devices, fabricated allocation/submission success, and unverified vendor capability claims. See the source changelog for details.
 
 See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the full history and [`docs/SECURE_BOOT.md`](docs/SECURE_BOOT.md) for MOK enrollment.
 
@@ -125,7 +132,7 @@ See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the full history and [`docs/SEC
 | Tool | Description |
 |------|-------------|
 | `mvgal` | Main CLI: start/stop daemon, set strategy, show stats |
-| `mvgal-info` | Print all detected GPUs, VRAM, temperature, utilization |
+| `mvgal-info` | Print all detected GPUs, VRAM, temperature, utilization (`--json`, `--count`, `--vulkan-groups`) |
 | `mvgal-status` | Real-time GPU utilization/VRAM bars; `--watch` for continuous refresh; degraded-mode warnings |
 | `mvgal-bench` | Memory bandwidth, compute FLOPS, scheduling latency |
 | `mvgal-compat` | System readiness check + per-app compatibility database |
@@ -133,8 +140,11 @@ See [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for the full history and [`docs/SEC
 | `mvgal-probe` | PCI topology + kernel UAPI probe (`/dev/mvgal0` ioctls) |
 | `mvgal-enum` | Enumerate GPUs and capabilities |
 | `mvgal-hw-validate` | Hardware validation with actionable failure hints |
-| `mvgal-steam-setup` | Steam/Proton integration helper |
+| `mvgal-steam-setup` | Steam/Proton integration helper (`--list`, `--add`, `--remove`, `--check`, `--auto`) |
+| `mvgal-load` | Privileged module loader; sources `/usr/lib/mvgal/modules.sh` |
+| `mvgal-unload` | Privileged module unloader; same shared inventory |
 | `mvgal-enroll-mok` | Enroll the MVGAL signing key for Secure Boot (MOK) |
+| `mvgal-dmabuf-matrix` | Cross-vendor DMA-BUF import/export matrix probe |
 
 ## Scheduling Strategy Identifiers
 
@@ -160,35 +170,47 @@ These enum values are API/configuration identifiers; execution support depends o
 
 Use the Steam helper and consult its `--help` output for options supported by the installed build. Environment variables differ by integration path; do not assume a variable enables a capability that the runtime has not probed.
 
-| Variable | Values | Description |
-|----------|--------|-------------|
-| `ENABLE_MVGAL` | `0` / `1` | Enable MVGAL for this launch |
-| `MVGAL_STRATEGY` | `afr`, `sfr`, `hybrid`, `single` | Scheduling strategy |
-| `MVGAL_FRAME_PACING` | `0` / `1` | Enable vsync-aligned frame pacing |
-| `MVGAL_GPU_MASK` | hex bitmask | Which GPUs to use (e.g. `0x3` = GPU 0+1) |
+| Variable | Values | Consumed by | Description |
+|----------|--------|-------------|-------------|
+| `MVGAL_ENABLED` | `0` / `1` | written by the launch path | Master switch in the generated launch string |
+| `MVGAL_VULKAN_ENABLE` | `0` / `1` | **Vulkan loader** (not `getenv`) | Enables the interception layer via the manifest's `enable_environment` |
+| `MVGAL_VULKAN_DISABLE` | any | **Vulkan loader** (not `getenv`) | Disables the layer even if the app enabled it |
+| `MVGAL_STRATEGY` | strategy name | execution layer | Scheduling strategy (see the table above) |
+| `MVGAL_VULKAN_DEBUG` | any | `vk_layer.c:131` | Layer debug output |
+| `MVGAL_FRAME_PACING_DEBUG` | any | `mvgal_frame_pacer.c:156` | Frame-pacer debug output |
+
+> **Note** — `MVGAL_VULKAN_ENABLE` and `MVGAL_VULKAN_DISABLE` have **no `getenv` reader anywhere in the tree**. They are honoured by the Vulkan loader because `manifest.json.in` lists them under `enable_environment` / `disable_environment`. Setting them in a Steam launch option works; expecting library code to read them does not.
+>
+> **Warning** — `MVGAL_FRAME_PACING`, `MVGAL_GPU_MASK`, and `MVGAL_LOG_PATH` are **not read** by any MVGAL code. The GPU selection variable is `MVGAL_GPUS`, and frame pacing is not wired to a presentation hook (see [`docs/STEAM_INTEGRATION.md`](docs/STEAM_INTEGRATION.md) §4).
 
 ## Memory Management
 
-The project contains interfaces for a three-tier transfer strategy. Availability is capability-dependent; the source currently does not claim universal cross-vendor operation:
+The project contains interfaces for a three-tier transfer strategy. The kernel and userspace sides use different signals and even disagree on the ordering, so treat this as a description of the two independent selectors rather than one ranked list:
 
-1. **DMA-BUF** (only where runtime probing confirms support)
-2. **PCIe P2P** (only where the peer path is confirmed)
-3. **Host-RAM staging** (implementation and API path dependent)
+- **Kernel side** (`kernel/mvgal_memory.c`) — same `numa_node` → `MVGAL_MIGRATION_P2P`; both peers expose `export_dmabuf`/`import_dmabuf` → `DMA_BUF_ZERO_COPY`; otherwise → `HOST_STAGING`.
+- **Userspace side** (`src/userspace/memory/memory.c`) — same source and destination → `COPY_P2P`; cross-vendor support confirmed → delegate to `mvgal_p2p_get_optimal_method()`; same PCIe root and same vendor → `COPY_P2P`; same root, different vendors → `COPY_DMA_BUF`; different roots → `COPY_CPU`.
+
+Availability is capability-dependent and the source currently does not claim universal cross-vendor operation. See [`docs/MEMORY.md`](docs/MEMORY.md).
 
 ## License
 
-- **Kernel module**: GPL-2.0-only
-- **Userspace components**: GPL-3.0-only
-- **Rust crates**: MIT OR Apache-2.0
+MVGAL is multi-licensed by component. The authoritative statement is the [`LICENSE`](https://github.com/TheCreateGM/mvgal/blob/main/LICENSE) file in the source repository.
+
+- **Kernel module** (`kernel/`): GPL-2.0-only — the `.ko` files declare `MODULE_LICENSE("GPL")`
+- **Userspace components** (`src/`, `runtime/`, `include/`): GPL-3.0-only
+- **Rust crates** (`safe/`, `bindings/rust/`): MIT OR Apache-2.0
+- **Vendored Rust dependencies** (`vendor/`): each retains its own license
+
+> **Note** — the RPM spec's `License:` field is `GPL-3.0-only` for the whole package, while the kernel modules inside it declare `MODULE_LICENSE("GPL")` (GPL-2.0-only) and one file, `kernel/vendors/mvgal_adreno.c`, declares the non-standard string `"GPL v2"`. That is a discrepancy in the source packaging metadata, not a documentation claim, and it is worth resolving upstream.
 
 ## Source Code
 
-The MVGAL source code is available for purchase at:
+The MVGAL source is public: <https://github.com/TheCreateGM/mvgal>
 
-- **Patreon Shop** — [patreon.com/axogm/shop](https://www.patreon.com/axogm/shop)
-- **Ko-fi Shop** — [ko-fi.com/axogm/shop](https://ko-fi.com/axogm/shop)
+Supporting continued development:
 
-Your purchase helps fund continued development of MVGAL and other open-source projects.
+- **Patreon** — [patreon.com/axogm/shop](https://www.patreon.com/axogm/shop)
+- **Ko-fi** — [ko-fi.com/axogm/shop](https://ko-fi.com/axogm/shop)
 
 ## Getting Help
 

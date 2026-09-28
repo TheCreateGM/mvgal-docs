@@ -1,11 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: guide
+mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.13**; the source changelog documents releases through **0.7.12**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.14**; the source changelog documents releases through **0.7.14**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 

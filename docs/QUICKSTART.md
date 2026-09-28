@@ -1,17 +1,24 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: guide
+mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.13**; the source changelog documents releases through **0.7.12**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.14**; the source changelog documents releases through **0.7.14**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 This guide covers package discovery, basic diagnostics, and service startup. Package publication and optional components depend on the distribution and build.
 
 ## 1. Inspect the package or build
 
-The documentation workspace's `package/` directory contains 0.7.13 artifacts for several package formats. Select the artifact matching your distribution and architecture, or build from the [Build Guide](BUILD.md). The source repository includes package definitions, but availability from a remote COPR repository can change.
+The documentation workspace's `package/` directory holds **0.7.14 RPMs** (`mvgal`, `mvgal-dkms`, `mvgal-user-space`, and the source RPM); the `.deb`, AppImage, tarball and Flatpak files there are still **0.7.13**. Read [`package/README.md`](https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md) before installing — it lists the current version of every file. For anything else, build from the [Build Guide](BUILD.md). The source repository includes package definitions, but availability from a remote COPR repository can change.
+
+> [!note]
+> On RPM distros, install `mvgal-dkms` rather than relying on the prebuilt modules in `mvgal`. Those are pinned to kernel `7.2.7-200.fc44` and are ignored on any other kernel.
 
 ## 2. Inspect GPUs
 

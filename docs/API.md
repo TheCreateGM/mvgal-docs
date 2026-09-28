@@ -1,13 +1,17 @@
 ---
 tags: [mvgal, api, reference]
 aliases: [API Reference, API]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: reference
+mvgal_order: 8
 ---
 
 # MVGAL Public API Reference
 
-> **Implementation status:** Source metadata is 0.7.13. The source changelog documents through 0.7.12. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.13 | **Header:** `#include <mvgal/mvgal.h>`
+**Source version:** 0.7.14 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 
@@ -23,11 +27,15 @@ MVGAL currently contains 29 public C headers under `include/mvgal/`. The main he
 | `mvgal_uapi.h` | Kernel/userspace UAPI — IOCTL structs + commands |
 | `mvgal_gpu.h` | GPU enumeration, properties, topology |
 | `mvgal_memory.h` | Memory allocation, flags, placement |
-| `mvgal_unified_heap.h` | Unified heap abstraction (Heaps 0–3) |
+| `mvgal_unified_heap.h` | Unified heap handle, placement and access-pattern hints |
 | `mvgal_scheduler.h` | Scheduler strategy, policy control |
 | `mvgal_execution.h` | Frame sessions, migration plans |
 | `mvgal_power.h` | Power management, DVFS, thermal |
 | `mvgal_config.h` | Configuration file parsing |
+| `mvgal_binary.h` | Binary protocol helpers |
+| `mvgal_ccl.h` | Collective communication primitives |
+| `mvgal_dispatch.h` | Dispatch and interception helpers |
+| `mvgal_shader_compiler.h` | Shader compilation utilities |
 | `mvgal_log.h` | Logging subsystem |
 | `mvgal_ipc.h` | IPC client/server — Unix domain socket protocol |
 | `mvgal_intercept.h` | API intercept layer interface |
@@ -383,13 +391,18 @@ mvgal_error_t mvgal_ipc_server_start(void);
 void          mvgal_ipc_server_stop(void);
 
 // Client
-mvgal_error_t mvgal_ipc_client_connect(const char *socket_path);
-void          mvgal_ipc_client_disconnect(void);
-mvgal_error_t mvgal_ipc_send(mvgal_ipc_message_type_t type,
-                              const void *payload, size_t payload_size);
-mvgal_error_t mvgal_ipc_receive(mvgal_ipc_message_type_t *type,
-                                 void *payload, size_t *payload_size);
+mvgal_error_t mvgal_ipc_client_connect(const char *socket_path, int *fd_out);
+void          mvgal_ipc_client_disconnect(int fd);
+mvgal_error_t mvgal_ipc_send(int fd, mvgal_ipc_message_type_t type,
+                             const void *payload, size_t payload_size,
+                             uint64_t request_id);
+mvgal_error_t mvgal_ipc_receive(int fd, mvgal_ipc_message_type_t *type_out,
+                                void *payload_buf, size_t payload_buf_size,
+                                size_t *payload_size_out,
+                                uint64_t *request_id_out);
 ```
+
+Every client call takes the connected file descriptor as its first argument, and `send`/`receive` both carry a `request_id` so a caller can match responses to requests. The wire header (`src/userspace/daemon/ipc.c`) is `MVGAL_IPC_MAGIC 0x4D564741` ("MVGA"), version `1`, then `message_type`, `payload_size`, and `request_id`.
 
 **IPC Message Types:**
 
@@ -413,20 +426,33 @@ mvgal_error_t mvgal_ipc_receive(mvgal_ipc_message_type_t *type,
 
 MVGAL exposes a character device at `/dev/mvgal0`. Magic number: `'M'` (0x4D).
 
-| IOCTL | Code | Direction | Description |
-|-------|:----:|:---------:|-------------|
-| `MVGAL_IOC_QUERY_VERSION` | `0x00` | Read | Query UAPI version |
-| `MVGAL_IOC_GET_GPU_COUNT` | `0x01` | Read | Get number of GPUs |
-| `MVGAL_IOC_GET_GPU_INFO` | `0x02` | Write-Read | Get GPU info by index |
-| `MVGAL_IOC_ENABLE` | `0x03` | None | Enable MVGAL |
-| `MVGAL_IOC_DISABLE` | `0x04` | None | Disable MVGAL |
-| `MVGAL_IOC_GET_STATS` | `0x05` | Read | Get driver statistics |
-| `MVGAL_IOC_GET_CAPS` | `0x06` | Read | Get capabilities |
-| `MVGAL_IOC_RESCAN` | `0x07` | None | Trigger GPU rescan |
-| `MVGAL_IOC_EXPORT_DMABUF` | `0x10` | Write-Read | Export DMA-BUF |
-| `MVGAL_IOC_IMPORT_DMABUF` | `0x11` | Write-Read | Import DMA-BUF |
-| `MVGAL_IOC_ALLOC_CROSS_VENDOR` | `0x12` | Write-Read | Cross-vendor allocation |
-| `MVGAL_IOC_FREE_CROSS_VENDOR` | `0x13` | Write | Free cross-vendor alloc |
+**13 ioctls are declared; 9 are implemented.** The four DMA-BUF and cross-vendor entries are reserved for future work — they are defined in the header but have no `case` in the `kernel/mvgal_core.c` dispatcher, so they fall through to `default: return -EINVAL`.
+
+| IOCTL | Code | Direction | Implemented | Description |
+|-------|:----:|:---------:|:-----------:|-------------|
+| `MVGAL_IOC_QUERY_VERSION` | `0x00` | Read | ✅ | Query UAPI version |
+| `MVGAL_IOC_GET_GPU_COUNT` | `0x01` | Read | ✅ | Get number of GPUs |
+| `MVGAL_IOC_GET_GPU_INFO` | `0x02` | Write-Read | ✅ | Get GPU info by index |
+| `MVGAL_IOC_ENABLE` | `0x03` | None | ✅ | Enable MVGAL |
+| `MVGAL_IOC_DISABLE` | `0x04` | None | ✅ | Disable MVGAL |
+| `MVGAL_IOC_GET_STATS` | `0x05` | Read | ✅ | Get driver statistics |
+| `MVGAL_IOC_GET_CAPS` | `0x06` | Read | ✅ | Get capabilities |
+| `MVGAL_IOC_RESCAN` | `0x07` | None | ✅ | Trigger GPU rescan |
+| `MVGAL_IOC_NTSYNC_QUERY` | `0x20` | Read | ✅ | Query NTSYNC support |
+| `MVGAL_IOC_EXPORT_DMABUF` | `0x10` | Write-Read | ❌ | Export DMA-BUF (reserved) |
+| `MVGAL_IOC_IMPORT_DMABUF` | `0x11` | Write-Read | ❌ | Import DMA-BUF (reserved) |
+| `MVGAL_IOC_ALLOC_CROSS_VENDOR` | `0x12` | Write-Read | ❌ | Cross-vendor allocation (reserved) |
+| `MVGAL_IOC_FREE_CROSS_VENDOR` | `0x13` | Write | ❌ | Free cross-vendor alloc (reserved) |
+
+`MVGAL_IOC_QUERY_VERSION` reports its feature set through `feature_flags`, which includes `MVGAL_UAPI_FEATURE_FUTURE_DMABUF` and `MVGAL_UAPI_FEATURE_FUTURE_SUBMISSION` — the flags that mark the unimplemented entries above.
+
+### DRM render ioctls
+
+Separately, `kernel/mvgal_core.c` registers a DRM driver with its own table of **10** render ioctls, all `DRM_RENDER_ALLOW`:
+
+`MVGAL_QUERY_DEVICES` · `MVGAL_QUERY_CAPABILITIES` · `MVGAL_SUBMIT_WORKLOAD` · `MVGAL_ALLOC_MEMORY` · `MVGAL_FREE_MEMORY` · `MVGAL_IMPORT_DMABUF` · `MVGAL_EXPORT_DMABUF` · `MVGAL_WAIT_FENCE` · `MVGAL_SIGNAL_FENCE` · `MVGAL_SET_GPU_AFFINITY`
+
+The device registers with `driver_features = DRIVER_RENDER | DRIVER_HAVE_IRQ | DRIVER_GEM` at major/minor `0.2`. Registration is minimal and logical-only — GPU discovery runs in userspace.
 
 ---
 
@@ -438,24 +464,32 @@ MVGAL exposes a character device at `/dev/mvgal0`. Magic number: `'M'` (0x4D).
 | Object path | `/org/mvgal/daemon` |
 | Interface | `org.mvgal.MVGAL` |
 
-**Methods:** `GetGPUCount`, `GetGPUInfo`, `GetStats`, `GetScheduler`, `SetScheduler`, `GetPowerState`, `GetTemperature`, `RescanGPUs`, `Ping`
+**Methods (6):**
 
-**Signals:** `GPUHotplug` (gpu_index, added), `TemperatureWarning` (gpu_index, temperature), `PowerLimitReached` (gpu_index)
+| Method | In | Out | Description |
+|--------|----|-----|-------------|
+| `SetSchedulingMode` | `s` | `` | Set the scheduling strategy |
+| `GetSchedulingMode` | `` | `s` | Get the scheduling strategy |
+| `SetGPUEnabled` | `ub` | `b` | Enable or disable a GPU by index |
+| `GetGPUEnabled` | `u` | `b` | Query whether a GPU is enabled |
+| `TriggerRescan` | `` | `` | Re-enumerate GPUs |
+| `GetStatistics` | `` | `a{sv}` | Get driver statistics |
 
-> **Security (introduced in v0.7.8):** the D-Bus policy restricts `org.mvgal.MVGAL` to root and the `mvgal` group — all other users are denied.
+**Signals (3):** `GPUHotplug` (gpu_index, added) · `TemperatureWarning` (gpu_index, temperature) · `PowerLimitReached` (gpu_index)
+
+There are **no `SD_BUS_PROPERTY` entries** — the vtable contains only the six methods above, so clients should call the getter methods rather than reading properties. `GetStatistics` returns a dictionary (`a{sv}`), not a fixed struct.
+
+> **Security (introduced in v0.7.8):** the D-Bus policy at `/etc/dbus-1/system.d/org.mvgal.MVGAL.conf` restricts `org.mvgal.MVGAL` to root and the `mvgal` group — all other users are denied. An older `data/mvgal-dbus.conf` declaring `com.mvgal.Daemon` was stale and is explicitly removed by the package scriptlet.
 
 ---
 
-## Vulkan Extensions
+## Vulkan
 
-| Extension Name | Version | Description |
-|---------------|:-------:|-------------|
-| `VK_MVGAL_aggregation_device` | 1 | Query MVGAL virtual device properties |
-| `VK_MVGAL_memory_heaps` | 1 | Unified heap (Heaps 0–3) enumeration |
-| `VK_MVGAL_multi_gpu_submit` | 1 | Multi-GPU command buffer submission |
-| `VK_MVGAL_scheduler_hint` | 1 | Per-submission scheduling hint |
-| `VK_MVGAL_frame_pacing` | 1 | Frame pacing control via Vulkan |
-| `VK_MVGAL_p2p_transfer` | 1 | P2P transfer between MVGAL GPUs |
+MVGAL ships **no Vulkan extensions.** The interception layer and the ICD implement the standard Vulkan API and are selected by the loader, not by a `VK_MVGAL_*` extension.
+
+The layer is a standard global layer: `VK_LAYER_MVGAL`, `api_version 1.4.0`, installed to `/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json`, enabled with `MVGAL_VULKAN_ENABLE=1` and disabled with `MVGAL_VULKAN_DISABLE=1`. It intercepts 38 standard entry points including `vkQueueSubmit`, and notably does **not** intercept `vkQueuePresentKHR`, `vkAcquireNextImageKHR`, or `vkWaitForFences`. See [STEAM_INTEGRATION](STEAM_INTEGRATION.md) for the full list and the frame-pacing implications.
+
+> Earlier revisions of this document listed six `VK_MVGAL_*` extensions. No such symbol exists anywhere in the source tree — it was a documentation error, and the table has been removed rather than corrected.
 
 ---
 
@@ -537,6 +571,8 @@ void          mvgal_config_print(void);
 | `MVGAL_ERROR_CANCELLED` | 22 | Operation cancelled |
 | `MVGAL_ERROR_QUEUE_FULL` | 23 | Queue or buffer at capacity |
 
+> **Note on 5 vs 13.** `MVGAL_ERROR_UNSUPPORTED` (5) and `MVGAL_ERROR_NOT_SUPPORTED` (13) are distinct codes with near-identical meanings, and both are defined at `include/mvgal/mvgal_types.h:94-117`. This is a genuine quirk of the source, not a transcription error in this table — code that compares against one will not match the other. It is left as-is rather than silently renumbered, because renumbering would break ABI compatibility.
+
 ---
 
 ## Type Reference
@@ -594,38 +630,89 @@ MVGAL_FEATURE_AI_ACCEL        MVGAL_FEATURE_RAY_TRACING
 
 ## Rust FFI Reference
 
-### `fence_manager`
+Three Rust crates export C-ABI functions for the C++ daemon. **The directory names and the Cargo package names differ:** `safe/fence_manager/` is the `mvgal_fence` package, `safe/memory_safety/` is `mvgal_memory_safety`, and `safe/capability_model/` is `mvgal_capability`. `runtime/safe/lib.rs` re-exports them under their directory names as modules, which is why the two naming schemes appear to collide.
 
-```c
-uint64_t mvgal_fence_create(uint32_t gpu_index);
-void     mvgal_fence_submit(uint64_t handle);
-void     mvgal_fence_signal(uint64_t handle);
-uint32_t mvgal_fence_state(uint64_t handle);
-void     mvgal_fence_reset(uint64_t handle);
-void     mvgal_fence_destroy(uint64_t handle);
+Every entry point is `#[no_mangle] extern "C"` and catches panics at the boundary, so no unwind can cross into C.
+
+### `mvgal_fence` — `safe/fence_manager/`
+
+Handle is `MvgalFenceHandle` = `u64`.
+
+```rust
+pub type MvgalFenceHandle = u64;
+
+pub extern "C" fn mvgal_fence_create(gpu_index: u32) -> MvgalFenceHandle;
+pub extern "C" fn mvgal_fence_submit(handle: MvgalFenceHandle) -> i32;
+pub extern "C" fn mvgal_fence_signal(handle: MvgalFenceHandle) -> i32;
+pub extern "C" fn mvgal_fence_state(handle: MvgalFenceHandle) -> i32;
+pub extern "C" fn mvgal_fence_reset(handle: MvgalFenceHandle) -> i32;
+pub extern "C" fn mvgal_fence_destroy(handle: MvgalFenceHandle) -> i32;
+pub extern "C" fn mvgal_fence_get_last_error() -> i32;
 ```
 
-### `memory_safety`
+`mvgal_fence_create` is the only function that returns a handle; everything else takes one and returns an `i32` status. The handle must be freed with `mvgal_fence_destroy`.
 
-```c
-uint64_t mvgal_mem_track(uint64_t size, uint32_t placement);
-void     mvgal_mem_retain(uint64_t handle);
-void     mvgal_mem_release(uint64_t handle);
-void     mvgal_mem_set_dmabuf(uint64_t handle, int32_t fd);
-uint64_t mvgal_mem_size(uint64_t handle);
-uint32_t mvgal_mem_placement(uint64_t handle);
-uint64_t mvgal_mem_total_system_bytes(void);
-uint64_t mvgal_mem_total_gpu_bytes(void);
+### `mvgal_memory_safety` — `safe/memory_safety/`
+
+Handle is `MvgalAllocHandle` = `u64`.
+
+```rust
+pub type MvgalAllocHandle = u64;
+
+pub extern "C" fn mvgal_mem_track(size_bytes: u64, placement: u32, gpu_index: u32) -> MvgalAllocHandle;
+pub extern "C" fn mvgal_mem_retain(handle: MvgalAllocHandle) -> i32;
+pub extern "C" fn mvgal_mem_release(handle: MvgalAllocHandle) -> i32;
+pub extern "C" fn mvgal_mem_set_dmabuf(handle: MvgalAllocHandle, fd: i32) -> i32;
+pub extern "C" fn mvgal_mem_size(handle: MvgalAllocHandle) -> u64;
+pub extern "C" fn mvgal_mem_placement(handle: MvgalAllocHandle) -> i32;
+pub extern "C" fn mvgal_mem_total_system_bytes() -> u64;
+pub extern "C" fn mvgal_mem_total_gpu_bytes() -> u64;
+pub extern "C" fn mvgal_mem_get_last_error() -> i32;
 ```
 
-### `capability_model`
+`mvgal_mem_track` takes both a `placement` and a `gpu_index`.
 
-```c
-uint64_t    mvgal_cap_compute(const GpuCapability *caps, uint32_t count);
-void        mvgal_cap_free(uint64_t handle);
-uint64_t    mvgal_cap_total_vram(uint64_t handle);
-uint32_t    mvgal_cap_tier(uint64_t handle);
-const char *mvgal_cap_to_json(uint64_t handle);
+### `mvgal_capability` — `safe/capability_model/`
+
+Handle is `MvgalCapHandle` = `*mut AggregateCapability` — a **pointer**, not an integer. `pub struct GpuCapability` is defined at `safe/capability_model/src/lib.rs:37`.
+
+```rust
+pub type MvgalCapHandle = *mut AggregateCapability;
+
+pub unsafe extern "C" fn mvgal_cap_compute(gpus: *const GpuCapability, count: u32) -> MvgalCapHandle;
+pub unsafe extern "C" fn mvgal_cap_free(handle: MvgalCapHandle);
+pub unsafe extern "C" fn mvgal_cap_total_vram(handle: MvgalCapHandle) -> u64;
+pub unsafe extern "C" fn mvgal_cap_tier(handle: MvgalCapHandle) -> i32;
+pub unsafe extern "C" fn mvgal_cap_to_json(handle: MvgalCapHandle, buf: *mut c_char, buf_len: usize) -> i32;
+pub extern "C" fn mvgal_cap_get_last_error() -> i32;
 ```
+
+Notes on the contract: `mvgal_cap_compute` returns a valid **empty** aggregate when `gpus` is null or `count` is 0 — it must still be freed. `mvgal_cap_to_json` writes into a caller-supplied buffer and truncates rather than allocating, returning `-1` for a null handle, null buffer, or zero length. The `capability_model` functions are `unsafe extern` because the caller guarantees the pointer validity; the other two crates are safe.
+
+### `mvgal_ffi_tests` — `safe/ffi_tests/`
+
+A fourth crate exercising the FFI boundary. It imports the packages under their directory-name aliases:
+
+```rust
+use mvgal_capability as capability_model;
+use mvgal_fence as fence_manager;
+use mvgal_memory_safety as memory_safety;
+```
+
+---
+
+## Documentation Corrections in This Revision
+
+The following claims appeared in earlier revisions of this document and have no counterpart in the source. They are recorded here so the removal is traceable rather than silent:
+
+| Removed claim | Reality |
+|---------------|---------|
+| Nine-method D-Bus table (`GetGPUCount`, `GetPowerState`, `Ping`, …) | Six methods, listed above; the signals were correct |
+| `VK_MVGAL_*` Vulkan extensions | No such symbol exists; the layer implements standard Vulkan |
+| IPC client calls without `fd` or `request_id` | Both are required parameters |
+| "12 ioctls" | 13 declared, 9 implemented, plus 10 separate DRM ioctls |
+| "26 headers" (in [MOC](MOC.md)) | 29 headers; this table listed 25 |
+| Rust functions returning `void` from mutating calls | They return `i32` status; `mvgal_mem_track` also takes a `gpu_index` |
+| `GpuCapability`-based `mvgal_cap_to_json` returning `const char *` | Takes a caller-supplied buffer and returns `i32` |
 
 ---

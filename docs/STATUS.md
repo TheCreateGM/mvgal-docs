@@ -1,11 +1,15 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: reference
+mvgal_order: 5
 ---
 
 # MVGAL Project Status
 
-> Source metadata is **0.7.13** (`CMakeLists.txt`, `Cargo.toml`, and version headers). The project changelog documents releases through **0.7.12**; no 0.7.13 release entry is present in the source tree.
+> Source metadata is **0.7.14** (`CMakeLists.txt`, `Cargo.toml`, and version headers). The project changelog documents releases through **0.7.14**.
 
 ## Verified project state
 
@@ -25,9 +29,9 @@ These constraints mean MVGAL does not currently provide general transparent cros
 
 | Surface | State |
 |---------|-------|
-| CMake project and Cargo workspace | 0.7.13 |
-| Source changelog | Releases documented through 0.7.12 |
-| Docs package directory | Contains artifacts named 0.7.13; artifact presence is not a runtime validation result |
+| CMake project and Cargo workspace | 0.7.14 |
+| Source changelog | Releases documented through 0.7.14 |
+| Docs package directory | 0.7.14 RPMs; `.deb`, AppImage, tarball and Flatpak artifacts are still 0.7.13 — see [`package/README.md`](https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md). Artifact presence is not a runtime validation result |
 
 See [CHANGELOG.md](CHANGELOG.md) for the changes documented in the source changelog.
 

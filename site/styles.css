@@ -1320,3 +1320,198 @@ main a { overflow-wrap: anywhere; }
 @media (max-width: 767px) {
   .app-header .header-actions .btn-sm { display: none; }
 }
+
+/* ===================================================================
+   Obsidian constructs rendered by tools/generate_site.py
+   =================================================================== */
+
+/* --- Callouts: > [!warning] etc. ---------------------------------- */
+main .callout {
+  --callout-color: var(--color-accent-fg);
+  --callout-soft: var(--color-accent-subtle);
+  margin: 0 0 16px;
+  border: 1px solid var(--color-border-muted);
+  border-left: 0.25em solid var(--callout-color);
+  border-radius: 6px;
+  background: var(--callout-soft);
+  overflow: hidden;
+}
+main .callout > .callout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--callout-color);
+  background: transparent;
+}
+main .callout > .callout-title .callout-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--color-fg-on-emphasis);
+  background: var(--callout-color);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+main .callout > .callout-body {
+  padding: 0 14px 10px;
+  color: var(--color-fg-default);
+}
+main .callout > .callout-body > :first-child { margin-top: 0; }
+main .callout > .callout-body > :last-child { margin-bottom: 0; }
+main .callout pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border-muted);
+}
+/* Foldable callouts render their title as a <details><summary>. */
+main .callout > details > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: var(--callout-color);
+  cursor: pointer;
+  list-style: none;
+}
+main .callout > details > summary::-webkit-details-marker { display: none; }
+main .callout > details > summary::before {
+  content: "▸";
+  display: inline-block;
+  transition: transform .12s ease;
+}
+main .callout > details[open] > summary::before { transform: rotate(90deg); }
+main .callout > details > .callout-body { padding-top: 0; }
+
+main .callout.note,
+main .callout.abstract,
+main .callout.summary,
+main .callout.tldr { --callout-color: var(--color-accent-fg); --callout-soft: var(--color-accent-subtle); }
+main .callout.info,
+main .callout.todo { --callout-color: #0969da; --callout-soft: #ddf4ff; }
+main .callout.tip,
+main .callout.hint,
+main .callout.success,
+main .callout.check,
+main .callout.done { --callout-color: var(--color-success-emphasis); --callout-soft: var(--color-success-subtle); }
+main .callout.question,
+main .callout.help,
+main .callout.faq { --callout-color: var(--color-attention-fg); --callout-soft: #fff8c5; }
+main .callout.warning,
+main .callout.caution,
+main .callout.attention,
+main .callout.important { --callout-color: var(--color-attention-emphasis); --callout-soft: #fff8c5; }
+main .callout.danger,
+main .callout.failure,
+main .callout.fail,
+main .callout.missing,
+main .callout.error,
+main .callout.bug { --callout-color: var(--color-danger-emphasis); --callout-soft: #ffebe9; }
+main .callout.example,
+main .callout.quote,
+main .callout.cite { --callout-color: var(--color-fg-muted); --callout-soft: var(--color-canvas-subtle); }
+
+@media (prefers-color-scheme: dark) {
+  main .callout.info,
+  main .callout.todo { --callout-color: #58a6ff; --callout-soft: rgba(56, 139, 253, 0.1); }
+  main .callout.question,
+  main .callout.help,
+  main .callout.faq { --callout-color: #d29922; --callout-soft: rgba(210, 153, 34, 0.1); }
+  main .callout.warning,
+  main .callout.caution,
+  main .callout.attention,
+  main .callout.important { --callout-color: #d29922; --callout-soft: rgba(210, 153, 34, 0.1); }
+  main .callout.danger,
+  main .callout.failure,
+  main .callout.fail,
+  main .callout.missing,
+  main .callout.error,
+  main .callout.bug { --callout-color: #f85149; --callout-soft: rgba(248, 81, 73, 0.1); }
+  main .callout.example,
+  main .callout.quote,
+  main .callout.cite { --callout-color: var(--color-fg-muted); --callout-soft: var(--color-canvas-subtle); }
+}
+
+/* --- Mermaid diagrams --------------------------------------------- */
+main .mermaid {
+  margin: 0 0 20px;
+  padding: 16px;
+  border: 1px solid var(--color-border-muted);
+  border-radius: 6px;
+  background: var(--color-canvas-subtle);
+  overflow-x: auto;
+  text-align: center;
+}
+main .mermaid svg { max-width: 100%; height: auto; }
+main .mermaid-error {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-danger-emphasis);
+  border-left-width: 0.25em;
+  border-radius: 6px;
+  background: rgba(248, 81, 73, 0.1);
+  color: var(--color-fg-default);
+  font-size: 14px;
+}
+/* Shown until mermaid has replaced the source text with an <svg>. */
+main .mermaid:not([data-processed]) {
+  color: var(--color-fg-muted);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  white-space: pre;
+}
+
+/* --- Precomputed Dataview results --------------------------------- */
+main .dv-block { margin: 0 0 20px; }
+main .dv-block > .dv-caption {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fg-muted);
+}
+main .dv-table-wrap { overflow-x: auto; max-width: 100%; }
+main table.dv-table { min-width: auto; margin-bottom: 0; }
+main table.dv-table th { white-space: nowrap; }
+main .dv-list { padding-left: 1.4em; }
+main .dv-list li { margin: 3px 0; }
+main .dv-empty {
+  padding: 10px 14px;
+  border: 1px dashed var(--color-border-default);
+  border-radius: 6px;
+  color: var(--color-fg-muted);
+  font-size: 14px;
+  font-style: italic;
+}
+main .dv-note {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-muted);
+  border-left: 0.25em solid var(--color-attention-emphasis);
+  border-radius: 6px;
+  background: rgba(210, 153, 34, 0.1);
+  color: var(--color-fg-default);
+  font-size: 14px;
+}
+
+/* --- Unresolved wikilinks ----------------------------------------- */
+main .wikilink-missing {
+  color: var(--color-danger-fg);
+  text-decoration: underline dotted;
+}
+
+/* --- Links that leave the site (e.g. an unpublished note's source) --- */
+main a.external::after {
+  content: " \2197";              /* north-east arrow */
+  font-size: 0.85em;
+  opacity: 0.65;
+}

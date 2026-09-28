@@ -2,44 +2,86 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
+mvgal_version: "0.7.14"
+mvgal_verified: 2026-09-28
+mvgal_role: index
 ---
 
 # MVGAL Documentation — Map of Content
 
-> **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux · **source version 0.7.13**; documented releases through 0.7.12
->
-> Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
+> [!info] Source version
+> **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
+> Source version **0.7.14**; the source changelog documents releases through **0.7.14**.
+> Every page in this vault was re-verified against the source tree on **2026-09-28**.
+
+Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
 ## 🚀 Start Here
 
 | Note | Purpose |
 |------|---------|
-| [[QUICKSTART]] | Get MVGAL running in 5 minutes |
-| [[INSTALL]] | Full installation guide (COPR, Secure Boot, config) |
-| [[SECURE_BOOT]] | MOK enrollment for Secure Boot systems |
-| [[CHANGELOG]] | Release history through v0.7.12 |
+| [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
+| [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
+| [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.14 |
+| [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
 
 | Note | Purpose |
 |------|---------|
-| [[ARCHITECTURE]] | System architecture overview |
-| [[DESIGN]] | Design document |
-| [[API]] | Public C API reference (26 headers) |
-| [[MEMORY]] | Unified memory management |
-| [[STRATEGIES]] | Scheduling & memory strategies |
-| [[POWER_MANAGEMENT]] | Power management, DVFS, thermal |
-| [[HARDWARE_COMPATIBILITY]] | Supported GPUs and platforms |
-| [[BUILD]] | Build from source (CMake, Meson, Zig, DKMS) |
-| [[STATUS]] | Project status & release history |
-| [[TROUBLESHOOTING]] | Common issues and fixes |
-| [[STEAM_INTEGRATION]] | Steam/Proton integration |
+| [[docs/ARCHITECTURE\|Architecture]] | System architecture overview |
+| [[docs/DESIGN\|Design Document]] | Design decisions, and which ones shipped |
+| [[docs/API\|API Reference]] | Public C API reference (29 headers) |
+| [[docs/MEMORY\|Memory Management]] | Transfer paths, allocation, and what is not implemented |
+| [[docs/STRATEGIES\|Scheduling Strategies]] | The 13 public strategy identifiers |
+| [[docs/POWER_MANAGEMENT\|Power Management]] | Power, DVFS, thermal |
+| [[docs/HARDWARE_COMPATIBILITY\|Hardware Compatibility]] | Supported GPUs and platforms |
+| [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Zig, DKMS) |
+| [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
+| [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
+
+## 🔍 What's New in 0.7.14
+
+> [!tip]
+> The summary below is generated from the source changelog. For the full prose entry see [[docs/CHANGELOG\|Changelog]].
+
+```dataview
+TABLE WITHOUT ID
+  file.link AS "Note",
+  file.mtime AS "Last reviewed"
+FROM "docs"
+WHERE file.mtime >= date(2026-09-27)
+SORT file.mtime DESC
+```
+
+The headline items, all verified in this revision:
+
+- **Secure Boot enrollment could silently fail.** `mokutil --list-new` never matched MVGAL's key name, the password was piped once instead of twice, and `mvgal-enroll-mok` parsed its arguments *before* elevating, so `-p PASSWORD` was dropped. All three are fixed.
+- **The daemon could never `modprobe`.** `CAP_SYS_MODULE` was missing from both `CapabilityBoundingSet` and `AmbientCapabilities`, and the `-` prefix on `ExecStartPre` hid the failure. See [[docs/SECURE_BOOT\|Secure Boot]].
+- **The IPC socket was unreachable for normal users.** It is now `chown`ed to the `mvgal` group (falling back to `video`) before `chmod 0660`. See [[docs/DESIGN\|Design Document]] § Security Model.
+- **The privileged helper's polkit policy was dead.** Ten orphaned action IDs, two of them with `allow_any=yes`, have been replaced by exactly two `auth_admin` actions.
+- **The OpenCL ICD was registered globally with nothing to aggregate.** `%post` now parks `mvgal.icd` when no other ICD is present. See [[docs/INSTALL\|Installation]].
+
+## ⚠️ Read Before Relying on a Feature
+
+Three areas of this documentation describe capability that the current source does **not** deliver. Each page carries an explicit callout.
+
+| Area | Reality | Page |
+|------|---------|------|
+| Vendor VRAM allocation, compute submission | Return `-EOPNOTSUPP` for all four vendor adapters | [[docs/MEMORY\|Memory]] |
+| Frame pacing | `mvgal_fp_submit_frame()` has no call site anywhere in the tree | [[docs/STEAM_INTEGRATION\|Steam]] |
+| Proton plugin, WoW64 thunk | `compat/` and `steam/` have no `CMakeLists.txt`, so they are not built | [[docs/STEAM_INTEGRATION\|Steam]] |
 
 ## 🗂️ All Notes
 
 ```dataview
-TABLE file.mtime as "Modified"
+TABLE WITHOUT ID
+  file.link AS "Note",
+  mvgal_role AS "Role",
+  mvgal_verified AS "Verified"
 FROM "docs"
+WHERE file.name != "CHANGELOG"
 SORT file.name ASC
 ```
 
@@ -52,4 +94,4 @@ SORT file.name ASC
 ```
 
 ---
-*Generated for Obsidian — plugins: Dataview, Obsidian-Git, Templater, Tag Wrangler*
+*Obsidian vault — plugins in use: Dataview (queries above), Tag Wrangler (tag discipline), Obsidian Git (sync), Templater, Linter. Published site is generated by `tools/generate_site.py`, which resolves wikilinks, renders callouts, and precomputes these Dataview queries at build time.*
