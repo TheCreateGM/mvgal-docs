@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.14"
-mvgal_verified: 2026-09-28
+mvgal_version: "0.7.16"
+mvgal_verified: 2026-09-30
 mvgal_role: guide
 mvgal_order: 3
 ---
 
 # MVGAL Secure Boot & MOK Enrollment
 
-> **Implementation status:** Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.14 | **Updated:** September 2026
+**Source version:** 0.7.16 | **Updated:** September 2026
 
 MVGAL ships seven kernel modules. On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 

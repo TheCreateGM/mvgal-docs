@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.14"
-mvgal_verified: 2026-09-28
+mvgal_version: "0.7.16"
+mvgal_verified: 2026-09-30
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **Source version 0.7.14** (CMake/Cargo metadata); the source changelog documents releases through **0.7.14**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
+> **Source version 0.7.16** (CMake/Cargo metadata); the source changelog documents releases through **0.7.16**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
 
 ## 📚 Documentation
 
@@ -34,7 +34,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
 
-MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.14, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
+MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.16, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
 
 ```mermaid
 flowchart TD
@@ -90,7 +90,7 @@ flowchart TD
 
 ## Packages
 
-This workspace includes package artifacts under [`package/`](package/README.md), which currently holds **0.7.14 RPMs** and 0.7.13 builds in the other formats — check the version before installing. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
+This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.16 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
 
 ```bash
 dnf info mvgal
@@ -114,8 +114,11 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
-## Recent source changes (through v0.7.14)
+## Recent source changes (through v0.7.16)
 
+- **Copies no longer double-apply their offsets** (v0.7.15) — `mvgal_memory_copy()` added `src_offset` and `dst_offset` to pointers `mvgal_memory_map()` had already advanced, so any copy at a non-zero offset overran the mapping. Every pre-existing test copied at offset 0, where a double-applied offset is invisible. The same function also tried to unmap buffers it did not own; that cleanup is gone.
+- **Custom splitters can be released** (v0.7.16) — `mvgal_unregister_custom_splitter()` gained its missing public declaration and now matches on all four descriptor fields by value. Registering a splitter still does not make the `custom` strategy selectable; applying one needs a task tree contract that is not defined.
+- **The command DAG is no longer a stub** (v0.7.16) — `mvgal_translate_dag()` deep copies and rewires dependency edges instead of returning its argument unchanged, and `mvgal_emit_dag()` resolves entry points through the device dispatch table and replays in recording order instead of always failing with `VK_ERROR_LAYER_NOT_PRESENT`. The command-buffer-to-DAG map also gained collision probing, and a second recording for the same buffer now destroys the old DAG rather than dropping it.
 - **Secure Boot hardening** — DKMS modules are signed with a per-machine MVGAL key and `mvgal-enroll-mok` verifies enrollment via `mokutil --list-new` (no more false success).
 - **Daemon capability dropping** — `mvgald` clears its capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_SYS_MODULE`. `CAP_SYS_MODULE` was added in 0.7.14: without it the unit's `ExecStartPre` `modprobe` could never succeed.
 - **Restricted D-Bus policy** — `org.mvgal.MVGAL` is now limited to root and the `mvgal` group. The shipped `com.mvgal.policy` declares exactly two actions, both `auth_admin`.

@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Quick Start — MVGAL Documentation">
 <meta name="twitter:description" content="Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Quick Start — MVGAL Documentation", "name": "Quick Start — MVGAL Documentation", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution.", "url": "https://thecreategm.github.io/mvgal-docs/site/quickstart.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL quick start, install MVGAL, COPR install, mvgald daemon, mvgal-info, get started, Fedora RHEL CentOS", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Quick Start — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/quickstart.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Quick Start — MVGAL Documentation", "name": "Quick Start — MVGAL Documentation", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution.", "url": "https://thecreategm.github.io/mvgal-docs/site/quickstart.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL quick start, install MVGAL, COPR install, mvgald daemon, mvgal-info, get started, Fedora RHEL CentOS", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Quick Start — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/quickstart.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -232,11 +232,11 @@
 </div>
 <h1 id="mvgal-quick-start">MVGAL Quick Start</h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.14</strong>; the source changelog documents releases through <strong>0.7.14</strong>. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return <code>-EOPNOTSUPP</code>.</p>
+<p>Source metadata is <strong>0.7.16</strong>; the source changelog documents releases through <strong>0.7.16</strong>. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
 <p>This guide covers package discovery, basic diagnostics, and service startup. Package publication and optional components depend on the distribution and build.</p>
 <h2 id="1-inspect-the-package-or-build">1. Inspect the package or build</h2>
-<p>The documentation workspace's <code>package/</code> directory holds <strong>0.7.14 RPMs</strong> (<code>mvgal</code>, <code>mvgal-dkms</code>, <code>mvgal-user-space</code>, and the source RPM); the <code>.deb</code>, AppImage, tarball and Flatpak files there are still <strong>0.7.13</strong>. Read <a href="https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md"><code>package/README.md</code></a> before installing — it lists the current version of every file. For anything else, build from the <a href="build.html">Build Guide</a>. The source repository includes package definitions, but availability from a remote COPR repository can change.</p>
+<p>The documentation workspace's <code>package/</code> directory holds <strong>0.7.16 builds in every format</strong> — four RPMs (<code>mvgal</code>, <code>mvgal-dkms</code>, <code>mvgal-user-space</code>, and the source RPM), five <code>.deb</code> packages, and the AppImage, tarball and Flatpak bundles. Read <a href="https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md"><code>package/README.md</code></a> before installing; it lists every file with its SHA-256 and flags the prebuilt-module kernel mismatch. For anything else, build from the <a href="build.html">Build Guide</a>. The source repository includes package definitions, but availability from a remote COPR repository can change.</p>
 <p><div class="callout callout-note"><div class="callout-title">Note</div><div class="callout-body"><p>On RPM distros, install <code>mvgal-dkms</code> rather than relying on the prebuilt modules in <code>mvgal</code>. Those are pinned to kernel <code>7.2.7-200.fc44</code> and are ignored on any other kernel.</p></div></div></p>
 <h2 id="2-inspect-gpus">2. Inspect GPUs</h2>
 <pre><code class="language-bash">lspci -nn | grep -Ei 'VGA|3D|Display'
@@ -274,7 +274,7 @@ mvgal-status --once
 <p>See <a href="troubleshooting.html">Troubleshooting</a> for supported diagnostic commands. See <a href="status.html">Status</a> for implementation boundaries and release provenance.</p>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

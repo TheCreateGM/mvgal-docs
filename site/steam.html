@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Steam / Proton — MVGAL Documentation">
 <meta name="twitter:description" content="Steam and Proton helper components, their environment variables, and capability-dependent behavior.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Steam / Proton — MVGAL Documentation", "name": "Steam / Proton — MVGAL Documentation", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior.", "url": "https://thecreategm.github.io/mvgal-docs/site/steam.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Steam / Proton — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/steam.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Steam / Proton — MVGAL Documentation", "name": "Steam / Proton — MVGAL Documentation", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior.", "url": "https://thecreategm.github.io/mvgal-docs/site/steam.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Steam / Proton — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/steam.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -236,7 +236,7 @@
 <li><strong>The Vulkan interception layer is real and installed. The frame pacer is not connected to anything.</strong> <code>mvgal_fp_create()</code> is called once at daemon start and a metrics callback is attached, but <strong>no code in the tree ever calls <code>mvgal_fp_submit_frame()</code></strong>. The pacer maintains statistics; it does not pace any frames.</li>
 <li><strong><code>compat/steam/</code> and <code>compat/wow64/</code> are not built.</strong> Neither directory has a <code>CMakeLists.txt</code>, so the top-level <code>add_subdirectory(compat)</code> is skipped. The Proton plugin and the WoW64 thunk layer in those directories are dormant source.</li>
 </ol></div></div></p>
-<p><strong>Source version:</strong> 0.7.14
+<p><strong>Source version:</strong> 0.7.16
 <strong>Date:</strong> September 2026</p>
 <hr>
 <h2 id="table-of-contents">Table of Contents</h2>
@@ -344,7 +344,7 @@
 }
 </code></pre>
 <p><div class="callout callout-warning"><div class="callout-title">Two problems with the shipped VDFs</div><div class="callout-body"><ul>
-<li>The tool ID and display name still say <strong>0.2.2</strong>, and the tree is at 0.7.14.</li>
+<li>The tool ID and display name still say <strong>0.2.2</strong>, and the tree is at 0.7.16.</li>
 <li><code>MVGAL_NTSYNC_ENABLE</code> is set here but <strong>no code reads it</strong>. The NTSYNC userspace library in <code>compat/ntsync/ntsync.c</code> does not consult any environment variable; it opens <code>/dev/mvgal_ntsync</code> directly.</li>
 </ul></div></div></p>
 <h3 id="23-environment-variables">2.3 Environment Variables</h3>
@@ -1055,7 +1055,7 @@ journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&qu
 </table>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

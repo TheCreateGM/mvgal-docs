@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.14"
-mvgal_verified: 2026-09-28
+mvgal_version: "0.7.16"
+mvgal_verified: 2026-09-30
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [v0.7.16] - 2026-09-30
+
+This release completes the custom splitter API and makes the command DAG translation and emission paths real instead of returning their arguments unchanged. Every item below was found by reading the source rather than from a field report, and each was reproduced before it was changed.
+
+### Fixed
+- **`mvgal_unregister_custom_splitter()` could never succeed.** Splitters were stored **by value** on registration but the removal loop compared the caller's pointer against the address of the internal slot, `&splitters[i]`, which is never exposed to any caller. Because the register path had already copied the struct, no caller could ever supply a pointer that matched, so the function reported the splitter as absent on every call. Removal now matches by value across `analyze`, `split`, `merge` and `user_data` together, which is what distinguishes two registrations that share callbacks but differ in their private state.
+- **`mvgal_unregister_custom_splitter()` was not declared in any public header.** The definition was reachable inside the library but not from outside it, so a program could register a splitter and had no way to release it. The declaration is now in `include/mvgal/mvgal.h` beside its counterpart.
+- **Both custom-splitter entry points discarded their arguments.** `mvgal_register_custom_splitter()` and `mvgal_unregister_custom_splitter()` in `src/userspace/api/mvgal_api.c` cast their context and splitter to `void`, logged that the feature was not yet implemented, and returned `MVGAL_ERROR_NOT_SUPPORTED`. They now validate the context is initialised and the descriptor is non-`NULL`, then forward to the scheduler.
+- **`mvgal_translate_dag()` returned its argument unchanged.** The header promised a translated copy, so callers had every reason to mutate the result; instead they were handed a pointer aliasing the original, and any edit silently corrupted the source DAG. It now deep copies, carrying the queue family, command buffer index and primary flag, and rewires every `deps[]` edge onto the copies through an old-to-new pointer map. An edge whose target is not in the map fails the whole translation rather than dropping a synchronization edge. `vendor_data[]` is reset to `NULL` on the copy, because that array is owned per-vendor data whose lifetime the copy does not share; the recorded `args.barrier.info` stays a borrowed pointer and the caller must keep it alive.
+- **`mvgal_emit_dag()` always failed.** It returned `VK_ERROR_LAYER_NOT_PRESENT` unconditionally, so a translated DAG could never be replayed. It now resolves `vkCmdDraw`, `vkCmdDrawIndirect`, `vkCmdDispatch`, `vkCmdPipelineBarrier2`, `vkCmdPipelineBarrier`, `vkCmdBlitImage`, `vkCmdClearAttachments` and `vkCmdBindPipeline` through the device dispatch table and replays the nodes in recording order. Node types with no captured arguments return a specific error instead of being skipped, because a silent skip renders the wrong frame. A new `mvgal_cmd_dag_begin_for_device()` records which device a command buffer belongs to; the existing `mvgal_cmd_dag_begin()` still works, and emission on a buffer with no known device reports that rather than pretending to succeed.
+- **The command buffer to DAG map leaked on collision.** It was an open-addressed table with no collision handling, so `mvgal_cmd_dag_begin()` overwrote whatever DAG occupied the slot whenever two command buffers hashed alike — losing the live DAG and leaking it. Lookups now probe linearly, `mvgal_cmd_dag_end()` probes instead of hashing once, and beginning a recording for a buffer that already has one destroys the old DAG rather than dropping it.
+
+### Notes
+- **Barrier lowering refuses rather than approximates.** A sync2 dependency carrying a queue family transfer or an image layout transition is rejected with `VK_ERROR_FEATURE_NOT_PRESENT` and an explanation, instead of being flattened into a plain memory barrier. `mvgal_cmd_node_t` records no fields for either, so emitting them would silently under-synchronize. The same applies to mask widening: 64-bit sync2 stage and access masks are widened to their 32-bit equivalents, and any bit above 31 becomes `VK_PIPELINE_STAGE_ALL_COMMANDS` or a read-and-write access mask rather than being truncated away.
+- **`MVGAL_STRATEGY_CUSTOM` still returns `MVGAL_ERROR_NOT_SUPPORTED`.** Registering a splitter works and the descriptor is validated, but applying one to a dequeued workload needs a task tree contract that is not yet defined: how a splitter's `split()` callback obtains sub-workload handles, who owns them, when `merge()` fires, and how a failed child is reported to the parent. That contract is a design decision, not a defect, so no speculative behaviour was added.
+
+### Tests
+- `test_custom_splitter_registration()` registers two splitters whose three callbacks are identical and which differ only in `user_data`, then unregisters them in the order that exposes a matcher ignoring that field: a matcher that compared only the callbacks would release `A` when asked for `B`, and the following release of `A` would then wrongly fail. It also checks that a third release reports `MVGAL_ERROR_NOT_FOUND` rather than success, that a `NULL` argument is rejected by both entry points, that a descriptor missing one callback is rejected outright, and that rejecting it left no stale entry behind — otherwise a stored descriptor with a `NULL` merge pointer would later be dispatched through it. Finally it asserts the three callbacks were never invoked, since no workload has been submitted.
+- `test_translate_deep_copy()` asserts the translated DAG is a distinct object, that dependency edges point at the copies rather than the source nodes, and that mutating the copy leaves the original untouched.
+
+## [v0.7.15] - 2026-09-30
+
+A memory-corruption fix in the buffer copy path, found by reading the code rather than from a field report. Every case below was reproduced before it was changed.
+
+### Fixed
+- **`mvgal_memory_copy()` applied the region offsets twice.** It passed `region->src_offset` and `region->dst_offset` to `mvgal_memory_map()`, whose documented contract is that the returned pointer already points at the requested offset, and then added the same offsets again at the `memcpy`. A copy from source offset 1024 to destination offset 2048 therefore read and wrote at `base + 2 * 2048`, running past the end of the mapping and corrupting whatever followed it in the allocator. `mvgal_memory_copy_gpu()` builds a single region and delegates, so it inherited the fix. The pre-existing copies all used offset 0, which is exactly the case where a double-applied offset is a no-op, so the suite passed while the path was broken.
+- **`mvgal_memory_copy()` unmapped buffers it did not own.** The cleanup was guarded by a test for the `MAPPED` state bit that `mvgal_memory_map()` had already set one line earlier, making it unreachable dead code, and the destination-map failure path tore down a source mapping it had never created. Host-valid buffers carry a `host_ptr` owned by the allocator, so unmapping would have freed memory the buffer still points at.
+
+### Tests
+- `test_memory` gained a case that copies 256 bytes from source offset 1024 to destination offset 2048, then checks both that the payload lands at the destination offset and that exactly 256 bytes anywhere in the destination buffer are non-zero, which is what proves nothing outside the destination window was written. It fails against the previous `mvgal_memory_copy()`.
 
 ## [v0.7.14] - 2026-09-28
 

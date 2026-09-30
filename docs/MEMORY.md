@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, memory, reference]
 aliases: [Memory Management, Memory]
-mvgal_version: "0.7.14"
-mvgal_verified: 2026-09-28
+mvgal_version: "0.7.16"
+mvgal_verified: 2026-09-30
 mvgal_role: reference
 mvgal_order: 9
 ---
 
 # MVGAL Memory Management
 
-> **Implementation status:** Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.14 | **Updated:** September 2026
+**Source version:** 0.7.16 | **Updated:** September 2026
 
 ---
 
@@ -30,6 +30,36 @@ mvgal_order: 9
 MVGAL implements a unified memory manager that abstracts over physically separate GPU VRAM pools. Applications see a single virtual address space; MVGAL handles placement, migration, and synchronization transparently.
 
 ---
+
+## Buffer copies
+
+`mvgal_memory_copy()` executes a single region described by
+`mvgal_memory_copy_region_t` (`include/mvgal/mvgal_memory.h`), which carries the
+source and destination buffers, their respective offsets, and a size.
+`mvgal_memory_copy_gpu()` builds one such region and delegates to it, so the two
+share a code path.
+
+> [!warning] A double-applied offset was corrupting memory here until v0.7.15
+> `mvgal_memory_map()` already returns a pointer advanced by the offset it is
+> given — that is its documented contract, and all three of its branches honour
+> it. The copy path nevertheless added `region->src_offset` and
+> `region->dst_offset` a second time at the `memcpy`, so a copy from source
+> offset 1024 to destination offset 2048 read and wrote at `base + 2 * 2048`,
+> running past the end of the mapping. Every pre-existing test copied at offset
+> 0, which is precisely the case where a double-applied offset is a no-op, so
+> the suite passed against broken code. The offsets are now applied once, by
+> `mvgal_memory_map()`.
+>
+> The same function also unmapped buffers it did not own. Its cleanup was guarded
+> by a test for the `MAPPED` state bit that `mvgal_memory_map()` had already set
+> one line earlier, making it unreachable, and the destination-map failure path
+> tore down a source mapping it had never created. Host-valid buffers carry a
+> `host_ptr` owned by the allocator, so unmapping would have freed memory the
+> buffer still points at.
+>
+> If you are comparing against an older MVGAL, treat every non-zero-offset copy
+> as suspect until you have confirmed the offsets appear exactly once in
+> `src/userspace/memory/memory.c`.
 
 ## Memory Architecture
 

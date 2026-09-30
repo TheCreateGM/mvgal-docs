@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, steam, proton, guide]
 aliases: [Steam Integration, Steam, Proton]
-mvgal_version: "0.7.14"
-mvgal_verified: 2026-09-28
+mvgal_version: "0.7.16"
+mvgal_verified: 2026-09-30
 mvgal_role: guide
 mvgal_order: 15
 ---
@@ -15,7 +15,7 @@ mvgal_order: 15
 > 1. **The Vulkan interception layer is real and installed. The frame pacer is not connected to anything.** `mvgal_fp_create()` is called once at daemon start and a metrics callback is attached, but **no code in the tree ever calls `mvgal_fp_submit_frame()`**. The pacer maintains statistics; it does not pace any frames.
 > 2. **`compat/steam/` and `compat/wow64/` are not built.** Neither directory has a `CMakeLists.txt`, so the top-level `add_subdirectory(compat)` is skipped. The Proton plugin and the WoW64 thunk layer in those directories are dormant source.
 
-**Source version:** 0.7.14
+**Source version:** 0.7.16
 **Date:** September 2026
 
 ---
@@ -115,7 +115,7 @@ The tool manifest is KeyValues, not JSON:
 ```
 
 > [!warning] Two problems with the shipped VDFs
-> - The tool ID and display name still say **0.2.2**, and the tree is at 0.7.14.
+> - The tool ID and display name still say **0.2.2**, and the tree is at 0.7.16.
 > - `MVGAL_NTSYNC_ENABLE` is set here but **no code reads it**. The NTSYNC userspace library in `compat/ntsync/ntsync.c` does not consult any environment variable; it opens `/dev/mvgal_ntsync` directly.
 
 ### 2.3 Environment Variables

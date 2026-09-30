@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Memory Management — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Memory Management — MVGAL Documentation", "name": "Memory Management — MVGAL Documentation", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.", "url": "https://thecreategm.github.io/mvgal-docs/site/memory.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Memory Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/memory.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Memory Management — MVGAL Documentation", "name": "Memory Management — MVGAL Documentation", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.", "url": "https://thecreategm.github.io/mvgal-docs/site/memory.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Memory Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/memory.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -232,9 +232,9 @@
 </div>
 <h1 id="mvgal-memory-management">MVGAL Memory Management</h1>
 <blockquote>
-<p><strong>Implementation status:</strong> Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
-<p><strong>Source version:</strong> 0.7.14 | <strong>Updated:</strong> September 2026</p>
+<p><strong>Source version:</strong> 0.7.16 | <strong>Updated:</strong> September 2026</p>
 <hr>
 <p><div class="callout callout-warning"><div class="callout-title">Read this before the API below</div><div class="callout-body"><p>The public memory API in <code>include/mvgal/mvgal_memory.h</code> is <strong>fully declared and largely implemented</strong>, but several subsystems it describes cannot succeed on present-day hardware. Two facts dominate:</p>
 <ol>
@@ -246,6 +246,30 @@
 <h2 id="overview">Overview</h2>
 <p>MVGAL implements a unified memory manager that abstracts over physically separate GPU VRAM pools. Applications see a single virtual address space; MVGAL handles placement, migration, and synchronization transparently.</p>
 <hr>
+<h2 id="buffer-copies">Buffer copies</h2>
+<p><code>mvgal_memory_copy()</code> executes a single region described by
+<code>mvgal_memory_copy_region_t</code> (<code>include/mvgal/mvgal_memory.h</code>), which carries the
+source and destination buffers, their respective offsets, and a size.
+<code>mvgal_memory_copy_gpu()</code> builds one such region and delegates to it, so the two
+share a code path.</p>
+<p><div class="callout callout-warning"><div class="callout-title">A double-applied offset was corrupting memory here until v0.7.15</div><div class="callout-body"><p><code>mvgal_memory_map()</code> already returns a pointer advanced by the offset it is
+given — that is its documented contract, and all three of its branches honour
+it. The copy path nevertheless added <code>region-&gt;src_offset</code> and
+<code>region-&gt;dst_offset</code> a second time at the <code>memcpy</code>, so a copy from source
+offset 1024 to destination offset 2048 read and wrote at <code>base + 2 * 2048</code>,
+running past the end of the mapping. Every pre-existing test copied at offset
+0, which is precisely the case where a double-applied offset is a no-op, so
+the suite passed against broken code. The offsets are now applied once, by
+<code>mvgal_memory_map()</code>.</p>
+<p>The same function also unmapped buffers it did not own. Its cleanup was guarded
+by a test for the <code>MAPPED</code> state bit that <code>mvgal_memory_map()</code> had already set
+one line earlier, making it unreachable, and the destination-map failure path
+tore down a source mapping it had never created. Host-valid buffers carry a
+<code>host_ptr</code> owned by the allocator, so unmapping would have freed memory the
+buffer still points at.</p>
+<p>If you are comparing against an older MVGAL, treat every non-zero-offset copy
+as suspect until you have confirmed the offsets appear exactly once in
+<code>src/userspace/memory/memory.c</code>.</p></div></div></p>
 <h2 id="memory-architecture">Memory Architecture</h2>
 <div class="mermaid">
 flowchart TD
@@ -660,7 +684,7 @@ enable_prime = true
 </table>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

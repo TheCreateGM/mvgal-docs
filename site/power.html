@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Power Management — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Power Management — MVGAL Documentation", "name": "Power Management — MVGAL Documentation", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.", "url": "https://thecreategm.github.io/mvgal-docs/site/power.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL power management, runtime capability probing, native driver controls", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Power Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/power.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Power Management — MVGAL Documentation", "name": "Power Management — MVGAL Documentation", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.", "url": "https://thecreategm.github.io/mvgal-docs/site/power.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL power management, runtime capability probing, native driver controls", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Power Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/power.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -232,7 +232,7 @@
 </div>
 <h1 id="mvgal-power-management">MVGAL Power Management</h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.14</strong>; the source changelog documents releases through <strong>0.7.14</strong>. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.</p>
+<p>Source metadata is <strong>0.7.16</strong>; the source changelog documents releases through <strong>0.7.16</strong>. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.</p>
 </blockquote>
 <h2 id="what-the-source-provides">What the source provides</h2>
 <p>The repository contains power APIs and managers in <code>include/mvgal/mvgal_power.h</code>, <code>kernel/mvgal_power.c</code>, <code>runtime/daemon/power_manager.cpp</code>, and vendor adapter files under <code>kernel/vendors/</code>. Runtime capability probing determines which controls are reported. In 0.7.12 the changelog notes that DPM capability is no longer inferred from vendor family and requires the relevant sysfs node to exist. Operations without a verified backend report unsupported or record state without claiming that hardware changed.</p>
@@ -252,7 +252,7 @@ mvgal-status --once
 <p>MVGAL does not claim universal dynamic voltage/frequency scaling, GPU parking, fan control, thermal policy, or power-curve support. Native drivers retain ownership of the hardware. Check the probed capability mask and the native driver's documentation before changing power settings.</p>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

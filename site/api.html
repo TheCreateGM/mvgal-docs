@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="API Reference — MVGAL Documentation">
 <meta name="twitter:description" content="Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -232,9 +232,9 @@
 </div>
 <h1 id="mvgal-public-api-reference">MVGAL Public API Reference</h1>
 <blockquote>
-<p><strong>Implementation status:</strong> Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
-<p><strong>Source version:</strong> 0.7.14 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
+<p><strong>Source version:</strong> 0.7.16 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
 <hr>
 <h2 id="public-c-headers">Public C Headers</h2>
 <p>MVGAL currently contains 29 public C headers under <code>include/mvgal/</code>. The main header <code>mvgal.h</code> includes all core subsystem headers.</p>
@@ -406,8 +406,26 @@ mvgal_error_t mvgal_reset_stats(mvgal_context_t context);
 <h3 id="custom-splitters">Custom Splitters</h3>
 <pre><code class="language-c">mvgal_error_t mvgal_register_custom_splitter(mvgal_context_t ctx,
                                               const mvgal_workload_splitter_t *splitter);
-mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx);
+mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx,
+                                                const mvgal_workload_splitter_t *splitter);
 </code></pre>
+<p>Both take the same descriptor. Removal matches on <code>analyze</code>, <code>split</code>, <code>merge</code> and
+<code>user_data</code> together, so a descriptor is the same one that was registered only if
+all four agree; two splitters sharing the three callbacks but holding different
+<code>user_data</code> are distinct and can be removed independently.</p>
+<p>All three callbacks are required. A descriptor with any of them <code>NULL</code> is
+rejected with <code>MVGAL_ERROR_INVALID_ARGUMENT</code> rather than stored, so a later
+strategy dispatch cannot call through a null pointer. Registration does <strong>not</strong>
+check for an existing entry: registering one descriptor twice stores it twice and
+both calls return <code>MVGAL_SUCCESS</code>, while each release consumes one entry, so
+releasing an unbalanced number of times ends in <code>MVGAL_ERROR_NOT_FOUND</code>.</p>
+<p><div class="callout callout-warning"><div class="callout-title">Registering works; applying does not yet</div><div class="callout-body"><p>Both calls succeed and the scheduler validates and retains the descriptor, but
+selecting the <code>custom</code> strategy still returns <code>MVGAL_ERROR_NOT_SUPPORTED</code>
+from <code>mvgal_scheduler_apply_strategy()</code>. No code path reads the registry to
+apply a splitter to a workload, and <code>merge()</code> is never called. A task tree
+contract — how <code>split()</code> obtains sub-workload handles, who owns them, when
+<code>merge()</code> fires, and how a failed child is reported — has not been defined. See
+<a href="strategies.html">Scheduling Strategies</a> § Custom Splitters.</p></div></div></p>
 <h3 id="synchronization-primitives">Synchronization Primitives</h3>
 <pre><code class="language-c">// Fences
 mvgal_error_t mvgal_fence_create(mvgal_context_t ctx, mvgal_fence_t *fence);
@@ -1215,7 +1233,7 @@ use mvgal_memory_safety as memory_safety;
 <hr>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

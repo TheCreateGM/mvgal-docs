@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Scheduling Strategies — MVGAL Documentation">
 <meta name="twitter:description" content="Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Scheduling Strategies — MVGAL Documentation", "name": "Scheduling Strategies — MVGAL Documentation", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.", "url": "https://thecreategm.github.io/mvgal-docs/site/strategies.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL scheduling, GPU scheduler, round-robin, least-load, bin-packing, GPU-aware, hybrid, RLD, REP, PPL, workload distribution, memory heap", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Scheduling Strategies — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/strategies.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Scheduling Strategies — MVGAL Documentation", "name": "Scheduling Strategies — MVGAL Documentation", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.", "url": "https://thecreategm.github.io/mvgal-docs/site/strategies.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL scheduling, GPU scheduler, round-robin, least-load, bin-packing, GPU-aware, hybrid, RLD, REP, PPL, workload distribution, memory heap", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Scheduling Strategies — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/strategies.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -232,7 +232,7 @@
 </div>
 <h1 id="mvgal-scheduling-strategy-identifiers">MVGAL Scheduling Strategy Identifiers</h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.14</strong>; the source changelog documents releases through <strong>0.7.14</strong>. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.</p>
+<p>Source metadata is <strong>0.7.16</strong>; the source changelog documents releases through <strong>0.7.16</strong>. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.</p>
 </blockquote>
 <h2 id="public-c-identifiers">Public C identifiers</h2>
 <p>The enum in <code>include/mvgal/mvgal_types.h</code> declares:</p>
@@ -315,11 +315,52 @@
 <p>The enum labels RLD, REP, and PPL do not mean “render layer distribution,” “replication mode,” or “pipeline parallelism” in the current public header. Older versions of this guide expanded those abbreviations incorrectly.</p>
 <h2 id="cli-configuration">CLI configuration</h2>
 <p>The main CLI documents these strategy arguments in <code>tools/mvgal.c</code>: <code>round_robin</code>, <code>afr</code>, <code>sfr</code>, <code>single</code>/<code>single_gpu</code>, <code>hybrid</code>, <code>task</code>, <code>compute_offload</code>, <code>auto</code>, and <code>custom</code>. Check <code>mvgal --help</code> and <code>mvgal-config --help</code> on the installed version for accepted forms.</p>
+<h2 id="custom-splitters">Custom splitters</h2>
+<p><code>MVGAL_STRATEGY_CUSTOM</code> is a public identifier with a registration API behind it,
+but the two halves are not yet connected. A splitter descriptor
+(<code>mvgal_workload_splitter_t</code>) carries three callbacks — <code>analyze</code>, <code>split</code> and
+<code>merge</code> — plus an opaque <code>user_data</code>:</p>
+<pre><code class="language-c">bool (*analyze)(mvgal_workload_t workload, const mvgal_workload_submit_info_t *info,
+                uint32_t gpu_count, const uint32_t *gpu_indices,
+                void *split_info, void *user_data);
+bool (*split)(mvgal_workload_t workload, void *split_info, uint32_t part_count,
+              mvgal_workload_t *parts, void *user_data);
+bool (*merge)(mvgal_workload_t workload, uint32_t part_count,
+              mvgal_workload_t *parts, void *user_data);
+</code></pre>
+<p><code>mvgal_register_custom_splitter()</code> and <code>mvgal_unregister_custom_splitter()</code> both
+work as of v0.7.16. The scheduler validates the descriptor, rejects any of the
+three callbacks being <code>NULL</code>, and retains a copy. Removal matches on all four
+fields together, so splitters that share callbacks but differ in <code>user_data</code> can
+be released independently.</p>
+<p><div class="callout callout-note"><div class="callout-title">Registration does not deduplicate</div><div class="callout-body"><p>Registering the same descriptor twice stores it twice and reports
+<code>MVGAL_SUCCESS</code> both times; there is no lookup on the register path. Release
+removes one entry per call, so <code>N</code> registrations of one descriptor need <code>N</code>
+releases, and a mismatch on a later call surfaces as
+<code>MVGAL_ERROR_NOT_FOUND</code>. If you register in a reinitialisation path, release
+on the way out rather than relying on the registry to reconcile it. The
+descriptor is a POD, so compare the four fields yourself if you need
+idempotence.</p></div></div>
+<div class="callout callout-warning"><div class="callout-title">The `custom` strategy still cannot be selected</div><div class="callout-body"><p><code>mvgal_scheduler_apply_strategy()</code> returns <code>MVGAL_ERROR_NOT_SUPPORTED</code> for
+<code>MVGAL_STRATEGY_CUSTOM</code>, and no code path reads the registry to apply a
+registered splitter to a dequeued workload. <code>merge()</code> is never invoked. Until
+the task tree contract below is settled, registering a splitter has no effect
+on scheduling.</p></div></div></p>
+<p>The missing contract is not a bug with a known shape. A splitter's <code>split()</code>
+callback returns an array of <code>mvgal_workload_t</code> sub-workload handles, and there
+is currently no public API for a callback to mint one without re-entering
+<code>mvgal_workload_submit()</code>; there is no defined owner of the returned parts, no
+trigger for <code>merge()</code>, and no defined propagation of a failed child to the
+parent. These are design decisions, so none were invented. One structural fact
+does reduce the risk: <code>mvgal_scheduler_apply_strategy()</code> runs on the scheduler
+thread <em>after</em> the workload has been dequeued, so a splitter calling
+<code>mvgal_workload_submit()</code> enqueues children rather than recursing synchronously.</p>
+<p>See <a href="api.html">API Reference</a> § Custom Splitters for the registration calls.</p>
 <h2 id="operational-limits">Operational limits</h2>
 <p>The v0.7.12 source changelog records that vendor <code>submit_cs</code> functions previously returned success without dispatching work. Those functions now return <code>-EOPNOTSUPP</code>, and the scheduler no longer marks such work complete. Kernel submission is not advertised as a supported runtime capability. Treat strategies as configuration/API surface until a real workload and device capability test confirms the selected path.</p>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

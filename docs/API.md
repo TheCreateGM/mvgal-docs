@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, api, reference]
 aliases: [API Reference, API]
-mvgal_version: "0.7.14"
-mvgal_verified: 2026-09-28
+mvgal_version: "0.7.16"
+mvgal_verified: 2026-09-30
 mvgal_role: reference
 mvgal_order: 8
 ---
 
 # MVGAL Public API Reference
 
-> **Implementation status:** Source metadata is 0.7.14. The source changelog documents through 0.7.14. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.14 | **Header:** `#include <mvgal/mvgal.h>`
+**Source version:** 0.7.16 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 
@@ -112,8 +112,30 @@ mvgal_error_t mvgal_reset_stats(mvgal_context_t context);
 ```c
 mvgal_error_t mvgal_register_custom_splitter(mvgal_context_t ctx,
                                               const mvgal_workload_splitter_t *splitter);
-mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx);
+mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx,
+                                                const mvgal_workload_splitter_t *splitter);
 ```
+
+Both take the same descriptor. Removal matches on `analyze`, `split`, `merge` and
+`user_data` together, so a descriptor is the same one that was registered only if
+all four agree; two splitters sharing the three callbacks but holding different
+`user_data` are distinct and can be removed independently.
+
+All three callbacks are required. A descriptor with any of them `NULL` is
+rejected with `MVGAL_ERROR_INVALID_ARGUMENT` rather than stored, so a later
+strategy dispatch cannot call through a null pointer. Registration does **not**
+check for an existing entry: registering one descriptor twice stores it twice and
+both calls return `MVGAL_SUCCESS`, while each release consumes one entry, so
+releasing an unbalanced number of times ends in `MVGAL_ERROR_NOT_FOUND`.
+
+> [!warning] Registering works; applying does not yet
+> Both calls succeed and the scheduler validates and retains the descriptor, but
+> selecting the `custom` strategy still returns `MVGAL_ERROR_NOT_SUPPORTED`
+> from `mvgal_scheduler_apply_strategy()`. No code path reads the registry to
+> apply a splitter to a workload, and `merge()` is never called. A task tree
+> contract — how `split()` obtains sub-workload handles, who owns them, when
+> `merge()` fires, and how a failed child is reported — has not been defined. See
+> [[docs/STRATEGIES|Scheduling Strategies]] § Custom Splitters.
 
 ### Synchronization Primitives
 

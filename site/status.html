@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Project Status — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL source version, release provenance, and verified runtime capability boundaries.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Project Status — MVGAL Documentation", "name": "Project Status — MVGAL Documentation", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries.", "url": "https://thecreategm.github.io/mvgal-docs/site/status.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL status, source version 0.7.14, release provenance, capability boundaries", "datePublished": "2026-08-31", "dateModified": "2026-09-28", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Project Status — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/status.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Project Status — MVGAL Documentation", "name": "Project Status — MVGAL Documentation", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries.", "url": "https://thecreategm.github.io/mvgal-docs/site/status.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL status, source version 0.7.14, release provenance, capability boundaries", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Project Status — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/status.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -50,7 +50,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       
-      <span>v0.7.14</span>
+      <span>v0.7.16</span>
     </a>
   </div>
 </header>
@@ -154,7 +154,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"> Documentation</div>
-  <div class="sb-sub">v0.7.14 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -232,10 +232,15 @@
 </div>
 <h1 id="mvgal-project-status">MVGAL Project Status</h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.14</strong> (<code>CMakeLists.txt</code>, <code>Cargo.toml</code>, and version headers). The project changelog documents releases through <strong>0.7.14</strong>.</p>
+<p>Source metadata is <strong>0.7.16</strong> (<code>CMakeLists.txt</code>, <code>Cargo.toml</code>, and version headers). The project changelog documents releases through <strong>0.7.16</strong>.</p>
 </blockquote>
 <h2 id="verified-project-state">Verified project state</h2>
 <p>MVGAL contains a Linux kernel module, userspace daemon and libraries, API interception components, command-line tools, Rust safety crates, tests, and packaging definitions. Components building successfully does not establish that every runtime feature works on physical hardware.</p>
+<p>Two later releases changed correctness, not capability:</p>
+<ul>
+<li><strong>v0.7.15 fixed a memory-corruption bug in the userspace copy path.</strong> <code>mvgal_memory_copy()</code> applied the region offsets twice, so any copy at a non-zero offset read and wrote past the end of the mapping. The untrusted part of the data path was corrupting memory; it now does not. See <a href="memory.html">Memory Management</a> § Buffer copies.</li>
+<li><strong>v0.7.16 made two API paths real rather than present.</strong> The custom splitter API now registers and releases descriptors, and the command DAG translate and emit paths now produce a deep copy and an actual replay instead of returning their arguments unchanged. Both were previously reachable but non-functional. Note that registering a splitter still does not make the <code>custom</code> strategy selectable; applying one needs a task tree contract that has not been defined. See <a href="strategies.html">Scheduling Strategies</a> § Custom splitters.</li>
+</ul>
 <p>The 0.7.12 source changelog records an audit that removed misleading success behavior:</p>
 <ul>
 <li>The MVGAL PCI driver no longer binds GPU devices; discovery remains read-only so native drivers retain ownership.</li>
@@ -256,15 +261,15 @@
 <tbody>
 <tr>
 <td>CMake project and Cargo workspace</td>
-<td>0.7.14</td>
+<td>0.7.16</td>
 </tr>
 <tr>
 <td>Source changelog</td>
-<td>Releases documented through 0.7.14</td>
+<td>Releases documented through 0.7.16</td>
 </tr>
 <tr>
 <td>Docs package directory</td>
-<td>0.7.14 RPMs; <code>.deb</code>, AppImage, tarball and Flatpak artifacts are still 0.7.13 — see <a href="https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md"><code>package/README.md</code></a>. Artifact presence is not a runtime validation result</td>
+<td>0.7.16 in every format — RPM, <code>.deb</code>, AppImage, tarball and Flatpak. See <a href="https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md"><code>package/README.md</code></a>. Artifact presence is not a runtime validation result</td>
 </tr>
 </tbody>
 </table>
@@ -321,7 +326,7 @@
 <p>Hardware compatibility claims should include the GPU model, native driver, kernel version, reported capability bits, exact test, and result. The repository changelog and tests are the evidence source for code changes; the docs do not claim unrecorded production validation.</p>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.14 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>
