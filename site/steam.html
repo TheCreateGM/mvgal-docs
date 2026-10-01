@@ -24,7 +24,6 @@
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Steam / Proton — MVGAL Documentation", "name": "Steam / Proton — MVGAL Documentation", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior.", "url": "https://thecreategm.github.io/mvgal-docs/site/steam.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Steam / Proton — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/steam.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
 <header class="app-header">
@@ -38,26 +37,26 @@
     <span class="badge-accent badge">Public</span>
   </div>
   <div class="header-search" role="search" aria-label="Search documentation">
-    
+    <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
     <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
     <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
-      
+      <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg>
       <span>Get Started</span>
     </a>
     <a href="changelog.html" class="btn btn-sm">
-      
+      <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
       <span>v0.7.16</span>
     </a>
   </div>
 </header>
 <script>
 (function(){
-  var TOAST_OK = '';
-  var TOAST_INFO = '';
+  var TOAST_OK = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg>';
+  var TOAST_INFO = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg>';
   var toastTimer = null;
   function showToast(msg, kind) {
     kind = kind || 'success';
@@ -77,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.14, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.16, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,43 +152,43 @@
 <div class="app-shell">
 <nav class="sidebar">
 <div class="sidebar-brand">
-  <div class="sb-title"> Documentation</div>
+  <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
   <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
-<a href="index.html"><span>Home</span></a>
-<a href="quickstart.html"><span>Quick Start</span></a>
-<a href="install.html"><span>Installation</span></a>
-<a href="secure_boot.html"><span>Secure Boot</span></a>
-<a href="build.html"><span>Building</span></a>
+<a href="index.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/><path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/></svg><span>Home</span></a>
+<a href="quickstart.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg><span>Quick Start</span></a>
+<a href="install.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="m5 7 3 3 3-3"/><path d="M2.5 12v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/></svg><span>Installation</span></a>
+<a href="secure_boot.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.6 13.5 3.5v4.2c0 3.4-2.3 6.1-5.5 7-3.2-.9-5.5-3.6-5.5-7V3.5Z"/><rect x="6.1" y="7" width="3.8" height="3.2" rx=".6"/></svg><span>Secure Boot</span></a>
+<a href="build.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 2.4a3.4 3.4 0 0 0 4 4l-2.3 2.3-3.4-3.4Z"/><path d="m8.9 5.3-5.6 5.6a1.4 1.4 0 0 0 2 2l5.6-5.6"/></svg><span>Building</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Architecture & Design</div>
 <div class="sidebar-section">
-<a href="architecture.html"><span>Architecture</span></a>
-<a href="design.html"><span>Design</span></a>
+<a href="architecture.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/><rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/><rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/></svg><span>Architecture</span></a>
+<a href="design.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg><span>Design</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Core Subsystems</div>
 <div class="sidebar-section">
-<a href="api.html"><span>API Reference</span></a>
-<a href="strategies.html"><span>Scheduling Strategies</span></a>
-<a href="memory.html"><span>Memory Management</span></a>
-<a href="power.html"><span>Power Management</span></a>
+<a href="api.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.6" width="12.4" height="10.8" rx="1.4"/><path d="m4.6 6.2 2 1.8-2 1.8M8.4 10.4h3"/></svg><span>API Reference</span></a>
+<a href="strategies.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4.4" cy="3.6" r="1.8"/><circle cx="4.4" cy="12.4" r="1.8"/><circle cx="11.6" cy="6.2" r="1.8"/><path d="M4.4 5.4v5.2M11.6 8v1a3 3 0 0 1-3 3H6.2"/></svg><span>Scheduling Strategies</span></a>
+<a href="memory.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1"/><path d="M6.6 1.8v2.6M9.4 1.8v2.6M6.6 11.6v2.6M9.4 11.6v2.6M1.8 6.6h2.6M1.8 9.4h2.6M11.6 6.6h2.6M11.6 9.4h2.6"/></svg><span>Memory Management</span></a>
+<a href="power.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5 3.4 9.2h3.7l-.9 5.3 5.6-7.7H8.1Z"/></svg><span>Power Management</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Ecosystem</div>
 <div class="sidebar-section">
-<a href="hardware.html"><span>Hardware Compatibility</span></a>
-<a href="steam.html" class="active"><span>Steam / Proton</span></a>
+<a href="hardware.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.4" width="12.4" height="4.4" rx="1.1"/><rect x="1.8" y="9.2" width="12.4" height="4.4" rx="1.1"/><path d="M4.2 4.6h.01M4.2 11.4h.01"/></svg><span>Hardware Compatibility</span></a>
+<a href="steam.html" class="active"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.4 5.6h5.2a3.4 3.4 0 0 1 3.3 2.6l.8 3a1.9 1.9 0 0 1-3.2 1.7l-1.5-1.6H5.9l-1.5 1.6a1.9 1.9 0 0 1-3.2-1.7l.8-3a3.4 3.4 0 0 1 3.4-2.6Z"/><path d="M4.6 8.2v1.8M3.7 9.1h1.8M10 8.6h.01M11.6 10h.01"/></svg><span>Steam / Proton</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Project</div>
 <div class="sidebar-section">
-<a href="troubleshooting.html"><span>Troubleshooting</span></a>
-<a href="status.html"><span>Project Status</span></a>
-<a href="changelog.html"><span>Changelog</span></a>
+<a href="troubleshooting.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="8" cy="8.6" rx="3.4" ry="4.4"/><path d="M8 4.2v8.8M4.6 8.6h6.8"/><path d="M4.9 6 2.3 4.4M11.1 6l2.6-1.6M4.9 11.2l-2.6 1.6M11.1 11.2l2.6 1.6"/></svg><span>Troubleshooting</span></a>
+<a href="status.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.6 8.6h2.7l1.5-3.9 2.2 7 1.7-4.4 1 1.3h3.7"/></svg><span>Project Status</span></a>
+<a href="changelog.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.2 4.4 1.4 1.4L6 3.4M7.4 4.6h6.4M2.2 10l1.4 1.4L6 9M7.4 10.2h6.4"/></svg><span>Changelog</span></a>
 </div>
 </nav>
 
@@ -216,30 +215,35 @@
   <a class="crumb-current" href="steam.html">STEAM_INTEGRATION.md</a>
 </div>
 
-    <div class="page-header">
-  <div></div>
+<div class="page-header">
+  <div class="page-header-main">
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.16</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-09-30</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
+    <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>steam</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>proton</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>guide</a></div>
+  </div>
   <div class="page-header-actions">
   <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){});}catch(e){}">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg>
     <span>Copy link</span>
   </button>
   <a href="quickstart.html" class="btn btn-sm btn-primary">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m5 8.2 2.2 2.2L11 6.5"/></svg>
     <span>Quick Start</span>
   </a>
 </div>
 
 </div>
-<h1 id="mvgal-steamproton-integration">MVGAL Steam/Proton Integration</h1>
-<p><div class="callout callout-warning"><div class="callout-title">Read this before the sections below</div><div class="callout-body"><p>Two facts about the current tree govern almost everything on this page:</p>
+<div class="doc-layout">
+<div class="doc-body">
+<h1 id="mvgal-steamproton-integration">MVGAL Steam/Proton Integration<a class="anchor-link" href="#mvgal-steamproton-integration" aria-label="Permalink to this section"></a></h1>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Read this before the sections below</span></div><div class="callout-body"><p>Two facts about the current tree govern almost everything on this page:</p>
 <ol>
 <li><strong>The Vulkan interception layer is real and installed. The frame pacer is not connected to anything.</strong> <code>mvgal_fp_create()</code> is called once at daemon start and a metrics callback is attached, but <strong>no code in the tree ever calls <code>mvgal_fp_submit_frame()</code></strong>. The pacer maintains statistics; it does not pace any frames.</li>
 <li><strong><code>compat/steam/</code> and <code>compat/wow64/</code> are not built.</strong> Neither directory has a <code>CMakeLists.txt</code>, so the top-level <code>add_subdirectory(compat)</code> is skipped. The Proton plugin and the WoW64 thunk layer in those directories are dormant source.</li>
-</ol></div></div></p>
+</ol></div></div>
 <p><strong>Source version:</strong> 0.7.16
 <strong>Date:</strong> September 2026</p>
 <hr>
-<h2 id="table-of-contents">Table of Contents</h2>
+<h2 id="table-of-contents">Table of Contents<a class="anchor-link" href="#table-of-contents" aria-label="Permalink to this section"></a></h2>
 <ol>
 <li><a href="#1-overview">Overview</a></li>
 <li><a href="#2-integration-methods">Integration Methods</a></li>
@@ -256,9 +260,9 @@
 <li><a href="#13-documentation-corrections-in-this-revision">Documentation Corrections in This Revision</a></li>
 </ol>
 <hr>
-<h2 id="1-overview">1. Overview</h2>
+<h2 id="1-overview">1. Overview<a class="anchor-link" href="#1-overview" aria-label="Permalink to this section"></a></h2>
 <p>MVGAL's Steam and Proton integration consists of four pieces. Their status differs sharply:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Component</th>
@@ -303,19 +307,19 @@
 <td><strong>Not installed by any package.</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr>
-<h2 id="2-integration-methods">2. Integration Methods</h2>
-<h3 id="21-steam-launch-options">2.1 Steam Launch Options</h3>
+<h2 id="2-integration-methods">2. Integration Methods<a class="anchor-link" href="#2-integration-methods" aria-label="Permalink to this section"></a></h2>
+<h3 id="21-steam-launch-options">2.1 Steam Launch Options<a class="anchor-link" href="#21-steam-launch-options" aria-label="Permalink to this section"></a></h3>
 <p>The canonical form is built by <code>mvgal_execution_prepare_profile()</code> in <code>src/userspace/execution/execution.c:879</code>:</p>
 <pre><code class="language-bash">MVGAL_ENABLED=1 MVGAL_VULKAN_ENABLE=1 MVGAL_STRATEGY=afr MVGAL_GPUS=0x3 MVGAL_LOW_LATENCY=0 %command%
 </code></pre>
 <p>For manual use in Steam's <em>Properties → Launch Options</em>, the reliable subset is:</p>
 <pre><code class="language-bash">ENABLE_MVGAL=1 MVGAL_VULKAN_ENABLE=1 MVGAL_STRATEGY=afr %command%
 </code></pre>
-<p><div class="callout callout-note"><div class="callout-title">Not every variable the daemon emits is consumed</div><div class="callout-body"><p><code>MVGAL_ENABLED</code>, <code>MVGAL_GPUS</code>, <code>MVGAL_LOW_LATENCY</code>, <code>MVGAL_STEAM_MODE</code> and <code>MVGAL_PROTON_MODE</code> are all written into the child environment by <code>execution.c:857-881</code>, but a search for <code>getenv()</code> across the tree finds <strong>no reader</strong> for <code>MVGAL_GPUS</code>, <code>MVGAL_LOW_LATENCY</code>, <code>MVGAL_STEAM_MODE</code> or <code>MVGAL_PROTON_MODE</code>. <code>ENABLE_MVGAL</code> and <code>MVGAL_STRATEGY</code> <em>are</em> read (<code>compat/steam/mvgal_proton.cpp:89</code>, and the strategy path in the execution and interception layers).</p></div></div></p>
-<h3 id="22-steam-compatibility-tool">2.2 Steam Compatibility Tool</h3>
-<p><div class="callout callout-danger"><div class="callout-title">Not packaged</div><div class="callout-body"><p>The <code>steam/</code> directory ships VDF manifests that would let Steam list MVGAL as a selectable compatibility tool, but <strong>no RPM, deb or flatpak installs them</strong> and nothing copies <code>mvgal_steam_compat.sh</code> into place. The only Steam-facing tooling that is actually installed is <code>mvgal-steam-setup</code> (see <a href="#81-steam-launch-option-writer">§8.1</a>).</p></div></div></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">Not every variable the daemon emits is consumed</span></div><div class="callout-body"><p><code>MVGAL_ENABLED</code>, <code>MVGAL_GPUS</code>, <code>MVGAL_LOW_LATENCY</code>, <code>MVGAL_STEAM_MODE</code> and <code>MVGAL_PROTON_MODE</code> are all written into the child environment by <code>execution.c:857-881</code>, but a search for <code>getenv()</code> across the tree finds <strong>no reader</strong> for <code>MVGAL_GPUS</code>, <code>MVGAL_LOW_LATENCY</code>, <code>MVGAL_STEAM_MODE</code> or <code>MVGAL_PROTON_MODE</code>. <code>ENABLE_MVGAL</code> and <code>MVGAL_STRATEGY</code> <em>are</em> read (<code>compat/steam/mvgal_proton.cpp:89</code>, and the strategy path in the execution and interception layers).</p></div></div>
+<h3 id="22-steam-compatibility-tool">2.2 Steam Compatibility Tool<a class="anchor-link" href="#22-steam-compatibility-tool" aria-label="Permalink to this section"></a></h3>
+<div class="callout callout-danger"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m6 6 4 4M10 6l-4 4"/></svg></span><span class="callout-label">Not packaged</span></div><div class="callout-body"><p>The <code>steam/</code> directory ships VDF manifests that would let Steam list MVGAL as a selectable compatibility tool, but <strong>no RPM, deb or flatpak installs them</strong> and nothing copies <code>mvgal_steam_compat.sh</code> into place. The only Steam-facing tooling that is actually installed is <code>mvgal-steam-setup</code> (see <a href="#81-steam-launch-option-writer">§8.1</a>).</p></div></div>
 <p>To register the tool manually, copy the directory into Steam's compatibility-tools location and restart Steam:</p>
 <pre><code class="language-bash">cp -r steam/ ~/.steam/root/compatibilitytools.d/mvgal/
 </code></pre>
@@ -343,13 +347,13 @@
     }
 }
 </code></pre>
-<p><div class="callout callout-warning"><div class="callout-title">Two problems with the shipped VDFs</div><div class="callout-body"><ul>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Two problems with the shipped VDFs</span></div><div class="callout-body"><ul>
 <li>The tool ID and display name still say <strong>0.2.2</strong>, and the tree is at 0.7.16.</li>
 <li><code>MVGAL_NTSYNC_ENABLE</code> is set here but <strong>no code reads it</strong>. The NTSYNC userspace library in <code>compat/ntsync/ntsync.c</code> does not consult any environment variable; it opens <code>/dev/mvgal_ntsync</code> directly.</li>
-</ul></div></div></p>
-<h3 id="23-environment-variables">2.3 Environment Variables</h3>
+</ul></div></div>
+<h3 id="23-environment-variables">2.3 Environment Variables<a class="anchor-link" href="#23-environment-variables" aria-label="Permalink to this section"></a></h3>
 <p>Variables with a real consumer:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Variable</th>
@@ -501,12 +505,12 @@
 <td>Per-API-family control</td>
 </tr>
 </tbody>
-</table>
-<p><div class="callout callout-note"><div class="callout-title">The layer toggle is the loader&#39;s, not MVGAL&#39;s</div><div class="callout-body"><p><code>MVGAL_VULKAN_ENABLE</code> and <code>MVGAL_VULKAN_DISABLE</code> never appear in a <code>getenv()</code> call in MVGAL's own code. They are honoured by the <strong>Vulkan loader</strong>, which reads the <code>enable_environment</code> and <code>disable_environment</code> blocks of the layer manifest (<code>manifest.json.in:13-18</code>). <code>execution.c:858,879</code> writes them into the child environment; the loader is what acts on them.</p></div></div>
-<div class="callout callout-warning"><div class="callout-title">Removed in this revision</div><div class="callout-body"><p>The previous version of this page listed <code>MVGAL_GPU_MASK</code> and <code>MVGAL_LOG_PATH</code>. <strong>Neither is read anywhere.</strong> A <code>getenv()</code> search returns zero hits for both. <code>MVGAL_GPU_MASK</code> is <em>exported</em> by <code>steam/mvgal_steam_compat.sh</code> and appears in <code>steam/README.md</code>, but nothing consumes it. The GPU list is carried by <code>MVGAL_GPUS</code>, which <code>execution.c</code> emits but — as noted above — also nothing reads yet.</p></div></div></p>
+</table></div>
+<p><div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">The layer toggle is the loader&#39;s, not MVGAL&#39;s</span></div><div class="callout-body"><p><code>MVGAL_VULKAN_ENABLE</code> and <code>MVGAL_VULKAN_DISABLE</code> never appear in a <code>getenv()</code> call in MVGAL's own code. They are honoured by the <strong>Vulkan loader</strong>, which reads the <code>enable_environment</code> and <code>disable_environment</code> blocks of the layer manifest (<code>manifest.json.in:13-18</code>). <code>execution.c:858,879</code> writes them into the child environment; the loader is what acts on them.</p></div></div>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Removed in this revision</span></div><div class="callout-body"><p>The previous version of this page listed <code>MVGAL_GPU_MASK</code> and <code>MVGAL_LOG_PATH</code>. <strong>Neither is read anywhere.</strong> A <code>getenv()</code> search returns zero hits for both. <code>MVGAL_GPU_MASK</code> is <em>exported</em> by <code>steam/mvgal_steam_compat.sh</code> and appears in <code>steam/README.md</code>, but nothing consumes it. The GPU list is carried by <code>MVGAL_GPUS</code>, which <code>execution.c</code> emits but — as noted above — also nothing reads yet.</p></div></div></p>
 <hr>
-<h2 id="3-vulkan-layer-integration">3. Vulkan Layer Integration</h2>
-<h3 id="31-layer-discovery">3.1 Layer Discovery</h3>
+<h2 id="3-vulkan-layer-integration">3. Vulkan Layer Integration<a class="anchor-link" href="#3-vulkan-layer-integration" aria-label="Permalink to this section"></a></h2>
+<h3 id="31-layer-discovery">3.1 Layer Discovery<a class="anchor-link" href="#31-layer-discovery" aria-label="Permalink to this section"></a></h3>
 <p>MVGAL ships a global implicit layer. The manifest is generated from <code>src/userspace/intercept/vulkan/manifest.json.in</code> and installed to <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code>:</p>
 <pre><code class="language-json">{
     &quot;file_format_version&quot;: &quot;1.0.0&quot;,
@@ -526,8 +530,8 @@
 }
 </code></pre>
 <p>The layer declares <code>"type": "GLOBAL"</code> and is nonetheless installed into <code>implicit_layer.d/</code>. That is deliberate — <code>packaging/rpm/mvgal.spec:787-798</code> explains that the layer only intercepts and never stands in for a <code>VkPhysicalDevice</code>, so it does not need to be explicitly requested.</p>
-<p><div class="callout callout-info"><div class="callout-title">The layer is not the ICD</div><div class="callout-body"><p>The Vulkan <strong>ICD</strong> is a separate artifact, installed at <code>/usr/share/vulkan/mvgal/mvgal_icd.json</code> and <strong>opt-in</strong>. See <em>Enable the Vulkan ICD (opt-in)</em> in <a href="install.html">INSTALL.md</a>.</p></div></div></p>
-<h3 id="32-intercepted-functions">3.2 Intercepted Functions</h3>
+<div class="callout callout-info"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg></span><span class="callout-label">The layer is not the ICD</span></div><div class="callout-body"><p>The Vulkan <strong>ICD</strong> is a separate artifact, installed at <code>/usr/share/vulkan/mvgal/mvgal_icd.json</code> and <strong>opt-in</strong>. See <em>Enable the Vulkan ICD (opt-in)</em> in <a href="install.html">INSTALL.md</a>.</p></div></div>
+<h3 id="32-intercepted-functions">3.2 Intercepted Functions<a class="anchor-link" href="#32-intercepted-functions" aria-label="Permalink to this section"></a></h3>
 <p>The layer defines exactly 38 entry points.</p>
 <p><strong>Instance level</strong>
 <code>vkCreateInstance</code>, <code>vkDestroyInstance</code>, <code>vkGetInstanceProcAddr</code>,
@@ -554,16 +558,16 @@
 <code>vkGetPhysicalDeviceMemoryProperties</code>, <code>vkGetPhysicalDeviceQueueFamilyProperties</code></p>
 <p><strong>Extension / layer enumeration</strong>
 <code>vkEnumerateDeviceExtensionProperties</code>, <code>vkEnumerateDeviceLayerProperties</code></p>
-<p><div class="callout callout-important"><div class="callout-title">`vkQueueSubmit` is intercepted. `vkQueuePresentKHR` is not.</div><div class="callout-body"><p><code>vkQueuePresentKHR</code>, <code>vkQueueSubmit2</code>, <code>vkAcquireNextImageKHR</code> and <code>vkWaitForFences</code> appear <strong>nowhere</strong> in <code>src/userspace/intercept/vulkan/</code>. Anything in this document that described a presentation-path hook was wrong. <code>vkQueueWaitIdle</code> exists only in the <em>ICD</em> (<code>src/userspace/vulkan_icd/icd_entry.c</code>), which is a different component.</p></div></div></p>
-<h3 id="33-what-the-layer-does-at-submit">3.3 What the Layer Does at Submit</h3>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">`vkQueueSubmit` is intercepted. `vkQueuePresentKHR` is not.</span></div><div class="callout-body"><p><code>vkQueuePresentKHR</code>, <code>vkQueueSubmit2</code>, <code>vkAcquireNextImageKHR</code> and <code>vkWaitForFences</code> appear <strong>nowhere</strong> in <code>src/userspace/intercept/vulkan/</code>. Anything in this document that described a presentation-path hook was wrong. <code>vkQueueWaitIdle</code> exists only in the <em>ICD</em> (<code>src/userspace/vulkan_icd/icd_entry.c</code>), which is a different component.</p></div></div>
+<h3 id="33-what-the-layer-does-at-submit">3.3 What the Layer Does at Submit<a class="anchor-link" href="#33-what-the-layer-does-at-submit" aria-label="Permalink to this section"></a></h3>
 <p><code>vkQueueSubmit</code> is the layer's real scheduling hook. The previous version of this page showed an implementation calling <code>mvgal_layer_get_context()</code>, <code>mvgal_scheduler_select_gpu()</code> and <code>mvgal_ipc_send_submit()</code> — <strong>none of those symbols exist</strong>. The real handler selects a GPU from the active strategy, records telemetry, and forwards to the next layer in the chain via the loader's dispatch table.</p>
 <p>There is no <code>ctx-&gt;next_vkQueueSubmit</code> member: the layer resolves the next hop through the standard <code>loaderGetNextLayerProcAddr</code> mechanism.</p>
 <hr>
-<h2 id="4-frame-pacer">4. Frame Pacer</h2>
-<h3 id="41-purpose">4.1 Purpose</h3>
+<h2 id="4-frame-pacer">4. Frame Pacer<a class="anchor-link" href="#4-frame-pacer" aria-label="Permalink to this section"></a></h2>
+<h3 id="41-purpose">4.1 Purpose<a class="anchor-link" href="#41-purpose" aria-label="Permalink to this section"></a></h3>
 <p>Multi-GPU AFR can cause microstutter if frames are delivered at uneven intervals. The frame pacer is intended to hold completed frames and release them at consistent intervals.</p>
-<p><div class="callout callout-danger"><div class="callout-title">The pacer is not connected to the submission path</div><div class="callout-body"><p><code>runtime/daemon/daemon.cpp:208</code> calls <code>mvgal_fp_create(60)</code> — a <strong>hardcoded 60 Hz</strong>, not a detected refresh rate. <code>runtime/daemon/metrics_collector.cpp:64</code> attaches a statistics callback. <strong>That is the complete set of callers.</strong> A tree-wide search for <code>mvgal_fp_submit_frame</code> finds only its definition in <code>steam/mvgal_frame_pacer.c:217</code> and its declaration in the header — no call site anywhere, including tests. No frame is ever placed in the ring buffer, so <code>frames_paced</code>, <code>frames_dropped</code> and jitter stay at zero in every live deployment.</p></div></div></p>
-<h3 id="42-architecture">4.2 Architecture</h3>
+<div class="callout callout-danger"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m6 6 4 4M10 6l-4 4"/></svg></span><span class="callout-label">The pacer is not connected to the submission path</span></div><div class="callout-body"><p><code>runtime/daemon/daemon.cpp:208</code> calls <code>mvgal_fp_create(60)</code> — a <strong>hardcoded 60 Hz</strong>, not a detected refresh rate. <code>runtime/daemon/metrics_collector.cpp:64</code> attaches a statistics callback. <strong>That is the complete set of callers.</strong> A tree-wide search for <code>mvgal_fp_submit_frame</code> finds only its definition in <code>steam/mvgal_frame_pacer.c:217</code> and its declaration in the header — no call site anywhere, including tests. No frame is ever placed in the ring buffer, so <code>frames_paced</code>, <code>frames_dropped</code> and jitter stay at zero in every live deployment.</p></div></div>
+<h3 id="42-architecture">4.2 Architecture<a class="anchor-link" href="#42-architecture" aria-label="Permalink to this section"></a></h3>
 <div class="mermaid">
 flowchart TD
     Caller["mvgal_fp_submit_frame(fp, frame_id, gpu_index)&lt;br/&gt;(defined, never called)"]
@@ -577,14 +581,14 @@ flowchart TD
     REL --&gt; STAT["frames_paced++&lt;br/&gt;jitter sample recorded"]
 </div>
 
-<p><div class="callout callout-note"><div class="callout-title">&quot;vsync&quot; here is a software interval, not a hardware signal</div><div class="callout-body"><p>The target presentation time is computed as <code>last_present_ns + frame_interval_ns</code>, where <code>frame_interval_ns = 1000000000ULL / refresh_hz</code>, and the release thread waits with <code>nanosleep()</code> (<code>steam/mvgal_frame_pacer.c:90-96, 231-247</code>). There is <strong>no <code>drmWaitForVBlank()</code> call, no DRM page-flip wait, and no presentation semaphore</strong> anywhere in the pacer. The previous diagram's "Wait for next vsync boundary → Signal presentation semaphore" described a mechanism that was never written.</p></div></div></p>
-<h3 id="43-configuration">4.3 Configuration</h3>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">&quot;vsync&quot; here is a software interval, not a hardware signal</span></div><div class="callout-body"><p>The target presentation time is computed as <code>last_present_ns + frame_interval_ns</code>, where <code>frame_interval_ns = 1000000000ULL / refresh_hz</code>, and the release thread waits with <code>nanosleep()</code> (<code>steam/mvgal_frame_pacer.c:90-96, 231-247</code>). There is <strong>no <code>drmWaitForVBlank()</code> call, no DRM page-flip wait, and no presentation semaphore</strong> anywhere in the pacer. The previous diagram's "Wait for next vsync boundary → Signal presentation semaphore" described a mechanism that was never written.</p></div></div>
+<h3 id="43-configuration">4.3 Configuration<a class="anchor-link" href="#43-configuration" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">runtime/daemon/daemon.cpp:208
     m_frame_pacer = mvgal_fp_create(60);   /* 60 Hz, hardcoded */
 </code></pre>
-<p><div class="callout callout-warning"><div class="callout-title">`MVGAL_FRAME_PACING` is never read</div><div class="callout-body"><p>The variable is exported by <code>tools/mvgal-steam-setup.c:338</code>, suggested by <code>tools/mvgal-compat.c:89</code>, and set by <code>steam/mvgal_steam_compat.sh</code>. A <code>getenv("MVGAL_FRAME_PACING")</code> search returns <strong>zero hits</strong>. Setting it changes nothing today. There is also <strong>no <code>MVGAL_REFRESH_HZ</code></strong> variable — <code>mvgal_fp_set_refresh_hz()</code> exists in the API but is called from nowhere.</p>
-<p>The only frame-pacing variable with a real reader is <code>MVGAL_FRAME_PACING_DEBUG</code> (<code>steam/mvgal_frame_pacer.c:156</code>).</p></div></div></p>
-<h3 id="44-frame-pacer-api">4.4 Frame Pacer API</h3>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">`MVGAL_FRAME_PACING` is never read</span></div><div class="callout-body"><p>The variable is exported by <code>tools/mvgal-steam-setup.c:338</code>, suggested by <code>tools/mvgal-compat.c:89</code>, and set by <code>steam/mvgal_steam_compat.sh</code>. A <code>getenv("MVGAL_FRAME_PACING")</code> search returns <strong>zero hits</strong>. Setting it changes nothing today. There is also <strong>no <code>MVGAL_REFRESH_HZ</code></strong> variable — <code>mvgal_fp_set_refresh_hz()</code> exists in the API but is called from nowhere.</p>
+<p>The only frame-pacing variable with a real reader is <code>MVGAL_FRAME_PACING_DEBUG</code> (<code>steam/mvgal_frame_pacer.c:156</code>).</p></div></div>
+<h3 id="44-frame-pacer-api">4.4 Frame Pacer API<a class="anchor-link" href="#44-frame-pacer-api" aria-label="Permalink to this section"></a></h3>
 <p>This block is correct as published and matches <code>steam/mvgal_frame_pacer.h</code> (SPDX MIT) exactly:</p>
 <pre><code class="language-c">/* Initialize frame pacer (0 selects MVGAL_FP_DEFAULT_HZ) */
 mvgal_frame_pacer_t *pacer = mvgal_fp_create(144);  /* 144 Hz */
@@ -599,8 +603,8 @@ mvgal_fp_get_stats(pacer, &amp;frames_paced, &amp;frames_dropped, &amp;avg_jitte
 </code></pre>
 <p>The full surface also includes <code>mvgal_fp_destroy()</code>, <code>mvgal_fp_set_refresh_hz()</code> and <code>mvgal_fp_set_stats_callback()</code>.</p>
 <hr>
-<h2 id="5-alternate-frame-rendering-afr">5. Alternate Frame Rendering (AFR)</h2>
-<h3 id="51-how-afr-works-with-mvgal">5.1 How AFR Works with MVGAL</h3>
+<h2 id="5-alternate-frame-rendering-afr">5. Alternate Frame Rendering (AFR)<a class="anchor-link" href="#5-alternate-frame-rendering-afr" aria-label="Permalink to this section"></a></h2>
+<h3 id="51-how-afr-works-with-mvgal">5.1 How AFR Works with MVGAL<a class="anchor-link" href="#51-how-afr-works-with-mvgal" aria-label="Permalink to this section"></a></h3>
 <pre><code>Frame 0: GPU 0 renders
 Frame 1: GPU 1 renders
 Frame 2: GPU 0 renders
@@ -608,12 +612,12 @@ Frame 3: GPU 1 renders
 ...
 </code></pre>
 <p><code>afr</code> is strategy value <code>1</code> in <code>mvgal_distribution_strategy_t</code> (<code>include/mvgal/mvgal_types.h:70</code>).</p>
-<h3 id="52-frame-synchronization">5.2 Frame Synchronization</h3>
-<p><div class="callout callout-warning"><div class="callout-title">There is no MVGAL AFR coordinator in this tree</div><div class="callout-body"><p>The previous version of this section showed a <code>struct afr_sync</code> and an <code>afr_submit_frame()</code> function. <strong>Neither exists.</strong> <code>steam/README.md</code> lists a file <code>steam/mvgal_afr.c</code>; that file is not present. The 38 intercepted Vulkan entry points include <code>vkQueueSubmit</code> but no present-path or per-frame-acquire hook, so the layer has no place to sequence alternating frames today.</p></div></div></p>
+<h3 id="52-frame-synchronization">5.2 Frame Synchronization<a class="anchor-link" href="#52-frame-synchronization" aria-label="Permalink to this section"></a></h3>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">There is no MVGAL AFR coordinator in this tree</span></div><div class="callout-body"><p>The previous version of this section showed a <code>struct afr_sync</code> and an <code>afr_submit_frame()</code> function. <strong>Neither exists.</strong> <code>steam/README.md</code> lists a file <code>steam/mvgal_afr.c</code>; that file is not present. The 38 intercepted Vulkan entry points include <code>vkQueueSubmit</code> but no present-path or per-frame-acquire hook, so the layer has no place to sequence alternating frames today.</p></div></div>
 <p>What the layer <em>can</em> do at <code>vkQueueSubmit</code> is choose which GPU receives the work, according to the active strategy. That is the whole of the implemented AFR behaviour.</p>
-<h3 id="53-strategy-names">5.3 Strategy Names</h3>
+<h3 id="53-strategy-names">5.3 Strategy Names<a class="anchor-link" href="#53-strategy-names" aria-label="Permalink to this section"></a></h3>
 <p><code>afr</code> is one of <strong>three different strategy vocabularies</strong> in this project, and they do not agree:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Source</th>
@@ -638,24 +642,24 @@ Frame 3: GPU 1 renders
 <td><code>single</code>, <code>single_gpu</code>, <code>hybrid</code>, <code>task</code>, <code>afr</code>, <code>sfr</code>, <code>compute</code>, <code>compute_offload</code>, <code>round_robin</code>, <code>auto</code>, <code>custom</code></td>
 </tr>
 </tbody>
-</table>
-<p><div class="callout callout-caution"><div class="callout-title">The C enum&#39;s `single_gpu` is not accepted by the privileged helper&#39;s `single` alias set, and the helper additionally accepts `compute`, which the C enum calls `compute_offload`. Use the **C enum names** in configuration; use the helper only for the operations it implements.</div><div class="callout-body"></div></div></p>
-<h3 id="54-afr-configuration">5.4 AFR Configuration</h3>
+</table></div>
+<div class="callout callout-caution"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">The C enum&#39;s `single_gpu` is not accepted by the privileged helper&#39;s `single` alias set, and the helper additionally accepts `compute`, which the C enum calls `compute_offload`. Use the **C enum names** in configuration; use the helper only for the operations it implements.</span></div><div class="callout-body"></div></div>
+<h3 id="54-afr-configuration">5.4 AFR Configuration<a class="anchor-link" href="#54-afr-configuration" aria-label="Permalink to this section"></a></h3>
 <p><code>[afr]</code> in <code>config/mvgal.conf</code> has exactly two keys:</p>
 <pre><code class="language-ini"># /etc/mvgal/mvgal.conf
 [afr]
 enable_sync = true
 sync_timeout_ms = 16
 </code></pre>
-<p><div class="callout callout-warning"><div class="callout-title">`max_latency` does not exist</div><div class="callout-body"><p>The previous version of this page listed <code>max_latency = 3</code>. A tree-wide search finds zero occurrences. It was removed. The <code>max_latency_ms</code> key that appears in <code>steam/steam_profiles/baldurs_gate3.conf</code> is read by the daemon-side profile loader, not by <code>config/mvgal.conf</code> — see <a href="#82-per-game-profiles">§8.2</a>.</p></div></div></p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">`max_latency` does not exist</span></div><div class="callout-body"><p>The previous version of this page listed <code>max_latency = 3</code>. A tree-wide search finds zero occurrences. It was removed. The <code>max_latency_ms</code> key that appears in <code>steam/steam_profiles/baldurs_gate3.conf</code> is read by the daemon-side profile loader, not by <code>config/mvgal.conf</code> — see <a href="#82-per-game-profiles">§8.2</a>.</p></div></div>
 <hr>
-<h2 id="6-ntsync">6. NTSYNC</h2>
-<h3 id="61-what-ntsync-is">6.1 What NTSYNC Is</h3>
+<h2 id="6-ntsync">6. NTSYNC<a class="anchor-link" href="#6-ntsync" aria-label="Permalink to this section"></a></h2>
+<h3 id="61-what-ntsync-is">6.1 What NTSYNC Is<a class="anchor-link" href="#61-what-ntsync-is" aria-label="Permalink to this section"></a></h3>
 <p>NTSYNC is a Wine synchronization mechanism that maps Windows NT kernel objects — events, semaphores, mutexes, timers, fences — onto Linux primitives. Games built for Windows assume it exists, and produce wrong behaviour or refuse to start without it.</p>
-<h3 id="62-mvgals-ntsync-implementation">6.2 MVGAL's NTSYNC Implementation</h3>
+<h3 id="62-mvgals-ntsync-implementation">6.2 MVGAL's NTSYNC Implementation<a class="anchor-link" href="#62-mvgals-ntsync-implementation" aria-label="Permalink to this section"></a></h3>
 <p>This is real and it is kernel-side, not the pseudo-code the previous version of this page showed.</p>
 <p><strong>Kernel module</strong> <code>kernel/mvgal_ntsync.c</code> registers a character device at <strong><code>/dev/mvgal_ntsync</code></strong>. It defines 15 ioctls under magic <code>'N'</code>:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Range</th>
@@ -680,9 +684,9 @@ sync_timeout_ms = 16
 <td><code>WAIT_MULTI</code> (16) — backs <code>ntsync_wait_multi()</code></td>
 </tr>
 </tbody>
-</table>
-<p><div class="callout callout-note"><div class="callout-title">The ring buffer is 8 frames deep</div><div class="callout-body"><p><code>MVGAL_FP_MAX_FRAMES</code> is <code>8</code> and <code>MVGAL_FP_DEFAULT_HZ</code> is <code>60</code> (<code>steam/mvgal_frame_pacer.c:30-31</code>). Both are private to the <code>.c</code> file, not exported in the header. A submit into a full ring increments <code>frames_dropped</code> and returns <code>-1</code>.</p></div></div>
-<div class="callout callout-note"><div class="callout-title">A separate ioctl namespace</div><div class="callout-body"><p>These <code>'N'</code>-magic ioctls are distinct from the <code>'M'</code>-magic <code>MVGAL_IOC_*</code> set on <code>/dev/mvgal0</code>. <code>MVGAL_IOC_NTSYNC_QUERY</code> (<code>_IOR('M', 0x20, struct mvgal_uapi_ntsync_info)</code>) is the capability query that reports whether the NTSYNC module initialised; the object operations live on the dedicated <code>/dev/mvgal_ntsync</code> node.</p></div></div></p>
+</table></div>
+<p><div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">The ring buffer is 8 frames deep</span></div><div class="callout-body"><p><code>MVGAL_FP_MAX_FRAMES</code> is <code>8</code> and <code>MVGAL_FP_DEFAULT_HZ</code> is <code>60</code> (<code>steam/mvgal_frame_pacer.c:30-31</code>). Both are private to the <code>.c</code> file, not exported in the header. A submit into a full ring increments <code>frames_dropped</code> and returns <code>-1</code>.</p></div></div>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">A separate ioctl namespace</span></div><div class="callout-body"><p>These <code>'N'</code>-magic ioctls are distinct from the <code>'M'</code>-magic <code>MVGAL_IOC_*</code> set on <code>/dev/mvgal0</code>. <code>MVGAL_IOC_NTSYNC_QUERY</code> (<code>_IOR('M', 0x20, struct mvgal_uapi_ntsync_info)</code>) is the capability query that reports whether the NTSYNC module initialised; the object operations live on the dedicated <code>/dev/mvgal_ntsync</code> node.</p></div></div></p>
 <p><strong>Userspace library</strong> <code>compat/ntsync/ntsync.c</code> (419 lines, MIT) wraps the ioctls. It is compiled into <code>libmvgal</code> by <code>src/userspace/CMakeLists.txt:104</code> and into the unit-test target by <code>src/tests/tests/unit/CMakeLists.txt:267</code>.</p>
 <pre><code class="language-c">/* compat/ntsync/ntsync.h */
 int ntsync_init(void);                                    /* opens /dev/mvgal_ntsync */
@@ -705,19 +709,19 @@ int ntsync_release_mutex(int handle);
 int ntsync_close(int handle);
 </code></pre>
 <p><code>ntsync_wait_multi()</code> is the <code>WaitForMultipleObjects</code>-equivalent Wine expects. <code>ntsync_set_timer()</code> takes an absolute <code>CLOCK_MONOTONIC</code> due time and an optional period (<code>0</code> = one-shot).</p>
-<p><div class="callout callout-warning"><div class="callout-title">The previous kernel structs were fabricated</div><div class="callout-body"><p>The old <code>struct mvgal_event</code> / <code>struct mvgal_semaphore</code> / <code>struct mvgal_mutex</code> blocks, with <code>wait_queue_head_t</code> members and a <code>struct task_struct *owner</code>, <strong>are not MVGAL's types.</strong> They are illustrations of the Windows concepts. The real kernel objects are <code>struct mvgal_ntsync_object</code> and friends in <code>kernel/mvgal_ntsync.c</code>. (<code>struct mvgal_semaphore</code> does exist, but in <code>src/userspace/memory/memory_internal.h:72</code> — it is a userspace interop object, unrelated to NTSYNC.)</p></div></div></p>
-<h3 id="63-integration-points">6.3 Integration Points</h3>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">The previous kernel structs were fabricated</span></div><div class="callout-body"><p>The old <code>struct mvgal_event</code> / <code>struct mvgal_semaphore</code> / <code>struct mvgal_mutex</code> blocks, with <code>wait_queue_head_t</code> members and a <code>struct task_struct *owner</code>, <strong>are not MVGAL's types.</strong> They are illustrations of the Windows concepts. The real kernel objects are <code>struct mvgal_ntsync_object</code> and friends in <code>kernel/mvgal_ntsync.c</code>. (<code>struct mvgal_semaphore</code> does exist, but in <code>src/userspace/memory/memory_internal.h:72</code> — it is a userspace interop object, unrelated to NTSYNC.)</p></div></div>
+<h3 id="63-integration-points">6.3 Integration Points<a class="anchor-link" href="#63-integration-points" aria-label="Permalink to this section"></a></h3>
 <ol>
 <li><strong>Wine / Proton</strong> — Wine's own NTSYNC lives in <code>dlls/ntsync/</code>. That is upstream Wine's code, not MVGAL's. <code>steam/compatibilitytool.vdf</code> sets <code>WINE_NTSYNC=1</code> to enable it.</li>
 <li><strong>MVGAL kernel module</strong> — <code>mvgal_ntsync.ko</code> provides the <code>/dev/mvgal_ntsync</code> object model above, loaded as part of the standard module set (see <a href="secure_boot.html">SECURE_BOOT.md</a>).</li>
 <li><strong>MVGAL userspace</strong> — <code>libmvgal</code>'s NTSYNC library wraps it for MVGAL's own synchronisation.</li>
 </ol>
-<p><div class="callout callout-note"><div class="callout-title">The udev rule</div><div class="callout-body"><p><code>config/99-mvgal.rules</code> sets <code>MODE="0666", GROUP="video"</code> on the <code>mvgal_ntsync</code> misc node so unprivileged Proton/Wine processes can reach it. Unlike <code>/dev/mvgal*</code>, this node is <strong>not</strong> tightened to <code>0660</code> by the privileged helper.</p></div></div></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">The udev rule</span></div><div class="callout-body"><p><code>config/99-mvgal.rules</code> sets <code>MODE="0666", GROUP="video"</code> on the <code>mvgal_ntsync</code> misc node so unprivileged Proton/Wine processes can reach it. Unlike <code>/dev/mvgal*</code>, this node is <strong>not</strong> tightened to <code>0660</code> by the privileged helper.</p></div></div>
 <hr>
-<h2 id="7-wow64-support">7. WoW64 Support</h2>
-<h3 id="71-wow64-windows-on-windows-64-bit">7.1 WoW64 (Windows-on-Windows 64-bit)</h3>
+<h2 id="7-wow64-support">7. WoW64 Support<a class="anchor-link" href="#7-wow64-support" aria-label="Permalink to this section"></a></h2>
+<h3 id="71-wow64-windows-on-windows-64-bit">7.1 WoW64 (Windows-on-Windows 64-bit)<a class="anchor-link" href="#71-wow64-windows-on-windows-64-bit" aria-label="Permalink to this section"></a></h3>
 <p>WoW64 allows 32-bit Windows applications to run on a 64-bit host. Under Proton this requires care with pointer widths when GPU API calls cross from 32-bit game code into 64-bit native layers.</p>
-<h3 id="72-what-actually-exists">7.2 What Actually Exists</h3>
+<h3 id="72-what-actually-exists">7.2 What Actually Exists<a class="anchor-link" href="#72-what-actually-exists" aria-label="Permalink to this section"></a></h3>
 <p>Two separate things carry the WoW64 name in this tree, and only one is built.</p>
 <p><strong>Built:</strong> <code>src/userspace/win32/wow64_thunk.c</code>, compiled by <code>src/userspace/win32/CMakeLists.txt</code>.</p>
 <p><strong>Not built:</strong> <code>compat/wow64/wow64_thunk.c</code> and its header <code>compat/wow64/wow64.h</code>. <code>compat/</code> has no <code>CMakeLists.txt</code>, so the top-level <code>add_subdirectory(compat)</code> at <code>CMakeLists.txt:393-395</code> is skipped. The <code>compat/wow64/</code> API is nonetheless well-specified:</p>
@@ -737,12 +741,12 @@ MVGAL_WOW64_CONTEXT_UNKNOWN
 MVGAL_WOW64_CONTEXT_GAMING
 MVGAL_WOW64_CONTEXT_RENDERING
 </code></pre>
-<p><div class="callout callout-warning"><div class="callout-title">The previous code sample was broken</div><div class="callout-body"><p>The old <code>is_wow64_process(pid_t pid)</code> example declared <code>struct task_struct *task;</code> and then passed it to <code>is_32bit_task()</code> without ever assigning it. It was illustrative pseudo-code presented as source. No process-detection function like it exists in the tree.</p></div></div></p>
-<h3 id="73-wow64-configuration">7.3 WoW64 Configuration</h3>
-<p><div class="callout callout-danger"><div class="callout-title">These variables are not read</div><div class="callout-body"><p><code>MVGAL_WOW64</code> and <code>MVGAL_WOW64_DEBUG</code> are exported by <code>steam/mvgal_steam_compat.sh</code> and appear in <code>steam/README.md</code>. A <code>getenv()</code> search finds <strong>zero readers</strong> for either. There is no supported way to toggle WoW64 handling from the environment; it is compiled in.</p></div></div></p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">The previous code sample was broken</span></div><div class="callout-body"><p>The old <code>is_wow64_process(pid_t pid)</code> example declared <code>struct task_struct *task;</code> and then passed it to <code>is_32bit_task()</code> without ever assigning it. It was illustrative pseudo-code presented as source. No process-detection function like it exists in the tree.</p></div></div>
+<h3 id="73-wow64-configuration">7.3 WoW64 Configuration<a class="anchor-link" href="#73-wow64-configuration" aria-label="Permalink to this section"></a></h3>
+<div class="callout callout-danger"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m6 6 4 4M10 6l-4 4"/></svg></span><span class="callout-label">These variables are not read</span></div><div class="callout-body"><p><code>MVGAL_WOW64</code> and <code>MVGAL_WOW64_DEBUG</code> are exported by <code>steam/mvgal_steam_compat.sh</code> and appear in <code>steam/README.md</code>. A <code>getenv()</code> search finds <strong>zero readers</strong> for either. There is no supported way to toggle WoW64 handling from the environment; it is compiled in.</p></div></div>
 <hr>
-<h2 id="8-configuration">8. Configuration</h2>
-<h3 id="81-steam-launch-option-writer">8.1 Steam Launch Option Writer</h3>
+<h2 id="8-configuration">8. Configuration<a class="anchor-link" href="#8-configuration" aria-label="Permalink to this section"></a></h2>
+<h3 id="81-steam-launch-option-writer">8.1 Steam Launch Option Writer<a class="anchor-link" href="#81-steam-launch-option-writer" aria-label="Permalink to this section"></a></h3>
 <p><code>mvgal-steam-setup</code> <strong>is</strong> installed, at <code>/usr/bin/mvgal-steam-setup</code> (<code>packaging/rpm/mvgal.spec:739</code>).</p>
 <pre><code class="language-bash">mvgal-steam-setup --list                 # or -l: show detected Steam games
 mvgal-steam-setup --check                # or -c: verify library discovery
@@ -757,7 +761,7 @@ mvgal-steam-setup --help                 # or -h
 <p>Sub-commands are <code>--list/-l</code>, <code>--add/-a</code>, <code>--remove/-r</code>, <code>--check/-c</code>, <code>--auto</code>, <code>--help/-h</code> (<code>tools/mvgal-steam-setup.c:553-576</code>). <code>--add</code> takes a mandatory game name or App ID — there is no interactive prompt, and with no argument it errors rather than asking. The optional modifiers are <code>--strategy &lt;name&gt;</code>, <code>--frame-pacing</code>, <code>--gpu-mask &lt;mask&gt;</code> and <code>--all</code> (<code>mvgal-steam-setup.c:540-549</code>).</p>
 <p>It scans Steam's <code>appmanifest_*.acf</code> files, and writes a <code>LaunchOptions</code> line into Steam's <code>appinfo.vdf</code> in the form <code>"&lt;options&gt; %command%"</code>.</p>
 <p>It ships a built-in profile table. Each entry pairs a game name with a strategy and a note:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Game</th>
@@ -797,10 +801,10 @@ mvgal-steam-setup --help                 # or -h
 <td>Hybrid works well</td>
 </tr>
 </tbody>
-</table>
-<p><div class="callout callout-note"><div class="callout-title">The `MVGAL_FRAME_PACING=1` this tool writes has no effect</div><div class="callout-body"><p>See <a href="#43-configuration">§4.3</a>.</p></div></div>
-<div class="callout callout-caution"><div class="callout-title">It does not create a `compat_tools.d` manifest</div><div class="callout-body"><p>The previous version of this page said the tool creates <code>~/.local/share/Steam/steamapps/common/Proton - MVGAL/</code> and <code>~/.local/share/Steam/steamapps/compat_tools.d/mvgal.json</code>. <strong>It does not.</strong> It edits <code>appinfo.vdf</code> launch options only. A search for <code>compat_tools</code> and <code>VersionString</code> in the C sources returns nothing.</p></div></div></p>
-<h3 id="82-per-game-profiles">8.2 Per-Game Profiles</h3>
+</table></div>
+<p><div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">The `MVGAL_FRAME_PACING=1` this tool writes has no effect</span></div><div class="callout-body"><p>See <a href="#43-configuration">§4.3</a>.</p></div></div>
+<div class="callout callout-caution"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">It does not create a `compat_tools.d` manifest</span></div><div class="callout-body"><p>The previous version of this page said the tool creates <code>~/.local/share/Steam/steamapps/common/Proton - MVGAL/</code> and <code>~/.local/share/Steam/steamapps/compat_tools.d/mvgal.json</code>. <strong>It does not.</strong> It edits <code>appinfo.vdf</code> launch options only. A search for <code>compat_tools</code> and <code>VersionString</code> in the C sources returns nothing.</p></div></div></p>
+<h3 id="82-per-game-profiles">8.2 Per-Game Profiles<a class="anchor-link" href="#82-per-game-profiles" aria-label="Permalink to this section"></a></h3>
 <p>The daemon loads per-game profiles from <strong><code>/etc/mvgal/steam_profiles/</code></strong> (<code>runtime/daemon/steam_profile_loader.cpp:26</code>). The RPM creates this directory at install time (<code>mvgal.spec:411</code>) and it survives as <code>%dir %attr(755,root,root)</code> (<code>mvgal.spec:806</code>).</p>
 <p>Each file is named after the Steam App ID and parsed as INI. Three examples ship in <code>steam/steam_profiles/</code>:</p>
 <pre><code class="language-ini"># /etc/mvgal/steam_profiles/1086940.conf
@@ -830,11 +834,11 @@ cross_vendor = true
 </code></pre>
 <p>The loader reads <code>app_id</code> from <code>[application]</code> and matches it as the executable name (<code>steam_profile_loader.cpp:148, 283-284</code>).</p>
 <p>The other two shipped profiles are <code>cyberpunk2077.conf</code> and <code>halflife_alyx.conf</code>.</p>
-<h3 id="83-compatibility-tool-manifest">8.3 Compatibility Tool Manifest</h3>
-<p><div class="callout callout-warning"><div class="callout-title">The published JSON manifest does not exist</div><div class="callout-body"><p>The previous version of this page showed a <code>compat_tools.d</code> JSON file with <code>"Name"</code>, <code>"Version": "0.7.3"</code>, <code>"VersionString": "Proton 9.0 with MVGAL 0.7.3"</code>, <code>"Architectures"</code> and <code>"Priority"</code>. <strong>No such file is in the tree, and MVGAL ships no Steam <em>runtime</em> manifest.</strong> Steam's custom-runtime <code>compat_tools.d</code> format is a different thing from Steam's <code>compatibilitytools.d</code> format; MVGAL uses the latter, and its content is the KeyValues shown in <a href="#22-steam-compatibility-tool">§2.2</a> — currently stamped <code>0.2.2</code>.</p></div></div></p>
+<h3 id="83-compatibility-tool-manifest">8.3 Compatibility Tool Manifest<a class="anchor-link" href="#83-compatibility-tool-manifest" aria-label="Permalink to this section"></a></h3>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">The published JSON manifest does not exist</span></div><div class="callout-body"><p>The previous version of this page showed a <code>compat_tools.d</code> JSON file with <code>"Name"</code>, <code>"Version": "0.7.3"</code>, <code>"VersionString": "Proton 9.0 with MVGAL 0.7.3"</code>, <code>"Architectures"</code> and <code>"Priority"</code>. <strong>No such file is in the tree, and MVGAL ships no Steam <em>runtime</em> manifest.</strong> Steam's custom-runtime <code>compat_tools.d</code> format is a different thing from Steam's <code>compatibilitytools.d</code> format; MVGAL uses the latter, and its content is the KeyValues shown in <a href="#22-steam-compatibility-tool">§2.2</a> — currently stamped <code>0.2.2</code>.</p></div></div>
 <hr>
-<h2 id="9-troubleshooting">9. Troubleshooting</h2>
-<h3 id="91-common-issues">9.1 Common Issues</h3>
+<h2 id="9-troubleshooting">9. Troubleshooting<a class="anchor-link" href="#9-troubleshooting" aria-label="Permalink to this section"></a></h2>
+<h3 id="91-common-issues">9.1 Common Issues<a class="anchor-link" href="#91-common-issues" aria-label="Permalink to this section"></a></h3>
 <p><strong>Issue: Game shows a black screen</strong></p>
 <pre><code class="language-bash"># Fall back to a single GPU
 MVGAL_STRATEGY=single %command%
@@ -855,12 +859,12 @@ VK_LOADER_DEBUG=layer,vulkaninfo 2&gt;&amp;1 | grep -i mvgal
 # Turn on layer tracing
 MVGAL_VULKAN_DEBUG=1 %command%
 </code></pre>
-<p><div class="callout callout-tip"><div class="callout-title">`vulkaninfo` will not list it</div><div class="callout-body"><p>The manifest declares <code>"type": "GLOBAL"</code>, so the layer is not enumerated as a <em>selectable</em> layer. Use <code>VK_LOADER_DEBUG=layer</code> to confirm the loader found and loaded it, rather than grepping <code>vulkaninfo</code>'s layer list.</p></div></div></p>
+<div class="callout callout-tip"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 10.6a3.5 3.5 0 1 1 3.6 0"/><path d="M6.4 12.4h3.2M6.8 14h2.4"/></svg></span><span class="callout-label">`vulkaninfo` will not list it</span></div><div class="callout-body"><p>The manifest declares <code>"type": "GLOBAL"</code>, so the layer is not enumerated as a <em>selectable</em> layer. Use <code>VK_LOADER_DEBUG=layer</code> to confirm the loader found and loaded it, rather than grepping <code>vulkaninfo</code>'s layer list.</p></div></div>
 <p><strong>Issue: Anti-cheat</strong></p>
 <pre><code class="language-bash"># Fall back to a single GPU and disable the layer
 MVGAL_STRATEGY=single MVGAL_VULKAN_DISABLE=1 %command%
 </code></pre>
-<h3 id="92-debug-commands">9.2 Debug Commands</h3>
+<h3 id="92-debug-commands">9.2 Debug Commands<a class="anchor-link" href="#92-debug-commands" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-bash"># Layer debug logging
 export MVGAL_VULKAN_DEBUG=1
 
@@ -880,8 +884,8 @@ mvgal-info --vulkan-groups
 mvgal-compat
 mvgal-steam-setup --check
 </code></pre>
-<p><div class="callout callout-warning"><div class="callout-title">`mvgal-status --verbose` does not exist</div><div class="callout-body"><p><code>tools/mvgal-status.c</code> accepts <code>--watch/-w</code>, <code>--once/-1</code>, <code>--interval/-i</code>, <code>--version/-V</code> and <code>--help/-h</code>. There is no <code>--verbose</code>. Similarly, <code>MVGAL_LOG_PATH</code> is not a real variable and no log file can be redirected with it.</p></div></div></p>
-<h3 id="93-log-analysis">9.3 Log Analysis</h3>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">`mvgal-status --verbose` does not exist</span></div><div class="callout-body"><p><code>tools/mvgal-status.c</code> accepts <code>--watch/-w</code>, <code>--once/-1</code>, <code>--interval/-i</code>, <code>--version/-V</code> and <code>--help/-h</code>. There is no <code>--verbose</code>. Similarly, <code>MVGAL_LOG_PATH</code> is not a real variable and no log file can be redirected with it.</p></div></div>
+<h3 id="93-log-analysis">9.3 Log Analysis<a class="anchor-link" href="#93-log-analysis" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-bash"># Daemon log — the unit installs as mvgal-daemon.service
 journalctl -u mvgal-daemon.service -f
 
@@ -896,9 +900,9 @@ ls -la /var/log/mvgal/
 # Module load failures, including the Secure Boot hint
 journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&quot;
 </code></pre>
-<p><div class="callout callout-note"><div class="callout-title">`/var/log/mvgal/` is created but not written to by the pacer</div><div class="callout-body"><p>The directory is created by <code>%install</code> and shipped as an empty owned directory. Nothing in the current tree writes frame-timing or GPU-assignment logs there, so <code>grep -i "jitter\|drop" /var/log/mvgal/mvgald.log</code> will find nothing. Use <code>journalctl</code> and the layer's own debug output instead.</p></div></div></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">`/var/log/mvgal/` is created but not written to by the pacer</span></div><div class="callout-body"><p>The directory is created by <code>%install</code> and shipped as an empty owned directory. Nothing in the current tree writes frame-timing or GPU-assignment logs there, so <code>grep -i "jitter\|drop" /var/log/mvgal/mvgald.log</code> will find nothing. Use <code>journalctl</code> and the layer's own debug output instead.</p></div></div>
 <hr>
-<h2 id="10-known-limitations">10. Known Limitations</h2>
+<h2 id="10-known-limitations">10. Known Limitations<a class="anchor-link" href="#10-known-limitations" aria-label="Permalink to this section"></a></h2>
 <ol>
 <li><strong>The frame pacer is inert.</strong> No call site for <code>mvgal_fp_submit_frame()</code> exists, and its refresh rate is hardcoded to 60 Hz. Frame pacing is not happening.</li>
 <li><strong>AFR has no coordinator.</strong> The layer picks a GPU for <code>vkQueueSubmit</code>, but nothing sequences alternating frames; there is no present-path interception.</li>
@@ -910,7 +914,7 @@ journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&qu
 <li><strong>Anti-cheat is not officially supported.</strong> EasyAntiCheat and BattlEye have their own layer and overlay policies, and some titles refuse to run with an unexpected global Vulkan layer. MVGAL provides no bypass; <code>MVGAL_VULKAN_DISABLE=1</code> plus a single-GPU strategy is the only supported fallback.</li>
 </ol>
 <hr>
-<h2 id="11-performance-tips">11. Performance Tips</h2>
+<h2 id="11-performance-tips">11. Performance Tips<a class="anchor-link" href="#11-performance-tips" aria-label="Permalink to this section"></a></h2>
 <ol>
 <li><strong>Verify before you tune.</strong> <code>mvgal-info --json</code> shows what is actually detected; <code>mvgal-status --watch</code> shows live state.</li>
 <li><strong>Check PCIe topology.</strong> The userspace copy path chooser picks <code>COPY_P2P</code> for same-vendor devices under one PCIe root complex, <code>COPY_DMA_BUF</code> for cross-vendor under one root, and <code>COPY_CPU</code> across roots (<code>src/userspace/memory/memory.c:963-996</code>).</li>
@@ -918,7 +922,7 @@ journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&qu
 <li><strong>Use the daemon's profile loader, not launch options</strong>, for per-game settings — it is the path with a real consumer.</li>
 </ol>
 <hr>
-<h2 id="12-future-improvements">12. Future Improvements</h2>
+<h2 id="12-future-improvements">12. Future Improvements<a class="anchor-link" href="#12-future-improvements" aria-label="Permalink to this section"></a></h2>
 <ol>
 <li><strong>Wire up the frame pacer.</strong> Connect <code>mvgal_fp_submit_frame()</code> to the submission path, detect the real refresh rate instead of hardcoding 60 Hz, and consider a DRM page-flip wait in place of <code>nanosleep()</code>.</li>
 <li><strong>Build <code>compat/</code>.</strong> Adding a <code>compat/CMakeLists.txt</code> would activate the Proton plugin and the WoW64 thunk layer.</li>
@@ -929,9 +933,9 @@ journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&qu
 <li><strong>AI-based scheduling.</strong> <code>MVGAL_AI_DRIVEN</code> is strategy value <code>8</code> in the enum, and the scheduler is a built-in heuristic — not a learned model. See <em>the <code>ai_scheduler</code> note</em> in <a href="install.html">INSTALL.md</a>.</li>
 </ol>
 <hr>
-<h2 id="13-documentation-corrections-in-this-revision">13. Documentation Corrections in This Revision</h2>
+<h2 id="13-documentation-corrections-in-this-revision">13. Documentation Corrections in This Revision<a class="anchor-link" href="#13-documentation-corrections-in-this-revision" aria-label="Permalink to this section"></a></h2>
 <p>Every claim below was in the 0.7.13 edition of this page. Each was checked against the source tree at commit <code>5511cf4</code>.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Previous claim</th>
@@ -1052,7 +1056,20 @@ journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&qu
 <td>One of 13 in the C enum; three disagreeing vocabularies exist</td>
 </tr>
 </tbody>
-</table>
+</table></div>
+<section class="backlinks">
+<div class="backlinks-title"><svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg> Linked mentions</div>
+<ul class="backlinks-list"><li><a href="design.html">Design</a></li><li><a href="install.html">Installation</a></li></ul>
+</section>
+</div>
+<aside class="doc-rail">
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#table-of-contents">Table of Contents</a></li><li class="outline-item outline-l2"><a href="#1-overview">1. Overview</a></li><li class="outline-item outline-l2"><a href="#2-integration-methods">2. Integration Methods</a></li><li class="outline-item outline-l3"><a href="#21-steam-launch-options">2.1 Steam Launch Options</a></li><li class="outline-item outline-l3"><a href="#22-steam-compatibility-tool">2.2 Steam Compatibility Tool</a></li><li class="outline-item outline-l3"><a href="#23-environment-variables">2.3 Environment Variables</a></li><li class="outline-item outline-l2"><a href="#3-vulkan-layer-integration">3. Vulkan Layer Integration</a></li><li class="outline-item outline-l3"><a href="#31-layer-discovery">3.1 Layer Discovery</a></li><li class="outline-item outline-l3"><a href="#32-intercepted-functions">3.2 Intercepted Functions</a></li><li class="outline-item outline-l3"><a href="#33-what-the-layer-does-at-submit">3.3 What the Layer Does at Submit</a></li><li class="outline-item outline-l2"><a href="#4-frame-pacer">4. Frame Pacer</a></li><li class="outline-item outline-l3"><a href="#41-purpose">4.1 Purpose</a></li><li class="outline-item outline-l3"><a href="#42-architecture">4.2 Architecture</a></li><li class="outline-item outline-l3"><a href="#43-configuration">4.3 Configuration</a></li><li class="outline-item outline-l3"><a href="#44-frame-pacer-api">4.4 Frame Pacer API</a></li><li class="outline-item outline-l2"><a href="#5-alternate-frame-rendering-afr">5. Alternate Frame Rendering (AFR)</a></li><li class="outline-item outline-l3"><a href="#51-how-afr-works-with-mvgal">5.1 How AFR Works with MVGAL</a></li><li class="outline-item outline-l3"><a href="#52-frame-synchronization">5.2 Frame Synchronization</a></li><li class="outline-item outline-l3"><a href="#53-strategy-names">5.3 Strategy Names</a></li><li class="outline-item outline-l3"><a href="#54-afr-configuration">5.4 AFR Configuration</a></li><li class="outline-item outline-l2"><a href="#6-ntsync">6. NTSYNC</a></li><li class="outline-item outline-l3"><a href="#61-what-ntsync-is">6.1 What NTSYNC Is</a></li><li class="outline-item outline-l3"><a href="#62-mvgals-ntsync-implementation">6.2 MVGAL's NTSYNC Implementation</a></li><li class="outline-item outline-l3"><a href="#63-integration-points">6.3 Integration Points</a></li><li class="outline-item outline-l2"><a href="#7-wow64-support">7. WoW64 Support</a></li><li class="outline-item outline-l3"><a href="#71-wow64-windows-on-windows-64-bit">7.1 WoW64 (Windows-on-Windows 64-bit)</a></li><li class="outline-item outline-l3"><a href="#72-what-actually-exists">7.2 What Actually Exists</a></li><li class="outline-item outline-l3"><a href="#73-wow64-configuration">7.3 WoW64 Configuration</a></li><li class="outline-item outline-l2"><a href="#8-configuration">8. Configuration</a></li><li class="outline-item outline-l3"><a href="#81-steam-launch-option-writer">8.1 Steam Launch Option Writer</a></li><li class="outline-item outline-l3"><a href="#82-per-game-profiles">8.2 Per-Game Profiles</a></li><li class="outline-item outline-l3"><a href="#83-compatibility-tool-manifest">8.3 Compatibility Tool Manifest</a></li><li class="outline-item outline-l2"><a href="#9-troubleshooting">9. Troubleshooting</a></li><li class="outline-item outline-l3"><a href="#91-common-issues">9.1 Common Issues</a></li><li class="outline-item outline-l3"><a href="#92-debug-commands">9.2 Debug Commands</a></li><li class="outline-item outline-l3"><a href="#93-log-analysis">9.3 Log Analysis</a></li><li class="outline-item outline-l2"><a href="#10-known-limitations">10. Known Limitations</a></li><li class="outline-item outline-l2"><a href="#11-performance-tips">11. Performance Tips</a></li><li class="outline-item outline-l2"><a href="#12-future-improvements">12. Future Improvements</a></li><li class="outline-item outline-l2"><a href="#13-documentation-corrections-in-this-revision">13. Documentation Corrections in This Revision</a></li></ul>
+<div class="rail-actions">
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/STEAM_INTEGRATION.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/STEAM_INTEGRATION.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
+</div>
+</aside>
+</div>
   </main>
   <footer>
     <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
@@ -1068,10 +1085,46 @@ journalctl -u mvgal-daemon.service | grep -i &quot;not loaded\|userspace-only&qu
   </div>
 <script src="mermaid.min.js"></script>
 <script>
-if (window.mermaid) {
-  mermaid.initialize({startOnLoad: true, securityLevel: 'strict',
-    theme: 'neutral', flowchart: {htmlLabels: true, useMaxWidth: true}});
-}
+(function () {
+  if (!window.mermaid) return;
+  var P = {
+    fontFamily: getComputedStyle(document.body).fontFamily,
+    primaryColor: '#ddf4ff', primaryTextColor: '#1f2328',
+    primaryBorderColor: '#0969da', lineColor: '#656d76',
+    secondaryColor: '#f6f8fa', tertiaryColor: '#ffffff'
+  };
+  var D = {
+    fontFamily: P.fontFamily,
+    primaryColor: '#161b22', primaryTextColor: '#e6edf3',
+    primaryBorderColor: '#58a6ff', lineColor: '#8b949e',
+    secondaryColor: '#0d1117', tertiaryColor: '#1f2328'
+  };
+  var sources = Array.prototype.map.call(
+    document.querySelectorAll('.mermaid'),
+    function (el) { return el.textContent; });
+  if (!sources.length) return;
+  var nodes = document.querySelectorAll('.mermaid');
+  function draw(dark) {
+    mermaid.initialize({
+      startOnLoad: false, securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: dark ? D : P,
+      flowchart: { htmlLabels: true, useMaxWidth: true }
+    });
+    // run() only renders nodes it has not already seen, so clear the
+    // marker and restore the source text before each pass.
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].removeAttribute('data-processed');
+      nodes[i].textContent = sources[i];
+    }
+    return mermaid.run({ nodes: nodes, suppressErrors: true });
+  }
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function render() { draw(mq.matches).catch(function () {}); }
+  render();
+  if (mq.addEventListener) mq.addEventListener('change', render);
+  else if (mq.addListener) mq.addListener(render);
+})();
 </script>
 </body>
 </html>

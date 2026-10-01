@@ -24,7 +24,6 @@
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Scheduling Strategies — MVGAL Documentation", "name": "Scheduling Strategies — MVGAL Documentation", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.", "url": "https://thecreategm.github.io/mvgal-docs/site/strategies.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL scheduling, GPU scheduler, round-robin, least-load, bin-packing, GPU-aware, hybrid, RLD, REP, PPL, workload distribution, memory heap", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Scheduling Strategies — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/strategies.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
 <header class="app-header">
@@ -38,26 +37,26 @@
     <span class="badge-accent badge">Public</span>
   </div>
   <div class="header-search" role="search" aria-label="Search documentation">
-    
+    <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
     <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
     <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
-      
+      <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg>
       <span>Get Started</span>
     </a>
     <a href="changelog.html" class="btn btn-sm">
-      
+      <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
       <span>v0.7.16</span>
     </a>
   </div>
 </header>
 <script>
 (function(){
-  var TOAST_OK = '';
-  var TOAST_INFO = '';
+  var TOAST_OK = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg>';
+  var TOAST_INFO = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg>';
   var toastTimer = null;
   function showToast(msg, kind) {
     kind = kind || 'success';
@@ -77,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.14, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.16, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,43 +152,43 @@
 <div class="app-shell">
 <nav class="sidebar">
 <div class="sidebar-brand">
-  <div class="sb-title"> Documentation</div>
+  <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
   <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
-<a href="index.html"><span>Home</span></a>
-<a href="quickstart.html"><span>Quick Start</span></a>
-<a href="install.html"><span>Installation</span></a>
-<a href="secure_boot.html"><span>Secure Boot</span></a>
-<a href="build.html"><span>Building</span></a>
+<a href="index.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/><path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/></svg><span>Home</span></a>
+<a href="quickstart.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg><span>Quick Start</span></a>
+<a href="install.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="m5 7 3 3 3-3"/><path d="M2.5 12v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/></svg><span>Installation</span></a>
+<a href="secure_boot.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.6 13.5 3.5v4.2c0 3.4-2.3 6.1-5.5 7-3.2-.9-5.5-3.6-5.5-7V3.5Z"/><rect x="6.1" y="7" width="3.8" height="3.2" rx=".6"/></svg><span>Secure Boot</span></a>
+<a href="build.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 2.4a3.4 3.4 0 0 0 4 4l-2.3 2.3-3.4-3.4Z"/><path d="m8.9 5.3-5.6 5.6a1.4 1.4 0 0 0 2 2l5.6-5.6"/></svg><span>Building</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Architecture & Design</div>
 <div class="sidebar-section">
-<a href="architecture.html"><span>Architecture</span></a>
-<a href="design.html"><span>Design</span></a>
+<a href="architecture.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/><rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/><rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/></svg><span>Architecture</span></a>
+<a href="design.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg><span>Design</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Core Subsystems</div>
 <div class="sidebar-section">
-<a href="api.html"><span>API Reference</span></a>
-<a href="strategies.html" class="active"><span>Scheduling Strategies</span></a>
-<a href="memory.html"><span>Memory Management</span></a>
-<a href="power.html"><span>Power Management</span></a>
+<a href="api.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.6" width="12.4" height="10.8" rx="1.4"/><path d="m4.6 6.2 2 1.8-2 1.8M8.4 10.4h3"/></svg><span>API Reference</span></a>
+<a href="strategies.html" class="active"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4.4" cy="3.6" r="1.8"/><circle cx="4.4" cy="12.4" r="1.8"/><circle cx="11.6" cy="6.2" r="1.8"/><path d="M4.4 5.4v5.2M11.6 8v1a3 3 0 0 1-3 3H6.2"/></svg><span>Scheduling Strategies</span></a>
+<a href="memory.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1"/><path d="M6.6 1.8v2.6M9.4 1.8v2.6M6.6 11.6v2.6M9.4 11.6v2.6M1.8 6.6h2.6M1.8 9.4h2.6M11.6 6.6h2.6M11.6 9.4h2.6"/></svg><span>Memory Management</span></a>
+<a href="power.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5 3.4 9.2h3.7l-.9 5.3 5.6-7.7H8.1Z"/></svg><span>Power Management</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Ecosystem</div>
 <div class="sidebar-section">
-<a href="hardware.html"><span>Hardware Compatibility</span></a>
-<a href="steam.html"><span>Steam / Proton</span></a>
+<a href="hardware.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.4" width="12.4" height="4.4" rx="1.1"/><rect x="1.8" y="9.2" width="12.4" height="4.4" rx="1.1"/><path d="M4.2 4.6h.01M4.2 11.4h.01"/></svg><span>Hardware Compatibility</span></a>
+<a href="steam.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.4 5.6h5.2a3.4 3.4 0 0 1 3.3 2.6l.8 3a1.9 1.9 0 0 1-3.2 1.7l-1.5-1.6H5.9l-1.5 1.6a1.9 1.9 0 0 1-3.2-1.7l.8-3a3.4 3.4 0 0 1 3.4-2.6Z"/><path d="M4.6 8.2v1.8M3.7 9.1h1.8M10 8.6h.01M11.6 10h.01"/></svg><span>Steam / Proton</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Project</div>
 <div class="sidebar-section">
-<a href="troubleshooting.html"><span>Troubleshooting</span></a>
-<a href="status.html"><span>Project Status</span></a>
-<a href="changelog.html"><span>Changelog</span></a>
+<a href="troubleshooting.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="8" cy="8.6" rx="3.4" ry="4.4"/><path d="M8 4.2v8.8M4.6 8.6h6.8"/><path d="M4.9 6 2.3 4.4M11.1 6l2.6-1.6M4.9 11.2l-2.6 1.6M11.1 11.2l2.6 1.6"/></svg><span>Troubleshooting</span></a>
+<a href="status.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.6 8.6h2.7l1.5-3.9 2.2 7 1.7-4.4 1 1.3h3.7"/></svg><span>Project Status</span></a>
+<a href="changelog.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.2 4.4 1.4 1.4L6 3.4M7.4 4.6h6.4M2.2 10l1.4 1.4L6 9M7.4 10.2h6.4"/></svg><span>Changelog</span></a>
 </div>
 </nav>
 
@@ -216,27 +215,32 @@
   <a class="crumb-current" href="strategies.html">STRATEGIES.md</a>
 </div>
 
-    <div class="page-header">
-  <div></div>
+<div class="page-header">
+  <div class="page-header-main">
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.16</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-09-30</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
+    <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>strategies</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>reference</a></div>
+  </div>
   <div class="page-header-actions">
   <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){});}catch(e){}">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg>
     <span>Copy link</span>
   </button>
   <a href="quickstart.html" class="btn btn-sm btn-primary">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m5 8.2 2.2 2.2L11 6.5"/></svg>
     <span>Quick Start</span>
   </a>
 </div>
 
 </div>
-<h1 id="mvgal-scheduling-strategy-identifiers">MVGAL Scheduling Strategy Identifiers</h1>
+<div class="doc-layout">
+<div class="doc-body">
+<h1 id="mvgal-scheduling-strategy-identifiers">MVGAL Scheduling Strategy Identifiers<a class="anchor-link" href="#mvgal-scheduling-strategy-identifiers" aria-label="Permalink to this section"></a></h1>
 <blockquote>
 <p>Source metadata is <strong>0.7.16</strong>; the source changelog documents releases through <strong>0.7.16</strong>. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.</p>
 </blockquote>
-<h2 id="public-c-identifiers">Public C identifiers</h2>
+<h2 id="public-c-identifiers">Public C identifiers<a class="anchor-link" href="#public-c-identifiers" aria-label="Permalink to this section"></a></h2>
 <p>The enum in <code>include/mvgal/mvgal_types.h</code> declares:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Identifier</th>
@@ -311,11 +315,11 @@
 <td>Custom strategy (user-defined)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The enum labels RLD, REP, and PPL do not mean “render layer distribution,” “replication mode,” or “pipeline parallelism” in the current public header. Older versions of this guide expanded those abbreviations incorrectly.</p>
-<h2 id="cli-configuration">CLI configuration</h2>
+<h2 id="cli-configuration">CLI configuration<a class="anchor-link" href="#cli-configuration" aria-label="Permalink to this section"></a></h2>
 <p>The main CLI documents these strategy arguments in <code>tools/mvgal.c</code>: <code>round_robin</code>, <code>afr</code>, <code>sfr</code>, <code>single</code>/<code>single_gpu</code>, <code>hybrid</code>, <code>task</code>, <code>compute_offload</code>, <code>auto</code>, and <code>custom</code>. Check <code>mvgal --help</code> and <code>mvgal-config --help</code> on the installed version for accepted forms.</p>
-<h2 id="custom-splitters">Custom splitters</h2>
+<h2 id="custom-splitters">Custom splitters<a class="anchor-link" href="#custom-splitters" aria-label="Permalink to this section"></a></h2>
 <p><code>MVGAL_STRATEGY_CUSTOM</code> is a public identifier with a registration API behind it,
 but the two halves are not yet connected. A splitter descriptor
 (<code>mvgal_workload_splitter_t</code>) carries three callbacks — <code>analyze</code>, <code>split</code> and
@@ -333,7 +337,7 @@ work as of v0.7.16. The scheduler validates the descriptor, rejects any of the
 three callbacks being <code>NULL</code>, and retains a copy. Removal matches on all four
 fields together, so splitters that share callbacks but differ in <code>user_data</code> can
 be released independently.</p>
-<p><div class="callout callout-note"><div class="callout-title">Registration does not deduplicate</div><div class="callout-body"><p>Registering the same descriptor twice stores it twice and reports
+<p><div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">Registration does not deduplicate</span></div><div class="callout-body"><p>Registering the same descriptor twice stores it twice and reports
 <code>MVGAL_SUCCESS</code> both times; there is no lookup on the register path. Release
 removes one entry per call, so <code>N</code> registrations of one descriptor need <code>N</code>
 releases, and a mismatch on a later call surfaces as
@@ -341,7 +345,7 @@ releases, and a mismatch on a later call surfaces as
 on the way out rather than relying on the registry to reconcile it. The
 descriptor is a POD, so compare the four fields yourself if you need
 idempotence.</p></div></div>
-<div class="callout callout-warning"><div class="callout-title">The `custom` strategy still cannot be selected</div><div class="callout-body"><p><code>mvgal_scheduler_apply_strategy()</code> returns <code>MVGAL_ERROR_NOT_SUPPORTED</code> for
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">The `custom` strategy still cannot be selected</span></div><div class="callout-body"><p><code>mvgal_scheduler_apply_strategy()</code> returns <code>MVGAL_ERROR_NOT_SUPPORTED</code> for
 <code>MVGAL_STRATEGY_CUSTOM</code>, and no code path reads the registry to apply a
 registered splitter to a dequeued workload. <code>merge()</code> is never invoked. Until
 the task tree contract below is settled, registering a splitter has no effect
@@ -356,8 +360,21 @@ does reduce the risk: <code>mvgal_scheduler_apply_strategy()</code> runs on the 
 thread <em>after</em> the workload has been dequeued, so a splitter calling
 <code>mvgal_workload_submit()</code> enqueues children rather than recursing synchronously.</p>
 <p>See <a href="api.html">API Reference</a> § Custom Splitters for the registration calls.</p>
-<h2 id="operational-limits">Operational limits</h2>
+<h2 id="operational-limits">Operational limits<a class="anchor-link" href="#operational-limits" aria-label="Permalink to this section"></a></h2>
 <p>The v0.7.12 source changelog records that vendor <code>submit_cs</code> functions previously returned success without dispatching work. Those functions now return <code>-EOPNOTSUPP</code>, and the scheduler no longer marks such work complete. Kernel submission is not advertised as a supported runtime capability. Treat strategies as configuration/API surface until a real workload and device capability test confirms the selected path.</p>
+<section class="backlinks">
+<div class="backlinks-title"><svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg> Linked mentions</div>
+<ul class="backlinks-list"><li><a href="api.html">API Reference</a></li><li><a href="install.html">Installation</a></li><li><a href="status.html">Project Status</a></li></ul>
+</section>
+</div>
+<aside class="doc-rail">
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#public-c-identifiers">Public C identifiers</a></li><li class="outline-item outline-l2"><a href="#cli-configuration">CLI configuration</a></li><li class="outline-item outline-l2"><a href="#custom-splitters">Custom splitters</a></li><li class="outline-item outline-l2"><a href="#operational-limits">Operational limits</a></li></ul>
+<div class="rail-actions">
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/STRATEGIES.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/STRATEGIES.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
+</div>
+</aside>
+</div>
   </main>
   <footer>
     <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>

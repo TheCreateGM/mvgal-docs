@@ -24,7 +24,6 @@
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Design — MVGAL Documentation", "name": "Design — MVGAL Documentation", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior.", "url": "https://thecreategm.github.io/mvgal-docs/site/design.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Design — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/design.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
 <header class="app-header">
@@ -38,26 +37,26 @@
     <span class="badge-accent badge">Public</span>
   </div>
   <div class="header-search" role="search" aria-label="Search documentation">
-    
+    <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
     <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
     <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
-      
+      <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg>
       <span>Get Started</span>
     </a>
     <a href="changelog.html" class="btn btn-sm">
-      
+      <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
       <span>v0.7.16</span>
     </a>
   </div>
 </header>
 <script>
 (function(){
-  var TOAST_OK = '';
-  var TOAST_INFO = '';
+  var TOAST_OK = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg>';
+  var TOAST_INFO = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg>';
   var toastTimer = null;
   function showToast(msg, kind) {
     kind = kind || 'success';
@@ -77,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.14, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.16, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,43 +152,43 @@
 <div class="app-shell">
 <nav class="sidebar">
 <div class="sidebar-brand">
-  <div class="sb-title"> Documentation</div>
+  <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
   <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
-<a href="index.html"><span>Home</span></a>
-<a href="quickstart.html"><span>Quick Start</span></a>
-<a href="install.html"><span>Installation</span></a>
-<a href="secure_boot.html"><span>Secure Boot</span></a>
-<a href="build.html"><span>Building</span></a>
+<a href="index.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/><path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/></svg><span>Home</span></a>
+<a href="quickstart.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg><span>Quick Start</span></a>
+<a href="install.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="m5 7 3 3 3-3"/><path d="M2.5 12v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/></svg><span>Installation</span></a>
+<a href="secure_boot.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.6 13.5 3.5v4.2c0 3.4-2.3 6.1-5.5 7-3.2-.9-5.5-3.6-5.5-7V3.5Z"/><rect x="6.1" y="7" width="3.8" height="3.2" rx=".6"/></svg><span>Secure Boot</span></a>
+<a href="build.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 2.4a3.4 3.4 0 0 0 4 4l-2.3 2.3-3.4-3.4Z"/><path d="m8.9 5.3-5.6 5.6a1.4 1.4 0 0 0 2 2l5.6-5.6"/></svg><span>Building</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Architecture & Design</div>
 <div class="sidebar-section">
-<a href="architecture.html"><span>Architecture</span></a>
-<a href="design.html" class="active"><span>Design</span></a>
+<a href="architecture.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/><rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/><rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/></svg><span>Architecture</span></a>
+<a href="design.html" class="active"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg><span>Design</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Core Subsystems</div>
 <div class="sidebar-section">
-<a href="api.html"><span>API Reference</span></a>
-<a href="strategies.html"><span>Scheduling Strategies</span></a>
-<a href="memory.html"><span>Memory Management</span></a>
-<a href="power.html"><span>Power Management</span></a>
+<a href="api.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.6" width="12.4" height="10.8" rx="1.4"/><path d="m4.6 6.2 2 1.8-2 1.8M8.4 10.4h3"/></svg><span>API Reference</span></a>
+<a href="strategies.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4.4" cy="3.6" r="1.8"/><circle cx="4.4" cy="12.4" r="1.8"/><circle cx="11.6" cy="6.2" r="1.8"/><path d="M4.4 5.4v5.2M11.6 8v1a3 3 0 0 1-3 3H6.2"/></svg><span>Scheduling Strategies</span></a>
+<a href="memory.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1"/><path d="M6.6 1.8v2.6M9.4 1.8v2.6M6.6 11.6v2.6M9.4 11.6v2.6M1.8 6.6h2.6M1.8 9.4h2.6M11.6 6.6h2.6M11.6 9.4h2.6"/></svg><span>Memory Management</span></a>
+<a href="power.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5 3.4 9.2h3.7l-.9 5.3 5.6-7.7H8.1Z"/></svg><span>Power Management</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Ecosystem</div>
 <div class="sidebar-section">
-<a href="hardware.html"><span>Hardware Compatibility</span></a>
-<a href="steam.html"><span>Steam / Proton</span></a>
+<a href="hardware.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.4" width="12.4" height="4.4" rx="1.1"/><rect x="1.8" y="9.2" width="12.4" height="4.4" rx="1.1"/><path d="M4.2 4.6h.01M4.2 11.4h.01"/></svg><span>Hardware Compatibility</span></a>
+<a href="steam.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.4 5.6h5.2a3.4 3.4 0 0 1 3.3 2.6l.8 3a1.9 1.9 0 0 1-3.2 1.7l-1.5-1.6H5.9l-1.5 1.6a1.9 1.9 0 0 1-3.2-1.7l.8-3a3.4 3.4 0 0 1 3.4-2.6Z"/><path d="M4.6 8.2v1.8M3.7 9.1h1.8M10 8.6h.01M11.6 10h.01"/></svg><span>Steam / Proton</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Project</div>
 <div class="sidebar-section">
-<a href="troubleshooting.html"><span>Troubleshooting</span></a>
-<a href="status.html"><span>Project Status</span></a>
-<a href="changelog.html"><span>Changelog</span></a>
+<a href="troubleshooting.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="8" cy="8.6" rx="3.4" ry="4.4"/><path d="M8 4.2v8.8M4.6 8.6h6.8"/><path d="M4.9 6 2.3 4.4M11.1 6l2.6-1.6M4.9 11.2l-2.6 1.6M11.1 11.2l2.6 1.6"/></svg><span>Troubleshooting</span></a>
+<a href="status.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.6 8.6h2.7l1.5-3.9 2.2 7 1.7-4.4 1 1.3h3.7"/></svg><span>Project Status</span></a>
+<a href="changelog.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.2 4.4 1.4 1.4L6 3.4M7.4 4.6h6.4M2.2 10l1.4 1.4L6 9M7.4 10.2h6.4"/></svg><span>Changelog</span></a>
 </div>
 </nav>
 
@@ -216,27 +215,32 @@
   <a class="crumb-current" href="design.html">DESIGN.md</a>
 </div>
 
-    <div class="page-header">
-  <div></div>
+<div class="page-header">
+  <div class="page-header-main">
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.16</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-09-30</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>design</span></div>
+    <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>design</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>reference</a></div>
+  </div>
   <div class="page-header-actions">
   <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){});}catch(e){}">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg>
     <span>Copy link</span>
   </button>
   <a href="quickstart.html" class="btn btn-sm btn-primary">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m5 8.2 2.2 2.2L11 6.5"/></svg>
     <span>Quick Start</span>
   </a>
 </div>
 
 </div>
-<h1 id="mvgal-design-document">MVGAL Design Document</h1>
+<div class="doc-layout">
+<div class="doc-body">
+<h1 id="mvgal-design-document">MVGAL Design Document<a class="anchor-link" href="#mvgal-design-document" aria-label="Permalink to this section"></a></h1>
 <blockquote>
 <p><strong>Implementation status:</strong> Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
 <p><strong>Source version:</strong> 0.7.16 | <strong>Last Updated:</strong> September 2026</p>
 <hr>
-<h2 id="design-goals">Design Goals</h2>
+<h2 id="design-goals">Design Goals<a class="anchor-link" href="#design-goals" aria-label="Permalink to this section"></a></h2>
 <ol>
 <li><strong>Transparent multi-vendor GPU aggregation</strong> — applications see one logical GPU regardless of how many physical GPUs exist.</li>
 <li><strong>Zero application changes</strong> — interception via Vulkan layer, OpenCL ICD, CUDA shim, and LD_PRELOAD.</li>
@@ -245,11 +249,11 @@
 <li><strong>Low overhead</strong> — target &lt;2% frame time regression for single-GPU pass-through mode.</li>
 </ol>
 <hr>
-<h2 id="architecture-decisions">Architecture Decisions</h2>
-<h3 id="decision-1-kernel-module-as-drm-meta-driver">Decision 1: Kernel Module as DRM Meta-Driver</h3>
+<h2 id="architecture-decisions">Architecture Decisions<a class="anchor-link" href="#architecture-decisions" aria-label="Permalink to this section"></a></h2>
+<h3 id="decision-1-kernel-module-as-drm-meta-driver">Decision 1: Kernel Module as DRM Meta-Driver<a class="anchor-link" href="#decision-1-kernel-module-as-drm-meta-driver" aria-label="Permalink to this section"></a></h3>
 <p><strong>Chosen approach:</strong> A Linux kernel module (<code>mvgal.ko</code>) that registers a DRM device and exposes a character device, <code>/dev/mvgal0</code>.</p>
 <p>There are <strong>two distinct ioctl namespaces</strong>, and they are easy to confuse:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Namespace</th>
@@ -269,7 +273,7 @@
 <td>Implemented: <code>QUERY_VERSION</code>, <code>GET_GPU_COUNT</code>, <code>GET_GPU_INFO</code>, <code>GET_CAPS</code>, <code>RESCAN</code>, <code>GET_STATS</code>, <code>ENABLE</code>, <code>DISABLE</code>, <code>NTSYNC_QUERY</code>. Declared but <strong>not yet handled</strong> — <code>EXPORT_DMABUF</code>, <code>IMPORT_DMABUF</code>, <code>ALLOC_CROSS_VENDOR</code>, <code>FREE_CROSS_VENDOR</code> — fall through to <code>default: return -EINVAL</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The device registers with <code>driver_features = DRIVER_RENDER | DRIVER_HAVE_IRQ | DRIVER_GEM</code> and major/minor <code>0.2</code>. Registration is deliberately minimal and logical-only: GPU discovery happens in userspace.</p>
 <p><strong>Alternatives considered:</strong>
 - <strong>Userspace-only daemon:</strong> Simpler to develop, no kernel patching required. Rejected because DMA-BUF zero-copy and cross-device synchronization require kernel-level buffer management.
@@ -280,7 +284,7 @@
 - (+) DMA-BUF import/export across vendors
 - (-) Requires module signing and MOK enrollment for Secure Boot
 - (-) Must track kernel API changes across releases</p>
-<h3 id="decision-2-c20-daemon-with-ipc-over-unix-socket">Decision 2: C++20 Daemon with IPC over Unix Socket</h3>
+<h3 id="decision-2-c20-daemon-with-ipc-over-unix-socket">Decision 2: C++20 Daemon with IPC over Unix Socket<a class="anchor-link" href="#decision-2-c20-daemon-with-ipc-over-unix-socket" aria-label="Permalink to this section"></a></h3>
 <p><strong>Chosen approach:</strong> <code>mvgald</code> is a C++20 daemon communicating with clients via Unix socket (<code>/run/mvgal/mvgal.sock</code>) using a binary protocol and peer-credential authentication.</p>
 <p>The wire header is <code>ipc_message_header_t</code> (packed): <code>magic</code>, <code>version</code>, <code>message_type</code>, <code>payload_size</code>, <code>request_id</code>. The magic is <strong><code>MVGAL_IPC_MAGIC 0x4D564741</code></strong> ("MVGA") and the protocol version is <code>1</code>. Message types are the eleven <code>mvgal_ipc_message_type_t</code> values from <code>MVGAL_IPC_MSG_PING</code> (0) through <code>MVGAL_IPC_MSG_ERROR</code> (10).</p>
 <blockquote>
@@ -296,7 +300,7 @@
 - (+) Native Unix credential verification
 - (-) Custom binary protocol requires versioning discipline
 - (-) No automatic cross-language binding generation</p>
-<h3 id="decision-3-ld_preload-interception-for-all-apis">Decision 3: LD_PRELOAD Interception for All APIs</h3>
+<h3 id="decision-3-ld_preload-interception-for-all-apis">Decision 3: LD_PRELOAD Interception for All APIs<a class="anchor-link" href="#decision-3-ld_preload-interception-for-all-apis" aria-label="Permalink to this section"></a></h3>
 <p><strong>Chosen approach:</strong> Transparent interception via Vulkan implicit layer, OpenCL ICD wrapper, CUDA function hooking (40+ functions), and LD_PRELOAD for OpenGL/D3D/Metal/WebGPU.</p>
 <p><strong>Alternatives considered:</strong>
 - <strong>Library wrapping (link-time):</strong> Compile against MVGAL lib instead of vendor lib. Rejected because it requires recompilation and breaks binary compatibility.
@@ -307,7 +311,7 @@
 - (+) Works with any binary (Steam games, AI frameworks)
 - (-) Environment variable setup required per-launch
 - (-) Anti-cheat software may flag LD_PRELOAD</p>
-<h3 id="decision-4-dma-buf-zero-copy-with-host-ram-fallback">Decision 4: DMA-BUF Zero-Copy with Host-RAM Fallback</h3>
+<h3 id="decision-4-dma-buf-zero-copy-with-host-ram-fallback">Decision 4: DMA-BUF Zero-Copy with Host-RAM Fallback<a class="anchor-link" href="#decision-4-dma-buf-zero-copy-with-host-ram-fallback" aria-label="Permalink to this section"></a></h3>
 <p><strong>Chosen approach:</strong> Three-tier memory transfer: (1) DMA-BUF zero-copy between GPUs sharing the same IOMMU group, (2) PCIe P2P for GPUs on the same root complex, (3) host-RAM staging as universal fallback.</p>
 <p><strong>Alternatives considered:</strong>
 - <strong>CUDA peer-to-peer only:</strong> Works for NVIDIA+NVIDIA. Rejected because MVGAL must handle AMD+NVIDIA+Intel combinations.
@@ -318,10 +322,10 @@
 - (+) Universal fallback ensures correctness
 - (-) Complex fallback logic with three code paths
 - (-) DMA-BUF support varies by driver version</p>
-<h3 id="decision-5-rust-for-safety-critical-subsystems">Decision 5: Rust for Safety-Critical Subsystems</h3>
+<h3 id="decision-5-rust-for-safety-critical-subsystems">Decision 5: Rust for Safety-Critical Subsystems<a class="anchor-link" href="#decision-5-rust-for-safety-critical-subsystems" aria-label="Permalink to this section"></a></h3>
 <p><strong>Chosen approach:</strong> Three Rust crates with C FFI exports for use by the C++ daemon.</p>
 <p>The directory names and the Cargo package names differ, which is an easy thing to get wrong:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Directory</th>
@@ -342,7 +346,7 @@
 <td><code>mvgal_capability</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>runtime/safe/lib.rs</code> re-exports them as modules (<code>fence_manager</code>, <code>memory_safety</code>, <code>capability_model</code>), and <code>safe/ffi_tests/tests/ffi_integration.rs</code> imports them under the same aliases — which is why the module names and the package names can appear to conflict. <code>pub struct GpuCapability</code> is defined at <code>safe/capability_model/src/lib.rs:37</code>. A fourth crate, <code>safe/ffi_tests</code>, exercises the FFI boundary.</p>
 <p><strong>Alternatives considered:</strong>
 - <strong>All C++ with RAII:</strong> Would keep the codebase single-language. Rejected because Rust's ownership model eliminates entire classes of bugs (use-after-free, data races) that are critical in GPU synchronization code.
@@ -353,12 +357,12 @@
 - (+) Compile-time enforcement of concurrency safety
 - (-) FFI boundary adds complexity
 - (-) Two build systems (Cargo + CMake)</p>
-<h3 id="decision-6-13-scheduling-strategies">Decision 6: 13 Scheduling Strategies</h3>
+<h3 id="decision-6-13-scheduling-strategies">Decision 6: 13 Scheduling Strategies<a class="anchor-link" href="#decision-6-13-scheduling-strategies" aria-label="Permalink to this section"></a></h3>
 <p><strong>Chosen approach:</strong> The C enum <code>mvgal_distribution_strategy_t</code> (<code>include/mvgal/mvgal_types.h:69-84</code>) has <strong>13 members</strong> — twelve auto-numbered <code>0..11</code> plus <code>CUSTOM = 100</code>:</p>
 <p><code>ROUND_ROBIN</code> 0 · <code>AFR</code> 1 · <code>SFR</code> 2 · <code>AUTO</code> 3 · <code>COMPUTE_OFFLOAD</code> 4 · <code>HYBRID</code> 5 · <code>SINGLE_GPU</code> 6 · <code>TASK</code> 7 · <code>AI_DRIVEN</code> 8 · <code>RLD</code> 9 · <code>REP</code> 10 · <code>PPL</code> 11 · <code>CUSTOM</code> 100</p>
 <p>Auto-detect (<code>AUTO</code>) selects a strategy based on workload type.</p>
 <p>Three different strategy vocabularies exist in the tree, and they are <strong>not</strong> the same list:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Where</th>
@@ -383,7 +387,7 @@
 <td>What <code>--set-strategy</code> will actually accept, including the <code>single</code>/<code>compute</code> aliases</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Set the strategy with <code>mvgal_set_strategy()</code> (<code>mvgal.h:197</code>) or the scheduler-specific <code>mvgal_scheduler_set_strategy()</code> (<code>mvgal_scheduler.h:324</code>) — these are two distinct APIs, not duplicates.</p>
 <p><strong>Alternatives considered:</strong>
 - <strong>Fixed single strategy:</strong> Simplest. Rejected because different workloads benefit from different strategies (AFR for gaming, compute offload for AI).
@@ -395,7 +399,7 @@
 - (-) 13 strategies increase code surface area
 - (-) Auto-detect heuristics may be wrong for edge cases</p>
 <hr>
-<h2 id="data-flow">Data Flow</h2>
+<h2 id="data-flow">Data Flow<a class="anchor-link" href="#data-flow" aria-label="Permalink to this section"></a></h2>
 <div class="mermaid">
 flowchart TD
     App["Application"] --&gt; IL["Interception Layer (Vulkan/CL/CUDA/GL)"]
@@ -417,7 +421,7 @@ flowchart TD
 </div>
 
 <hr>
-<h2 id="security-model">Security Model</h2>
+<h2 id="security-model">Security Model<a class="anchor-link" href="#security-model" aria-label="Permalink to this section"></a></h2>
 <ul>
 <li><strong>Socket permissions:</strong> <code>/run/mvgal/mvgal.sock</code> is mode <code>0660</code>, owned <code>root:mvgal</code> — falling back to the daemon's primary group if the <code>mvgal</code> group does not exist. The run directory <code>/run/mvgal</code> is chowned to the same gid and made <code>0775</code>. <em>(Changed in v0.7.14; earlier releases chmod'ed the socket <code>0660</code> without a matching chown, leaving it <code>root:root</code> and unreachable by any non-root user. Both the C++ and the legacy C daemon now apply this, and <code>mvgal-compat</code> reports the socket's real uid:gid and mode instead of advising you to join a group that did not own it.)</em></li>
 <li><strong>IPC authentication:</strong> <code>SO_PEERCRED</code> on the Unix socket. Admitted: root, the daemon's own uid, and members of the <code>mvgal</code> group (falling back to the daemon's primary group) or of the standard <code>video</code> group, including via supplementary group membership.</li>
@@ -427,11 +431,11 @@ flowchart TD
 <li><strong>No firmware flashing:</strong> Vendor-overriding firmware operations are explicitly excluded</li>
 </ul>
 <hr>
-<h2 id="performance-characteristics">Performance Characteristics</h2>
+<h2 id="performance-characteristics">Performance Characteristics<a class="anchor-link" href="#performance-characteristics" aria-label="Permalink to this section"></a></h2>
 <blockquote>
 <p><strong>These figures are design targets, not measurements.</strong> The project publishes no benchmark data backing them, and the same numbers were carried forward across earlier revisions without being re-measured. Treat the "Notes" column as the intent of the design; the absolute values are unverified.</p>
 </blockquote>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Path</th>
@@ -471,10 +475,10 @@ flowchart TD
 <td>Priority queue with 16 levels</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The only figures in this document that are backed by code inspection are structural — the ioctl counts, the strategy count, and the protocol constants. Everything measured is currently aspirational.</p>
 <hr>
-<h2 id="limitations-and-known-issues">Limitations and Known Issues</h2>
+<h2 id="limitations-and-known-issues">Limitations and Known Issues<a class="anchor-link" href="#limitations-and-known-issues" aria-label="Permalink to this section"></a></h2>
 <ol>
 <li><strong>No direct upstream kernel integration</strong> — the module must be built and signed per-kernel.</li>
 <li><strong>Anti-cheat compatibility</strong> — LD_PRELOAD interception may be flagged by kernel-level anti-cheat (EAC, BattlEye).</li>
@@ -485,6 +489,16 @@ flowchart TD
 <li><strong>VRAM allocation and compute submission are not functional</strong> — as of v0.7.12 these paths return <code>-EOPNOTSUPP</code>. See <a href="memory.html">MEMORY</a> for what that means for the memory architecture, and <a href="status.html">STATUS</a> for the capability matrix.</li>
 <li><strong>Steam runtime behaviour is unverified on hardware</strong> — the frame pacer's vsync wait and the Steam compatdata paths have not been observed on a multi-GPU machine. Everything in <a href="steam.html">STEAM_INTEGRATION</a> is either read from source or explicitly marked unverified.</li>
 </ol>
+
+</div>
+<aside class="doc-rail">
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#design-goals">Design Goals</a></li><li class="outline-item outline-l2"><a href="#architecture-decisions">Architecture Decisions</a></li><li class="outline-item outline-l3"><a href="#decision-1-kernel-module-as-drm-meta-driver">Decision 1: Kernel Module as DRM Meta-Driver</a></li><li class="outline-item outline-l3"><a href="#decision-2-c20-daemon-with-ipc-over-unix-socket">Decision 2: C++20 Daemon with IPC over Unix Socket</a></li><li class="outline-item outline-l3"><a href="#decision-3-ld_preload-interception-for-all-apis">Decision 3: LD_PRELOAD Interception for All APIs</a></li><li class="outline-item outline-l3"><a href="#decision-4-dma-buf-zero-copy-with-host-ram-fallback">Decision 4: DMA-BUF Zero-Copy with Host-RAM Fallback</a></li><li class="outline-item outline-l3"><a href="#decision-5-rust-for-safety-critical-subsystems">Decision 5: Rust for Safety-Critical Subsystems</a></li><li class="outline-item outline-l3"><a href="#decision-6-13-scheduling-strategies">Decision 6: 13 Scheduling Strategies</a></li><li class="outline-item outline-l2"><a href="#data-flow">Data Flow</a></li><li class="outline-item outline-l2"><a href="#security-model">Security Model</a></li><li class="outline-item outline-l2"><a href="#performance-characteristics">Performance Characteristics</a></li><li class="outline-item outline-l2"><a href="#limitations-and-known-issues">Limitations and Known Issues</a></li></ul>
+<div class="rail-actions">
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/DESIGN.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/DESIGN.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
+</div>
+</aside>
+</div>
   </main>
   <footer>
     <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
@@ -500,10 +514,46 @@ flowchart TD
   </div>
 <script src="mermaid.min.js"></script>
 <script>
-if (window.mermaid) {
-  mermaid.initialize({startOnLoad: true, securityLevel: 'strict',
-    theme: 'neutral', flowchart: {htmlLabels: true, useMaxWidth: true}});
-}
+(function () {
+  if (!window.mermaid) return;
+  var P = {
+    fontFamily: getComputedStyle(document.body).fontFamily,
+    primaryColor: '#ddf4ff', primaryTextColor: '#1f2328',
+    primaryBorderColor: '#0969da', lineColor: '#656d76',
+    secondaryColor: '#f6f8fa', tertiaryColor: '#ffffff'
+  };
+  var D = {
+    fontFamily: P.fontFamily,
+    primaryColor: '#161b22', primaryTextColor: '#e6edf3',
+    primaryBorderColor: '#58a6ff', lineColor: '#8b949e',
+    secondaryColor: '#0d1117', tertiaryColor: '#1f2328'
+  };
+  var sources = Array.prototype.map.call(
+    document.querySelectorAll('.mermaid'),
+    function (el) { return el.textContent; });
+  if (!sources.length) return;
+  var nodes = document.querySelectorAll('.mermaid');
+  function draw(dark) {
+    mermaid.initialize({
+      startOnLoad: false, securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: dark ? D : P,
+      flowchart: { htmlLabels: true, useMaxWidth: true }
+    });
+    // run() only renders nodes it has not already seen, so clear the
+    // marker and restore the source text before each pass.
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].removeAttribute('data-processed');
+      nodes[i].textContent = sources[i];
+    }
+    return mermaid.run({ nodes: nodes, suppressErrors: true });
+  }
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function render() { draw(mq.matches).catch(function () {}); }
+  render();
+  if (mq.addEventListener) mq.addEventListener('change', render);
+  else if (mq.addListener) mq.addListener(render);
+})();
 </script>
 </body>
 </html>

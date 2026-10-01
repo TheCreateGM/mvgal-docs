@@ -24,7 +24,6 @@
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Memory Management — MVGAL Documentation", "name": "Memory Management — MVGAL Documentation", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.", "url": "https://thecreategm.github.io/mvgal-docs/site/memory.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Memory Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/memory.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
 <header class="app-header">
@@ -38,26 +37,26 @@
     <span class="badge-accent badge">Public</span>
   </div>
   <div class="header-search" role="search" aria-label="Search documentation">
-    
+    <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
     <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
     <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
-      
+      <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg>
       <span>Get Started</span>
     </a>
     <a href="changelog.html" class="btn btn-sm">
-      
+      <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
       <span>v0.7.16</span>
     </a>
   </div>
 </header>
 <script>
 (function(){
-  var TOAST_OK = '';
-  var TOAST_INFO = '';
+  var TOAST_OK = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg>';
+  var TOAST_INFO = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg>';
   var toastTimer = null;
   function showToast(msg, kind) {
     kind = kind || 'success';
@@ -77,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.14, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.16, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,43 +152,43 @@
 <div class="app-shell">
 <nav class="sidebar">
 <div class="sidebar-brand">
-  <div class="sb-title"> Documentation</div>
+  <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
   <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
-<a href="index.html"><span>Home</span></a>
-<a href="quickstart.html"><span>Quick Start</span></a>
-<a href="install.html"><span>Installation</span></a>
-<a href="secure_boot.html"><span>Secure Boot</span></a>
-<a href="build.html"><span>Building</span></a>
+<a href="index.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/><path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/></svg><span>Home</span></a>
+<a href="quickstart.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg><span>Quick Start</span></a>
+<a href="install.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="m5 7 3 3 3-3"/><path d="M2.5 12v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/></svg><span>Installation</span></a>
+<a href="secure_boot.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.6 13.5 3.5v4.2c0 3.4-2.3 6.1-5.5 7-3.2-.9-5.5-3.6-5.5-7V3.5Z"/><rect x="6.1" y="7" width="3.8" height="3.2" rx=".6"/></svg><span>Secure Boot</span></a>
+<a href="build.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 2.4a3.4 3.4 0 0 0 4 4l-2.3 2.3-3.4-3.4Z"/><path d="m8.9 5.3-5.6 5.6a1.4 1.4 0 0 0 2 2l5.6-5.6"/></svg><span>Building</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Architecture & Design</div>
 <div class="sidebar-section">
-<a href="architecture.html"><span>Architecture</span></a>
-<a href="design.html"><span>Design</span></a>
+<a href="architecture.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/><rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/><rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/></svg><span>Architecture</span></a>
+<a href="design.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg><span>Design</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Core Subsystems</div>
 <div class="sidebar-section">
-<a href="api.html"><span>API Reference</span></a>
-<a href="strategies.html"><span>Scheduling Strategies</span></a>
-<a href="memory.html" class="active"><span>Memory Management</span></a>
-<a href="power.html"><span>Power Management</span></a>
+<a href="api.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.6" width="12.4" height="10.8" rx="1.4"/><path d="m4.6 6.2 2 1.8-2 1.8M8.4 10.4h3"/></svg><span>API Reference</span></a>
+<a href="strategies.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4.4" cy="3.6" r="1.8"/><circle cx="4.4" cy="12.4" r="1.8"/><circle cx="11.6" cy="6.2" r="1.8"/><path d="M4.4 5.4v5.2M11.6 8v1a3 3 0 0 1-3 3H6.2"/></svg><span>Scheduling Strategies</span></a>
+<a href="memory.html" class="active"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1"/><path d="M6.6 1.8v2.6M9.4 1.8v2.6M6.6 11.6v2.6M9.4 11.6v2.6M1.8 6.6h2.6M1.8 9.4h2.6M11.6 6.6h2.6M11.6 9.4h2.6"/></svg><span>Memory Management</span></a>
+<a href="power.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5 3.4 9.2h3.7l-.9 5.3 5.6-7.7H8.1Z"/></svg><span>Power Management</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Ecosystem</div>
 <div class="sidebar-section">
-<a href="hardware.html"><span>Hardware Compatibility</span></a>
-<a href="steam.html"><span>Steam / Proton</span></a>
+<a href="hardware.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.4" width="12.4" height="4.4" rx="1.1"/><rect x="1.8" y="9.2" width="12.4" height="4.4" rx="1.1"/><path d="M4.2 4.6h.01M4.2 11.4h.01"/></svg><span>Hardware Compatibility</span></a>
+<a href="steam.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.4 5.6h5.2a3.4 3.4 0 0 1 3.3 2.6l.8 3a1.9 1.9 0 0 1-3.2 1.7l-1.5-1.6H5.9l-1.5 1.6a1.9 1.9 0 0 1-3.2-1.7l.8-3a3.4 3.4 0 0 1 3.4-2.6Z"/><path d="M4.6 8.2v1.8M3.7 9.1h1.8M10 8.6h.01M11.6 10h.01"/></svg><span>Steam / Proton</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Project</div>
 <div class="sidebar-section">
-<a href="troubleshooting.html"><span>Troubleshooting</span></a>
-<a href="status.html"><span>Project Status</span></a>
-<a href="changelog.html"><span>Changelog</span></a>
+<a href="troubleshooting.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="8" cy="8.6" rx="3.4" ry="4.4"/><path d="M8 4.2v8.8M4.6 8.6h6.8"/><path d="M4.9 6 2.3 4.4M11.1 6l2.6-1.6M4.9 11.2l-2.6 1.6M11.1 11.2l2.6 1.6"/></svg><span>Troubleshooting</span></a>
+<a href="status.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.6 8.6h2.7l1.5-3.9 2.2 7 1.7-4.4 1 1.3h3.7"/></svg><span>Project Status</span></a>
+<a href="changelog.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.2 4.4 1.4 1.4L6 3.4M7.4 4.6h6.4M2.2 10l1.4 1.4L6 9M7.4 10.2h6.4"/></svg><span>Changelog</span></a>
 </div>
 </nav>
 
@@ -216,43 +215,48 @@
   <a class="crumb-current" href="memory.html">MEMORY.md</a>
 </div>
 
-    <div class="page-header">
-  <div></div>
+<div class="page-header">
+  <div class="page-header-main">
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.16</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-09-30</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
+    <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>memory</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>reference</a></div>
+  </div>
   <div class="page-header-actions">
   <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){});}catch(e){}">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg>
     <span>Copy link</span>
   </button>
   <a href="quickstart.html" class="btn btn-sm btn-primary">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m5 8.2 2.2 2.2L11 6.5"/></svg>
     <span>Quick Start</span>
   </a>
 </div>
 
 </div>
-<h1 id="mvgal-memory-management">MVGAL Memory Management</h1>
+<div class="doc-layout">
+<div class="doc-body">
+<h1 id="mvgal-memory-management">MVGAL Memory Management<a class="anchor-link" href="#mvgal-memory-management" aria-label="Permalink to this section"></a></h1>
 <blockquote>
 <p><strong>Implementation status:</strong> Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
 <p><strong>Source version:</strong> 0.7.16 | <strong>Updated:</strong> September 2026</p>
 <hr>
-<p><div class="callout callout-warning"><div class="callout-title">Read this before the API below</div><div class="callout-body"><p>The public memory API in <code>include/mvgal/mvgal_memory.h</code> is <strong>fully declared and largely implemented</strong>, but several subsystems it describes cannot succeed on present-day hardware. Two facts dominate:</p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Read this before the API below</span></div><div class="callout-body"><p>The public memory API in <code>include/mvgal/mvgal_memory.h</code> is <strong>fully declared and largely implemented</strong>, but several subsystems it describes cannot succeed on present-day hardware. Two facts dominate:</p>
 <ol>
 <li><strong>Vendor VRAM allocation is not wired up.</strong> Every vendor shim's <code>alloc_vram</code> returns <code>-EOPNOTSUPP</code> (<code>kernel/vendors/mvgal_nvidia.c:338</code>, <code>mvgal_amd*</code>, <code>mvgal_intel.c:368</code>, <code>mvgal_mtt.c:333</code>, <code>mvgal_adreno.h:6</code>). The kernel allocation path at <code>kernel/mvgal_memory.c:246</code> calls it only when <code>mvgal_gpu_can(gpu, MVGAL_CAP_KERNEL_VRAM)</code>, and on failure it silently marks the buffer <code>populated = false</code> and continues. So allocations succeed as <em>objects</em> but are not resident in any GPU's VRAM.</li>
 <li><strong>Compute-submission paths are disabled.</strong> Kernel CS submission returns <code>-EOPNOTSUPP</code> on the same vendor ops.</li>
 </ol>
-<p>Consequently, <strong>Memory Mirroring</strong>, <strong>Predictive Prefetching</strong>, <strong>LRU Eviction</strong>, and <strong>NUMA-aware host staging</strong> describe interfaces and intent, not working behaviour. Each section below says so explicitly. What <em>is</em> working: the userspace buffer bookkeeping, the reference-counted Rust safety layer, DMA-BUF export/import plumbing, the statistics counters, and the placement <em>decision</em> functions.</p></div></div></p>
+<p>Consequently, <strong>Memory Mirroring</strong>, <strong>Predictive Prefetching</strong>, <strong>LRU Eviction</strong>, and <strong>NUMA-aware host staging</strong> describe interfaces and intent, not working behaviour. Each section below says so explicitly. What <em>is</em> working: the userspace buffer bookkeeping, the reference-counted Rust safety layer, DMA-BUF export/import plumbing, the statistics counters, and the placement <em>decision</em> functions.</p></div></div>
 <hr>
-<h2 id="overview">Overview</h2>
+<h2 id="overview">Overview<a class="anchor-link" href="#overview" aria-label="Permalink to this section"></a></h2>
 <p>MVGAL implements a unified memory manager that abstracts over physically separate GPU VRAM pools. Applications see a single virtual address space; MVGAL handles placement, migration, and synchronization transparently.</p>
 <hr>
-<h2 id="buffer-copies">Buffer copies</h2>
+<h2 id="buffer-copies">Buffer copies<a class="anchor-link" href="#buffer-copies" aria-label="Permalink to this section"></a></h2>
 <p><code>mvgal_memory_copy()</code> executes a single region described by
 <code>mvgal_memory_copy_region_t</code> (<code>include/mvgal/mvgal_memory.h</code>), which carries the
 source and destination buffers, their respective offsets, and a size.
 <code>mvgal_memory_copy_gpu()</code> builds one such region and delegates to it, so the two
 share a code path.</p>
-<p><div class="callout callout-warning"><div class="callout-title">A double-applied offset was corrupting memory here until v0.7.15</div><div class="callout-body"><p><code>mvgal_memory_map()</code> already returns a pointer advanced by the offset it is
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">A double-applied offset was corrupting memory here until v0.7.15</span></div><div class="callout-body"><p><code>mvgal_memory_map()</code> already returns a pointer advanced by the offset it is
 given — that is its documented contract, and all three of its branches honour
 it. The copy path nevertheless added <code>region-&gt;src_offset</code> and
 <code>region-&gt;dst_offset</code> a second time at the <code>memcpy</code>, so a copy from source
@@ -269,8 +273,8 @@ tore down a source mapping it had never created. Host-valid buffers carry a
 buffer still points at.</p>
 <p>If you are comparing against an older MVGAL, treat every non-zero-offset copy
 as suspect until you have confirmed the offsets appear exactly once in
-<code>src/userspace/memory/memory.c</code>.</p></div></div></p>
-<h2 id="memory-architecture">Memory Architecture</h2>
+<code>src/userspace/memory/memory.c</code>.</p></div></div>
+<h2 id="memory-architecture">Memory Architecture<a class="anchor-link" href="#memory-architecture" aria-label="Permalink to this section"></a></h2>
 <div class="mermaid">
 flowchart TD
     App["Application virtual address space"] --&gt; UVM["Unified Virtual Memory (UVM)&lt;br/&gt;Single address space spanning all GPU VRAM pools"]
@@ -280,11 +284,11 @@ flowchart TD
     G1 --&gt; HR
 </div>
 
-<p><div class="callout callout-note"><div class="callout-title">Note</div><div class="callout-body"><p>This diagram is the <strong>design target</strong>. The <code>mvgal_unified_heap_t</code> view that backs it is real and populated by <code>mvgal_memory_get_unified_heap()</code> (<code>include/mvgal/mvgal_memory.h:609</code>), which aggregates system RAM as region <code>[0]</code> and per-GPU VRAM as regions <code>[1..N]</code>. However, the per-GPU <code>free_bytes</code> figures it reports are bookkeeping values, not probed vendor VRAM.</p></div></div></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">Note</span></div><div class="callout-body"><p>This diagram is the <strong>design target</strong>. The <code>mvgal_unified_heap_t</code> view that backs it is real and populated by <code>mvgal_memory_get_unified_heap()</code> (<code>include/mvgal/mvgal_memory.h:609</code>), which aggregates system RAM as region <code>[0]</code> and per-GPU VRAM as regions <code>[1..N]</code>. However, the per-GPU <code>free_bytes</code> figures it reports are bookkeeping values, not probed vendor VRAM.</p></div></div>
 <hr>
-<h2 id="transfer-path-selection">Transfer Path Selection</h2>
+<h2 id="transfer-path-selection">Transfer Path Selection<a class="anchor-link" href="#transfer-path-selection" aria-label="Permalink to this section"></a></h2>
 <p>MVGAL selects a transfer path automatically. <strong>There are two implementations of the same function name, and they disagree</strong> — both are reproduced below so you know which one you are calling.</p>
-<h3 id="kernel-side-kernelmvgal_memoryc1460-1497">Kernel side — <code>kernel/mvgal_memory.c:1460-1497</code></h3>
+<h3 id="kernel-side-kernelmvgal_memoryc1460-1497">Kernel side — <code>kernel/mvgal_memory.c:1460-1497</code><a class="anchor-link" href="#kernel-side-kernelmvgal_memoryc1460-1497" aria-label="Permalink to this section"></a></h3>
 <p>Returns <code>mvgal_migration_method_t</code> (<code>kernel/mvgal_memory.h:65-67</code>):</p>
 <pre><code class="language-c">typedef enum {
     MVGAL_MIGRATION_DMA_BUF_ZERO_COPY = 0,  /* Direct DMA-BUF sharing */
@@ -302,9 +306,9 @@ flowchart TD
 </div>
 
 <p>Note the ordering: <strong>P2P is tried before DMA-BUF</strong>, and the gate is NUMA-node equality — not a per-vendor compatibility table. (The source comment above this block says "same PCI root complex"; the code compares <code>numa_node</code>. Same intent, but the test is the NUMA node.)</p>
-<h3 id="userspace-side-srcuserspacememorymemoryc963-996">Userspace side — <code>src/userspace/memory/memory.c:963-996</code></h3>
+<h3 id="userspace-side-srcuserspacememorymemoryc963-996">Userspace side — <code>src/userspace/memory/memory.c:963-996</code><a class="anchor-link" href="#userspace-side-srcuserspacememorymemoryc963-996" aria-label="Permalink to this section"></a></h3>
 <p>Returns the richer <code>mvgal_memory_copy_method_t</code> (<code>include/mvgal/mvgal_types.h</code>):</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Condition</th>
@@ -333,12 +337,12 @@ flowchart TD
 <td><code>MVGAL_MEMORY_COPY_CPU</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>This one <em>does</em> use vendor identity and PCIe topology rather than NUMA node.</p>
-<p><div class="callout callout-important"><div class="callout-title">`size` is ignored</div><div class="callout-body"><p>Both functions take a <code>size_t size</code> parameter and both <strong>explicitly discard it</strong> — <code>src/userspace/memory/memory.c:965</code> reads <code>(void)size; /* Size not used in simplified implementation */</code>. There is no small-transfer vs. large-transfer threshold anywhere in the path-selection code.</p></div></div></p>
-<h3 id="bandwidth">Bandwidth</h3>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">`size` is ignored</span></div><div class="callout-body"><p>Both functions take a <code>size_t size</code> parameter and both <strong>explicitly discard it</strong> — <code>src/userspace/memory/memory.c:965</code> reads <code>(void)size; /* Size not used in simplified implementation */</code>. There is no small-transfer vs. large-transfer threshold anywhere in the path-selection code.</p></div></div>
+<h3 id="bandwidth">Bandwidth<a class="anchor-link" href="#bandwidth" aria-label="Permalink to this section"></a></h3>
 <p>The following figures are <strong>order-of-magnitude reference values for PCIe 4.0 x16, not measurements produced by this project.</strong> MVGAL ships no benchmark that measures any of these paths end-to-end.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Path</th>
@@ -363,11 +367,11 @@ flowchart TD
 <td>6–12 GB/s</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr>
-<h2 id="memory-flags">Memory Flags</h2>
+<h2 id="memory-flags">Memory Flags<a class="anchor-link" href="#memory-flags" aria-label="Permalink to this section"></a></h2>
 <p><code>mvgal_memory_flags_t</code> — <code>include/mvgal/mvgal_memory.h:68-81</code>. <strong>Twelve members</strong>, not eleven: the previous revision of this document omitted <code>MVGAL_MEMORY_FLAG_NONE</code>.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Flag</th>
@@ -437,9 +441,9 @@ flowchart TD
 <td>Zero-initialized</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr>
-<h2 id="allocation-policy">Allocation Policy</h2>
+<h2 id="allocation-policy">Allocation Policy<a class="anchor-link" href="#allocation-policy" aria-label="Permalink to this section"></a></h2>
 <p>Placement is decided by <code>mvgal_buffer_optimize_placement()</code> (<code>src/userspace/memory/memory.c:1002-1058</code>), which branches on the workload type:</p>
 <div class="mermaid">
 flowchart TD
@@ -457,12 +461,12 @@ flowchart TD
     const uint32_t *gpu_indices
 );
 </code></pre>
-<p><div class="callout callout-note"><div class="callout-title">What changed</div><div class="callout-body"><p>The previous revision of this document described a 64 MB threshold that sent <em>small</em> buffers to the GPU with the most free VRAM and <em>large</em> buffers to the "GPU that will write first". That is inverted. The 64 MB threshold applies to <strong>graphics</strong> workloads and selects between <strong>replicate and pin</strong>; the most-free-VRAM choice applies to <strong>compute/AI</strong> workloads.</p></div></div></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">What changed</span></div><div class="callout-body"><p>The previous revision of this document described a 64 MB threshold that sent <em>small</em> buffers to the GPU with the most free VRAM and <em>large</em> buffers to the "GPU that will write first". That is inverted. The 64 MB threshold applies to <strong>graphics</strong> workloads and selects between <strong>replicate and pin</strong>; the most-free-VRAM choice applies to <strong>compute/AI</strong> workloads.</p></div></div>
 <p>The kernel allocation path (<code>kernel/mvgal_memory.c:230-260</code>) is separate and simpler: a <code>gpu_mask</code> of <code>0</code> means <em>all</em> GPUs, and each selected GPU gets <code>ops-&gt;alloc_vram()</code> if it advertises <code>MVGAL_CAP_KERNEL_VRAM</code>, otherwise a DMA-BUF-export fallback. It makes no free-VRAM or size-based choice.</p>
 <hr>
-<h2 id="memory-sharing-modes">Memory Sharing Modes</h2>
+<h2 id="memory-sharing-modes">Memory Sharing Modes<a class="anchor-link" href="#memory-sharing-modes" aria-label="Permalink to this section"></a></h2>
 <p><code>mvgal_memory_sharing_mode_t</code> — <strong>five</strong> members, <code>include/mvgal/mvgal_types.h:188-194</code> (duplicated in <code>include/mvgal/mvgal_intercept.h:134-138</code>).</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Mode</th>
@@ -497,10 +501,10 @@ flowchart TD
 <td>Shared via DMA-BUF</td>
 </tr>
 </tbody>
-</table>
-<p><div class="callout callout-warning"><div class="callout-title">Two fabricated modes removed</div><div class="callout-body"><p>The previous revision listed <code>MVGAL_MEMORY_SHARING_P2P</code> and <code>MVGAL_MEMORY_SHARING_HOST</code>. <strong>Neither symbol exists anywhere in the source tree.</strong> P2P and host staging are <em>transfer paths</em> selected by <code>mvgal_memory_get_placement_strategy()</code>, not sharing modes.</p></div></div></p>
+</table></div>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Two fabricated modes removed</span></div><div class="callout-body"><p>The previous revision listed <code>MVGAL_MEMORY_SHARING_P2P</code> and <code>MVGAL_MEMORY_SHARING_HOST</code>. <strong>Neither symbol exists anywhere in the source tree.</strong> P2P and host staging are <em>transfer paths</em> selected by <code>mvgal_memory_get_placement_strategy()</code>, not sharing modes.</p></div></div>
 <hr>
-<h2 id="memory-mirroring">Memory Mirroring</h2>
+<h2 id="memory-mirroring">Memory Mirroring<a class="anchor-link" href="#memory-mirroring" aria-label="Permalink to this section"></a></h2>
 <p>Replicating a buffer across GPUs is a real API:</p>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_replicate(
     mvgal_buffer_t buffer,
@@ -509,24 +513,24 @@ flowchart TD
     mvgal_fence_t fence
 );
 </code></pre>
-<p><div class="callout callout-warning"><div class="callout-title">No mirror controller</div><div class="callout-body"><p>The previous revision of this document claimed a "mirror controller" that "tracks access patterns per allocation and applies hysteresis" against a mirror threshold, and showed <code>mvgal_memory_replicate(buffer, 0x3)</code> with a bitmask. <strong>No such controller exists</strong> — there is no hysteresis logic, no mirror-threshold configuration, and no per-frame access-pattern tracking in the tree. The real signature takes an explicit GPU-index array, not a bitmask.</p></div></div></p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">No mirror controller</span></div><div class="callout-body"><p>The previous revision of this document claimed a "mirror controller" that "tracks access patterns per allocation and applies hysteresis" against a mirror threshold, and showed <code>mvgal_memory_replicate(buffer, 0x3)</code> with a bitmask. <strong>No such controller exists</strong> — there is no hysteresis logic, no mirror-threshold configuration, and no per-frame access-pattern tracking in the tree. The real signature takes an explicit GPU-index array, not a bitmask.</p></div></div>
 <p>The only caller is the graphics branch of <code>mvgal_buffer_optimize_placement()</code> (see above), which replicates when <code>size &lt; 64 MiB</code> and <code>gpu_count &gt; 1</code>.</p>
 <hr>
-<h2 id="predictive-prefetching">Predictive Prefetching</h2>
-<p><div class="callout callout-danger"><div class="callout-title">Not implemented</div><div class="callout-body"><p>There is no predictive prefetcher. No code inspects per-buffer access history across frames to speculatively move a buffer ahead of the next frame. The two nearest things in the tree are:</p>
+<h2 id="predictive-prefetching">Predictive Prefetching<a class="anchor-link" href="#predictive-prefetching" aria-label="Permalink to this section"></a></h2>
+<div class="callout callout-danger"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m6 6 4 4M10 6l-4 4"/></svg></span><span class="callout-label">Not implemented</span></div><div class="callout-body"><p>There is no predictive prefetcher. No code inspects per-buffer access history across frames to speculatively move a buffer ahead of the next frame. The two nearest things in the tree are:</p>
 <ul>
 <li><code>MVGAL_MIGRATION_PRIORITY_LOW = 3</code> — an enum value documented as <code>/**&lt; Prefetch / speculative */</code> (<code>include/mvgal/mvgal_memory.h:654</code>). It is a priority label for <code>mvgal_memory_migrate_schedule()</code>; nothing schedules speculative work at it automatically.</li>
 <li><code>mvgal_execution_submit()</code> (<code>include/mvgal/mvgal_execution.h:169</code>) is a real entry point and does read the execution plan's selected-GPU mask — but it selects a GPU, it does not prefetch memory.</li>
-</ul></div></div></p>
+</ul></div></div>
 <hr>
-<h2 id="dma-buf-integration">DMA-BUF Integration</h2>
+<h2 id="dma-buf-integration">DMA-BUF Integration<a class="anchor-link" href="#dma-buf-integration" aria-label="Permalink to this section"></a></h2>
 <p>This is one of the memory subsystems that <strong>is</strong> genuinely wired up.</p>
-<h3 id="export-import-userspace-api">Export / Import (userspace API)</h3>
+<h3 id="export-import-userspace-api">Export / Import (userspace API)<a class="anchor-link" href="#export-import-userspace-api" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_export_dmabuf(mvgal_buffer_t buffer, int *fd);
 mvgal_error_t mvgal_memory_import_dmabuf(void *context, int fd, mvgal_buffer_t *buffer);
 </code></pre>
-<p><div class="callout callout-note"><div class="callout-title">Signature correction</div><div class="callout-body"><p>The previous revision showed <code>mvgal_memory_import_dmabuf(ctx, fd, size, &amp;buffer)</code>. There is no <code>size</code> parameter — the size is carried inside the DMA-BUF object itself.</p></div></div></p>
-<h3 id="kernel-path">Kernel path</h3>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">Signature correction</span></div><div class="callout-body"><p>The previous revision showed <code>mvgal_memory_import_dmabuf(ctx, fd, size, &amp;buffer)</code>. There is no <code>size</code> parameter — the size is carried inside the DMA-BUF object itself.</p></div></div>
+<h3 id="kernel-path">Kernel path<a class="anchor-link" href="#kernel-path" aria-label="Permalink to this section"></a></h3>
 <p><code>kernel/mvgal_memory.c</code> implements a real DMA-BUF provider:</p>
 <ul>
 <li><code>mvgal_dmabuf_ops</code> (<code>kernel/mvgal_memory.c:402-407</code>) with <code>map_dma_buf</code>, <code>unmap_dma_buf</code>, <code>release</code>, and <code>mmap</code>.</li>
@@ -534,9 +538,9 @@ mvgal_error_t mvgal_memory_import_dmabuf(void *context, int fd, mvgal_buffer_t *
 <li>Bounce pages are allocated on demand during <code>map_dma_buf</code> and recycled by <code>mvgal_free_bounce_pages()</code>.</li>
 <li><code>mmap</code> deliberately returns <code>-ENODEV</code> (not <code>-EOPNOTSUPP</code>), with the comment explaining that the bounce buffer is not persistently mappable, whereas <code>-EOPNOTSUPP</code> would wrongly imply the ops are missing.</li>
 </ul>
-<p><div class="callout callout-warning"><div class="callout-title">`DRM_IOCTL_PRIME_*` is not what MVGAL uses</div><div class="callout-body"><p>The previous revision stated that "the kernel module uses <code>DRM_IOCTL_PRIME_HANDLE_TO_FD</code> and <code>DRM_IOCTL_PRIME_FD_TO_HANDLE</code> to export/import DMA-BUF objects between vendor DRM drivers." <strong>Those two ioctls appear nowhere in the source</strong> — only in Markdown. MVGAL calls each vendor driver's own <code>ops-&gt;export_dmabuf</code> / <code>ops-&gt;import_dmabuf</code> and wraps the result in its own <code>dma_buf_ops</code>.</p></div></div></p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">`DRM_IOCTL_PRIME_*` is not what MVGAL uses</span></div><div class="callout-body"><p>The previous revision stated that "the kernel module uses <code>DRM_IOCTL_PRIME_HANDLE_TO_FD</code> and <code>DRM_IOCTL_PRIME_FD_TO_HANDLE</code> to export/import DMA-BUF objects between vendor DRM drivers." <strong>Those two ioctls appear nowhere in the source</strong> — only in Markdown. MVGAL calls each vendor driver's own <code>ops-&gt;export_dmabuf</code> / <code>ops-&gt;import_dmabuf</code> and wraps the result in its own <code>dma_buf_ops</code>.</p></div></div>
 <hr>
-<h2 id="rust-memory-safety-layer">Rust Memory Safety Layer</h2>
+<h2 id="rust-memory-safety-layer">Rust Memory Safety Layer<a class="anchor-link" href="#rust-memory-safety-layer" aria-label="Permalink to this section"></a></h2>
 <p>The crate directory is <code>safe/memory_safety/</code>, but the <strong>Cargo package name is <code>mvgal_memory_safety</code></strong>, and it is re-exported from <code>runtime/safe/lib.rs</code> as the module <code>memory_safety</code>.</p>
 <pre><code class="language-rust">// Real signatures (safe/memory_safety/src/lib.rs:158-211)
 pub extern &quot;C&quot; fn mvgal_mem_track(size_bytes: u64, placement: u32, gpu_index: u32) -&gt; MvgalAllocHandle;
@@ -550,14 +554,14 @@ pub extern &quot;C&quot; fn mvgal_mem_total_gpu_bytes() -&gt; u64;
 pub extern &quot;C&quot; fn mvgal_mem_get_last_error() -&gt; i32;
 </code></pre>
 <p>Placements (<code>safe/memory_safety/src/lib.rs:15-17</code>): <code>SystemRam = 0</code>, <code>GpuVram = 1</code>, <code>Mirrored = 2</code>.</p>
-<p><div class="callout callout-note"><div class="callout-title">Corrections</div><div class="callout-body"><ul>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">Corrections</span></div><div class="callout-body"><ul>
 <li><code>mvgal_mem_track</code> takes a <strong>third</strong> <code>gpu_index: u32</code> argument that the previous revision omitted.</li>
 <li>Every fallible call returns <code>i32</code> (0 on success, negative on error), not <code>void</code>. Each crate exposes <code>*_get_last_error()</code> for the detail.</li>
 <li>All externs are <code>#[no_mangle] extern "C"</code> and wrapped in <code>panic::catch_unwind</code>, so no Rust panic can unwind across the FFI boundary.</li>
 <li>The FFI integration tests import the crates under their directory names — <code>use mvgal_fence as fence_manager;</code> — which is why the module and package names differ.</li>
-</ul></div></div></p>
+</ul></div></div>
 <hr>
-<h2 id="memory-statistics">Memory Statistics</h2>
+<h2 id="memory-statistics">Memory Statistics<a class="anchor-link" href="#memory-statistics" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">// Real signature (include/mvgal/mvgal_memory.h:482-487)
 mvgal_error_t mvgal_memory_get_stats(
     mvgal_buffer_t buffer,
@@ -567,18 +571,18 @@ mvgal_error_t mvgal_memory_get_stats(
 );
 </code></pre>
 <p>Implementation at <code>src/userspace/memory/memory.c:940-953</code> reads the buffer's atomic counters and sums <code>access_count[]</code> across all <code>MVGAL_MAX_GPUS</code> entries into the third out-parameter.</p>
-<p><div class="callout callout-warning"><div class="callout-title">Signature correction</div><div class="callout-body"><p>The previous revision showed an <code>mvgal_memory_stats_t</code> struct passed by pointer with eight named fields (<code>total_allocated_bytes</code>, <code>dmabuf_count</code>, <code>p2p_transfers</code>, <code>staging_transfers</code>, …). <strong>No such type exists</strong> and the real function has three scalar out-parameters. A separate, genuinely-existing struct is <code>mvgal_migration_stats_t</code> (<code>mvgal_memory_migrate_query_stats()</code>), which reports <code>total_scheduled</code> / <code>total_completed</code> / <code>total_failed</code> / <code>total_cancelled</code> / <code>queue_depth</code> / <code>bytes_migrated</code>.</p></div></div></p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Signature correction</span></div><div class="callout-body"><p>The previous revision showed an <code>mvgal_memory_stats_t</code> struct passed by pointer with eight named fields (<code>total_allocated_bytes</code>, <code>dmabuf_count</code>, <code>p2p_transfers</code>, <code>staging_transfers</code>, …). <strong>No such type exists</strong> and the real function has three scalar out-parameters. A separate, genuinely-existing struct is <code>mvgal_migration_stats_t</code> (<code>mvgal_memory_migrate_query_stats()</code>), which reports <code>total_scheduled</code> / <code>total_completed</code> / <code>total_failed</code> / <code>total_cancelled</code> / <code>queue_depth</code> / <code>bytes_migrated</code>.</p></div></div>
 <hr>
-<h2 id="numa-awareness">NUMA Awareness</h2>
-<p><div class="callout callout-note"><div class="callout-title">What the code actually does</div><div class="callout-body"><p>The previous revision claimed MVGAL "reads the NUMA node for each GPU from <code>/sys/bus/pci/devices/&lt;slot&gt;/numa_node</code>" and "prefers memory on the NUMA node closest to the GPU" when allocating host staging buffers.</p>
+<h2 id="numa-awareness">NUMA Awareness<a class="anchor-link" href="#numa-awareness" aria-label="Permalink to this section"></a></h2>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">What the code actually does</span></div><div class="callout-body"><p>The previous revision claimed MVGAL "reads the NUMA node for each GPU from <code>/sys/bus/pci/devices/&lt;slot&gt;/numa_node</code>" and "prefers memory on the NUMA node closest to the GPU" when allocating host staging buffers.</p>
 <ul>
 <li>The value comes from the kernel API <code>dev_to_node(&amp;pdev-&gt;dev)</code> at <code>kernel/mvgal_device.c:532</code>, not from parsing sysfs.</li>
 <li>It is used for exactly three things: transfer-path selection (<code>kernel/mvgal_memory.c:1485</code>, same-node → P2P), a warning when a GPU pair straddles NUMA nodes (<code>kernel/mvgal_device.c:676-679</code>), and exposure through <code>MVGAL_IOC_GET_GPU_INFO</code> and <code>mvgal-info --json</code>.</li>
 <li><strong>No host-staging buffer is placed on a NUMA node.</strong> There is no node-local allocation policy in the tree.</li>
-</ul></div></div></p>
+</ul></div></div>
 <hr>
-<h2 id="eviction-policy">Eviction Policy</h2>
-<p><div class="callout callout-danger"><div class="callout-title">No LRU eviction exists</div><div class="callout-body"><p>The previous revision documented a three-step LRU procedure (scan by last-access time → evict least-recently-used to host RAM → re-populate on demand) and claimed <code>MVGAL_MEMORY_FLAG_PERSISTENT</code> buffers are never evicted. <strong>There is no LRU list, no eviction pass, and no re-population path in the source tree.</strong> The only eviction-related identifier is the enum value <code>MVGAL_EXECUTION_MIGRATION_EVICT = 3</code> in <code>include/mvgal/mvgal_execution.h:35</code>.</p></div></div></p>
+<h2 id="eviction-policy">Eviction Policy<a class="anchor-link" href="#eviction-policy" aria-label="Permalink to this section"></a></h2>
+<div class="callout callout-danger"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m6 6 4 4M10 6l-4 4"/></svg></span><span class="callout-label">No LRU eviction exists</span></div><div class="callout-body"><p>The previous revision documented a three-step LRU procedure (scan by last-access time → evict least-recently-used to host RAM → re-populate on demand) and claimed <code>MVGAL_MEMORY_FLAG_PERSISTENT</code> buffers are never evicted. <strong>There is no LRU list, no eviction pass, and no re-population path in the source tree.</strong> The only eviction-related identifier is the enum value <code>MVGAL_EXECUTION_MIGRATION_EVICT = 3</code> in <code>include/mvgal/mvgal_execution.h:35</code>.</p></div></div>
 <p>What does happen on GPU idleness is much simpler — <code>mvgal_check_idle_state()</code> (<code>src/userspace/core/mvgal.c:252-266</code>):</p>
 <pre><code class="language-c">if (mvgal_gpus[i].active &amp;&amp; mvgal_gpus[i].memory_used == 0) {
     mvgal_log(&quot;info&quot;, &quot;GPU %d is idle. Clock gating enabled.&quot;, i);
@@ -590,7 +594,7 @@ mvgal_error_t mvgal_memory_get_stats(
 </code></pre>
 <p>It toggles a logical <code>active</code> flag based on <code>memory_used</code>. It does not move or free any memory.</p>
 <hr>
-<h2 id="configuration">Configuration</h2>
+<h2 id="configuration">Configuration<a class="anchor-link" href="#configuration" aria-label="Permalink to this section"></a></h2>
 <p>In <code>/etc/mvgal/mvgal.conf</code> — all of these keys exist and are read by the config loader:</p>
 <pre><code class="language-ini">[core]
 # Enable cross-GPU memory migration
@@ -613,10 +617,10 @@ device_pattern = /dev/dri/card*
 # Enable PRIME support
 enable_prime = true
 </code></pre>
-<p><div class="callout callout-note"><div class="callout-title">Note</div><div class="callout-body"><p>The per-GPU memory limit is a <strong>logical budget applied by the userspace allocator</strong>. It cannot cause the kernel to free vendor VRAM, because no vendor <code>alloc_vram</code> currently succeeds (see the warning at the top of this page).</p></div></div></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/><path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/></svg></span><span class="callout-label">Note</span></div><div class="callout-body"><p>The per-GPU memory limit is a <strong>logical budget applied by the userspace allocator</strong>. It cannot cause the kernel to free vendor VRAM, because no vendor <code>alloc_vram</code> currently succeeds (see the warning at the top of this page).</p></div></div>
 <hr>
-<h2 id="documentation-corrections-in-this-revision">Documentation Corrections in This Revision</h2>
-<table>
+<h2 id="documentation-corrections-in-this-revision">Documentation Corrections in This Revision<a class="anchor-link" href="#documentation-corrections-in-this-revision" aria-label="Permalink to this section"></a></h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Claim in the previous revision</th>
@@ -681,7 +685,20 @@ enable_prime = true
 <td>Explicitly discarded in both implementations</td>
 </tr>
 </tbody>
-</table>
+</table></div>
+<section class="backlinks">
+<div class="backlinks-title"><svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg> Linked mentions</div>
+<ul class="backlinks-list"><li><a href="design.html">Design</a></li><li><a href="status.html">Project Status</a></li><li><a href="steam.html">Steam / Proton</a></li></ul>
+</section>
+</div>
+<aside class="doc-rail">
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#overview">Overview</a></li><li class="outline-item outline-l2"><a href="#buffer-copies">Buffer copies</a></li><li class="outline-item outline-l2"><a href="#memory-architecture">Memory Architecture</a></li><li class="outline-item outline-l2"><a href="#transfer-path-selection">Transfer Path Selection</a></li><li class="outline-item outline-l3"><a href="#kernel-side-kernelmvgal_memoryc1460-1497">Kernel side — <code>kernel/mvgal_memory.c:1460-1497</code></a></li><li class="outline-item outline-l3"><a href="#userspace-side-srcuserspacememorymemoryc963-996">Userspace side — <code>src/userspace/memory/memory.c:963-996</code></a></li><li class="outline-item outline-l3"><a href="#bandwidth">Bandwidth</a></li><li class="outline-item outline-l2"><a href="#memory-flags">Memory Flags</a></li><li class="outline-item outline-l2"><a href="#allocation-policy">Allocation Policy</a></li><li class="outline-item outline-l2"><a href="#memory-sharing-modes">Memory Sharing Modes</a></li><li class="outline-item outline-l2"><a href="#memory-mirroring">Memory Mirroring</a></li><li class="outline-item outline-l2"><a href="#predictive-prefetching">Predictive Prefetching</a></li><li class="outline-item outline-l2"><a href="#dma-buf-integration">DMA-BUF Integration</a></li><li class="outline-item outline-l3"><a href="#export-import-userspace-api">Export / Import (userspace API)</a></li><li class="outline-item outline-l3"><a href="#kernel-path">Kernel path</a></li><li class="outline-item outline-l2"><a href="#rust-memory-safety-layer">Rust Memory Safety Layer</a></li><li class="outline-item outline-l2"><a href="#memory-statistics">Memory Statistics</a></li><li class="outline-item outline-l2"><a href="#numa-awareness">NUMA Awareness</a></li><li class="outline-item outline-l2"><a href="#eviction-policy">Eviction Policy</a></li><li class="outline-item outline-l2"><a href="#configuration">Configuration</a></li><li class="outline-item outline-l2"><a href="#documentation-corrections-in-this-revision">Documentation Corrections in This Revision</a></li></ul>
+<div class="rail-actions">
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/MEMORY.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/MEMORY.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
+</div>
+</aside>
+</div>
   </main>
   <footer>
     <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
@@ -697,10 +714,46 @@ enable_prime = true
   </div>
 <script src="mermaid.min.js"></script>
 <script>
-if (window.mermaid) {
-  mermaid.initialize({startOnLoad: true, securityLevel: 'strict',
-    theme: 'neutral', flowchart: {htmlLabels: true, useMaxWidth: true}});
-}
+(function () {
+  if (!window.mermaid) return;
+  var P = {
+    fontFamily: getComputedStyle(document.body).fontFamily,
+    primaryColor: '#ddf4ff', primaryTextColor: '#1f2328',
+    primaryBorderColor: '#0969da', lineColor: '#656d76',
+    secondaryColor: '#f6f8fa', tertiaryColor: '#ffffff'
+  };
+  var D = {
+    fontFamily: P.fontFamily,
+    primaryColor: '#161b22', primaryTextColor: '#e6edf3',
+    primaryBorderColor: '#58a6ff', lineColor: '#8b949e',
+    secondaryColor: '#0d1117', tertiaryColor: '#1f2328'
+  };
+  var sources = Array.prototype.map.call(
+    document.querySelectorAll('.mermaid'),
+    function (el) { return el.textContent; });
+  if (!sources.length) return;
+  var nodes = document.querySelectorAll('.mermaid');
+  function draw(dark) {
+    mermaid.initialize({
+      startOnLoad: false, securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: dark ? D : P,
+      flowchart: { htmlLabels: true, useMaxWidth: true }
+    });
+    // run() only renders nodes it has not already seen, so clear the
+    // marker and restore the source text before each pass.
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].removeAttribute('data-processed');
+      nodes[i].textContent = sources[i];
+    }
+    return mermaid.run({ nodes: nodes, suppressErrors: true });
+  }
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function render() { draw(mq.matches).catch(function () {}); }
+  render();
+  if (mq.addEventListener) mq.addEventListener('change', render);
+  else if (mq.addListener) mq.addListener(render);
+})();
 </script>
 </body>
 </html>

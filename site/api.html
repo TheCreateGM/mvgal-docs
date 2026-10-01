@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>API Reference — MVGAL Documentation</title>
 <meta name="description" content="Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
-<meta name="keywords" content="MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions">
+<meta name="keywords" content="MVGAL C API, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions">
 <meta name="author" content="MVGAL Project">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="generator" content="MVGAL docs site generator">
@@ -22,9 +22,8 @@
 <meta name="twitter:title" content="API Reference — MVGAL Documentation">
 <meta name="twitter:description" content="Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "API Reference — MVGAL Documentation", "name": "API Reference — MVGAL Documentation", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.", "url": "https://thecreategm.github.io/mvgal-docs/site/api.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL C API, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions", "datePublished": "2026-08-31", "dateModified": "2026-09-30", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "API Reference — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/api.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
-
 </head>
 <body>
 <header class="app-header">
@@ -38,26 +37,26 @@
     <span class="badge-accent badge">Public</span>
   </div>
   <div class="header-search" role="search" aria-label="Search documentation">
-    
+    <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
     <input id="docs-search" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" autocomplete="off" placeholder="Search documentation" aria-label="Search documentation" aria-controls="docs-search-results" aria-expanded="false">
     <kbd>/</kbd>
     <div class="search-results" id="docs-search-results" role="listbox" aria-label="Documentation pages" hidden></div>
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
-      
+      <svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg>
       <span>Get Started</span>
     </a>
     <a href="changelog.html" class="btn btn-sm">
-      
+      <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
       <span>v0.7.16</span>
     </a>
   </div>
 </header>
 <script>
 (function(){
-  var TOAST_OK = '';
-  var TOAST_INFO = '';
+  var TOAST_OK = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg>';
+  var TOAST_INFO = '<svg class="octicon toast-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg>';
   var toastTimer = null;
   function showToast(msg, kind) {
     kind = kind || 'success';
@@ -77,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.14, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.16, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,43 +152,43 @@
 <div class="app-shell">
 <nav class="sidebar">
 <div class="sidebar-brand">
-  <div class="sb-title"> Documentation</div>
+  <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
   <div class="sb-sub">v0.7.16 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
-<a href="index.html"><span>Home</span></a>
-<a href="quickstart.html"><span>Quick Start</span></a>
-<a href="install.html"><span>Installation</span></a>
-<a href="secure_boot.html"><span>Secure Boot</span></a>
-<a href="build.html"><span>Building</span></a>
+<a href="index.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/><path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/></svg><span>Home</span></a>
+<a href="quickstart.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/><circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/></svg><span>Quick Start</span></a>
+<a href="install.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8"/><path d="m5 7 3 3 3-3"/><path d="M2.5 12v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/></svg><span>Installation</span></a>
+<a href="secure_boot.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.6 13.5 3.5v4.2c0 3.4-2.3 6.1-5.5 7-3.2-.9-5.5-3.6-5.5-7V3.5Z"/><rect x="6.1" y="7" width="3.8" height="3.2" rx=".6"/></svg><span>Secure Boot</span></a>
+<a href="build.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 2.4a3.4 3.4 0 0 0 4 4l-2.3 2.3-3.4-3.4Z"/><path d="m8.9 5.3-5.6 5.6a1.4 1.4 0 0 0 2 2l5.6-5.6"/></svg><span>Building</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Architecture & Design</div>
 <div class="sidebar-section">
-<a href="architecture.html"><span>Architecture</span></a>
-<a href="design.html"><span>Design</span></a>
+<a href="architecture.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/><rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/><rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/></svg><span>Architecture</span></a>
+<a href="design.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg><span>Design</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Core Subsystems</div>
 <div class="sidebar-section">
-<a href="api.html" class="active"><span>API Reference</span></a>
-<a href="strategies.html"><span>Scheduling Strategies</span></a>
-<a href="memory.html"><span>Memory Management</span></a>
-<a href="power.html"><span>Power Management</span></a>
+<a href="api.html" class="active"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.6" width="12.4" height="10.8" rx="1.4"/><path d="m4.6 6.2 2 1.8-2 1.8M8.4 10.4h3"/></svg><span>API Reference</span></a>
+<a href="strategies.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4.4" cy="3.6" r="1.8"/><circle cx="4.4" cy="12.4" r="1.8"/><circle cx="11.6" cy="6.2" r="1.8"/><path d="M4.4 5.4v5.2M11.6 8v1a3 3 0 0 1-3 3H6.2"/></svg><span>Scheduling Strategies</span></a>
+<a href="memory.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1"/><path d="M6.6 1.8v2.6M9.4 1.8v2.6M6.6 11.6v2.6M9.4 11.6v2.6M1.8 6.6h2.6M1.8 9.4h2.6M11.6 6.6h2.6M11.6 9.4h2.6"/></svg><span>Memory Management</span></a>
+<a href="power.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.5 3.4 9.2h3.7l-.9 5.3 5.6-7.7H8.1Z"/></svg><span>Power Management</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Ecosystem</div>
 <div class="sidebar-section">
-<a href="hardware.html"><span>Hardware Compatibility</span></a>
-<a href="steam.html"><span>Steam / Proton</span></a>
+<a href="hardware.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="2.4" width="12.4" height="4.4" rx="1.1"/><rect x="1.8" y="9.2" width="12.4" height="4.4" rx="1.1"/><path d="M4.2 4.6h.01M4.2 11.4h.01"/></svg><span>Hardware Compatibility</span></a>
+<a href="steam.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.4 5.6h5.2a3.4 3.4 0 0 1 3.3 2.6l.8 3a1.9 1.9 0 0 1-3.2 1.7l-1.5-1.6H5.9l-1.5 1.6a1.9 1.9 0 0 1-3.2-1.7l.8-3a3.4 3.4 0 0 1 3.4-2.6Z"/><path d="M4.6 8.2v1.8M3.7 9.1h1.8M10 8.6h.01M11.6 10h.01"/></svg><span>Steam / Proton</span></a>
 </div>
 <div class="sidebar-divider"></div>
 <div class="sidebar-section-title">Project</div>
 <div class="sidebar-section">
-<a href="troubleshooting.html"><span>Troubleshooting</span></a>
-<a href="status.html"><span>Project Status</span></a>
-<a href="changelog.html"><span>Changelog</span></a>
+<a href="troubleshooting.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="8" cy="8.6" rx="3.4" ry="4.4"/><path d="M8 4.2v8.8M4.6 8.6h6.8"/><path d="M4.9 6 2.3 4.4M11.1 6l2.6-1.6M4.9 11.2l-2.6 1.6M11.1 11.2l2.6 1.6"/></svg><span>Troubleshooting</span></a>
+<a href="status.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.6 8.6h2.7l1.5-3.9 2.2 7 1.7-4.4 1 1.3h3.7"/></svg><span>Project Status</span></a>
+<a href="changelog.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.2 4.4 1.4 1.4L6 3.4M7.4 4.6h6.4M2.2 10l1.4 1.4L6 9M7.4 10.2h6.4"/></svg><span>Changelog</span></a>
 </div>
 </nav>
 
@@ -216,29 +215,34 @@
   <a class="crumb-current" href="api.html">API.md</a>
 </div>
 
-    <div class="page-header">
-  <div></div>
+<div class="page-header">
+  <div class="page-header-main">
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.16</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-09-30</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
+    <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>api</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>reference</a></div>
+  </div>
   <div class="page-header-actions">
   <button class="btn btn-sm" title="Copy link" onclick="window._showToast&&window._showToast('Link copied to clipboard');try{if(navigator.clipboard)navigator.clipboard.writeText(location.href).catch(function(){});}catch(e){}">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg>
     <span>Copy link</span>
   </button>
   <a href="quickstart.html" class="btn btn-sm btn-primary">
-    
+    <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="m5 8.2 2.2 2.2L11 6.5"/></svg>
     <span>Quick Start</span>
   </a>
 </div>
 
 </div>
-<h1 id="mvgal-public-api-reference">MVGAL Public API Reference</h1>
+<div class="doc-layout">
+<div class="doc-body">
+<h1 id="mvgal-public-api-reference">MVGAL Public API Reference<a class="anchor-link" href="#mvgal-public-api-reference" aria-label="Permalink to this section"></a></h1>
 <blockquote>
 <p><strong>Implementation status:</strong> Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
 <p><strong>Source version:</strong> 0.7.16 | <strong>Header:</strong> <code>#include &lt;mvgal/mvgal.h&gt;</code></p>
 <hr>
-<h2 id="public-c-headers">Public C Headers</h2>
+<h2 id="public-c-headers">Public C Headers<a class="anchor-link" href="#public-c-headers" aria-label="Permalink to this section"></a></h2>
 <p>MVGAL currently contains 29 public C headers under <code>include/mvgal/</code>. The main header <code>mvgal.h</code> includes all core subsystem headers.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Header</th>
@@ -363,10 +367,10 @@
 <td>WoW64 filesystem redirection types</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr>
-<h2 id="core-api-mvgalh">Core API (<code>mvgal.h</code>)</h2>
-<h3 id="initialization">Initialization</h3>
+<h2 id="core-api-mvgalh">Core API (<code>mvgal.h</code>)<a class="anchor-link" href="#core-api-mvgalh" aria-label="Permalink to this section"></a></h2>
+<h3 id="initialization">Initialization<a class="anchor-link" href="#initialization" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">// Initialize MVGAL with default configuration
 mvgal_error_t mvgal_init(uint32_t flags);
 
@@ -383,27 +387,27 @@ bool mvgal_is_initialized(void);
 const char *mvgal_get_version(void);
 void        mvgal_get_version_numbers(uint32_t *major, uint32_t *minor, uint32_t *patch);
 </code></pre>
-<h3 id="context-management">Context Management</h3>
+<h3 id="context-management">Context Management<a class="anchor-link" href="#context-management" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_context_create(mvgal_context_t *context);
 void          mvgal_context_destroy(mvgal_context_t context);
 mvgal_error_t mvgal_context_set_current(mvgal_context_t context);
 </code></pre>
-<h3 id="execution-control">Execution Control</h3>
+<h3 id="execution-control">Execution Control<a class="anchor-link" href="#execution-control" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_flush(mvgal_context_t context);
 mvgal_error_t mvgal_finish(mvgal_context_t context);
 mvgal_error_t mvgal_wait_idle(mvgal_context_t context);
 mvgal_error_t mvgal_set_enabled(mvgal_context_t context, bool enabled);
 bool          mvgal_is_enabled(mvgal_context_t context);
 </code></pre>
-<h3 id="strategy-control">Strategy Control</h3>
+<h3 id="strategy-control">Strategy Control<a class="anchor-link" href="#strategy-control" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t                mvgal_set_strategy(mvgal_context_t ctx, mvgal_distribution_strategy_t strategy);
 mvgal_distribution_strategy_t mvgal_get_strategy(mvgal_context_t ctx);
 </code></pre>
-<h3 id="statistics">Statistics</h3>
+<h3 id="statistics">Statistics<a class="anchor-link" href="#statistics" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_get_stats(mvgal_context_t context, mvgal_stats_t *stats);
 mvgal_error_t mvgal_reset_stats(mvgal_context_t context);
 </code></pre>
-<h3 id="custom-splitters">Custom Splitters</h3>
+<h3 id="custom-splitters">Custom Splitters<a class="anchor-link" href="#custom-splitters" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_register_custom_splitter(mvgal_context_t ctx,
                                               const mvgal_workload_splitter_t *splitter);
 mvgal_error_t mvgal_unregister_custom_splitter(mvgal_context_t ctx,
@@ -419,14 +423,14 @@ strategy dispatch cannot call through a null pointer. Registration does <strong>
 check for an existing entry: registering one descriptor twice stores it twice and
 both calls return <code>MVGAL_SUCCESS</code>, while each release consumes one entry, so
 releasing an unbalanced number of times ends in <code>MVGAL_ERROR_NOT_FOUND</code>.</p>
-<p><div class="callout callout-warning"><div class="callout-title">Registering works; applying does not yet</div><div class="callout-body"><p>Both calls succeed and the scheduler validates and retains the descriptor, but
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Registering works; applying does not yet</span></div><div class="callout-body"><p>Both calls succeed and the scheduler validates and retains the descriptor, but
 selecting the <code>custom</code> strategy still returns <code>MVGAL_ERROR_NOT_SUPPORTED</code>
 from <code>mvgal_scheduler_apply_strategy()</code>. No code path reads the registry to
 apply a splitter to a workload, and <code>merge()</code> is never called. A task tree
 contract — how <code>split()</code> obtains sub-workload handles, who owns them, when
 <code>merge()</code> fires, and how a failed child is reported — has not been defined. See
-<a href="strategies.html">Scheduling Strategies</a> § Custom Splitters.</p></div></div></p>
-<h3 id="synchronization-primitives">Synchronization Primitives</h3>
+<a href="strategies.html">Scheduling Strategies</a> § Custom Splitters.</p></div></div>
+<h3 id="synchronization-primitives">Synchronization Primitives<a class="anchor-link" href="#synchronization-primitives" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">// Fences
 mvgal_error_t mvgal_fence_create(mvgal_context_t ctx, mvgal_fence_t *fence);
 void          mvgal_fence_destroy(mvgal_fence_t fence);
@@ -442,33 +446,33 @@ mvgal_error_t mvgal_semaphore_wait(mvgal_semaphore_t sem, uint64_t value, uint64
 uint64_t      mvgal_semaphore_get_value(mvgal_semaphore_t sem);
 </code></pre>
 <hr>
-<h2 id="gpu-management-api-mvgal_gpuh">GPU Management API (<code>mvgal_gpu.h</code>)</h2>
-<h3 id="enumeration">Enumeration</h3>
+<h2 id="gpu-management-api-mvgal_gpuh">GPU Management API (<code>mvgal_gpu.h</code>)<a class="anchor-link" href="#gpu-management-api-mvgal_gpuh" aria-label="Permalink to this section"></a></h2>
+<h3 id="enumeration">Enumeration<a class="anchor-link" href="#enumeration" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">int32_t       mvgal_gpu_get_count(void);
 mvgal_error_t mvgal_gpu_enumerate(mvgal_gpu_descriptor_t *descriptors, uint32_t *count);
 mvgal_error_t mvgal_gpu_get_descriptor(int32_t index, mvgal_gpu_descriptor_t *desc);
 </code></pre>
-<h3 id="discovery">Discovery</h3>
+<h3 id="discovery">Discovery<a class="anchor-link" href="#discovery" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_gpu_t mvgal_gpu_find_by_pci(uint16_t vendor_id, uint16_t device_id);
 mvgal_gpu_t mvgal_gpu_find_by_node(const char *drm_node);
 mvgal_gpu_t mvgal_gpu_find_by_vendor(mvgal_vendor_t vendor);
 mvgal_gpu_t mvgal_gpu_select_best(const mvgal_gpu_selection_criteria_t *criteria);
 mvgal_gpu_t mvgal_gpu_get_primary(void);
 </code></pre>
-<h3 id="control">Control</h3>
+<h3 id="control">Control<a class="anchor-link" href="#control" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_gpu_enable(int32_t index, bool enabled);
 bool          mvgal_gpu_is_enabled(int32_t index);
 mvgal_error_t mvgal_gpu_enable_all(void);
 mvgal_error_t mvgal_gpu_disable_all(void);
 </code></pre>
-<h3 id="capabilities">Capabilities</h3>
+<h3 id="capabilities">Capabilities<a class="anchor-link" href="#capabilities" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">bool          mvgal_gpu_has_feature(mvgal_gpu_t gpu, mvgal_feature_flags_t feature);
 bool          mvgal_gpu_has_api(mvgal_gpu_t gpu, mvgal_api_type_t api);
 mvgal_error_t mvgal_gpu_get_memory_stats(mvgal_gpu_t gpu, uint64_t *total, uint64_t *free);
 float         mvgal_gpu_get_utilization(mvgal_gpu_t gpu);
 float         mvgal_gpu_get_temperature(mvgal_gpu_t gpu);
 </code></pre>
-<h3 id="health-monitoring">Health Monitoring</h3>
+<h3 id="health-monitoring">Health Monitoring<a class="anchor-link" href="#health-monitoring" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t          mvgal_gpu_get_health_status(mvgal_gpu_t gpu, mvgal_gpu_health_status_t *status);
 mvgal_gpu_health_level_t mvgal_gpu_get_health_level(mvgal_gpu_t gpu);
 bool                   mvgal_gpu_all_healthy(void);
@@ -479,7 +483,7 @@ void                   mvgal_gpu_unregister_health_callback(mvgal_gpu_health_cal
 mvgal_error_t          mvgal_gpu_enable_health_monitoring(bool enable);
 </code></pre>
 <p><strong>Default health thresholds:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Metric</th>
@@ -504,8 +508,8 @@ mvgal_error_t          mvgal_gpu_enable_health_monitoring(bool enable);
 <td>95 %</td>
 </tr>
 </tbody>
-</table>
-<h3 id="logical-device">Logical Device</h3>
+</table></div>
+<h3 id="logical-device">Logical Device<a class="anchor-link" href="#logical-device" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_device_create(const mvgal_gpu_t *gpus, uint32_t count,
                                    mvgal_logical_device_t *device);
 void          mvgal_device_destroy(mvgal_logical_device_t device);
@@ -513,8 +517,8 @@ mvgal_error_t mvgal_device_get_descriptor(mvgal_logical_device_t device,
                                            mvgal_logical_device_descriptor_t *desc);
 </code></pre>
 <hr>
-<h2 id="memory-management-api-mvgal_memoryh">Memory Management API (<code>mvgal_memory.h</code>)</h2>
-<h3 id="allocation">Allocation</h3>
+<h2 id="memory-management-api-mvgal_memoryh">Memory Management API (<code>mvgal_memory.h</code>)<a class="anchor-link" href="#memory-management-api-mvgal_memoryh" aria-label="Permalink to this section"></a></h2>
+<h3 id="allocation">Allocation<a class="anchor-link" href="#allocation" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_allocate(mvgal_context_t ctx,
                                      const mvgal_memory_alloc_info_t *info,
                                      mvgal_buffer_t *buffer);
@@ -525,7 +529,7 @@ void          mvgal_memory_free(mvgal_buffer_t buffer);
 mvgal_error_t mvgal_memory_get_descriptor(mvgal_buffer_t buffer,
                                            mvgal_memory_descriptor_t *desc);
 </code></pre>
-<h3 id="cpu-access">CPU Access</h3>
+<h3 id="cpu-access">CPU Access<a class="anchor-link" href="#cpu-access" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_map(mvgal_buffer_t buffer, void **ptr);
 void          mvgal_memory_unmap(mvgal_buffer_t buffer);
 bool          mvgal_memory_is_mapped(mvgal_buffer_t buffer);
@@ -535,7 +539,7 @@ mvgal_error_t mvgal_memory_write(mvgal_buffer_t buffer, uint64_t offset,
 mvgal_error_t mvgal_memory_read(mvgal_buffer_t buffer, uint64_t offset,
                                  void *data, size_t size);
 </code></pre>
-<h3 id="gpu-transfers">GPU Transfers</h3>
+<h3 id="gpu-transfers">GPU Transfers<a class="anchor-link" href="#gpu-transfers" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_copy(mvgal_context_t ctx,
                                  const mvgal_memory_copy_region_t *region);
 mvgal_error_t mvgal_memory_copy_gpu(mvgal_context_t ctx,
@@ -543,17 +547,17 @@ mvgal_error_t mvgal_memory_copy_gpu(mvgal_context_t ctx,
                                      mvgal_buffer_t dst, uint32_t dst_gpu,
                                      size_t size);
 </code></pre>
-<h3 id="dma-buf">DMA-BUF</h3>
+<h3 id="dma-buf">DMA-BUF<a class="anchor-link" href="#dma-buf" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_export_dmabuf(mvgal_buffer_t buffer, int *fd);
 mvgal_error_t mvgal_memory_import_dmabuf(mvgal_context_t ctx, int fd,
                                           size_t size, mvgal_buffer_t *buffer);
 </code></pre>
-<h3 id="synchronization">Synchronization</h3>
+<h3 id="synchronization">Synchronization<a class="anchor-link" href="#synchronization" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_flush(mvgal_buffer_t buffer);
 mvgal_error_t mvgal_memory_invalidate(mvgal_buffer_t buffer);
 mvgal_error_t mvgal_memory_sync(mvgal_buffer_t buffer, uint32_t gpu_mask);
 </code></pre>
-<h3 id="advanced">Advanced</h3>
+<h3 id="advanced">Advanced<a class="anchor-link" href="#advanced" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_memory_replicate(mvgal_buffer_t buffer, uint32_t gpu_mask);
 uint64_t      mvgal_memory_get_gpu_address(mvgal_buffer_t buffer, uint32_t gpu_index);
 bool          mvgal_memory_is_accessible(mvgal_buffer_t buffer, uint32_t gpu_index);
@@ -562,19 +566,19 @@ mvgal_error_t mvgal_memory_create_shared(mvgal_context_t ctx, size_t size,
 mvgal_error_t mvgal_memory_get_stats(mvgal_context_t ctx, mvgal_memory_stats_t *stats);
 </code></pre>
 <hr>
-<h2 id="power-management-api-mvgal_powerh">Power Management API (<code>mvgal_power.h</code>)</h2>
+<h2 id="power-management-api-mvgal_powerh">Power Management API (<code>mvgal_power.h</code>)<a class="anchor-link" href="#power-management-api-mvgal_powerh" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">mvgal_error_t mvgal_power_get_state(mvgal_gpu_index_t gpu, mvgal_power_state_t *state);
 mvgal_error_t mvgal_power_get_temperature(mvgal_gpu_index_t gpu, int32_t *temperature_c);
 mvgal_error_t mvgal_power_get_metrics(mvgal_gpu_index_t gpu, mvgal_power_metrics_t *metrics);
 </code></pre>
 <hr>
-<h2 id="p2p-dma-api-mvgal_p2p_dmah">P2P DMA API (<code>mvgal_p2p_dma.h</code>)</h2>
+<h2 id="p2p-dma-api-mvgal_p2p_dmah">P2P DMA API (<code>mvgal_p2p_dma.h</code>)<a class="anchor-link" href="#p2p-dma-api-mvgal_p2p_dmah" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">mvgal_error_t mvgal_p2p_transfer(mvgal_p2p_context_t ctx, const mvgal_p2p_transfer_info_t *info);
 mvgal_error_t mvgal_p2p_get_caps(mvgal_gpu_index_t src, mvgal_gpu_index_t dst, mvgal_p2p_caps_t *caps);
 </code></pre>
 <hr>
-<h2 id="scheduler-api-mvgal_schedulerh">Scheduler API (<code>mvgal_scheduler.h</code>)</h2>
-<h3 id="workload-submission">Workload Submission</h3>
+<h2 id="scheduler-api-mvgal_schedulerh">Scheduler API (<code>mvgal_scheduler.h</code>)<a class="anchor-link" href="#scheduler-api-mvgal_schedulerh" aria-label="Permalink to this section"></a></h2>
+<h3 id="workload-submission">Workload Submission<a class="anchor-link" href="#workload-submission" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_workload_submit(mvgal_context_t ctx,
                                      const mvgal_workload_submit_info_t *info,
                                      mvgal_workload_t *workload);
@@ -584,7 +588,7 @@ mvgal_error_t mvgal_workload_submit_with_callback(mvgal_context_t ctx,
                                                    void *user_data,
                                                    mvgal_workload_t *workload);
 </code></pre>
-<h3 id="workload-control">Workload Control</h3>
+<h3 id="workload-control">Workload Control<a class="anchor-link" href="#workload-control" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_workload_wait(mvgal_workload_t workload, uint64_t timeout_ns);
 bool          mvgal_workload_is_completed(mvgal_workload_t workload);
 mvgal_error_t mvgal_workload_get_result(mvgal_workload_t workload);
@@ -595,7 +599,7 @@ void          mvgal_workload_destroy(mvgal_workload_t workload);
 mvgal_error_t mvgal_workload_set_priority(mvgal_workload_t workload, uint32_t priority);
 mvgal_error_t mvgal_workload_assign_gpus(mvgal_workload_t workload, uint32_t gpu_mask);
 </code></pre>
-<h3 id="scheduler-configuration">Scheduler Configuration</h3>
+<h3 id="scheduler-configuration">Scheduler Configuration<a class="anchor-link" href="#scheduler-configuration" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_scheduler_configure(const mvgal_scheduler_config_t *config);
 mvgal_error_t mvgal_scheduler_get_config(mvgal_scheduler_config_t *config);
 mvgal_error_t mvgal_scheduler_get_stats(mvgal_scheduler_stats_t *stats);
@@ -608,7 +612,7 @@ mvgal_error_t mvgal_scheduler_pause(void);
 mvgal_error_t mvgal_scheduler_resume(void);
 bool          mvgal_scheduler_is_paused(void);
 </code></pre>
-<h3 id="distribution-functions">Distribution Functions</h3>
+<h3 id="distribution-functions">Distribution Functions<a class="anchor-link" href="#distribution-functions" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">mvgal_error_t mvgal_distribute_afr(mvgal_workload_t workload, uint32_t frame_number,
                                     uint32_t *gpu_index);
 mvgal_error_t mvgal_distribute_sfr(mvgal_workload_t workload, float split_ratio,
@@ -616,7 +620,7 @@ mvgal_error_t mvgal_distribute_sfr(mvgal_workload_t workload, float split_ratio,
 mvgal_error_t mvgal_distribute_task(mvgal_workload_t workload, uint32_t *gpu_index);
 </code></pre>
 <hr>
-<h2 id="execution-engine-api-mvgal_executionh">Execution Engine API (<code>mvgal_execution.h</code>)</h2>
+<h2 id="execution-engine-api-mvgal_executionh">Execution Engine API (<code>mvgal_execution.h</code>)<a class="anchor-link" href="#execution-engine-api-mvgal_executionh" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">// Begin a new frame session
 mvgal_error_t mvgal_execution_begin_frame(const mvgal_execution_frame_begin_info_t *info,
                                            uint64_t *frame_id);
@@ -641,7 +645,7 @@ mvgal_error_t mvgal_execution_get_steam_profile(const mvgal_steam_profile_reques
                                                   mvgal_steam_profile_t *profile);
 </code></pre>
 <hr>
-<h2 id="ipc-api-mvgal_ipch">IPC API (<code>mvgal_ipc.h</code>)</h2>
+<h2 id="ipc-api-mvgal_ipch">IPC API (<code>mvgal_ipc.h</code>)<a class="anchor-link" href="#ipc-api-mvgal_ipch" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">// Server
 mvgal_error_t mvgal_ipc_server_init(const char *socket_path);
 void          mvgal_ipc_server_cleanup(void);
@@ -661,7 +665,7 @@ mvgal_error_t mvgal_ipc_receive(int fd, mvgal_ipc_message_type_t *type_out,
 </code></pre>
 <p>Every client call takes the connected file descriptor as its first argument, and <code>send</code>/<code>receive</code> both carry a <code>request_id</code> so a caller can match responses to requests. The wire header (<code>src/userspace/daemon/ipc.c</code>) is <code>MVGAL_IPC_MAGIC 0x4D564741</code> ("MVGA"), version <code>1</code>, then <code>message_type</code>, <code>payload_size</code>, and <code>request_id</code>.</p>
 <p><strong>IPC Message Types:</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Type</th>
@@ -726,12 +730,12 @@ mvgal_error_t mvgal_ipc_receive(int fd, mvgal_ipc_message_type_t *type_out,
 <td>Error response</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr>
-<h2 id="ioctl-interface-mvgal_uapih">IOCTL Interface (<code>mvgal_uapi.h</code>)</h2>
+<h2 id="ioctl-interface-mvgal_uapih">IOCTL Interface (<code>mvgal_uapi.h</code>)<a class="anchor-link" href="#ioctl-interface-mvgal_uapih" aria-label="Permalink to this section"></a></h2>
 <p>MVGAL exposes a character device at <code>/dev/mvgal0</code>. Magic number: <code>'M'</code> (0x4D).</p>
 <p><strong>13 ioctls are declared; 9 are implemented.</strong> The four DMA-BUF and cross-vendor entries are reserved for future work — they are defined in the header but have no <code>case</code> in the <code>kernel/mvgal_core.c</code> dispatcher, so they fall through to <code>default: return -EINVAL</code>.</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>IOCTL</th>
@@ -834,15 +838,15 @@ mvgal_error_t mvgal_ipc_receive(int fd, mvgal_ipc_message_type_t *type_out,
 <td>Free cross-vendor alloc (reserved)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><code>MVGAL_IOC_QUERY_VERSION</code> reports its feature set through <code>feature_flags</code>, which includes <code>MVGAL_UAPI_FEATURE_FUTURE_DMABUF</code> and <code>MVGAL_UAPI_FEATURE_FUTURE_SUBMISSION</code> — the flags that mark the unimplemented entries above.</p>
-<h3 id="drm-render-ioctls">DRM render ioctls</h3>
+<h3 id="drm-render-ioctls">DRM render ioctls<a class="anchor-link" href="#drm-render-ioctls" aria-label="Permalink to this section"></a></h3>
 <p>Separately, <code>kernel/mvgal_core.c</code> registers a DRM driver with its own table of <strong>10</strong> render ioctls, all <code>DRM_RENDER_ALLOW</code>:</p>
 <p><code>MVGAL_QUERY_DEVICES</code> · <code>MVGAL_QUERY_CAPABILITIES</code> · <code>MVGAL_SUBMIT_WORKLOAD</code> · <code>MVGAL_ALLOC_MEMORY</code> · <code>MVGAL_FREE_MEMORY</code> · <code>MVGAL_IMPORT_DMABUF</code> · <code>MVGAL_EXPORT_DMABUF</code> · <code>MVGAL_WAIT_FENCE</code> · <code>MVGAL_SIGNAL_FENCE</code> · <code>MVGAL_SET_GPU_AFFINITY</code></p>
 <p>The device registers with <code>driver_features = DRIVER_RENDER | DRIVER_HAVE_IRQ | DRIVER_GEM</code> at major/minor <code>0.2</code>. Registration is minimal and logical-only — GPU discovery runs in userspace.</p>
 <hr>
-<h2 id="d-bus-api">D-Bus API</h2>
-<table>
+<h2 id="d-bus-api">D-Bus API<a class="anchor-link" href="#d-bus-api" aria-label="Permalink to this section"></a></h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Property</th>
@@ -863,9 +867,9 @@ mvgal_error_t mvgal_ipc_receive(int fd, mvgal_ipc_message_type_t *type_out,
 <td><code>org.mvgal.MVGAL</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Methods (6):</strong></p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Method</th>
@@ -912,21 +916,21 @@ mvgal_error_t mvgal_ipc_receive(int fd, mvgal_ipc_message_type_t *type_out,
 <td>Get driver statistics</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Signals (3):</strong> <code>GPUHotplug</code> (gpu_index, added) · <code>TemperatureWarning</code> (gpu_index, temperature) · <code>PowerLimitReached</code> (gpu_index)</p>
 <p>There are <strong>no <code>SD_BUS_PROPERTY</code> entries</strong> — the vtable contains only the six methods above, so clients should call the getter methods rather than reading properties. <code>GetStatistics</code> returns a dictionary (<code>a{sv}</code>), not a fixed struct.</p>
 <blockquote>
 <p><strong>Security (introduced in v0.7.8):</strong> the D-Bus policy at <code>/etc/dbus-1/system.d/org.mvgal.MVGAL.conf</code> restricts <code>org.mvgal.MVGAL</code> to root and the <code>mvgal</code> group — all other users are denied. An older <code>data/mvgal-dbus.conf</code> declaring <code>com.mvgal.Daemon</code> was stale and is explicitly removed by the package scriptlet.</p>
 </blockquote>
 <hr>
-<h2 id="vulkan">Vulkan</h2>
+<h2 id="vulkan">Vulkan<a class="anchor-link" href="#vulkan" aria-label="Permalink to this section"></a></h2>
 <p>MVGAL ships <strong>no Vulkan extensions.</strong> The interception layer and the ICD implement the standard Vulkan API and are selected by the loader, not by a <code>VK_MVGAL_*</code> extension.</p>
 <p>The layer is a standard global layer: <code>VK_LAYER_MVGAL</code>, <code>api_version 1.4.0</code>, installed to <code>/usr/share/vulkan/implicit_layer.d/VK_LAYER_MVGAL.json</code>, enabled with <code>MVGAL_VULKAN_ENABLE=1</code> and disabled with <code>MVGAL_VULKAN_DISABLE=1</code>. It intercepts 38 standard entry points including <code>vkQueueSubmit</code>, and notably does <strong>not</strong> intercept <code>vkQueuePresentKHR</code>, <code>vkAcquireNextImageKHR</code>, or <code>vkWaitForFences</code>. See <a href="steam.html">STEAM_INTEGRATION</a> for the full list and the frame-pacing implications.</p>
 <blockquote>
 <p>Earlier revisions of this document listed six <code>VK_MVGAL_*</code> extensions. No such symbol exists anywhere in the source tree — it was a documentation error, and the table has been removed rather than corrected.</p>
 </blockquote>
 <hr>
-<h2 id="logging-api-mvgal_logh">Logging API (<code>mvgal_log.h</code>)</h2>
+<h2 id="logging-api-mvgal_logh">Logging API (<code>mvgal_log.h</code>)<a class="anchor-link" href="#logging-api-mvgal_logh" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">void mvgal_log_init(mvgal_log_level_t level, mvgal_log_callback_t callback, void *user_data);
 void mvgal_log_shutdown(void);
 void mvgal_log_set_level(mvgal_log_level_t level);
@@ -949,7 +953,7 @@ void mvgal_log_flush(void);
 <p><strong>Log levels:</strong> <code>MVGAL_LOG_LEVEL_ERROR=0</code>, <code>WARN=1</code>, <code>INFO=2</code>, <code>DEBUG=3</code>, <code>TRACE=4</code></p>
 <p><strong>Convenience macros:</strong> <code>MVGAL_LOG_ERROR(fmt, ...)</code>, <code>MVGAL_LOG_WARN</code>, <code>MVGAL_LOG_INFO</code>, <code>MVGAL_LOG_DEBUG</code>, <code>MVGAL_LOG_TRACE</code></p>
 <hr>
-<h2 id="configuration-api-mvgal_configh">Configuration API (<code>mvgal_config.h</code>)</h2>
+<h2 id="configuration-api-mvgal_configh">Configuration API (<code>mvgal_config.h</code>)<a class="anchor-link" href="#configuration-api-mvgal_configh" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-c">mvgal_error_t mvgal_config_init(void);
 void          mvgal_config_shutdown(void);
 mvgal_error_t mvgal_config_load(const char *path);
@@ -965,8 +969,8 @@ const char   *mvgal_config_get_default_path(void);
 void          mvgal_config_print(void);
 </code></pre>
 <hr>
-<h2 id="error-codes">Error Codes</h2>
-<table>
+<h2 id="error-codes">Error Codes<a class="anchor-link" href="#error-codes" aria-label="Permalink to this section"></a></h2>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Code</th>
@@ -1096,13 +1100,13 @@ void          mvgal_config_print(void);
 <td>Queue or buffer at capacity</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p><strong>Note on 5 vs 13.</strong> <code>MVGAL_ERROR_UNSUPPORTED</code> (5) and <code>MVGAL_ERROR_NOT_SUPPORTED</code> (13) are distinct codes with near-identical meanings, and both are defined at <code>include/mvgal/mvgal_types.h:94-117</code>. This is a genuine quirk of the source, not a transcription error in this table — code that compares against one will not match the other. It is left as-is rather than silently renumbered, because renumbering would break ABI compatibility.</p>
 </blockquote>
 <hr>
-<h2 id="type-reference">Type Reference</h2>
-<h3 id="mvgal_vendor_t"><code>mvgal_vendor_t</code></h3>
+<h2 id="type-reference">Type Reference<a class="anchor-link" href="#type-reference" aria-label="Permalink to this section"></a></h2>
+<h3 id="mvgal_vendor_t"><code>mvgal_vendor_t</code><a class="anchor-link" href="#mvgal_vendor_t" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">MVGAL_VENDOR_UNKNOWN       = 0
 MVGAL_VENDOR_AMD           = 0x1002
 MVGAL_VENDOR_NVIDIA        = 0x10DE
@@ -1112,7 +1116,7 @@ MVGAL_VENDOR_QUALCOMM      = 0x5143
 MVGAL_VENDOR_ARM           = 0x13B5
 MVGAL_VENDOR_BROADCOM      = 0x14E4
 </code></pre>
-<h3 id="mvgal_distribution_strategy_t"><code>mvgal_distribution_strategy_t</code></h3>
+<h3 id="mvgal_distribution_strategy_t"><code>mvgal_distribution_strategy_t</code><a class="anchor-link" href="#mvgal_distribution_strategy_t" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">MVGAL_STRATEGY_ROUND_ROBIN     = 0
 MVGAL_STRATEGY_AFR             = 1
 MVGAL_STRATEGY_SFR             = 2
@@ -1127,12 +1131,12 @@ MVGAL_STRATEGY_REP             = 10
 MVGAL_STRATEGY_PPL             = 11
 MVGAL_STRATEGY_CUSTOM          = 100
 </code></pre>
-<h3 id="mvgal_api_type_t-api-flags"><code>mvgal_api_type_t</code> (API flags)</h3>
+<h3 id="mvgal_api_type_t-api-flags"><code>mvgal_api_type_t</code> (API flags)<a class="anchor-link" href="#mvgal_api_type_t-api-flags" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">MVGAL_API_VULKAN   MVGAL_API_OPENGL   MVGAL_API_OPENCL
 MVGAL_API_CUDA     MVGAL_API_D3D11    MVGAL_API_D3D12
 MVGAL_API_METAL    MVGAL_API_WEBGPU   MVGAL_API_VA_API
 </code></pre>
-<h3 id="mvgal_feature_flags_t"><code>mvgal_feature_flags_t</code></h3>
+<h3 id="mvgal_feature_flags_t"><code>mvgal_feature_flags_t</code><a class="anchor-link" href="#mvgal_feature_flags_t" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-c">MVGAL_FEATURE_DMA_BUF         MVGAL_FEATURE_CROSS_VENDOR
 MVGAL_FEATURE_UNIFIED_MEMORY  MVGAL_FEATURE_P2P_TRANSFER
 MVGAL_FEATURE_GRAPHICS        MVGAL_FEATURE_COMPUTE
@@ -1140,10 +1144,10 @@ MVGAL_FEATURE_VIDEO_DECODE    MVGAL_FEATURE_VIDEO_ENCODE
 MVGAL_FEATURE_AI_ACCEL        MVGAL_FEATURE_RAY_TRACING
 </code></pre>
 <hr>
-<h2 id="rust-ffi-reference">Rust FFI Reference</h2>
+<h2 id="rust-ffi-reference">Rust FFI Reference<a class="anchor-link" href="#rust-ffi-reference" aria-label="Permalink to this section"></a></h2>
 <p>Three Rust crates export C-ABI functions for the C++ daemon. <strong>The directory names and the Cargo package names differ:</strong> <code>safe/fence_manager/</code> is the <code>mvgal_fence</code> package, <code>safe/memory_safety/</code> is <code>mvgal_memory_safety</code>, and <code>safe/capability_model/</code> is <code>mvgal_capability</code>. <code>runtime/safe/lib.rs</code> re-exports them under their directory names as modules, which is why the two naming schemes appear to collide.</p>
 <p>Every entry point is <code>#[no_mangle] extern "C"</code> and catches panics at the boundary, so no unwind can cross into C.</p>
-<h3 id="mvgal_fence-safefence_manager"><code>mvgal_fence</code> — <code>safe/fence_manager/</code></h3>
+<h3 id="mvgal_fence-safefence_manager"><code>mvgal_fence</code> — <code>safe/fence_manager/</code><a class="anchor-link" href="#mvgal_fence-safefence_manager" aria-label="Permalink to this section"></a></h3>
 <p>Handle is <code>MvgalFenceHandle</code> = <code>u64</code>.</p>
 <pre><code class="language-rust">pub type MvgalFenceHandle = u64;
 
@@ -1156,7 +1160,7 @@ pub extern &quot;C&quot; fn mvgal_fence_destroy(handle: MvgalFenceHandle) -&gt; 
 pub extern &quot;C&quot; fn mvgal_fence_get_last_error() -&gt; i32;
 </code></pre>
 <p><code>mvgal_fence_create</code> is the only function that returns a handle; everything else takes one and returns an <code>i32</code> status. The handle must be freed with <code>mvgal_fence_destroy</code>.</p>
-<h3 id="mvgal_memory_safety-safememory_safety"><code>mvgal_memory_safety</code> — <code>safe/memory_safety/</code></h3>
+<h3 id="mvgal_memory_safety-safememory_safety"><code>mvgal_memory_safety</code> — <code>safe/memory_safety/</code><a class="anchor-link" href="#mvgal_memory_safety-safememory_safety" aria-label="Permalink to this section"></a></h3>
 <p>Handle is <code>MvgalAllocHandle</code> = <code>u64</code>.</p>
 <pre><code class="language-rust">pub type MvgalAllocHandle = u64;
 
@@ -1171,7 +1175,7 @@ pub extern &quot;C&quot; fn mvgal_mem_total_gpu_bytes() -&gt; u64;
 pub extern &quot;C&quot; fn mvgal_mem_get_last_error() -&gt; i32;
 </code></pre>
 <p><code>mvgal_mem_track</code> takes both a <code>placement</code> and a <code>gpu_index</code>.</p>
-<h3 id="mvgal_capability-safecapability_model"><code>mvgal_capability</code> — <code>safe/capability_model/</code></h3>
+<h3 id="mvgal_capability-safecapability_model"><code>mvgal_capability</code> — <code>safe/capability_model/</code><a class="anchor-link" href="#mvgal_capability-safecapability_model" aria-label="Permalink to this section"></a></h3>
 <p>Handle is <code>MvgalCapHandle</code> = <code>*mut AggregateCapability</code> — a <strong>pointer</strong>, not an integer. <code>pub struct GpuCapability</code> is defined at <code>safe/capability_model/src/lib.rs:37</code>.</p>
 <pre><code class="language-rust">pub type MvgalCapHandle = *mut AggregateCapability;
 
@@ -1183,16 +1187,16 @@ pub unsafe extern &quot;C&quot; fn mvgal_cap_to_json(handle: MvgalCapHandle, buf
 pub extern &quot;C&quot; fn mvgal_cap_get_last_error() -&gt; i32;
 </code></pre>
 <p>Notes on the contract: <code>mvgal_cap_compute</code> returns a valid <strong>empty</strong> aggregate when <code>gpus</code> is null or <code>count</code> is 0 — it must still be freed. <code>mvgal_cap_to_json</code> writes into a caller-supplied buffer and truncates rather than allocating, returning <code>-1</code> for a null handle, null buffer, or zero length. The <code>capability_model</code> functions are <code>unsafe extern</code> because the caller guarantees the pointer validity; the other two crates are safe.</p>
-<h3 id="mvgal_ffi_tests-safeffi_tests"><code>mvgal_ffi_tests</code> — <code>safe/ffi_tests/</code></h3>
+<h3 id="mvgal_ffi_tests-safeffi_tests"><code>mvgal_ffi_tests</code> — <code>safe/ffi_tests/</code><a class="anchor-link" href="#mvgal_ffi_tests-safeffi_tests" aria-label="Permalink to this section"></a></h3>
 <p>A fourth crate exercising the FFI boundary. It imports the packages under their directory-name aliases:</p>
 <pre><code class="language-rust">use mvgal_capability as capability_model;
 use mvgal_fence as fence_manager;
 use mvgal_memory_safety as memory_safety;
 </code></pre>
 <hr>
-<h2 id="documentation-corrections-in-this-revision">Documentation Corrections in This Revision</h2>
+<h2 id="documentation-corrections-in-this-revision">Documentation Corrections in This Revision<a class="anchor-link" href="#documentation-corrections-in-this-revision" aria-label="Permalink to this section"></a></h2>
 <p>The following claims appeared in earlier revisions of this document and have no counterpart in the source. They are recorded here so the removal is traceable rather than silent:</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Removed claim</th>
@@ -1229,8 +1233,21 @@ use mvgal_memory_safety as memory_safety;
 <td>Takes a caller-supplied buffer and returns <code>i32</code></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr>
+<section class="backlinks">
+<div class="backlinks-title"><svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg> Linked mentions</div>
+<ul class="backlinks-list"><li><a href="architecture.html">Architecture</a></li><li><a href="strategies.html">Scheduling Strategies</a></li></ul>
+</section>
+</div>
+<aside class="doc-rail">
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#public-c-headers">Public C Headers</a></li><li class="outline-item outline-l2"><a href="#core-api-mvgalh">Core API (<code>mvgal.h</code>)</a></li><li class="outline-item outline-l3"><a href="#initialization">Initialization</a></li><li class="outline-item outline-l3"><a href="#context-management">Context Management</a></li><li class="outline-item outline-l3"><a href="#execution-control">Execution Control</a></li><li class="outline-item outline-l3"><a href="#strategy-control">Strategy Control</a></li><li class="outline-item outline-l3"><a href="#statistics">Statistics</a></li><li class="outline-item outline-l3"><a href="#custom-splitters">Custom Splitters</a></li><li class="outline-item outline-l3"><a href="#synchronization-primitives">Synchronization Primitives</a></li><li class="outline-item outline-l2"><a href="#gpu-management-api-mvgal_gpuh">GPU Management API (<code>mvgal_gpu.h</code>)</a></li><li class="outline-item outline-l3"><a href="#enumeration">Enumeration</a></li><li class="outline-item outline-l3"><a href="#discovery">Discovery</a></li><li class="outline-item outline-l3"><a href="#control">Control</a></li><li class="outline-item outline-l3"><a href="#capabilities">Capabilities</a></li><li class="outline-item outline-l3"><a href="#health-monitoring">Health Monitoring</a></li><li class="outline-item outline-l3"><a href="#logical-device">Logical Device</a></li><li class="outline-item outline-l2"><a href="#memory-management-api-mvgal_memoryh">Memory Management API (<code>mvgal_memory.h</code>)</a></li><li class="outline-item outline-l3"><a href="#allocation">Allocation</a></li><li class="outline-item outline-l3"><a href="#cpu-access">CPU Access</a></li><li class="outline-item outline-l3"><a href="#gpu-transfers">GPU Transfers</a></li><li class="outline-item outline-l3"><a href="#dma-buf">DMA-BUF</a></li><li class="outline-item outline-l3"><a href="#synchronization">Synchronization</a></li><li class="outline-item outline-l3"><a href="#advanced">Advanced</a></li><li class="outline-item outline-l2"><a href="#power-management-api-mvgal_powerh">Power Management API (<code>mvgal_power.h</code>)</a></li><li class="outline-item outline-l2"><a href="#p2p-dma-api-mvgal_p2p_dmah">P2P DMA API (<code>mvgal_p2p_dma.h</code>)</a></li><li class="outline-item outline-l2"><a href="#scheduler-api-mvgal_schedulerh">Scheduler API (<code>mvgal_scheduler.h</code>)</a></li><li class="outline-item outline-l3"><a href="#workload-submission">Workload Submission</a></li><li class="outline-item outline-l3"><a href="#workload-control">Workload Control</a></li><li class="outline-item outline-l3"><a href="#scheduler-configuration">Scheduler Configuration</a></li><li class="outline-item outline-l3"><a href="#distribution-functions">Distribution Functions</a></li><li class="outline-item outline-l2"><a href="#execution-engine-api-mvgal_executionh">Execution Engine API (<code>mvgal_execution.h</code>)</a></li><li class="outline-item outline-l2"><a href="#ipc-api-mvgal_ipch">IPC API (<code>mvgal_ipc.h</code>)</a></li><li class="outline-item outline-l2"><a href="#ioctl-interface-mvgal_uapih">IOCTL Interface (<code>mvgal_uapi.h</code>)</a></li><li class="outline-item outline-l3"><a href="#drm-render-ioctls">DRM render ioctls</a></li><li class="outline-item outline-l2"><a href="#d-bus-api">D-Bus API</a></li><li class="outline-item outline-l2"><a href="#vulkan">Vulkan</a></li><li class="outline-item outline-l2"><a href="#logging-api-mvgal_logh">Logging API (<code>mvgal_log.h</code>)</a></li><li class="outline-item outline-l2"><a href="#configuration-api-mvgal_configh">Configuration API (<code>mvgal_config.h</code>)</a></li><li class="outline-item outline-l2"><a href="#error-codes">Error Codes</a></li><li class="outline-item outline-l2"><a href="#type-reference">Type Reference</a></li><li class="outline-item outline-l3"><a href="#mvgal_vendor_t"><code>mvgal_vendor_t</code></a></li><li class="outline-item outline-l3"><a href="#mvgal_distribution_strategy_t"><code>mvgal_distribution_strategy_t</code></a></li><li class="outline-item outline-l3"><a href="#mvgal_api_type_t-api-flags"><code>mvgal_api_type_t</code> (API flags)</a></li><li class="outline-item outline-l3"><a href="#mvgal_feature_flags_t"><code>mvgal_feature_flags_t</code></a></li><li class="outline-item outline-l2"><a href="#rust-ffi-reference">Rust FFI Reference</a></li><li class="outline-item outline-l3"><a href="#mvgal_fence-safefence_manager"><code>mvgal_fence</code> — <code>safe/fence_manager/</code></a></li><li class="outline-item outline-l3"><a href="#mvgal_memory_safety-safememory_safety"><code>mvgal_memory_safety</code> — <code>safe/memory_safety/</code></a></li><li class="outline-item outline-l3"><a href="#mvgal_capability-safecapability_model"><code>mvgal_capability</code> — <code>safe/capability_model/</code></a></li><li class="outline-item outline-l3"><a href="#mvgal_ffi_tests-safeffi_tests"><code>mvgal_ffi_tests</code> — <code>safe/ffi_tests/</code></a></li><li class="outline-item outline-l2"><a href="#documentation-corrections-in-this-revision">Documentation Corrections in This Revision</a></li></ul>
+<div class="rail-actions">
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/API.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
+  <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/API.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
+</div>
+</aside>
+</div>
   </main>
   <footer>
     <div>© 2026 MVGAL Project · v0.7.16 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>

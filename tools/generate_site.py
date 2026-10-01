@@ -22,6 +22,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import NamedTuple
 
 import markdown
 
@@ -45,105 +46,200 @@ BLOB = f"https://github.com/{OWNER}/{REPO}/blob/main"
 MERMAID_JS = "mermaid.min.js"
 MERMAID_VERSION = "10.9.3"
 
-OCTICONS_CSS = ""
+# Vendored, no CDN. Commit cec1bb7 removed the octicon/CDN dependencies and
+# this stays dependency-free: mermaid ships as one UMD bundle next to styles.css.
+MERMAID_JS = "mermaid.min.js"
+MERMAID_VERSION = "10.9.3"
+EDIT = f"https://github.com/{OWNER}/{REPO}/edit/main"
+
+
+# ── Icons ────────────────────────────────────────────────────────────────────
+# Hand-authored 16x16 stroke glyphs, inlined as SVG. No font, no CDN, no
+# third-party path data: commit cec1bb7 dropped Primer's octicon dependency and
+# this keeps it that way. Stroke-only so every glyph shares one optical weight.
+
+ICONS = {
+    "search": '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/>',
+    "rocket": '<path d="M8 1.4c2.1 1.7 3.1 4.1 3.1 6.7v2.2L9.4 11.9H6.6L4.9 10.3V8.1c0-2.6 1-5 3.1-6.7Z"/>'
+              '<circle cx="8" cy="7" r="1.4"/><path d="m6.4 12.3-1.3 2.4M9.6 12.3l1.3 2.4"/>',
+    "tag": '<path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/>'
+           '<circle cx="11" cy="5" r="1"/>',
+    "check": '<path d="m3 8.5 3.2 3.2L13 5"/>',
+    "check-circle": '<circle cx="8" cy="8" r="6.25"/><path d="m5 8.2 2.2 2.2L11 6.5"/>',
+    "x-circle": '<circle cx="8" cy="8" r="6.25"/><path d="m6 6 4 4M10 6l-4 4"/>',
+    "info": '<circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/>',
+    "alert": '<path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/>',
+    "question": '<circle cx="8" cy="8" r="6.25"/><path d="M6.2 6.2a1.9 1.9 0 0 1 3.6.8c0 1.3-1.8 1.8-1.8 3M8 12.2h.01"/>',
+    "lightbulb": '<path d="M6.2 10.6a3.5 3.5 0 1 1 3.6 0"/>'
+                 '<path d="M6.4 12.4h3.2M6.8 14h2.4"/>',
+    "link": '<path d="M6.6 9.4 9.4 6.6"/>'
+            '<path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/>'
+            '<path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/>',
+    "download": '<path d="M8 2v8"/><path d="m5 7 3 3 3-3"/>'
+                '<path d="M2.5 12v1a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/>',
+    "shield-lock": '<path d="M8 1.6 13.5 3.5v4.2c0 3.4-2.3 6.1-5.5 7-3.2-.9-5.5-3.6-5.5-7V3.5Z"/>'
+                   '<rect x="6.1" y="7" width="3.8" height="3.2" rx=".6"/>',
+    "tools": '<path d="M10.6 2.4a3.4 3.4 0 0 0 4 4l-2.3 2.3-3.4-3.4Z"/>'
+             '<path d="m8.9 5.3-5.6 5.6a1.4 1.4 0 0 0 2 2l5.6-5.6"/>',
+    "stack": '<rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/>'
+             '<rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/>'
+             '<rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/>',
+    "book": '<path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/>'
+            '<path d="M2.6 12.9a1 1 0 0 0 1 1H13"/>',
+    "terminal": '<rect x="1.8" y="2.6" width="12.4" height="10.8" rx="1.4"/>'
+                '<path d="m4.6 6.2 2 1.8-2 1.8M8.4 10.4h3"/>',
+    "git-branch": '<circle cx="4.4" cy="3.6" r="1.8"/><circle cx="4.4" cy="12.4" r="1.8"/>'
+                  '<circle cx="11.6" cy="6.2" r="1.8"/><path d="M4.4 5.4v5.2M11.6 8v1a3 3 0 0 1-3 3H6.2"/>',
+    "cpu": '<rect x="4.4" y="4.4" width="7.2" height="7.2" rx="1"/>'
+           '<path d="M6.6 1.8v2.6M9.4 1.8v2.6M6.6 11.6v2.6M9.4 11.6v2.6M1.8 6.6h2.6M1.8 9.4h2.6M11.6 6.6h2.6M11.6 9.4h2.6"/>',
+    "zap": '<path d="M9 1.5 3.4 9.2h3.7l-.9 5.3 5.6-7.7H8.1Z"/>',
+    "server": '<rect x="1.8" y="2.4" width="12.4" height="4.4" rx="1.1"/>'
+              '<rect x="1.8" y="9.2" width="12.4" height="4.4" rx="1.1"/>'
+              '<path d="M4.2 4.6h.01M4.2 11.4h.01"/>',
+    "gamepad": '<path d="M5.4 5.6h5.2a3.4 3.4 0 0 1 3.3 2.6l.8 3a1.9 1.9 0 0 1-3.2 1.7l-1.5-1.6H5.9l-1.5 1.6a1.9 1.9 0 0 1-3.2-1.7l.8-3a3.4 3.4 0 0 1 3.4-2.6Z"/>'
+               '<path d="M4.6 8.2v1.8M3.7 9.1h1.8M10 8.6h.01M11.6 10h.01"/>',
+    "bug": '<ellipse cx="8" cy="8.6" rx="3.4" ry="4.4"/><path d="M8 4.2v8.8M4.6 8.6h6.8"/>'
+           '<path d="M4.9 6 2.3 4.4M11.1 6l2.6-1.6M4.9 11.2l-2.6 1.6M11.1 11.2l2.6 1.6"/>',
+    "pulse": '<path d="M1.6 8.6h2.7l1.5-3.9 2.2 7 1.7-4.4 1 1.3h3.7"/>',
+    "checklist": '<path d="m2.2 4.4 1.4 1.4L6 3.4M7.4 4.6h6.4M2.2 10l1.4 1.4L6 9M7.4 10.2h6.4"/>',
+    "folder": '<path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/>',
+    "file-code": '<path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/>'
+                 '<path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/>',
+    "note": '<rect x="2.6" y="2" width="10.8" height="12" rx="1.3"/>'
+            '<path d="M5.2 5.6h5.6M5.2 8h5.6M5.2 10.4h3.4"/>',
+    "code": '<path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/>',
+    "quote": '<path d="M3 10.4c0-2.6 1.2-4.3 3.4-5.2l.6 1.2c-1.3.7-2 1.6-2.1 2.6h1.9v3.4H3Z"/>'
+             '<path d="M9.2 10.4c0-2.6 1.2-4.3 3.4-5.2l.6 1.2c-1.3.7-2 1.6-2.1 2.6H13v3.4H9.2Z"/>',
+    "pencil": '<path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/>',
+    "dot": '<circle cx="8" cy="8" r="3" fill="currentColor" stroke="none"/>',
+}
+
+ICON_ATTRS = ('viewBox="0 0 16 16" fill="none" stroke="currentColor" '
+              'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"')
+
+
+def octicon(name: str, size: int = 16, extra_class: str = "") -> str:
+    """Inline one ICONS glyph. An unknown name yields '' rather than a hole."""
+    body = ICONS.get(name)
+    if body is None:
+        return ""
+    cls = f' class="octicon{(" " + extra_class) if extra_class else ""}"'
+    return (f'<svg{cls} width="{size}" height="{size}" {ICON_ATTRS} '
+            f'aria-hidden="true">{body}</svg>')
+
+
+# ── Page catalogue: the single source of truth ───────────────────────────────
+# One record per page. Nav groups, the index card grid, the search index, the
+# breadcrumbs and the sitemap all read from this list, so a label, icon or
+# description cannot drift between them again.
+
+class Page(NamedTuple):
+    html: str
+    label: str
+    title: str
+    desc: str
+    keywords: str
+    md: str
+    section: str
+    icon: str
+    card: str      # shorter blurb for the index grid
+    lang: str
+    meta: str
+
 
 PAGES = [
-    ("quickstart.html", "Quick Start", "Quick Start — MVGAL Documentation",
-     "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution.",
-     "MVGAL quick start, install MVGAL, COPR install, mvgald daemon, mvgal-info, get started, Fedora RHEL CentOS",
-     "QUICKSTART.md"),
-    ("install.html", "Installation", "Installation — MVGAL Documentation",
-     "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.",
-     "MVGAL install, COPR, dnf install mvgal, Fedora RHEL CentOS, kernel module, Secure Boot, MOK, prerequisites",
-     "INSTALL.md"),
-    ("secure_boot.html", "Secure Boot", "Secure Boot & MOK Enrollment — MVGAL Documentation",
-     "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.",
-     "MVGAL Secure Boot, MOK enrollment, mvgal-enroll-mok, mokutil, DKMS signing, UEFI, kernel module signing",
-     "SECURE_BOOT.md"),
-    ("build.html", "Building", "Building — MVGAL Documentation",
-     "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.",
-     "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM",
-     "BUILD.md"),
-    ("architecture.html", "Architecture", "Architecture — MVGAL Documentation",
-     "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.",
-     "MVGAL architecture, kernel module, read-only GPU discovery, runtime capability probes, userspace APIs",
-     "ARCHITECTURE.md"),
-    ("design.html", "Design", "Design — MVGAL Documentation",
-     "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior.",
-     "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals",
-     "DESIGN.md"),
-    ("api.html", "API Reference", "API Reference — MVGAL Documentation",
-     "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.",
-     "MVGAL API, C API reference, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions",
-     "API.md"),
-    ("strategies.html", "Scheduling Strategies", "Scheduling Strategies — MVGAL Documentation",
-     "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.",
-     "MVGAL scheduling, GPU scheduler, round-robin, least-load, bin-packing, GPU-aware, hybrid, RLD, REP, PPL, workload distribution, memory heap",
-     "STRATEGIES.md"),
-    ("memory.html", "Memory Management", "Memory Management — MVGAL Documentation",
-     "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.",
-     "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety",
-     "MEMORY.md"),
-    ("hardware.html", "Hardware Compatibility", "Hardware Compatibility — MVGAL Documentation",
-     "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports.",
-     "MVGAL hardware, supported GPUs, AMD RDNA, NVIDIA Turing Ampere Ada, Intel Arc, Moore Threads MTT, driver support, kernel requirements, feature matrix",
-     "HARDWARE_COMPATIBILITY.md"),
-    ("steam.html", "Steam / Proton", "Steam / Proton — MVGAL Documentation",
-     "Steam and Proton helper components, their environment variables, and capability-dependent behavior.",
-     "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY",
-     "STEAM_INTEGRATION.md"),
-    ("power.html", "Power Management", "Power Management — MVGAL Documentation",
-     "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.",
-     "MVGAL power management, runtime capability probing, native driver controls",
-     "POWER_MANAGEMENT.md"),
-    ("troubleshooting.html", "Troubleshooting", "Troubleshooting — MVGAL Documentation",
-     "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.",
-     "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics",
-     "TROUBLESHOOTING.md"),
-    ("status.html", "Project Status", "Project Status — MVGAL Documentation",
-     "MVGAL source version, release provenance, and verified runtime capability boundaries.",
-      "MVGAL status, source version 0.7.14, release provenance, capability boundaries",
-      "STATUS.md"),
-    ("changelog.html", "Changelog", "Changelog — MVGAL Documentation",
-      "MVGAL release history and changelog: source release history through v0.7.14, bug fixes, new features, known issues and release notes.",
-      "MVGAL changelog, release notes through v0.7.14, version history, DKMS, Secure Boot",
-      "CHANGELOG.md"),
+    Page("quickstart.html", "Quick Start", "Quick Start — MVGAL Documentation",
+         "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution.",
+         "MVGAL quick start, install MVGAL, COPR install, mvgald daemon, mvgal-info, get started, Fedora RHEL CentOS",
+         "QUICKSTART.md", "Getting Started", "rocket",
+         "Inspect GPUs and check daemon status.", "Linux", "Diagnostics"),
+    Page("install.html", "Installation", "Installation — MVGAL Documentation",
+         "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes.",
+         "MVGAL install, COPR, dnf install mvgal, Fedora RHEL CentOS, kernel module, Secure Boot, MOK, prerequisites",
+         "INSTALL.md", "Getting Started", "download",
+         "Check package availability or build from source.", "CMake", "2 methods"),
+    Page("secure_boot.html", "Secure Boot", "Secure Boot & MOK Enrollment — MVGAL Documentation",
+         "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.",
+         "MVGAL Secure Boot, MOK enrollment, mvgal-enroll-mok, mokutil, DKMS signing, UEFI, kernel module signing",
+         "SECURE_BOOT.md", "Getting Started", "shield-lock",
+         "MOK enrollment for packages that install signed modules.", "MOK", "UEFI"),
+    Page("build.html", "Building", "Building — MVGAL Documentation",
+         "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.",
+         "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM",
+         "BUILD.md", "Getting Started", "tools",
+         "Build with the repository CMake or Meson configuration.", "CMake", "Build systems"),
+    Page("architecture.html", "Architecture", "Architecture — MVGAL Documentation",
+         "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.",
+         "MVGAL architecture, kernel module, read-only GPU discovery, runtime capability probes, userspace APIs",
+         "ARCHITECTURE.md", "Architecture & Design", "stack",
+         "Kernel, runtime, APIs, packaging and tools.", "C/C++", "Subsystems"),
+    Page("design.html", "Design", "Design — MVGAL Documentation",
+         "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior.",
+         "MVGAL design, architecture decisions, DRM meta-driver, C++20 daemon, Unix socket IPC, LD_PRELOAD, design goals",
+         "DESIGN.md", "Architecture & Design", "book",
+         "Design goals and architecture decisions.", "C++20", "Decisions"),
+    Page("api.html", "API Reference", "API Reference — MVGAL Documentation",
+         "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores.",
+         "MVGAL C API, mvgal_init, context management, execution control, scheduling strategy, fences, semaphores, mvgal_ functions",
+         "API.md", "Core Subsystems", "terminal",
+         "Complete public C API reference.", "C", "Public headers"),
+    Page("strategies.html", "Scheduling Strategies", "Scheduling Strategies — MVGAL Documentation",
+         "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch.",
+         "MVGAL scheduling, GPU scheduler, round-robin, least-load, bin-packing, GPU-aware, hybrid, RLD, REP, PPL, workload distribution, memory heap",
+         "STRATEGIES.md", "Core Subsystems", "git-branch",
+         "Scheduling strategy identifiers and availability notes.", "C", "Strategy API"),
+    Page("memory.html", "Memory Management", "Memory Management — MVGAL Documentation",
+         "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers.",
+         "MVGAL memory, unified VRAM, DMA-BUF, PCIe P2P, host-RAM staging, memory manager, NUMA, memory flags, prefetching, Rust memory safety",
+         "MEMORY.md", "Core Subsystems", "cpu",
+         "Memory interfaces and capability-dependent support.", "DMA-BUF", "Capabilities"),
+    Page("hardware.html", "Hardware Compatibility", "Hardware Compatibility — MVGAL Documentation",
+         "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports.",
+         "MVGAL hardware, supported GPUs, AMD RDNA, NVIDIA Turing Ampere Ada, Intel Arc, Moore Threads MTT, driver support, kernel requirements, feature matrix",
+         "HARDWARE_COMPATIBILITY.md", "Ecosystem", "server",
+         "GPU discovery and runtime capability reporting.", "Vulkan", "4 vendors"),
+    Page("steam.html", "Steam / Proton", "Steam / Proton — MVGAL Documentation",
+         "Steam and Proton helper components, their environment variables, and capability-dependent behavior.",
+         "MVGAL Steam, Proton, gaming, Vulkan layer, frame pacer, AFR, NTSYNC, DXVK, VKD3D-Proton, ENABLE_MVGAL, MVGAL_STRATEGY",
+         "STEAM_INTEGRATION.md", "Ecosystem", "gamepad",
+         "Steam and Proton integration components.", "Proton", "Gaming"),
+    Page("power.html", "Power Management", "Power Management — MVGAL Documentation",
+         "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.",
+         "MVGAL power management, runtime capability probing, native driver controls",
+         "POWER_MANAGEMENT.md", "Core Subsystems", "zap",
+         "Capability-dependent power controls.", "DVFS", "Thermal"),
+    Page("troubleshooting.html", "Troubleshooting", "Troubleshooting — MVGAL Documentation",
+         "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.",
+         "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics",
+         "TROUBLESHOOTING.md", "Project", "bug",
+         "Common issues and solutions.", "Linux", "Diagnostics"),
+    Page("status.html", "Project Status", "Project Status — MVGAL Documentation",
+         f"MVGAL source version, release provenance, and verified runtime capability boundaries.",
+         f"MVGAL status, source version {VERSION}, release provenance, capability boundaries",
+         "STATUS.md", "Project", "pulse",
+         "Current milestone and status.", "Status", "Milestone"),
+    Page("changelog.html", "Changelog", "Changelog — MVGAL Documentation",
+         f"MVGAL release history and changelog: source release history through v{VERSION}, bug fixes, new features, known issues and release notes.",
+         f"MVGAL changelog, release notes through v{VERSION}, version history, DKMS, Secure Boot",
+         "CHANGELOG.md", "Project", "checklist",
+         f"Source release history through v{VERSION}.", "Releases", "Release history"),
 ]
 
-NAV_LABELS = {f: label for f, label, *_ in PAGES}
+# The home page is navigation-only: it is not a PAGES entry (nothing renders it
+# from a note) but it must lead the first nav section and count toward NAV_COUNT.
+HOME = ("index.html", "Home", "file-code")
+SECTION_ORDER = ["Getting Started", "Architecture & Design", "Core Subsystems",
+                 "Ecosystem", "Project"]
 
 NAV_SECTIONS = [
-    ("Getting Started", [
-        ("index.html", "Home", "file-code"),
-        ("quickstart.html", "Quick Start", "rocket"),
-        ("install.html", "Installation", "download"),
-        ("secure_boot.html", "Secure Boot", "shield-lock"),
-        ("build.html", "Building", "tools"),
-    ]),
-    ("Architecture & Design", [
-        ("architecture.html", "Architecture", "stack"),
-        ("design.html", "Design", "book"),
-    ]),
-    ("Core Subsystems", [
-        ("api.html", "API Reference", "terminal"),
-        ("strategies.html", "Scheduling Strategies", "git-branch"),
-        ("memory.html", "Memory Management", "cpu"),
-        ("power.html", "Power Management", "zap"),
-    ]),
-    ("Ecosystem", [
-        ("hardware.html", "Hardware Compatibility", "server"),
-        ("steam.html", "Steam / Proton", "gamepad-2"),
-    ]),
-    ("Project", [
-        ("troubleshooting.html", "Troubleshooting", "bug"),
-        ("status.html", "Project Status", "pulse"),
-        ("changelog.html", "Changelog", "checklist"),
-    ]),
+    (section,
+     ([HOME] if section == SECTION_ORDER[0] else [])
+     + [(p.html, p.label, p.icon) for p in PAGES if p.section == section])
+    for section in SECTION_ORDER
 ]
 
-def octicon(name, size=16, extra_class=""):
-    return ""
-
+NAV_LABELS = {p.html: p.label for p in PAGES}
+NAV_LABELS[HOME[0]] = HOME[1]
 NAV_COUNT = len(PAGES) + 1
 
 MD = markdown.Markdown(
@@ -158,7 +254,7 @@ CALLOUT_MD = markdown.Markdown(
 )
 
 # "QUICKSTART" -> "quickstart.html", so [[docs/API|API]] can be resolved.
-NOTE_HTML = {entry[5][:-3]: entry[0] for entry in PAGES}
+NOTE_HTML = {p.md[:-3]: p.html for p in PAGES}
 
 # Per-page counts of each Obsidian construct that was converted, reported by
 # main() so a regression (a callout that stopped rendering) is visible.
@@ -174,6 +270,21 @@ CALLOUT_TYPES = {
     "failure": "Failure", "fail": "Fail", "missing": "Missing",
     "danger": "Danger", "error": "Error", "bug": "Bug",
     "example": "Example", "quote": "Quote", "cite": "Cite",
+}
+
+# Which glyph each callout kind wears. Types that share a severity share a
+# glyph, so the icon reads as the severity ladder rather than 28 identities.
+CALLOUT_ICONS = {
+    "note": "note", "abstract": "info", "summary": "info", "tldr": "info",
+    "info": "info", "todo": "checklist",
+    "tip": "lightbulb", "hint": "lightbulb",
+    "success": "check-circle", "check": "check-circle", "done": "check-circle",
+    "question": "question", "help": "question", "faq": "question",
+    "warning": "alert", "caution": "alert", "attention": "alert",
+    "important": "alert", "missing": "alert",
+    "failure": "x-circle", "fail": "x-circle", "danger": "x-circle",
+    "error": "x-circle", "bug": "bug",
+    "example": "code", "quote": "quote", "cite": "quote",
 }
 
 # "> [!warning] Title" — Obsidian's real form has a space after the '>'.
@@ -302,12 +413,70 @@ def extract_callouts(text: str) -> tuple[str, list[str], list[str]]:
         inner = CALLOUT_MD.convert("\n".join(body).strip())
         blocks.append(
             f'<div class="callout callout-{escattr(kind)}">'
-            f'<div class="callout-title">{escattr(title)}</div>'
+            f'<div class="callout-title"><span class="callout-icon">'
+            f'{octicon(CALLOUT_ICONS.get(kind, "info"), 12)}</span>'
+            f'<span class="callout-label">{escattr(title)}</span></div>'
             f'<div class="callout-body">{inner}</div>'
             f"</div>"
         )
         out.append(f"\x00CALLOUT{len(blocks) - 1}\x00")
     return "\n".join(out), blocks, unknown
+
+
+# ── Post-processing of converted HTML ───────────────────────────────────────
+# Markdown emits these constructs as bare block-level elements. Left alone they
+# escape their container's styling and overflow the page.
+
+# A lone placeholder line becomes "<p>SENTINEL</p>", so injecting a <div> into
+# it yields "<p><div>…</div></p>": invalid nesting that browsers silently split.
+BLOCK_SENTINEL = re.compile(r"<p>(\x00(?:CALLOUT|DATAVIEW)\d+\x00)</p>")
+# python-markdown's tables extension emits a bare <table>; the dataview
+# renderer emits <table class="dv-table"> and is already wrapped.
+BARE_TABLE = re.compile(r"<table>(.*?)</table>", re.S)
+HEADING = re.compile(r'<h([1-6])\s+id="([^"]+)"([^>]*)>(.*?)</h\1>', re.S)
+
+
+def unwrap_placeholders(html: str) -> str:
+    return BLOCK_SENTINEL.sub(r"\1", html)
+
+
+def wrap_tables(html: str) -> str:
+    """Give every body table a horizontal scroll container of its own."""
+    return BARE_TABLE.sub(
+        lambda m: f'<div class="table-wrap"><table>{m.group(1)}</table></div>', html)
+
+
+def add_heading_anchors(html: str) -> str:
+    """Add the hover permalink the stylesheet's .anchor-link rules expect."""
+    def sub(m: re.Match) -> str:
+        level, hid, attrs, inner = m.groups()
+        return (f'<h{level} id="{hid}"{attrs}>{inner}'
+                f'<a class="anchor-link" href="#{hid}" aria-label="Permalink to this section"></a>'
+                f'</h{level}>')
+
+    return HEADING.sub(sub, html)
+
+
+def outline(tokens: list[dict], max_level: int = 3) -> str:
+    """Build the right-rail "On this page" nav from the toc extension's tokens.
+
+    The h1 is the page title and already sits above the rail, so level 1 is
+    skipped. Tokens nest, so the tree is walked rather than read flat.
+    """
+    items: list[str] = []
+
+    def walk(toks: list[dict]) -> None:
+        for t in toks:
+            if t["level"] <= max_level and t["level"] > 1:
+                items.append(f'<li class="outline-item outline-l{t["level"]}">'
+                             f'<a href="#{t["id"]}">{t["html"]}</a></li>')
+            walk(t.get("children", []))
+
+    walk(tokens)
+    if not items:
+        return ""
+    return ('<div class="outline-title">On this page</div>'
+            f'<ul class="outline-list">{"".join(items)}</ul>')
 
 
 def preprocess_mermaid(text: str) -> tuple[str, int]:
@@ -327,13 +496,55 @@ def preprocess_mermaid(text: str) -> tuple[str, int]:
 
 
 def mermaid_script() -> str:
+    """Load the vendored mermaid bundle, themed to match the GitHub palette.
+
+    Mermaid bakes its theme into the SVG at render time and cannot restyle it
+    afterwards, so a scheme change has to re-initialize and re-run over the
+    original sources, which live in each .mermaid div's textContent.
+    """
     return (
         f'<script src="{MERMAID_JS}"></script>\n'
         "<script>\n"
-        "if (window.mermaid) {\n"
-        "  mermaid.initialize({startOnLoad: true, securityLevel: 'strict',\n"
-        "    theme: 'neutral', flowchart: {htmlLabels: true, useMaxWidth: true}});\n"
-        "}\n"
+        "(function () {\n"
+        "  if (!window.mermaid) return;\n"
+        "  var P = {\n"
+        "    fontFamily: getComputedStyle(document.body).fontFamily,\n"
+        "    primaryColor: '#ddf4ff', primaryTextColor: '#1f2328',\n"
+        "    primaryBorderColor: '#0969da', lineColor: '#656d76',\n"
+        "    secondaryColor: '#f6f8fa', tertiaryColor: '#ffffff'\n"
+        "  };\n"
+        "  var D = {\n"
+        "    fontFamily: P.fontFamily,\n"
+        "    primaryColor: '#161b22', primaryTextColor: '#e6edf3',\n"
+        "    primaryBorderColor: '#58a6ff', lineColor: '#8b949e',\n"
+        "    secondaryColor: '#0d1117', tertiaryColor: '#1f2328'\n"
+        "  };\n"
+        "  var sources = Array.prototype.map.call(\n"
+        "    document.querySelectorAll('.mermaid'),\n"
+        "    function (el) { return el.textContent; });\n"
+        "  if (!sources.length) return;\n"
+        "  var nodes = document.querySelectorAll('.mermaid');\n"
+        "  function draw(dark) {\n"
+        "    mermaid.initialize({\n"
+        "      startOnLoad: false, securityLevel: 'strict',\n"
+        "      theme: 'base',\n"
+        "      themeVariables: dark ? D : P,\n"
+        "      flowchart: { htmlLabels: true, useMaxWidth: true }\n"
+        "    });\n"
+        "    // run() only renders nodes it has not already seen, so clear the\n"
+        "    // marker and restore the source text before each pass.\n"
+        "    for (var i = 0; i < nodes.length; i++) {\n"
+        "      nodes[i].removeAttribute('data-processed');\n"
+        "      nodes[i].textContent = sources[i];\n"
+        "    }\n"
+        "    return mermaid.run({ nodes: nodes, suppressErrors: true });\n"
+        "  }\n"
+        "  var mq = window.matchMedia('(prefers-color-scheme: dark)');\n"
+        "  function render() { draw(mq.matches).catch(function () {}); }\n"
+        "  render();\n"
+        "  if (mq.addEventListener) mq.addEventListener('change', render);\n"
+        "  else if (mq.addListener) mq.addListener(render);\n"
+        "})();\n"
         "</script>\n"
     )
 
@@ -379,6 +590,35 @@ def resolve_links(html: str) -> tuple[str, int]:
         parts[i] = WIKILINK.sub(wiki, parts[i])
         parts[i] = MD_LINK.sub(md, parts[i])
     return "".join(parts), count
+
+
+# A vault note's inbound links are the main way to navigate it, so the site
+# shows them. Scanned once from the raw markdown rather than the rendered HTML,
+# because a rendered link has already been rewritten to an .html href.
+MD_TARGET = re.compile(r"\]\(([^):\s]+\.md)(?:#[^)]*)?\)")
+_LINK_GRAPH: dict[str, set[str]] | None = None
+
+
+def link_graph() -> dict[str, set[str]]:
+    """note stem -> stems of the notes that link to it."""
+    global _LINK_GRAPH
+    if _LINK_GRAPH is not None:
+        return _LINK_GRAPH
+    graph: dict[str, set[str]] = {stem: set() for stem in NOTE_HTML}
+    for page in PAGES:
+        source = page.md[:-3]
+        parts = CODE_REGION.split((DOCS / page.md).read_text(encoding="utf-8"))
+        for i in range(0, len(parts), 2):        # odd indices are code regions
+            text = parts[i]
+            stems = [m.group(1).replace("\\", "").rsplit("/", 1)[-1]
+                     for m in WIKILINK.finditer(text)]
+            stems += [m.group(1).rsplit("/", 1)[-1][:-3]
+                      for m in MD_TARGET.finditer(text)]
+            for stem in stems:
+                if stem in graph and stem != source:
+                    graph[stem].add(source)
+    _LINK_GRAPH = graph
+    return graph
 
 
 # ── Dataview: the subset of the query language this vault actually uses ──────
@@ -616,7 +856,7 @@ def app_header(active_page: str) -> str:
   </div>
   <div class="header-actions">
     <a href="quickstart.html" class="btn btn-primary">
-      {octicon("repo-push", 16)}
+      {octicon("rocket", 16)}
       <span>Get Started</span>
     </a>
     <a href="changelog.html" class="btn btn-sm">
@@ -648,7 +888,7 @@ def app_header(active_page: str) -> str:
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = {json.dumps([{"href": page[0], "title": page[2].split(" — ")[0], "description": page[3]} for page in PAGES], ensure_ascii=False)};
+  var searchPages = {json.dumps([{"href": p.html, "title": p.title.split(" — ")[0], "description": p.desc} for p in PAGES], ensure_ascii=False)};
   function closeSearch() {{
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -747,9 +987,9 @@ def repo_tabs(active_page: str) -> str:
 def breadcrumbs(active_page: str, title: str = "") -> str:
     page_title = title or NAV_LABELS.get(active_page, "Home")
     md_filename = ""
-    for entry in PAGES:
-        if entry[0] == active_page:
-            md_filename = entry[5]
+    for p in PAGES:
+        if p.html == active_page:
+            md_filename = p.md
             break
     if active_page == "index.html":
         md_filename = "README.md"
@@ -771,7 +1011,7 @@ def breadcrumbs(active_page: str, title: str = "") -> str:
 def sidebar(active: str) -> str:
     links_html = []
     links_html.append(f'<div class="sidebar-brand">')
-    links_html.append(f'  <div class="sb-title">{octicon("file-directory", 16)} Documentation</div>')
+    links_html.append(f'  <div class="sb-title">{octicon("folder", 16)} Documentation</div>')
     links_html.append(f'  <div class="sb-sub">v{VERSION} · GPL-2.0/3.0 · MIT/Apache-2.0</div>')
     links_html.append(f'</div>')
 
@@ -827,16 +1067,26 @@ def page_header_actions(active_page: str) -> str:
 """
 
 
-def render_markdown(fname: str, md_src: str) -> tuple[str, dict]:
-    """Convert one vault note to HTML, resolving Obsidian-only constructs."""
+def render_markdown(md_src: str) -> tuple[str, dict, dict, list]:
+    """Convert one vault note to HTML, resolving Obsidian-only constructs.
+
+    Returns (body, stats, frontmatter, toc_tokens).
+    """
     src = (DOCS / md_src).read_text(encoding="utf-8")
+    meta, _ = split_frontmatter(src)
     md_text, callouts, unknown = extract_callouts(strip_frontmatter(src))
     md_text, mermaid_n = preprocess_mermaid(md_text)
     md_text, dataview = extract_dataview(md_text)
     MD.reset()
     body = MD.convert(md_text)
+    toc = list(MD.toc_tokens)
+    # Sentinels are still bare at this point; drop the <p> the converter wrapped
+    # them in before the blocks are swapped back in.
+    body = unwrap_placeholders(body)
     body = inject_blocks(body, callouts, "CALLOUT")
     body = inject_blocks(body, dataview, "DATAVIEW")
+    body = wrap_tables(body)
+    body = add_heading_anchors(body)
     body, links = resolve_links(body)
     return body, {
         "callouts": len(callouts),
@@ -844,13 +1094,18 @@ def render_markdown(fname: str, md_src: str) -> tuple[str, dict]:
         "mermaid": mermaid_n,
         "dataview": len(dataview),
         "links": links,
-    }
+    }, meta, toc
 
 
-def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str, md_src: str) -> str:
-    body, stats = render_markdown(fname, md_src)
+def render_doc_page(page: Page) -> str:
+    fname, title, desc, keywords, md_src = page.html, page.title, page.desc, page.keywords, page.md
+    body, stats, meta, toc = render_markdown(md_src)
     TALLY.setdefault(fname, stats)
     url = BASE_URL + fname
+    chips = page_chips(meta)
+    tags = tag_pills(meta)
+    rail = outline(toc)
+    backlinks = backlinks_panel(page.md)
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -877,7 +1132,6 @@ def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str
 <meta name="twitter:image" content="{BASE_URL}favicon.svg">
 <script type="application/ld+json">{json_ld_doc(title, desc, url, keywords)}</script>
 <link rel="stylesheet" href="styles.css">
-{OCTICONS_CSS}
 </head>
 <body>
 {app_header(fname)}
@@ -888,17 +1142,79 @@ def render_doc_page(fname: str, label: str, title: str, desc: str, keywords: str
 {repo_tabs(fname)}
 <main>
 {breadcrumbs(fname)}
-    <div class="page-header">
-  <div></div>
+<div class="page-header">
+  <div class="page-header-main">
+    {chips}
+    {tags}
+  </div>
   {page_header_actions(fname)}
 </div>
+<div class="doc-layout">
+<div class="doc-body">
 {body}
+{backlinks}
+</div>
+<aside class="doc-rail">
+{rail}
+<div class="rail-actions">
+  <a class="rail-link" href="{EDIT}/{md_src}" target="_blank" rel="noopener">{octicon("pencil", 12)} Edit this page</a>
+  <a class="rail-link" href="{BLOB}/{md_src}" target="_blank" rel="noopener">{octicon("code", 12)} View source</a>
+</div>
+</aside>
+</div>
 """
     html += FOOTER
     html += mermaid_script() if TALLY[fname]["mermaid"] else ""
     html += FOOTER_TAIL
     return html
 
+
+
+def page_chips(meta: dict) -> str:
+    """Vault frontmatter surfaced as read-only property chips."""
+    fields = (("tag", "mvgal_version", "v{v}" if meta.get("mvgal_version") else ""),
+              ("check", "mvgal_verified", "{v}"),
+              ("book", "mvgal_role", "{v}"))
+    chips = []
+    for icon, key, fmt in fields:
+        value = meta.get(key)
+        if not value:
+            continue
+        text = fmt.format(v=esc(str(value)))
+        chips.append(
+            f'<span class="page-chip"><span class="chip-icon">'
+            f'{octicon(icon, 12)}</span>{text}</span>'
+        )
+    return f'<div class="page-chips">{"".join(chips)}</div>' if chips else ""
+
+
+def tag_pills(meta: dict) -> str:
+    """Frontmatter tags as pills, minus the vault-wide `mvgal` tag."""
+    tags = meta.get("tags") or []
+    if isinstance(tags, str):
+        tags = _scalar(tags)
+    tags = [t for t in tags if t and t != "mvgal"]
+    if not tags:
+        return ""
+    pills = "".join(f'<a class="tag-pill" href="#">{octicon("tag", 10)}{esc(str(t))}</a>' for t in tags)
+    return f'<div class="page-tags">{pills}</div>'
+
+
+def backlinks_panel(md_src: str) -> str:
+    """Incoming links, i.e. the notes that reference this one."""
+    incoming = sorted(link_graph().get(md_src[:-3], ()))
+    if not incoming:
+        return ""
+    items = "".join(
+        f'<li><a href="{NOTE_HTML[stem]}">{esc(NAV_LABELS.get(NOTE_HTML[stem], stem))}</a></li>'
+        for stem in incoming
+    )
+    return (
+        '<section class="backlinks">\n'
+        f'<div class="backlinks-title">{octicon("link", 14)} Linked mentions</div>\n'
+        f'<ul class="backlinks-list">{items}</ul>\n'
+        '</section>'
+    )
 
 
 def render_index() -> str:
@@ -908,40 +1224,22 @@ def render_index() -> str:
     url = BASE_URL + "index.html"
     fname = "index.html"
 
-    cards_spec = [
-        ("quickstart.html", "Quick Start", "Inspect GPUs and check daemon status.", "rocket", "Linux", "Diagnostics"),
-        ("install.html", "Installation", "Check package availability or build from source.", "download", "CMake", "2 methods"),
-        ("secure_boot.html", "Secure Boot", "MOK enrollment for packages that install signed modules.", "shield-lock", "MOK", "UEFI"),
-        ("build.html", "Building", "Build with the repository CMake or Meson configuration.", "tools", "CMake", "Build systems"),
-        ("architecture.html", "Architecture", "Kernel, runtime, APIs, packaging and tools.", "stack", "C/C++", "Subsystems"),
-        ("design.html", "Design", "Design goals and architecture decisions.", "book", "C++20", "Decisions"),
-        ("api.html", "API Reference", "Complete public C API reference.", "terminal", "C", "Public headers"),
-        ("strategies.html", "Scheduling Strategies", "Scheduling strategy identifiers and availability notes.", "git-branch", "C", "Strategy API"),
-        ("memory.html", "Memory Management", "Memory interfaces and capability-dependent support.", "cpu", "DMA-BUF", "Capabilities"),
-        ("hardware.html", "Hardware Compatibility", "GPU discovery and runtime capability reporting.", "server", "Vulkan", "4 vendors"),
-        ("steam.html", "Steam / Proton", "Steam and Proton integration components.", "gamepad-2", "Proton", "Gaming"),
-        ("power.html", "Power Management", "Capability-dependent power controls.", "zap", "DVFS", "Thermal"),
-        ("troubleshooting.html", "Troubleshooting", "Common issues and solutions.", "bug", "Linux", "Diagnostics"),
-        ("status.html", "Project Status", "Current milestone and status.", "pulse", "Status", "Milestone"),
-        ("changelog.html", "Changelog", "Source release history through v0.7.12.", "checklist", "Releases", "release history"),
-    ]
-
     card_html = "\n".join(
-        f'''<a class="card" href="{f}">
+        f'''<a class="card" href="{p.html}">
   <div class="card-header">
-    {octicon(icon, 16, "card-icon")}
-    <h3>{t}</h3>
+    {octicon(p.icon, 16, "card-icon")}
+    <h3>{esc(p.label)}</h3>
   </div>
-  <p>{d}</p>
+  <p>{esc(p.card)}</p>
   <div class="card-meta">
-    <span class="meta-item"><span class="lang-dot"></span>{lang}</span>
+    <span class="meta-item"><span class="lang-dot"></span>{esc(p.lang)}</span>
     <span class="meta-item">
       {octicon("dot", 12)}
-      {meta}
+      {esc(p.meta)}
     </span>
   </div>
 </a>'''
-        for f, t, d, icon, lang, meta in cards_spec
+        for p in PAGES
     )
 
     body = f"""{breadcrumbs(fname)}
@@ -987,7 +1285,7 @@ def render_index() -> str:
 </div>
 <h2>What is MVGAL?</h2>
 <p>Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.</p>
-<p>MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration. The kernel module discovers devices without binding them away from native drivers. As of 0.7.14, unsupported kernel submission and VRAM allocation fail with <code>-EOPNOTSUPP</code>, and the Vulkan ICD does not advertise a synthetic aggregate physical device. Verify each API path and probed capability on the target system.</p>
+<p>MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration. The kernel module discovers devices without binding them away from native drivers. As of {VERSION}, unsupported kernel submission and VRAM allocation fail with <code>-EOPNOTSUPP</code>, and the Vulkan ICD does not advertise a synthetic aggregate physical device. Verify each API path and probed capability on the target system.</p>
 <h2>Quick Start</h2>
 <pre><code># Start the daemon (the unit is mvgal-daemon.service; enable also creates
 # the mvgald.service and mvgal.service aliases)
@@ -1031,7 +1329,6 @@ mvgal-compat --system   # check readiness</code></pre>
 <meta name="twitter:image" content="{BASE_URL}favicon.svg">
 <script type="application/ld+json">{json_ld_index()}</script>
 <link rel="stylesheet" href="styles.css">
-{OCTICONS_CSS}
 </head>
 <body>
 {app_header(fname)}
@@ -1049,8 +1346,8 @@ mvgal-compat --system   # check readiness</code></pre>
 
 def render_sitemap() -> str:
     urls = ['<url><loc>%sindex.html</loc></url>' % BASE_URL]
-    for fname, *_ in PAGES:
-        urls.append(f"<url><loc>{BASE_URL}{fname}</loc></url>")
+    for p in PAGES:
+        urls.append(f"<url><loc>{BASE_URL}{p.html}</loc></url>")
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -1062,9 +1359,9 @@ def render_sitemap() -> str:
 def main() -> int:
     SITE.mkdir(parents=True, exist_ok=True)
     TALLY.clear()
-    for entry in PAGES:
-        out = render_doc_page(*entry)
-        (SITE / entry[0]).write_text(out, encoding="utf-8")
+    for p in PAGES:
+        out = render_doc_page(p)
+        (SITE / p.html).write_text(out, encoding="utf-8")
 
     (SITE / "index.html").write_text(render_index(), encoding="utf-8")
     (SITE / "sitemap.xml").write_text(render_sitemap(), encoding="utf-8")
