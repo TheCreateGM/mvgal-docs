@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, design, reference]
 aliases: [Design Document, Design]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: design
 mvgal_order: 7
 ---
 
 # MVGAL Design Document
 
-> **Implementation status:** Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.19. The source changelog documents through 0.7.19. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.16 | **Last Updated:** September 2026
+**Source version:** 0.7.19 | **Last Updated:** September 2026
 
 ---
 
@@ -156,7 +156,26 @@ Set the strategy with `mvgal_set_strategy()` (`mvgal.h:197`) or the scheduler-sp
 - (-) 13 strategies increase code surface area
 - (-) Auto-detect heuristics may be wrong for edge cases
 
+### Decision 7: Synthetic Topology at the Discovery Seam (v0.7.18)
+
+Multi-vendor code paths — cross-vendor DMA-BUF, P2P capability negotiation, heterogeneous scheduling, per-pair bandwidth costing — only misbehave on machines nobody has. MVGAL therefore lets a test describe a machine that does not exist, and substitutes that description for the result of hardware rescan.
+
+The alternative designs were rejected for specific reasons:
+
+- **Mock each subsystem independently.** Rejected: it would prove that a mocked scheduler picks the right strategy, which was never in doubt. The bugs worth catching live *between* discovery, capability negotiation and the cost model.
+- **Require real multi-vendor hardware.** Rejected: a test that needs four GPUs from four vendors in one box does not run.
+- **A separate fake-only code path.** Rejected: the fake path would not be the path production takes, so passing tests would prove nothing.
+
+**Why the discovery seam specifically:** it is the single point every downstream consumer already goes through. Substituting there means the scheduler, memory manager and P2P cost model are exercised through their real entry points, with no test-only branches inside them.
+
+**Tradeoffs:**
+- (+) Heterogeneous paths become testable on any machine, deterministically
+- (+) Thermal, throttling and bandwidth behaviour are *modelled*, so time and load are inputs rather than fixtures
+- (-) The backend shapes what discovery reports; it creates no devices and proves nothing about hardware
+- (-) It is a public header, so the test surface is part of the shipped ABI
+
 ---
+
 
 ## Data Flow
 

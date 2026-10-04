@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, strategies, reference]
 aliases: [Scheduling Strategies, Strategies]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: reference
 mvgal_order: 10
 ---
 
 # MVGAL Scheduling Strategy Identifiers
 
-> Source metadata is **0.7.16**; the source changelog documents releases through **0.7.16**. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.
+> Source metadata is **0.7.19**; the source changelog documents releases through **0.7.19**. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.
 
 ## Public C identifiers
 
@@ -55,7 +55,7 @@ bool (*merge)(mvgal_workload_t workload, uint32_t part_count,
 ```
 
 `mvgal_register_custom_splitter()` and `mvgal_unregister_custom_splitter()` both
-work as of v0.7.16. The scheduler validates the descriptor, rejects any of the
+work as of v0.7.19. The scheduler validates the descriptor, rejects any of the
 three callbacks being `NULL`, and retains a copy. Removal matches on all four
 fields together, so splitters that share callbacks but differ in `user_data` can
 be released independently.

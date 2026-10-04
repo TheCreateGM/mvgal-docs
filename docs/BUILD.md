@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: guide
 mvgal_order: 14
 ---
 
 # MVGAL Build Guide
 
-> Source metadata is **0.7.16**; the source changelog documents releases through **0.7.16**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
+> Source metadata is **0.7.19**; the source changelog documents releases through **0.7.19**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
 
 ## Requirements
 
@@ -74,9 +74,61 @@ cmake --install build --prefix /usr/local
 
 Distribution packaging definitions are under `packaging/`; artifact names and install paths depend on the selected package recipe. Do not rely on old hard-coded paths or version numbers in generated examples.
 
+## Packaging
+
+> [!info]
+> Verified on the v0.7.19 tree on 2026-10-04 by building the SRPM and all five artefact formats, then submitting the SRPM to COPR and to the Jenkins `mvgal-packages` job. Both succeeded.
+
+### Source RPM
+
+`scripts/mksrpm.sh` builds the SRPM. It is deliberately strict, and the strictness is the feature:
+
+```bash
+./scripts/mksrpm.sh            # uses packaging/rpm/mvgal.spec
+./scripts/mksrpm.sh path/to/other.spec
+```
+
+- **Version cross-check.** The version in the spec is compared against eight other sources — `CMakeLists.txt`, `Cargo.toml`, `bindings/rust/Cargo.toml`, `kernel/mvgal_version.h`, `include/mvgal/mvgal_version.h`, `tools/libmvgal/CMakeLists.txt`, `kernel/dkms/dkms.conf` and `Cargo.lock` — and against any hard-coded `N.N.N` left in six C/C++ sources after comment stripping. A mismatch aborts the build. This is why a release bump touches eleven files.
+- **Dirty-tree guard.** The script refuses to run against a working tree with uncommitted changes, because a tarball built from `git archive` would not correspond to the checkout you are looking at. Note that `vendor/` and `build*` are tracked/ignored asymmetrically; a stray `*.spec` in the repository root will block the script.
+- **Output.** Both `v<version>.tar.gz` and `mvgal-<version>-1.<dist>.src.rpm` are written to the repository root. Both are gitignored.
+
+### Fedora COPR
+
+```bash
+copr build axogm/mvgal mvgal-<version>-1.fc44.src.rpm
+copr watch-build <build_id>
+```
+
+The SRPM embeds the source tarball, so no build chroot fetches anything from the forge. This matters: the spec's `Source0` points at a `github.com/.../archive/refs/tags/v<version>.tar.gz` URL, and if a build ever did resolve it, the tag must exist first. Bumping the version without pushing the tag yields a build that fails in every chroot with a 404.
+
+> [!warning]
+> `copr build` prints nothing while uploading, and an SRPM is several megabytes. A short command timeout can kill the client after the upload has already succeeded server-side — check `copr list-builds` before assuming it failed.
+
+Build state is authoritative at `https://copr.fedorainfracloud.org/api_3/build/<build_id>`. Note that `api.copr.fedorainfracloud.org` does not resolve, and a bare `/api_3/` returns 404; only the per-build path works.
+
+### Reproducibility
+
+Rebuilding the tarball and SRPM from one commit is **byte-identical**. Rebuilding a binary RPM is not, for two independent reasons:
+
+| Artefact | Reproducible | Why |
+|----------|--------------|-----|
+| `v<version>.tar.gz` | yes | `git archive` plus a guard that refuses a missing `vendor/` |
+| `.src.rpm` | yes | `BUILDTIME` pinned to the commit date |
+| binary `.rpm` | no | random ELF build-id; build path baked into DWARF |
+
+The `BUILDTIME` pin is the non-obvious one. Exporting `SOURCE_DATE_EPOCH` alone changes nothing on rpm 6.0.2 — rpm only honours it when the opt-in macro `use_source_date_epoch_as_buildtime` is also defined, which it ships without on purpose. Both `scripts/mksrpm.sh` and `packaging/jenkins/build_rpm.sh` set both, which is why the SRPM the Jenkins RPM stage rebuilds is byte-identical to the one built locally.
+
+The remaining binary-RPM variance is **left in place deliberately**. `-Wl,--build-id=sha1` combined with `-fdebug-prefix-map` would fix both axes and was verified to work, but stripping or replacing build-ids degrades debuginfo and debuginfod correlation for a shipped `-debuginfo` subpackage. See [[docs/STATUS|Project Status]] § Reproducibility limits.
+
+### Jenkins
+
+The `mvgal-packages` job builds every distributable format — deb, rpm, tar.zst, AppImage and Flatpak — and verifies a `SHA256SUMS` over the results. It has no webhook and is triggered manually. `BUILD_FLATPAK` is a boolean parameter and defaults to true; the Flatpak stage needs a ~2 GB SDK cache under `$JENKINS_HOME/.flatpak-user`, which is why the job preserves that directory between runs.
+
 ## Source references
 
 - Top-level options and targets: source `CMakeLists.txt`
 - Meson options and targets: source `meson_options.txt` and `meson.build`
 - Rust workspace: source `Cargo.toml`
 - Package recipes: source `packaging/`
+- SRPM recipe and its version/dirty-tree guards: source `scripts/mksrpm.sh`
+- Multi-format packaging used by CI: source `packaging/jenkins/`

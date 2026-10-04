@@ -1,23 +1,23 @@
 ---
 tags: [mvgal, api, reference]
 aliases: [API Reference, API]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: reference
 mvgal_order: 8
 ---
 
 # MVGAL Public API Reference
 
-> **Implementation status:** Source metadata is 0.7.16. The source changelog documents through 0.7.16. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.19. The source changelog documents through 0.7.19. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.16 | **Header:** `#include <mvgal/mvgal.h>`
+**Source version:** 0.7.19 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 
 ## Public C Headers
 
-MVGAL currently contains 29 public C headers under `include/mvgal/`. The main header `mvgal.h` includes all core subsystem headers.
+MVGAL currently contains 30 public C headers under `include/mvgal/`. The main header `mvgal.h` includes all core subsystem headers.
 
 | Header | Description |
 |--------|-------------|
@@ -50,6 +50,7 @@ MVGAL currently contains 29 public C headers under `include/mvgal/`. The main he
 | `mvgal_sycl.h` | SYCL backend support |
 | `mvgal_network.h` | Network pooling / RDMA |
 | `mvgal_wow64.h` | WoW64 filesystem redirection types |
+| `mvgal_mock.h` | Synthetic GPU topology backend for deterministic tests (v0.7.18) |
 
 ---
 
@@ -314,6 +315,118 @@ mvgal_error_t mvgal_power_get_metrics(mvgal_gpu_index_t gpu, mvgal_power_metrics
 mvgal_error_t mvgal_p2p_transfer(mvgal_p2p_context_t ctx, const mvgal_p2p_transfer_info_t *info);
 mvgal_error_t mvgal_p2p_get_caps(mvgal_gpu_index_t src, mvgal_gpu_index_t dst, mvgal_p2p_caps_t *caps);
 ```
+
+---
+
+## Synthetic Topology Backend (`mvgal_mock.h`)
+
+> [!warning] This is a test and verification surface, not a runtime one
+> Added in v0.7.18. Every function here shapes what GPU *discovery reports*, so
+> that the heterogeneous code paths can be exercised and asserted on one
+> machine. It creates no devices, allocates no VRAM and moves no data. With the
+> backend inactive, `mvgal_mock_is_active()` returns false and the hardware scan
+> is used unmodified.
+
+The backend substitutes itself for the hardware scan inside
+`mvgal_gpu_rescan()`, so the scheduler, the memory manager and the P2P cost
+model observe synthetic devices **through the normal discovery path** rather
+than a parallel test-only one.
+
+```c
+/* Configuration */
+void          mvgal_mock_config_defaults(mvgal_mock_config_t *config);
+mvgal_error_t mvgal_mock_init(const mvgal_mock_config_t *config);
+mvgal_error_t mvgal_mock_shutdown(void);
+bool          mvgal_mock_is_active(void);
+bool          mvgal_mock_appends_to_hardware(void);
+
+/* Index <-> slot mapping. A slot is the synthetic device's own identity and is
+ * stable; a GPU index is its position in the discovery list and shifts when
+ * devices are appended or removed. Most per-device calls take a slot. */
+bool          mvgal_mock_slot_for_index(uint32_t gpu_index, uint32_t *slot_out);
+bool          mvgal_mock_index_for_slot(uint32_t slot, uint32_t *gpu_index_out);
+uint32_t      mvgal_mock_device_count(void);
+
+/* Per-device control */
+mvgal_error_t mvgal_mock_set_load(uint32_t slot, uint32_t percent);
+mvgal_error_t mvgal_mock_allocate_vram(uint32_t slot, uint64_t bytes); /* 0 releases */
+mvgal_error_t mvgal_mock_kill_device(uint32_t slot);
+mvgal_error_t mvgal_mock_resurrect_device(uint32_t slot);
+bool          mvgal_mock_device_failed(uint32_t slot);
+
+/* Topology and time */
+mvgal_error_t mvgal_mock_set_link_bandwidth(uint32_t slot_a, uint32_t slot_b, uint32_t mbps);
+uint32_t      mvgal_mock_link_bandwidth_mbps(uint32_t gpu_index_a, uint32_t gpu_index_b);
+bool          mvgal_mock_same_root_complex(uint32_t gpu_index_a, uint32_t gpu_index_b);
+mvgal_error_t mvgal_mock_advance(uint32_t milliseconds);
+
+/* Telemetry readout */
+uint64_t  mvgal_mock_vram_used(uint32_t slot);
+float     mvgal_mock_temperature(uint32_t slot);
+float     mvgal_mock_power_watts(uint32_t slot);
+```
+
+### Topology presets
+
+```c
+typedef enum {
+    MVGAL_MOCK_TOPOLOGY_NONE            = 0, /* no synthetic devices; hardware discovery unchanged */
+    MVGAL_MOCK_TOPOLOGY_SINGLE          = 1, /* one discrete NVIDIA: the "optimise one GPU" case */
+    MVGAL_MOCK_TOPOLOGY_HETERO_DUAL     = 2, /* AMD + NVIDIA, one root complex: dual-vendor P2P */
+    MVGAL_MOCK_TOPOLOGY_HETERO_TRI      = 3, /* + Intel iGPU, two root complexes: P2P and host staging */
+    MVGAL_MOCK_TOPOLOGY_HETERO_QUAD     = 4, /* + Moore Threads, three root complexes */
+    MVGAL_MOCK_TOPOLOGY_AMD_DUAL        = 5, /* two identical AMD cards, native P2P (CrossFire-style) */
+    MVGAL_MOCK_TOPOLOGY_INTEGRATED_ONLY = 6, /* one integrated Intel GPU: no VRAM, shared memory */
+} mvgal_mock_topology_t;
+```
+
+### Configuration
+
+```c
+typedef struct {
+    mvgal_mock_topology_t preset;              /* defaults to SINGLE */
+    bool                  append_to_hardware; /* default false: replace the hardware scan */
+    uint32_t              initial_load_percent; /* default 0 (idle) */
+    bool                  start_hot;           /* start at TDP, not ambient */
+} mvgal_mock_config_t;
+```
+
+`append_to_hardware` is off by default on purpose: a test asking for a
+synthetic topology wants a deterministic device population regardless of the
+machine it runs on.
+
+### Constants
+
+| Macro | Value | Meaning |
+|-------|-------|---------|
+| `MVGAL_MOCK_MAX_DEVICES` | `8` | Synthetic device ceiling |
+| `MVGAL_MOCK_AMBIENT_C` | `35.0f` | Idle temperature floor, degrees C |
+| `MVGAL_MOCK_TDP_C` | `85.0f` | Thermal design power, degrees C; throttling begins above this |
+| `MVGAL_MOCK_SYSTEM_RAM_BYTES` | 32 GiB | Reported VRAM for synthetic **integrated** devices |
+
+### Modelled physics, not canned values
+
+The backend models behaviour rather than returning fixed answers, so tests can
+assert on *transitions*:
+
+- **Thermal inertia.** Temperature approaches an asymptote between
+  `MVGAL_MOCK_AMBIENT_C` and a TDP-scaled peak, with a time constant of roughly
+  15 s. `mvgal_mock_advance()` integrates elapsed time, then refreshes telemetry.
+- **Throttling.** Above `MVGAL_MOCK_TDP_C` minus 5 C, reported utilisation
+  falls as temperature climbs, capped at a 60 % reduction.
+- **VRAM occupancy.** Devices report a 256 MiB baseline before any test
+  allocation, so `mvgal_mock_vram_used()` returns baseline + allocation, not the
+  allocation alone.
+- **Peer bandwidth.** Derived from the pair's negotiated PCIe generation and
+  lane count. Two Gen4 x16 peers model about 15.7 GB/s; a pair with no P2P path,
+  or on different root complexes, reports 0.
+
+> [!note] Synthetic integrated GPUs report a fixed RAM figure
+> Real integrated GPUs have their zero `vram_total` filled in from `sysinfo()`
+> by `finalize_gpu_descriptor()`. Synthetic ones use
+> `MVGAL_MOCK_SYSTEM_RAM_BYTES` instead, so a simulated topology does not
+> silently report the build host's memory and therefore differ between machines.
+> The real-hardware path is deliberately unchanged.
 
 ---
 
@@ -733,7 +846,8 @@ The following claims appeared in earlier revisions of this document and have no 
 | `VK_MVGAL_*` Vulkan extensions | No such symbol exists; the layer implements standard Vulkan |
 | IPC client calls without `fd` or `request_id` | Both are required parameters |
 | "12 ioctls" | 13 declared, 9 implemented, plus 10 separate DRM ioctls |
-| "26 headers" (in [MOC](MOC.md)) | 29 headers; this table listed 25 |
+| "26 headers" (in [MOC](MOC.md)) | 30 headers as of v0.7.19 |
+| Header count omitted `mvgal_mock.h` (v0.7.18) | It is a public header; see § Synthetic Topology Backend |
 | Rust functions returning `void` from mutating calls | They return `i32` status; `mvgal_mem_track` also takes a `gpu_index` |
 | `GpuCapability`-based `mvgal_cap_to_json` returning `const char *` | Takes a caller-supplied buffer and returns `i32` |
 

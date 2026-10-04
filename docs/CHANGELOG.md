@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [v0.7.19] - 2026-10-04
+
+Makes a release reproducible from its commit: rebuilding the source tarball and the SRPM from the same tree now yields byte-identical files. Two independent causes had to be removed.
+
+### Fixed
+- **The source tarball embedded a second, complete copy of `vendor/`.** `scripts/mksrpm.sh` assumed `vendor/` was gitignored and therefore absent from `git archive`, then copied it in — but `vendor/` is **tracked** (`.gitignore` says so explicitly: the vendored crates have to travel with the source, because `.cargo/config.toml` replaces crates.io with them). `git archive` already emitted all 1109 `vendor/` paths, so the copy nested a duplicate at `vendor/vendor/` and restamped the parent's mtime with the wall clock. That single mtime was the only difference between two builds of an identical tree. The copy is gone; the script now *fails* if `vendor/` is absent from the archive rather than silently duplicating it. The tarball shrank from 11 MB to 8.3 MB and is now reproducible.
+- **`BUILDTIME` was the wall clock.** rpm only rewrites `BUILDTIME` from `SOURCE_DATE_EPOCH` when the macro `use_source_date_epoch_as_buildtime` is defined, and it ships undefined on purpose — exporting `SOURCE_DATE_EPOCH` alone changes nothing, which is exactly what the first attempt at this fix demonstrated. Both `scripts/mksrpm.sh` and `packaging/jenkins/build_rpm.sh` now default `SOURCE_DATE_EPOCH` to the commit date (`git log -1 --format=%ct`) and pass the opt-in macro. Verified: two consecutive runs produce the same tarball digest, the same SRPM digest, and the same `BUILDTIME`, equal to the commit date. The Jenkins path was confirmed against a real build — its SRPM is byte-identical to the one `mksrpm.sh` produced locally from the same commit, so the two independent code paths agree.
+
+### Notes
+- **Binary RPMs are still not bit-reproducible, and this release does not claim they are.** Two axes remain. Fedora's toolchain links with a bare `--build-id`, so each ELF gets a random `NT_GNU_BUILD_ID` note; and the absolute build path is baked into `DW_AT_comp_dir`, `DW_AT_name` and the generated `mvgalConfig.cmake`, so two different build directories also diverge. Both are addressable — `-Wl,--build-id=sha1` with `-fdebug-prefix-map`/`-ffile-prefix-map` was verified to collapse two builds from different directories to a single digest, and unlike stripping the note it keeps the content-derived build-id that debuginfod depends on. It is not enabled because the spec's `%build` drives `cmake` through `cmake-rpm-macros`, whose `%cmake` macro has already overridden spec-level flag and cache workarounds in five earlier releases. This is recorded as open work in [[docs/STATUS|Project Status]] § Reproducibility limits rather than papered over.
+
+## [v0.7.18] - 2026-10-04
+
+Adds a synthetic GPU topology backend, so the heterogeneous code paths can be exercised and asserted on a single machine instead of only being reachable on a box that happens to have two vendors installed.
+
+### Added
+- **`mvgal_mock` — the 30th public header.** `include/mvgal/mvgal_mock.h` publishes a backend that advertises a configurable set of fake GPUs: vendor, VRAM size, PCIe generation and lane count, feature bits and driver identity. The GPU manager's rescan substitutes it for the hardware scan, so the scheduler, the memory manager and the P2P cost model all see synthetic devices **through the normal discovery path** rather than a parallel test-only one. With the backend inactive, `mvgal_mock_is_active()` returns false and discovery is untouched. See [[docs/API|API Reference]] § Synthetic Topology Backend.
+- **Seven topology presets** — `NONE`, `SINGLE`, `HETERO_DUAL`, `HETERO_TRI`, `HETERO_QUAD`, `AMD_DUAL` and `INTEGRATED_ONLY` — covering the single-GPU optimisation case, dual-vendor P2P, multi-root-complex host staging, homogeneous AMD peer-to-peer and the integrated-only case with no VRAM. `append_to_hardware` adds synthetic devices alongside the real scan instead of replacing it; it is off by default so a test gets the same device population on any machine.
+- **Modelled physics rather than canned values.** Temperature approaches an asymptote between a 35 C ambient and a TDP-scaled peak with a ~15 s time constant; throttling begins 5 C above TDP and is capped at a 60 % utilisation reduction; VRAM carries a 256 MiB baseline before any test allocation; and per-pair link bandwidth is derived from the pair's negotiated PCIe generation and lane count, so two Gen4 x16 peers model about 15.7 GB/s while a pair with no P2P path reports 0. `mvgal_mock_advance()` integrates elapsed time and then refreshes telemetry. Tests assert on *transitions* — a device heating into throttling and cooling back out — rather than on fixed numbers.
+- **Per-device control from the test:** `set_load`, `allocate_vram` (0 releases), `kill_device` and `resurrect_device`, and `set_link_bandwidth`.
+
+### Fixed
+- **`mvgal_p2p_query_caps()` fabricated a 16 GB/s peer link.** Any pair on the same root complex reported `supported` with `max_bandwidth_mb_s` defaulting to 16000 — including synthetic devices whose peer path was disabled. The cost model reads that number, so it would select `REPLICATE` for a small buffer or `MIGRATE` for a large one between two devices that cannot transfer at all. Synthetic pairs now report the bandwidth the topology actually models, and `supported` requires a path to exist. `same_root_complex` remains pure topology. The real-hardware path is unchanged.
+- **`mvgal_p2p_cross_vendor_supported()` ignored device health.** It checked only that both descriptors could be read, so a failed device still advertised itself as shareable and the scheduler would plan work onto it. Both descriptors must now also be `available`.
+- **Host state leaked into the simulation.** `finalize_gpu_descriptor()` fills an integrated GPU's zero `vram_total` from `sysinfo()`, which meant a synthetic integrated device reported the *build host's* RAM — so the same topology produced different descriptors on different machines, quietly defeating the point of a deterministic fixture. Synthetic integrated devices now use the new public `MVGAL_MOCK_SYSTEM_RAM_BYTES` (32 GiB). The real-hardware behaviour is deliberately unchanged.
+- **`mvgal_mock_init()` rejected its own documented preset.** `MVGAL_MOCK_TOPOLOGY_NONE` — "no synthetic devices, hardware discovery behaves unchanged" — was refused with `MVGAL_ERROR_INVALID_ARGUMENT` by a `preset <= NONE` bounds check, while the header promised `MVGAL_ERROR_NO_GPUS` for an empty preset. The check now rejects only out-of-range values, and `NONE` falls through to the documented result.
+
+### Tests
+- `test_mock_gpu` — 193 assertions across the presets, device selection, failure isolation and resurrection, memory pressure, thermal throttling and cooling, configurable health thresholds, transfer-bottleneck topology, cross-vendor sharing, and determinism (two passes over the same topology must agree). Determinism is asserted by reading descriptors back through the public `mvgal_gpu_get_descriptor()` rather than through mock-internal accessors, so the assertion covers the discovery path the rest of the project uses.
+
+## [v0.7.17] - 2026-10-04
+
+Repairs the Rust quality gate. The crates had never been linted at all.
+
+### Fixed
+- **The crates were never linted.** `clippy.toml` carried three keys that modern clippy rejects: `panic-in-upgrade`, which is not a clippy configuration field; `large-digit-grouping`, a rust-analyzer setting rather than a clippy one; and `cyclomatic-complexity-threshold`, a deprecated alias that now collides with `cognitive-complexity-threshold`. Clippy aborts on an unreadable configuration file *before* it lints anything, so every one of these turned the entire gate off rather than producing a warning.
+- **`disallowed-macros` listed two methods.** `unwrap` and `expect` are methods, not macros, so clippy reported them as unreachable macros on every invocation and `-D warnings` promoted that reporting quirk to a hard failure. The thresholds that are still meaningful are kept.
+- **`CrossDeviceFence` could never cross a thread boundary.** It held its signal timestamp in a `Cell` and its external handle in a raw pointer, so `Arc<CrossDeviceFence>` was neither `Send` nor `Sync` — meaning any attempt to share a fence across threads did not compile. The timestamp moved behind a mutex and the handle is now documented as synchronised by the caller.
+- **`create_fence()` returned a fence that was not the fence being tracked.** `GpuTimeline::create_fence()` and `FenceManager::create_fence()` each stored a clone in their map and returned a *second*, independent `Arc`, so signalling the returned handle had no effect on the fence the manager held. Both now hand out the same `Arc` they retain.
+- **`MvgalError` could not represent its own error.** It relied on the implicit C-like enum representation, which cannot hold `Unknown = 0xFFFFFFFF`. It is now explicitly `#[repr(u32)]`; the `i32` conversion used across the FFI boundary still yields `-1` for `Unknown`.
+- **`align_up()` hand-rolled `div_ceil()`.** The ceiling division is now the standard library's.
 
 ## [v0.7.16] - 2026-09-30
 

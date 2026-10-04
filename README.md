@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **Source version 0.7.16** (CMake/Cargo metadata); the source changelog documents releases through **0.7.16**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
+> **Source version 0.7.19** (CMake/Cargo metadata); the source changelog documents releases through **0.7.19**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
 
 ## 📚 Documentation
 
@@ -34,7 +34,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
 
-MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.16, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
+MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.19, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
 
 ```mermaid
 flowchart TD
@@ -90,7 +90,7 @@ flowchart TD
 
 ## Packages
 
-This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.16 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
+This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.19 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
 
 ```bash
 dnf info mvgal
@@ -114,7 +114,11 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
-## Recent source changes (through v0.7.16)
+## Recent source changes (through v0.7.19)
+
+- **Release artefacts are reproducible** (v0.7.19) — the source tarball and SRPM are now byte-identical when rebuilt from one commit. `vendor/` is tracked rather than gitignored, so the packaging script was copying it a second time into `vendor/vendor/` and restamping the parent mtime with the wall clock; and rpm only rewrites `BUILDTIME` from `SOURCE_DATE_EPOCH` when the opt-in macro `use_source_date_epoch_as_buildtime` is defined, which it ships without. Binary RPMs remain non-reproducible (random ELF build-id, plus the build directory baked into DWARF); see [`docs/STATUS.md`](docs/STATUS.md) § Reproducibility limits.
+- **A synthetic GPU topology backend** (v0.7.18) — `include/mvgal/mvgal_mock.h` describes a machine that does not exist, in one of seven presets from a single discrete GPU to a four-vendor, three-root-complex box. The GPU manager's rescan substitutes it for the hardware scan, so the scheduler, memory manager and P2P cost model reach synthetic devices through the ordinary discovery path. Thermal inertia, throttling, VRAM occupancy and per-pair link bandwidth are modelled rather than canned. It is a test surface: it shapes what discovery reports and creates no devices.
+- **The Rust quality gate had never run** (v0.7.17) — `clippy.toml` carried keys modern clippy rejects, and clippy aborts on an unreadable config *before* linting, so the Rust crates had never been linted. Repairing it surfaced four real defects: `CrossDeviceFence` was neither `Send` nor `Sync`; `create_fence()` returned a second independent `Arc`, so signalling it did nothing; `MvgalError` now carries an explicit `#[repr(u32)]` so `Unknown = 0xFFFFFFFF` is representable; and `align_up()` was replaced by `div_ceil()`.
 
 - **Copies no longer double-apply their offsets** (v0.7.15) — `mvgal_memory_copy()` added `src_offset` and `dst_offset` to pointers `mvgal_memory_map()` had already advanced, so any copy at a non-zero offset overran the mapping. Every pre-existing test copied at offset 0, where a double-applied offset is invisible. The same function also tried to unmap buffers it did not own; that cleanup is gone.
 - **Custom splitters can be released** (v0.7.16) — `mvgal_unregister_custom_splitter()` gained its missing public declaration and now matches on all four descriptor fields by value. Registering a splitter still does not make the `custom` strategy selectable; applying one needs a task tree contract that is not defined.

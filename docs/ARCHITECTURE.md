@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.16"
-mvgal_verified: 2026-09-30
+mvgal_version: "0.7.19"
+mvgal_verified: 2026-10-04
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-> Source metadata is **0.7.16**; the source changelog documents releases through **0.7.16**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
+> Source metadata is **0.7.19**; the source changelog documents releases through **0.7.19**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
 
 ## Repository components
 
@@ -23,6 +23,7 @@ mvgal_order: 6
 | Tools | `tools/` | `mvgal`, `mvgal-info`, `mvgal-status`, `mvgal-bench`, `mvgal-compat`, `mvgal-config`, `mvgal-enum`, `mvgal-hw-validate`, `mvgal-steam-setup`, and probe components |
 | Integrations | `steam/`, `compat/`, `opengl/`, `bindings/` | Compatibility helpers, API interception, and language bindings |
 | UI | `ui/`, `dashboard/` | Optional Qt and Haxe UI components |
+| Tests and synthetic topology | `src/tests/`, `src/userspace/testing/` | Unit suite, and the synthetic GPU topology backend that substitutes for hardware during rescan so hetero-GPU paths can be exercised deterministically |
 
 ## Device ownership and capabilities
 
