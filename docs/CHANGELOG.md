@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.19"
-mvgal_verified: 2026-10-04
+mvgal_version: "0.7.20"
+mvgal_verified: 2026-10-10
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [v0.7.20] - 2026-10-10
+
+Build system fix and version consistency across all components. The 0.7.19 release had a version drift: the Cargo workspace and several source headers still reported 0.7.19 while the CMake project and spec file reported 0.7.20. This release aligns every version source and fixes the daemon compilation.
+
+### Fixed
+- **Daemon compilation failed** with `testing/mvgal_mock_internal.h: No such file or directory`. The daemon's `gpu_manager.c` includes the mock header, but `src/userspace/CMakeLists.txt` did not expose the `testing/` directory to the daemon target. Added the include path.
+- **`build.sh` manual compilation test used the wrong include path.** The test now uses `-Isrc/userspace` so it finds `testing/mvgal_mock_internal.h` through the daemon's include path.
+
+### Changed
+- **Version alignment across all sources**: `CMakeLists.txt`, `packaging/rpm/mvgal.spec`, `Cargo.toml` (workspace), `bindings/rust/Cargo.toml`, `Cargo.lock` (via `cargo update --workspace`), `include/mvgal/mvgal_version.h`, `kernel/mvgal_version.h`, `kernel/dkms/dkms.conf`, `tools/libmvgal/CMakeLists.txt` all report 0.7.20.
+
+### Packaging
+- **COPR build #11104568** succeeded on Fedora 43/44/45, Rawhide, ELN, RHEL 8/9/10, AlmaLinux 9/10, CentOS Stream 9/10, Amazon Linux 2023, Mageia 9.
+- **Jenkins build #18** produced all 13 artifact formats: RPM (SRPM, binary, DKMS, metapackage), DEB (main, daemon, dev, dkms, vulkan), AppImage, tar.zst, Flatpak.
+- All 28 unit tests pass (`ctest --output-on-failure`).
 
 ## [v0.7.19] - 2026-10-04
 

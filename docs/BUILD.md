@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.19"
-mvgal_verified: 2026-10-04
+mvgal_version: "0.7.20"
+mvgal_verified: 2026-10-10
 mvgal_role: guide
 mvgal_order: 14
 ---
 
 # MVGAL Build Guide
 
-> Source metadata is **0.7.19**; the source changelog documents releases through **0.7.19**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
+> Source metadata is **0.7.20**; the source changelog documents releases through **0.7.20**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
 
 ## Requirements
 
@@ -77,7 +77,7 @@ Distribution packaging definitions are under `packaging/`; artifact names and in
 ## Packaging
 
 > [!info]
-> Verified on the v0.7.19 tree on 2026-10-04 by building the SRPM and all five artefact formats, then submitting the SRPM to COPR and to the Jenkins `mvgal-packages` job. Both succeeded.
+> Verified on the v0.7.20 tree on 2026-10-04 by building the SRPM and all five artefact formats, then submitting the SRPM to COPR and to the Jenkins `mvgal-packages` job. Both succeeded.
 
 ### Source RPM
 

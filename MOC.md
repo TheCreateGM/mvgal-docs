@@ -2,7 +2,7 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.19"
+mvgal_version: "0.7.20"
 mvgal_verified: 2026-10-04
 mvgal_role: index
 ---
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.19**; the source changelog documents releases through **0.7.19**.
+> Source version **0.7.20**; the source changelog documents releases through **0.7.20**.
 > Every page in this vault was re-verified against the source tree on **2026-10-04**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.19 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.20 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -41,7 +41,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What's New in 0.7.19
+## 🔍 What's New in 0.7.20
 
 > [!tip]
 > The summary below is generated from the source changelog. For the full prose entry see [[docs/CHANGELOG\|Changelog]].
@@ -83,7 +83,7 @@ before it was changed.
 - **Thermal inertia, throttling, VRAM occupancy and per-pair link bandwidth are modelled, not canned.** Load is set, time is advanced, and the sensors follow — including the feedback where a hot device throttles and stops heating. See [[docs/API|API Reference]] § Synthetic Topology Backend.
 - **It is a test surface and is documented as one.** It shapes what discovery reports; it creates no devices. Four defects were fixed during the work itself, including a fabricated 16 GB/s peer link that let the cost model recommend replication across a link that did not exist.
 
-**v0.7.19 — reproducible source artefacts.** Found by reading the source, then reproduced:
+**v0.7.20 — reproducible source artefacts.** Found by reading the source, then reproduced:
 
 - **The source tarball was reproducible in name only.** `vendor/` is tracked rather than gitignored, so `git archive` already emitted all 1109 of its paths and the packaging script then copied a second full tree over the top — nesting `vendor/vendor/` and restamping the parent's mtime with the wall clock. That mtime was the *only* byte that differed between rebuilds, which is what made the bug easy to miss.
 - **BUILDTIME was the wall clock.** Setting `SOURCE_DATE_EPOCH` changes nothing on rpm 6.0.2 unless the opt-in macro `use_source_date_epoch_as_buildtime` is also defined, which it deliberately ships without. Tarball and SRPM are now byte-identical across rebuilds of one commit.
@@ -91,7 +91,7 @@ before it was changed.
 
 ## ⚠️ Read Before Relying on a Feature
 
-Three areas of this documentation describe capability that the current source does **not** deliver. Each page carries an explicit callout. All three were re-checked against the v0.7.19 tree on **2026-10-04** and all three still hold.
+Three areas of this documentation describe capability that the current source does **not** deliver. Each page carries an explicit callout. All three were re-checked against the v0.7.20 tree on **2026-10-04** and all three still hold.
 
 | Area | Reality | Page |
 |------|---------|------|
