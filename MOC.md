@@ -2,7 +2,7 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.20"
+mvgal_version: "0.7.21"
 mvgal_verified: 2026-10-04
 mvgal_role: index
 ---
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.20**; the source changelog documents releases through **0.7.20**.
+> Source version **0.7.21**; the source changelog documents releases through **0.7.21**.
 > Every page in this vault was re-verified against the source tree on **2026-10-04**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.20 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.21 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -41,10 +41,10 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What's New in 0.7.20
+## 🔍 What’s New in 0.7.21
 
 > [!tip]
-> The summary below is generated from the source changelog. For the full prose entry see [[docs/CHANGELOG\|Changelog]].
+> The summary below is generated from the source changelog. For the full prose entry see [[docs/CHANGELOG|Changelog]].
 
 ```dataview
 TABLE WITHOUT ID
@@ -55,43 +55,30 @@ WHERE file.mtime >= date(2026-10-04)
 SORT file.mtime DESC
 ```
 
-Five releases landed between the two audits of this vault. Every one was found
-by reading the source rather than from a field report, and each was reproduced
-before it was changed.
-
-**v0.7.15 — a memory-corruption fix.** All headline items, verified in this revision:
-
-- **Copies applied their offsets twice.** `mvgal_memory_copy()` passed `src_offset` and `dst_offset` to `mvgal_memory_map()`, which already returns a pointer advanced by that offset, then added the same offsets again at the `memcpy`. A copy from source 1024 to destination 2048 landed at `base + 2 * 2048`, overrunning the mapping. Every existing test copied at offset 0, the one case where a double-applied offset is a no-op. See [[docs/MEMORY\|Memory Management]] § Buffer copies.
-- **The same function unmapped buffers it did not own.** The cleanup was dead code, guarded by a `MAPPED` test `mvgal_memory_map()` had already satisfied, and the destination-map failure path tore down a source mapping it never created. Host-valid buffers carry an allocator-owned `host_ptr`, so unmapping would have freed memory the buffer still pointed at.
-
-**v0.7.16 — the scheduler and command-DAG paths made real.** All headline items, verified in this revision:
-
-- **Custom splitters could never be released.** They were registered by value but unregistered by address, and the internal slot address is never exposed to a caller, so removal always reported the splitter as absent. Matching is now by value across `analyze`, `split`, `merge` and `user_data`, and the release function gained the public declaration it never had. See [[docs/API\|API Reference]] § Custom Splitters.
-- **`mvgal_translate_dag()` returned its argument unchanged** while its header promised a translated copy, so any caller edit silently corrupted the source DAG. It now deep copies and rewires every dependency edge onto the copies.
-- **`mvgal_emit_dag()` always returned `VK_ERROR_LAYER_NOT_PRESENT`.** It now resolves command entry points through the device dispatch table and replays in recording order. Node types with no captured arguments return a specific error instead of being skipped, because a silent skip renders the wrong frame.
-- **The command buffer to DAG map leaked on collision.** It was open-addressed with no collision handling, so two buffers hashing alike overwrote a live DAG. Lookups now probe, and beginning a second recording for the same buffer destroys the old DAG rather than dropping it.
-- **A packaging bug meant the CI rpm stage could never pass.** The pipeline wrote its output directory *inside* the git checkout, and `scripts/mksrpm.sh` refuses a dirty tree. Both scratch directories are now ignored. The dirty-tree guard itself was deliberately left intact, because it exists to catch builds depending on uncommitted source.
-
-**v0.7.17 — a Rust quality gate that had never run.** Found by reading the source, then reproduced:
-
-- **The gate was vacuous.** `clippy.toml` carried three keys that modern clippy rejects, and clippy aborts on an unreadable configuration file *before* it lints anything, so the Rust crates had never been linted. The file also listed `unwrap` and `expect` under `disallowed-macros`, though they are methods rather than macros, which turned a reporting quirk into a hard failure under `-D warnings`.
-- **Four real defects surfaced the moment it ran.** `CrossDeviceFence` was neither `Send` nor `Sync` — a timestamp in a `Cell` and a handle in a raw pointer — so it could never cross a thread boundary. `GpuTimeline::create_fence()` and `FenceManager::create_fence()` each returned a *second*, independent `Arc`, so signalling the returned handle had no effect on the fence they retained. `MvgalError` relied on the implicit C-like enum representation, which cannot hold `Unknown = 0xFFFFFFFF`, and is now `#[repr(u32)]`. `align_up()` hand-rolled the ceiling division `div_ceil()` provides.
-
-**v0.7.18 — a synthetic GPU topology backend.** Found by reading the source, then reproduced:
-
-- **A 30th public header**, `mvgal_mock.h`, lets a test describe a machine that does not exist: seven presets from a single discrete GPU to a four-vendor, three-root-complex box. The GPU manager's rescan substitutes it for the hardware scan, so the scheduler, memory manager and P2P cost model all reach synthetic devices through the ordinary discovery path rather than a test-only shortcut.
-- **Thermal inertia, throttling, VRAM occupancy and per-pair link bandwidth are modelled, not canned.** Load is set, time is advanced, and the sensors follow — including the feedback where a hot device throttles and stops heating. See [[docs/API|API Reference]] § Synthetic Topology Backend.
-- **It is a test surface and is documented as one.** It shapes what discovery reports; it creates no devices. Four defects were fixed during the work itself, including a fabricated 16 GB/s peer link that let the cost model recommend replication across a link that did not exist.
+**v0.7.21 is the first release in this vault driven by a field report rather than
+by reading the source.** The difference is visible in what it found. Every
+earlier release below was caught by an author reading code; this one was caught
+by someone installing the package and running the shipped tools on a real
+machine, and the two most serious findings were both things a source-reading
+pass had walked straight past.
 
 **v0.7.20 — reproducible source artefacts.** Found by reading the source, then reproduced:
 
-- **The source tarball was reproducible in name only.** `vendor/` is tracked rather than gitignored, so `git archive` already emitted all 1109 of its paths and the packaging script then copied a second full tree over the top — nesting `vendor/vendor/` and restamping the parent's mtime with the wall clock. That mtime was the *only* byte that differed between rebuilds, which is what made the bug easy to miss.
+- **The source tarball was reproducible in name only.** `vendor/` is tracked rather than gitignored, so `git archive` already emitted all 1109 of its paths and the packaging script then copied a second full tree over the top — nesting `vendor/vendor/` and restamping the parent’s mtime with the wall clock. That mtime was the *only* byte that differed between rebuilds, which is what made the bug easy to miss.
 - **BUILDTIME was the wall clock.** Setting `SOURCE_DATE_EPOCH` changes nothing on rpm 6.0.2 unless the opt-in macro `use_source_date_epoch_as_buildtime` is also defined, which it deliberately ships without. Tarball and SRPM are now byte-identical across rebuilds of one commit.
 - **Binary RPMs still are not.** Two axes remain: rpmbuild injects a random ELF build-id, and the build directory is baked into DWARF. Both, and the reason they are not being papered over, are documented in [[docs/STATUS|Project Status]] § Reproducibility limits.
 
+**v0.7.21 — a black-box test report against 0.7.20.** Found by running the shipped
+tools on a single-GPU Intel host, then reproduced:
+
+- **A capability problem that reads exactly like a permissions problem.** The daemon’s IPC socket was `root:root`, locking every `mvgal` group member out of all CLI IPC while `sudo` kept working. The `chown()` was correct; the unit’s `CapabilityBoundingSet` omitted `CAP_CHOWN`, and because a bounding set caps what a uid-0 process can ever hold — and root is not a member of `mvgal` — the call could only fail, quietly, since its result was discarded. This is the finding that justifies the whole exercise: a reviewer reading `IpcServer::init()` sees a correct `chown()` and moves on. See [[docs/TROUBLESHOOTING|Troubleshooting]] § Daemon socket permissions.
+- **The OpenCL ICD advertised a version it did not implement.** It reported `OpenCL 1.2` while exporting 2 of the 7 core entry points 1.2 added, so an application using a 1.2 feature received `NULL` from ocl-icd rather than an error.
+- **Two fixes replaced first attempts that would not have worked.** The configuration merge keyed on bare key names — `priority` and `enabled` repeat across sections, and `psu_capacity_watts` *exists* in the new file with a different value, so the user’s setting would still have been dropped, which is precisely the case reported. The shared-memory marker borrowed a bit in the kernel-owned UAPI `flags` word, where a kernel-set bit 31 would mislabel real VRAM as shared.
+- **Two reported items were not MVGAL’s fault, and were closed as such.** The Vulkan loader warning about display entry points cannot originate from MVGAL: both entry points resolve through the shipped ICD’s negotiated interface version 5, and no ICD manifest has shipped in `vulkan/icd.d` since 0.7.14. The `card0` concern needed no code change; enumeration selects on PCI vendor ID and was confirmed on a host exposing only `card1` with both `i915` and `xe` loaded.
+
 ## ⚠️ Read Before Relying on a Feature
 
-Three areas of this documentation describe capability that the current source does **not** deliver. Each page carries an explicit callout. All three were re-checked against the v0.7.20 tree on **2026-10-04** and all three still hold.
+Three areas of this documentation describe capability that the current source does **not** deliver. Each page carries an explicit callout. All three were re-checked against the v0.7.21 tree on **2026-10-12** and all three still hold.
 
 | Area | Reality | Page |
 |------|---------|------|

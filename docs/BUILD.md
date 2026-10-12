@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: guide
 mvgal_order: 14
 ---
 
 # MVGAL Build Guide
 
-> Source metadata is **0.7.20**; the source changelog documents releases through **0.7.20**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
+> Source metadata is **0.7.21**; the source changelog documents releases through **0.7.21**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
 
 ## Requirements
 

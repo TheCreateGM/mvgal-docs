@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [v0.7.21] - 2026-10-12
+
+Correctness and packaging release driven by a black-box test report against
+0.7.20 on a single-GPU Intel host. Most of the report concerned reporting and
+packaging rather than device paths, but two findings were genuine defects and
+two of the fixes below replaced a first attempt that would not have worked.
+
+### Fixed
+
+- **The daemon's IPC socket was created `root:root`, locking out every user in the `mvgal` group.** All CLI-to-daemon IPC failed: `mvgal show-stats` returned stub zeros, `mvgal status` could not read live state, and `nc -U /run/mvgal/mvgal.sock` returned `Permission denied`, even though the package adds the installing user to `mvgal` and the shipped unit comments say the socket must be `0660 root:mvgal`. The cause was **not** the `chown()` call itself. The unit's `CapabilityBoundingSet` listed `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_SYS_MODULE` and omitted `CAP_CHOWN`, and a bounding set caps the permitted set a uid-0 process can ever hold. `chown()` only avoids needing `CAP_CHOWN` when the target group is one the caller is already a member of, and root's supplementary groups do not include `mvgal` — so the call failed with `EPERM`, the return value was discarded, and the daemon reported a listener it had in fact left root-only. `CAP_CHOWN` is now in both `CapabilityBoundingSet` and `AmbientCapabilities`; it is needed exactly once, at startup. The unit's comment claiming the daemon "drops capabilities itself after init" was also false and has been corrected — there is no `prctl`/`capset`/`setuid` in `runtime/`. Both daemons now log the failure rather than swallowing it. See [[docs/TROUBLESHOOTING|Troubleshooting]] § Daemon socket permissions.
+- **The OpenCL ICD advertised a version it did not implement.** `clGetPlatformInfo` reported `"OpenCL 1.2 MVGAL"` while the library exported only 2 of the 7 entry points that OpenCL 1.2 added to the core API. Because the library is registered as an ICD, ocl-icd and the CUDA loader `dlsym()` them from the shared object, so an application using any 1.2 feature received `NULL` and would fault rather than fail gracefully. Added `clCreateCommandQueueWithProperties`, `clCreateSubDevices`, `clCreateSamplerWithProperties`, `clSetUserEventStatus` and `clGetEventProfilingInfo` as pass-throughs, returning `CL_INVALID_OPERATION` where no vendor implements them — deliberately *not* falling back to the deprecated `clCreateCommandQueue`, which would silently drop queue properties that 1.2 requires to be honoured. The 1.2 ceiling itself is deliberate and is now documented in the source: the layer enumerates and delegates vendor devices rather than virtualising the device API, and 3.0's pipe/sparse/dma-buf behaviours are not emulated, so claiming 3.0 would overstate the aggregation path.
+- **Configuration was silently reset on RPM upgrade.** `mvgal.conf` is `%config(noreplace)`, so an upgrade that changes the schema activates the new default file and leaves the user's edits in `.rpmsave` — the only record. A merge now runs in `%post` (`/usr/lib/mvgal/mvgal-merge-config.sh`), restoring the user's values per **section and key**, re-adding keys the new release dropped, and appending sections it dropped entirely. It also preserves the new release's default alongside as `mvgal.conf.mvgal-default`, so nothing is lost either way.
+- **`mvgal load-module` hung indefinitely.** The CLI spawned the polkit helper through `system()` with no bound, so a cancelled or ignored authentication dialog left it waiting forever and the user never saw the result. It now runs under a 60-second timeout, distinguishes that case explicitly, and prints the Secure Boot remediation on failure.
+- **Two fixes corrected first attempts that would not have worked.** The configuration merge originally keyed on bare key names; `priority` appears in both `[gpu_0]` and `[gpu_1]`, `enabled` in five sections, and `psu_capacity_watts` exists in the new file with a different value — so a user's `psu_capacity_watts = 750` would still have been dropped, which is the exact case reported. The shared-memory flag originally occupied a bit in the kernel-owned UAPI `flags` word; a kernel-set bit 31 would have mislabelled a real GPU's dedicated VRAM as shared system memory. Both were replaced with unambiguous mechanisms.
+- **`mvgal-compat` advised adding the user to group 0.** When the socket was inaccessible it printed that `'id -nG'` must list the socket's gid, "gid 0 means the daemon did not chown its socket" — self-contradictory, and it framed a privilege escalation as a fix. It now distinguishes the two cases: gid 0 names the daemon-side chown bug, anything else points at group membership.
+- **Exit codes disagreed about the same degraded state.** `mvgal status` exited 0 with the module unloaded while `mvgal-status --once` exited 1; `mvgal reload` printed "configuration not reloaded" and exited 0. Degraded/not-applied now returns non-zero consistently, and `mvgal reload` reports failure when there was no daemon to reload.
+- **Informational log output polluted stdout.** `get_default_output()` returned `stdout` for INFO and above, so `Configuration system initialized` and friends interleaved into command output and would break a JSON consumer. All levels now go to stderr.
+- **Placeholder values were presented as measurements.** `mvgal-info --json` emitted `"driver": ""`, `"class_code": "0x0000"`, `"pcie_link_gen": 0` and `vram_used_bytes: -1`. Unavailable values now emit `null`, and a new `vram_type` field distinguishes `dedicated`, `shared_system` and `unavailable`. Two sentinels had a genuine ambiguity: `utilization_pct` and `temperature_c` started at 0, so a real 0% busy was indistinguishable from "no such node"; these now use -1, and NUMA node uses `UINT32_MAX` because 0 is a real node.
+- **Integrated GPUs reported system RAM as VRAM.** An Intel UHD 770 was shown as `VRAM: 7.43 GB` and `Aggregate VRAM: 7.43 GiB`, the latter being the headline figure of an aggregation layer. Shared memory is now labelled as such in both the per-GPU listing and the aggregate total.
+- **Cross-tool disagreement about the same GPU.** `mvgal-info` reported an empty driver while `mvgal-enum` reported `i915`; `mvgal-enum`'s `timestamp_ns` field held epoch *seconds*. The driver is now resolved from the device's bound sysfs symlink, and the field is `timestamp_s`.
+- **`-c/--config` accepted only `/etc/mvgal/*.conf`, undocumented.** The restriction exists because the privileged helper edits the path, so an unconstrained value would be a privilege-escalation primitive; it is now stated in the help text. The raw wait-status `256` that masked the real error is now decoded.
+- **`--version` was missing on three shipped tools** and `mvgal-info` silently ignored unknown options while also ignoring `--version`. All shipped tools now answer `--version`, and `mvgal-info` rejects unknown arguments.
+- **`mvgal-probe` rejected long options**, printing `invalid option -- '-'`. It accepts `--help`, `--rescan`, `--caps`, `--stats`, `--json` and others.
+- **The AI scheduler logged a per-boot warning.** No model ships, so `AI scheduler: model ... not found` appeared at info level on every start. Demoted to debug.
+
+### Packaging
+- **COPR build #11110014** succeeded on all 19 enabled chroots (Fedora 43/44/45/ELN/Rawhide, RHEL 8/9/10 and +epel, AlmaLinux 9/10, AlmaLinux Kitten 10, AlmaLinux +epel, CentOS Stream 9/10 and +epel-next, Amazon Linux 2023, Mageia 9).
+- The Secure Boot banner is now printed by the daemon at startup as well as by `%post`, so an unenrolled key is visible on first run rather than only at install.
+- Verified by extracting the published `mvgal-0.7.21-1.fc44.x86_64.rpm` and checking the artefacts in place: the OpenCL shared object exports all seven 1.2 entry points, the configuration-merge script is installed mode 755, and the shipped unit carries `CAP_CHOWN`.
+
+### Notes
+- **L7 is not an MVGAL defect.** The report attributed a Vulkan loader warning about missing display entry points to the MVGAL ICD. Both `vkGetPhysicalDeviceDisplayPropertiesKHR` and `...PlanePropertiesKHR` are implemented and resolve through the shipped ICD's negotiated interface version 5, which is the path the loader uses; the library exports only the five spec-mandated `vk_icd*` symbols, as an ICD must. Since 0.7.14 no ICD manifest ships in `vulkan/icd.d` at all (the manifest is opt-in), so the loader cannot be loading MVGAL as an ICD unless a user explicitly opts in. The reporter also noted a second ICD warned in the same run.
+- **L8 required no change.** Enumeration selects on PCI vendor ID and resolves the driver from the bound sysfs symlink, never on card index or driver name. Confirmed on a host exposing only `card1` with both `i915` and `xe` loaded.
 
 ## [v0.7.20] - 2026-10-10
 

@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **Source version 0.7.20** (CMake/Cargo metadata); the source changelog documents releases through **0.7.20**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
+> **Source version 0.7.21** (CMake/Cargo metadata); the source changelog documents releases through **0.7.21**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
 
 ## 📚 Documentation
 
@@ -34,7 +34,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
 
-MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.20, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
+MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.21, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
 
 ```mermaid
 flowchart TD
@@ -90,7 +90,7 @@ flowchart TD
 
 ## Packages
 
-This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.20 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
+This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.20 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. **These have not been rebuilt for 0.7.21**; current 0.7.21 RPMs are on the upstream COPR project. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
 
 ```bash
 dnf info mvgal
@@ -114,8 +114,12 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
-## Recent source changes (through v0.7.20)
+## Recent source changes (through v0.7.21)
 
+- **The daemon socket is reachable again** (v0.7.21) — `/run/mvgal/mvgal.sock` was being created `root:root`, so every user in the `mvgal` group was locked out of all CLI-to-daemon IPC while `sudo` worked fine. The `chown()` call was correct; the unit's `CapabilityBoundingSet` omitted `CAP_CHOWN`, which caps what a uid-0 process can hold, and root is not a member of `mvgal`, so the call could only fail — with the error discarded. A first fix that only added error reporting would have documented the bug without fixing it.
+- **The OpenCL ICD stopped claiming a version it did not implement** (v0.7.21) — it reported `OpenCL 1.2` while exporting 2 of the 7 core entry points 1.2 added, so ocl-icd handed `NULL` to any application using one. All seven are now exported.
+- **Configuration survives an RPM upgrade** (v0.7.21) — `%config(noreplace)` plus a schema change meant your edits landed in `.rpmsave` while the new defaults went live. The package now merges your values back per section and key, and keeps the release default alongside as `mvgal.conf.mvgal-default`.
+- **Reports agree with each other** (v0.7.21) — degraded state returns non-zero consistently (`mvgal status` used to exit 0 where `mvgal-status --once` exited 1); log output moved off stdout so JSON stays parseable; unavailable values emit `null` instead of `-1`/`0`; integrated GPUs' shared system memory is no longer labelled as dedicated VRAM; and `driver` and node names agree across `mvgal-info` and `mvgal-enum`.
 - **Release artefacts are reproducible** (v0.7.20) — the source tarball and SRPM are now byte-identical when rebuilt from one commit. `vendor/` is tracked rather than gitignored, so the packaging script was copying it a second time into `vendor/vendor/` and restamping the parent mtime with the wall clock; and rpm only rewrites `BUILDTIME` from `SOURCE_DATE_EPOCH` when the opt-in macro `use_source_date_epoch_as_buildtime` is defined, which it ships without. Binary RPMs remain non-reproducible (random ELF build-id, plus the build directory baked into DWARF); see [`docs/STATUS.md`](docs/STATUS.md) § Reproducibility limits.
 - **A synthetic GPU topology backend** (v0.7.18) — `include/mvgal/mvgal_mock.h` describes a machine that does not exist, in one of seven presets from a single discrete GPU to a four-vendor, three-root-complex box. The GPU manager's rescan substitutes it for the hardware scan, so the scheduler, memory manager and P2P cost model reach synthetic devices through the ordinary discovery path. Thermal inertia, throttling, VRAM occupancy and per-pair link bandwidth are modelled rather than canned. It is a test surface: it shapes what discovery reports and creates no devices.
 - **The Rust quality gate had never run** (v0.7.17) — `clippy.toml` carried keys modern clippy rejects, and clippy aborts on an unreadable config *before* linting, so the Rust crates had never been linted. Repairing it surfaced four real defects: `CrossDeviceFence` was neither `Send` nor `Sync`; `create_fence()` returned a second independent `Arc`, so signalling it did nothing; `MvgalError` now carries an explicit `#[repr(u32)]` so `Unknown = 0xFFFFFFFF` is representable; and `align_up()` was replaced by `div_ceil()`.
@@ -124,7 +128,7 @@ mvgal-compat --system   # check readiness
 - **Custom splitters can be released** (v0.7.16) — `mvgal_unregister_custom_splitter()` gained its missing public declaration and now matches on all four descriptor fields by value. Registering a splitter still does not make the `custom` strategy selectable; applying one needs a task tree contract that is not defined.
 - **The command DAG is no longer a stub** (v0.7.16) — `mvgal_translate_dag()` deep copies and rewires dependency edges instead of returning its argument unchanged, and `mvgal_emit_dag()` resolves entry points through the device dispatch table and replays in recording order instead of always failing with `VK_ERROR_LAYER_NOT_PRESENT`. The command-buffer-to-DAG map also gained collision probing, and a second recording for the same buffer now destroys the old DAG rather than dropping it.
 - **Secure Boot hardening** — DKMS modules are signed with a per-machine MVGAL key and `mvgal-enroll-mok` verifies enrollment via `mokutil --list-new` (no more false success).
-- **Daemon capability dropping** — `mvgald` clears its capability sets after init and prunes the bounding set to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_SYS_MODULE`. `CAP_SYS_MODULE` was added in 0.7.14: without it the unit's `ExecStartPre` `modprobe` could never succeed.
+- **Daemon capability bounding** — the unit restricts the daemon to `CAP_SYS_ADMIN CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_SYS_MODULE CAP_CHOWN`. `CAP_SYS_MODULE` was added in 0.7.14: without it the unit's `ExecStartPre` `modprobe` could never succeed. `CAP_CHOWN` was added in 0.7.21 — see the daemon socket item above. An earlier version of this page claimed `mvgald` clears its own capability sets after init; that is not true, and the code was checked to confirm it (no `prctl`/`capset`/`setuid` in `runtime/`). The unit directives are the whole of the restriction.
 - **Restricted D-Bus policy** — `org.mvgal.MVGAL` is now limited to root and the `mvgal` group. The shipped `com.mvgal.policy` declares exactly two actions, both `auth_admin`.
 - **Real Vulkan driver version** — the ICD reports `apiVersion`/`driverVersion` from the MVGAL version macros instead of `0.0.0`.
 - **Degraded-mode reporting** — `mvgal-status` prints `Kernel Module: NOT LOADED (degraded userspace-only mode)` with a MOK hint and a real load-balance estimate.

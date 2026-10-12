@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.20. The source changelog documents through 0.7.20. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.21. The source changelog documents through 0.7.21. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.20 | **Updated:** September 2026
+**Source version:** 0.7.21 | **Updated:** September 2026
 
 ---
 
@@ -45,6 +45,19 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
+**Check that the daemon is actually reachable by your user.** The package adds
+you to the `mvgal` group, but group membership only reaches a new session:
+
+```bash
+ls -l /run/mvgal/mvgal.sock      # expect: srw-rw---- root:mvgal
+id -nG | tr ' ' '\n' | grep -x mvgal
+```
+
+The socket must be owned by `mvgal`, not `root`. If it shows `root:root` the
+daemon could not hand it over — see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) §
+Daemon socket permissions. If the group is missing from your session but the
+socket is correct, log out and back in.
+
 ---
 
 ## Secure Boot (UEFI systems)
@@ -58,6 +71,17 @@ mvgal-enroll-mok
 Then **reboot** and complete enrollment in the MOK Manager (blue screen). See [SECURE_BOOT.md](SECURE_BOOT.md) for details.
 
 If the kernel module is not loaded, `mvgal-status` reports **degraded userspace-only mode** with a MOK hint.
+
+As of v0.7.21 the daemon also checks this itself at startup and prints a banner
+to the journal when Secure Boot is on but the key is not enrolled, so the cause
+is visible without running a diagnostic:
+
+```bash
+journalctl -u mvgald -b | grep -A6 'Secure Boot is enabled'
+```
+
+`mvgal status` and `mvgal-status --once` both exit non-zero in this state; see
+[SECURE_BOOT.md](SECURE_BOOT.md) § Degraded Mode.
 
 ---
 
@@ -195,6 +219,47 @@ pkexec nano /etc/mvgal/mvgal.conf
 # or
 mvgal-config   # CLI configuration tool
 ```
+
+### Upgrading: what happens to your configuration
+
+`mvgal.conf` is marked `%config(noreplace)`, so rpm never overwrites your copy
+silently. Historically that meant something worse: when a new release changed
+the schema, rpm installed the new default file and moved yours to
+`mvgal.conf.rpmsave`, leaving the *new defaults active* and your settings only in
+that backup. Users read this as the upgrade resetting their configuration.
+
+**Since v0.7.21 the package merges your file back** during `%post`:
+
+- Values you had set are restored per **section and key**, so a setting in
+  `[gpu_0]` is never confused with the same key name in `[gpu_1]` or `[core]`.
+- Keys that only your version had — for example a `power_curve_profile` dropped
+  by a later release — are re-added to their own section.
+- Sections the new release removed entirely are appended rather than dropped.
+- Keys the new release introduced are left at their new defaults.
+
+The release's own default is preserved next to the result as
+`/etc/mvgal/mvgal.conf.mvgal-default`, so you can diff the two at any time:
+
+```bash
+diff /etc/mvgal/mvgal.conf.mvgal-default /etc/mvgal/mvgal.conf
+```
+
+The merge is keyed on section **and** key name deliberately. A key name alone is
+ambiguous — `priority` appears in both `[gpu_0]` and `[gpu_1]`, and `enabled`
+appears in five sections — and a key that still exists but whose default
+changed would be skipped entirely, which is the common case and exactly the one
+that loses a setting like `psu_capacity_watts`.
+
+The helper used for this is `/usr/lib/mvgal/mvgal-merge-config.sh`. It is also
+runnable by hand if you want to merge an old file yourself:
+
+```bash
+sudo /usr/lib/mvgal/mvgal-merge-config.sh /etc/mvgal/mvgal.conf /path/to/old.conf
+```
+
+> **Note:** merging restores the values you had. It cannot know whether a
+> behaviour you relied on changed meaning between releases; after a major schema
+> change, read the changelog rather than assuming the file is authoritative.
 
 ---
 

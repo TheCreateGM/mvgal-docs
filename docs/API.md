@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, api, reference]
 aliases: [API Reference, API]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: reference
 mvgal_order: 8
 ---
 
 # MVGAL Public API Reference
 
-> **Implementation status:** Source metadata is 0.7.20. The source changelog documents through 0.7.20. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.21. The source changelog documents through 0.7.21. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.20 | **Header:** `#include <mvgal/mvgal.h>`
+**Source version:** 0.7.21 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 
@@ -846,7 +846,7 @@ The following claims appeared in earlier revisions of this document and have no 
 | `VK_MVGAL_*` Vulkan extensions | No such symbol exists; the layer implements standard Vulkan |
 | IPC client calls without `fd` or `request_id` | Both are required parameters |
 | "12 ioctls" | 13 declared, 9 implemented, plus 10 separate DRM ioctls |
-| "26 headers" (in [MOC](MOC.md)) | 30 headers as of v0.7.20 |
+| "26 headers" (in [MOC](MOC.md)) | 30 headers as of v0.7.21 |
 | Header count omitted `mvgal_mock.h` (v0.7.18) | It is a public header; see § Synthetic Topology Backend |
 | Rust functions returning `void` from mutating calls | They return `i32` status; `mvgal_mem_track` also takes a `gpu_index` |
 | `GpuCapability`-based `mvgal_cap_to_json` returning `const char *` | Takes a caller-supplied buffer and returns `i32` |

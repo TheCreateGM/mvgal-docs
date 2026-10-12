@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: guide
 mvgal_order: 3
 ---
 
 # MVGAL Secure Boot & MOK Enrollment
 
-> **Implementation status:** Source metadata is 0.7.20. The source changelog documents through 0.7.20. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.21. The source changelog documents through 0.7.21. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.20 | **Updated:** September 2026
+**Source version:** 0.7.21 | **Updated:** September 2026
 
 MVGAL ships seven kernel modules. On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 
@@ -114,6 +114,26 @@ If the `mvgal` kernel module is **not loaded** (e.g. MOK not yet enrolled, or Se
 - The load-balance figure is a real estimate, or `N/A` when fewer than 2 enabled GPUs / no workload data (v0.7.8+).
 - `mvgal-hw-validate` attributes device-node failures to "kernel module not loaded" with a load hint (v0.7.8+).
 
+**How you learn about it changed in v0.7.21.** Degraded mode was previously
+discoverable only by running a diagnostic tool, or by reading the journal after
+wondering why aggregation does nothing. The daemon now checks at startup whether
+Secure Boot is enabled *and* the MVGAL key is absent from the enrolled list, and
+prints a boxed banner to the journal naming the remedy and the certificate path:
+
+```
+journalctl -u mvgald -b | grep -A6 'Secure Boot is enabled'
+```
+
+The RPM `%post` prints the same guidance at install time. Treat that banner as
+the reason aggregation and kernel-side memory management are unavailable — the
+userspace discovery you see in `mvgal list-gpus` still works, which is exactly
+why degraded mode is easy to mistake for a working install.
+
+Because this state looks healthy from several angles, the tools now agree on it:
+`mvgal status` exits non-zero when the module is absent, matching
+`mvgal-status --once` (v0.7.21+). Earlier versions disagreed — `mvgal status`
+returned 0 for the same condition.
+
 To load the module manually:
 
 ```bash
@@ -137,6 +157,7 @@ pkexec mvgal-load
 | MOK Manager doesn't appear on reboot | Secure Boot may be disabled, or the key was already enrolled. Check `mokutil --list-enrolled`. |
 | `modprobe mvgal` → "Required key not available" | The key is not enrolled. Run `mvgal-enroll-mok` and reboot. |
 | `mvgald` is `active (running)` but no module is loaded | The unit's `ExecStartPre` `modprobe` failed. Pre-v0.7.14 this was silent. Check `journalctl -u mvgald -b` for the reported reason. |
+| `mvgal load-module` seems to hang | Pre-v0.7.21 it waited on the polkit dialog with no bound, so a cancelled or ignored prompt left it blocked with no output. v0.7.21+ gives up after 60 s and says so. |
 | DKMS modules rejected but kernel-tree modules load | Pre-v0.7.5 behavior. Update to v0.7.5+ so DKMS modules are signed too. |
 
 ---

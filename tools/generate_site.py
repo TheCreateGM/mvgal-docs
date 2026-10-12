@@ -31,12 +31,21 @@ DOCS = ROOT / "docs"
 SITE = ROOT / "site"
 VAULT = ROOT                 # MOC.md and README.md live beside docs/, not in it.
 
-VERSION = "0.7.19"
+# VERSION and MODIFIED are derived from the vault rather than written here.
+# They were literals until 0.7.21, and they had already drifted: the constant
+# still said 0.7.19 while every note's frontmatter said 0.7.20, so the sidebar
+# badge, the footer and the JSON-LD dateModified all advertised a release the
+# site body was not describing.  Reading the vault makes that impossible --
+# bumping a release means editing the notes, which is where the version is
+# authoritative.  MOC.md is the fallback because it is the one page guaranteed
+# to exist and be in sync.
+#
+# _vault_version/_vault_reviewed are defined below, next to
+# split_frontmatter() which they depend on; see VAULT_VERSION below.
 BASE_URL = "https://thecreategm.github.io/mvgal-docs/site/"
 SITE_NAME = "MVGAL Documentation"
 ABOUT = "Multi-Vendor GPU Aggregation Layer for Linux"
 PUBLISHED = "2026-08-31"
-MODIFIED = "2026-10-04"
 OWNER = "TheCreateGM"
 REPO = "mvgal-docs"
 BLOB = f"https://github.com/{OWNER}/{REPO}/blob/main"
@@ -46,10 +55,57 @@ BLOB = f"https://github.com/{OWNER}/{REPO}/blob/main"
 MERMAID_JS = "mermaid.min.js"
 MERMAID_VERSION = "10.9.3"
 
-# Vendored, no CDN. Commit cec1bb7 removed the octicon/CDN dependencies and
-# this stays dependency-free: mermaid ships as one UMD bundle next to styles.css.
-MERMAID_JS = "mermaid.min.js"
-MERMAID_VERSION = "10.9.3"
+
+def _frontmatter_fields(path: Path) -> dict:
+    """Minimal frontmatter scalar reader, independent of split_frontmatter().
+
+    Duplicated rather than reused because split_frontmatter() is defined far
+    below, and VERSION is needed by module-level constants that run before it.
+    Only scalars are read; the values consumed here are a version string and a
+    date, neither of which uses YAML list or block syntax.
+    """
+    out = {}
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return out
+    if not text.startswith("---"):
+        return out
+    parts = text.split("---", 2)
+    if len(parts) != 3:
+        return out
+    for line in parts[1].splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or ":" not in line:
+            continue
+        key, _, val = line.partition(":")
+        out[key.strip()] = val.strip().strip("'\"")
+    return out
+
+
+def _vault_version() -> str:
+    for name in ("MOC.md", "README.md"):
+        v = _frontmatter_fields(VAULT / name).get("mvgal_version", "")
+        if v:
+            return v
+    raise SystemExit(
+        "generate_site: no mvgal_version in MOC.md or README.md frontmatter; "
+        "the site version is derived from the vault, so one of them must carry it"
+    )
+
+
+def _vault_reviewed() -> str:
+    """Newest mvgal_verified across docs/, as YYYY-MM-DD."""
+    best = ""
+    for path in sorted(DOCS.glob("*.md")):
+        v = _frontmatter_fields(path).get("mvgal_verified", "")
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v) and v > best:
+            best = v
+    return best or PUBLISHED
+
+
+VERSION = _vault_version()
+MODIFIED = _vault_reviewed()
 EDIT = f"https://github.com/{OWNER}/{REPO}/edit/main"
 
 

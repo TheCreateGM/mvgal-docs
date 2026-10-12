@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.20"
-mvgal_verified: 2026-10-10
+mvgal_version: "0.7.21"
+mvgal_verified: 2026-10-12
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.20**; the source changelog documents releases through **0.7.20**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.21**; the source changelog documents releases through **0.7.21**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -44,6 +44,40 @@ journalctl -u mvgald -b --no-pager
 ```
 
 Check that the unit and daemon were installed by the selected package. Do not create a socket or D-Bus policy manually using paths copied from an older release; compare against the packaged unit and configuration files.
+
+## Daemon socket permissions
+
+Symptom: the daemon is running, but every CLI-to-daemon operation fails for a
+normal user while working under `sudo`. `mvgal show-stats` returns zeros,
+`mvgal status` cannot read live state, and connecting to the socket directly
+gives `Permission denied`:
+
+```bash
+systemctl is-active mvgald
+ls -l /run/mvgal/mvgal.sock
+id -nG "$USER"
+nc -U /run/mvgal/mvgal.sock
+```
+
+A healthy socket is `srw-rw---- root:mvgal`. Two different failures look
+identical from the CLI, so read the socket's actual owner first:
+
+| Socket shows | Meaning | Fix |
+|---|---|---|
+| `root:mvgal` | Correct ownership; your session lacks the group | `pkexec usermod -aG mvgal "$USER"`, then **log out and back in** — a new login is required for the supplementary group to appear |
+| `root:root` | The daemon failed to hand the socket to the group; this is a daemon-side defect, not a group membership problem | Report it with `ls -l /run/mvgal/mvgal.sock` and the daemon's journal |
+
+Do not work around `root:root` by adding your user to group 0 or by making the
+socket world-writable. Both grant privilege the group model is meant to keep
+out of ordinary use; the group exists precisely so that access to the daemon is
+granted without root.
+
+On versions before 0.7.21 the packaged unit omitted `CAP_CHOWN` from its
+`CapabilityBoundingSet`, so the uid-0 daemon could not change the socket's
+group — root is not a member of `mvgal`, and the call failed with `EPERM`
+regardless of group membership. Both daemons now log that failure instead of
+discarding it, so a recurring occurrence should appear in
+`journalctl -u mvgald -b`.
 
 ## Kernel module does not load
 
