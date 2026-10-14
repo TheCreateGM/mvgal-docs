@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-> Source metadata is **0.7.21**; the source changelog documents releases through **0.7.21**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
+> Source metadata is **0.7.22**; the source changelog documents releases through **0.7.22**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
 
 ## Repository components
 
@@ -45,6 +45,40 @@ flowchart LR
 ```
 
 Use `mvgal --help`, `mvgal-info --help`, and `mvgal-config --help` to inspect commands actually provided by an installed build. Whether an API component was compiled is controlled by build options and dependencies; whether an operation works depends on runtime capabilities.
+
+## CLI output contract
+
+The tools are meant to be parsed, so the split is enforced:
+
+- **stdout** carries only the requested output — a GPU list, `--json`, a table.
+  Nothing else. Informational logging goes to stderr.
+- **SIGPIPE is ignored** by every tool, so `mvgal ... | head` exits 0 instead of
+  dying on signal 13 (shell status 141).
+
+Both were fixed in v0.7.22. The stdout rule previously leaked: the library's
+pre-initialisation fallback in `log_internal()` sent INFO and above to stdout,
+and the tools that printed `Configuration loaded from ...` were exactly the ones
+that never call `mvgal_log_init()`. Note for contributors — routing
+`get_default_output()` to stderr is **not** sufficient on its own, because that
+function is never reached on that path.
+
+### What `mvgal-bench` actually measures
+
+`mvgal-bench` does not measure GPU performance. It reports:
+
+- **memory bandwidth** — read/write/copy of `mmap`'d **host RAM**
+- **compute** — a single-threaded **host CPU** DAXPY
+
+Every figure is now labelled with that hardware path, and the run header states
+it explicitly when `/dev/mvgal0` is absent. `--metadata` carries the same
+provenance as machine-readable fields:
+
+```json
+{ "hardware_path": "host_cpu", "mvgal_device_present": false, "measures_gpu": false }
+```
+
+`measures_gpu` is a constant `false` today and is present so a consumer can tell
+host figures from GPU figures without inferring it from the tool name (v0.7.22).
 
 ## Build configuration
 

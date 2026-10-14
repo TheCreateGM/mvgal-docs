@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.21. The source changelog documents through 0.7.21. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.22. The source changelog documents through 0.7.22. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.21 | **Updated:** September 2026
+**Source version:** 0.7.22 | **Updated:** September 2026
 
 ---
 
@@ -327,6 +327,24 @@ it for the first time). The `library_path` in the manifest is absolute, so it no
 depends on the loader's `dlopen` search order.
 
 Upgrades remove a stale manifest from `icd.d` **only** when it is recognisably MVGAL's.
+
+Check which of the two you actually have:
+
+```bash
+mvgal-info | grep -i vulkan
+```
+
+```
+Vulkan layer registered  : yes (interception layer only; adds no GPU)
+Vulkan aggregated ICD    : disabled by default (opt-in via /usr/share/mvgal/scripts/mvgal-vulkan-env.sh)
+```
+
+The layer and the ICD are different things and are now reported separately
+(v0.7.22). The layer ships globally and only intercepts calls; it adds no device.
+The aggregated ICD is the thing that would expose an MVGAL `VkPhysicalDevice`,
+and it is off by default for the conformancy reason above. An earlier single
+`Vulkan layer registered: yes` line was easy to read as "Vulkan aggregation is
+active" when no aggregated device existed.
 
 ### Enable OpenCL ICD
 

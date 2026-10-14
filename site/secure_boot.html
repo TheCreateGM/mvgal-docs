@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Secure Boot &amp; MOK Enrollment — MVGAL Documentation">
 <meta name="twitter:description" content="Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Secure Boot & MOK Enrollment — MVGAL Documentation", "name": "Secure Boot & MOK Enrollment — MVGAL Documentation", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.", "url": "https://thecreategm.github.io/mvgal-docs/site/secure_boot.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Secure Boot, MOK enrollment, mvgal-enroll-mok, mokutil, DKMS signing, UEFI, kernel module signing", "datePublished": "2026-08-31", "dateModified": "2026-10-12", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Secure Boot & MOK Enrollment — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/secure_boot.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Secure Boot & MOK Enrollment — MVGAL Documentation", "name": "Secure Boot & MOK Enrollment — MVGAL Documentation", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting.", "url": "https://thecreategm.github.io/mvgal-docs/site/secure_boot.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL Secure Boot, MOK enrollment, mvgal-enroll-mok, mokutil, DKMS signing, UEFI, kernel module signing", "datePublished": "2026-08-31", "dateModified": "2026-10-14", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Secure Boot & MOK Enrollment — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/secure_boot.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
-      <span>v0.7.21</span>
+      <span>v0.7.22</span>
     </a>
   </div>
 </header>
@@ -76,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.21, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.22, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,7 +153,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
-  <div class="sb-sub">v0.7.21 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.22 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -217,7 +217,7 @@
 
 <div class="page-header">
   <div class="page-header-main">
-    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.21</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-10-12</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.22</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-10-14</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
     <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>secure-boot</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>mok</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>kernel</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>guide</a></div>
   </div>
   <div class="page-header-actions">
@@ -236,9 +236,9 @@
 <div class="doc-body">
 <h1 id="mvgal-secure-boot-mok-enrollment">MVGAL Secure Boot &amp; MOK Enrollment<a class="anchor-link" href="#mvgal-secure-boot-mok-enrollment" aria-label="Permalink to this section"></a></h1>
 <blockquote>
-<p><strong>Implementation status:</strong> Source metadata is 0.7.21. The source changelog documents through 0.7.21. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
+<p><strong>Implementation status:</strong> Source metadata is 0.7.22. The source changelog documents through 0.7.22. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return <code>-EOPNOTSUPP</code>.</p>
 </blockquote>
-<p><strong>Source version:</strong> 0.7.21 | <strong>Updated:</strong> September 2026</p>
+<p><strong>Source version:</strong> 0.7.22 | <strong>Updated:</strong> September 2026</p>
 <p>MVGAL ships seven kernel modules. On systems with <strong>UEFI Secure Boot</strong> enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with <strong>per-machine key signing</strong> and <strong>MOK (Machine Owner Key) enrollment</strong>.</p>
 <p>The modules, in the order <code>/usr/lib/mvgal/modules.sh</code> loads them (dependencies first):</p>
 <div class="table-wrap"><table>
@@ -320,15 +320,51 @@ pkexec openssl req -new -x509 -newkey rsa:4096 -nodes -days 3650 \
 <p>Then reboot and complete enrollment in the MOK Manager.</p>
 <hr>
 <h2 id="verifying-enrollment">Verifying Enrollment<a class="anchor-link" href="#verifying-enrollment" aria-label="Permalink to this section"></a></h2>
-<pre><code class="language-bash">mokutil --list-enrolled | grep 'CN=MVGAL Kernel Module Signing Key'   # enrolled keys
-mokutil --list-new | grep 'CN=MVGAL Kernel Module Signing Key'        # pending keys (empty after reboot)
+<p>Ask whether <strong>this machine's certificate</strong> is enrolled — not whether some MVGAL
+certificate is:</p>
+<pre><code class="language-bash">mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der
 </code></pre>
+<p><code>--test-key</code> exits 0 only if that exact certificate is in the platform keyring.</p>
 <blockquote>
-<p><strong>Note:</strong> grep for the certificate's <strong>common name</strong>, not the bare word <code>mvgal</code>. mokutil prints <code>Issuer/Subject: CN=MVGAL Kernel Module Signing Key, O=MVGAL</code>; the filename <code>mvgal-signing</code> never appears in its output.</p>
+<p><strong>Do not verify by grepping the enrolled list.</strong> <code>mokutil --list-enrolled |
+grep MVGAL</code> looks like it works and does not: every MVGAL keypair shares the
+subject <code>CN=MVGAL Kernel Module Signing Key, O=MVGAL</code>, so after the key is
+regenerated — a reinstall that lost <code>/var/lib/mvgal/keys</code>, a restore from
+backup, a deliberate rotation — the <strong>old</strong> certificate is still listed, the
+grep succeeds, and every module signed by the <strong>new</strong> key is still rejected.
+This was a live bug: <code>mvgald</code> performed exactly that check and stayed silent.
+Fixed in v0.7.22, which uses <code>mokutil --test-key</code>.</p>
 </blockquote>
 <p>If the module still fails to load, check:</p>
 <pre><code class="language-bash">journalctl -k -b | grep -i &quot;module verification\|mvgal&quot;
 </code></pre>
+<h2 id="modules-signed-with-the-wrong-key-fixed-in-v0722">Modules signed with the wrong key (fixed in v0.7.22)<a class="anchor-link" href="#modules-signed-with-the-wrong-key-fixed-in-v0722" aria-label="Permalink to this section"></a></h2>
+<p>If <code>mvgal_ntsync</code> is rejected but the other modules are not, compare the keys
+that actually signed them:</p>
+<pre><code class="language-bash">for ko in $(find /lib/modules/$(uname -r) -name 'mvgal*.ko*'); do
+  echo &quot;$ko&quot;; modinfo -F signer &quot;$ko&quot; 2&gt;/dev/null || echo &quot;  (unsigned)&quot;
+done
+</code></pre>
+<p>Every module must show <code>MVGAL Kernel Module Signing Key</code>. Anything showing
+<code>DKMS module signing key</code> is the v0.7.21 defect: <code>mvgal_ntsync.ko</code> — a hard
+dependency of <code>mvgal.ko</code> — was signed with DKMS's own key while
+<code>mvgal-enroll-mok</code> enrolled only the MVGAL one, so the documented remediation
+(enroll, reboot, confirm) could never succeed.</p>
+<p>Re-sign every installed module:</p>
+<pre><code class="language-bash">pkexec /usr/lib/mvgal/mvgal-sign-modules.sh
+</code></pre>
+<p>The helper searches all the places a module can end up (the kernel tree,
+<code>updates/dkms</code>, <code>extra</code>, <code>weak-updates</code>, <code>updates</code>), handles <code>.ko</code>, <code>.ko.xz</code>
+and <code>.ko.zst</code> by decompressing, signing and recompressing, and is idempotent —
+it leaves already-correct modules byte-identical. It also runs automatically
+from the RPM <code>%post</code>, from <code>mvgal-dkms</code> <code>%post</code>, and from <code>dkms.conf</code> after
+each DKMS rebuild.</p>
+<blockquote>
+<p>A compressed module cannot be signed in place: the signature covers the ELF
+image and the kernel verifies it after decompression. That is why the modules
+DKMS installs on a compression-enabled distro are <code>mvgal_ntsync.ko.xz</code> and
+have to be signed <em>before</em> compression.</p>
+</blockquote>
 <hr>
 <h2 id="degraded-mode-module-not-loaded">Degraded Mode (Module Not Loaded)<a class="anchor-link" href="#degraded-mode-module-not-loaded" aria-label="Permalink to this section"></a></h2>
 <p>If the <code>mvgal</code> kernel module is <strong>not loaded</strong> (e.g. MOK not yet enrolled, or Secure Boot rejected the module), MVGAL runs in <strong>degraded userspace-only mode</strong>:</p>
@@ -355,11 +391,14 @@ why degraded mode is easy to mistake for a working install.</p>
 <code>mvgal-status --once</code> (v0.7.21+). Earlier versions disagreed — <code>mvgal status</code>
 returned 0 for the same condition.</p>
 <p>To load the module manually:</p>
-<pre><code class="language-bash">pkexec modprobe mvgal
-# or, if the package is installed -- the shared inventory handles order:
-pkexec mvgal-load
+<pre><code class="language-bash">pkexec mvgal-load
 </code></pre>
 <blockquote>
+<p>Use <code>mvgal-load</code>, not <code>modprobe mvgal</code>. <code>mvgal.ko</code> declares <code>mvgal_ntsync.ko</code>
+as a hard dependency, so <code>modprobe</code> reports only the outermost failure and
+tells you nothing about which module was actually rejected. <code>mvgal-load</code> loads
+the inventory in order, names the module that failed, and prints the
+enrollment instructions itself when Secure Boot is the cause.</p>
 <p><strong>Note:</strong> the loader is <code>/usr/bin/mvgal-load</code> and its counterpart <code>/usr/bin/mvgal-unload</code>. Both source <code>/usr/lib/mvgal/modules.sh</code> for the module list.</p>
 </blockquote>
 <hr>
@@ -405,8 +444,16 @@ pkexec mvgal-load
 <td>Pre-v0.7.21 it waited on the polkit dialog with no bound, so a cancelled or ignored prompt left it blocked with no output. v0.7.21+ gives up after 60 s and says so.</td>
 </tr>
 <tr>
-<td>DKMS modules rejected but kernel-tree modules load</td>
-<td>Pre-v0.7.5 behavior. Update to v0.7.5+ so DKMS modules are signed too.</td>
+<td><code>mvgal_ntsync</code> rejected while other modules load</td>
+<td><strong>v0.7.21 and earlier.</strong> ntsync was signed with DKMS's key; the older "update to v0.7.5+" advice did not fix it. Upgrade to v0.7.22+, or re-sign with <code>pkexec /usr/lib/mvgal/mvgal-sign-modules.sh</code>, then enroll as described above.</td>
+</tr>
+<tr>
+<td>Modules still rejected after enrolling</td>
+<td>Check for a stale key: <code>mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der</code>. If it fails, an older MVGAL certificate is enrolled instead — enroll the current one (<code>pkexec mvgal-enroll-mok &amp;&amp; reboot</code>).</td>
+</tr>
+<tr>
+<td>Everything rejected right after a kernel update</td>
+<td>Pre-v0.7.22: DKMS rebuilt the modules with its own key and no RPM scriptlet ran. v0.7.22+ sets a <code>POST_INSTALL</code> hook in <code>dkms.conf</code> to re-sign. Workaround on older versions: <code>pkexec /usr/lib/mvgal/mvgal-sign-modules.sh</code>.</td>
 </tr>
 </tbody>
 </table></div>
@@ -463,11 +510,11 @@ pkexec mvgal-load
 <p>See <a href="troubleshooting.html">TROUBLESHOOTING.md</a> for more issues and <a href="status.html">STATUS.md</a> for the release history.</p>
 <section class="backlinks">
 <div class="backlinks-title"><svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg> Linked mentions</div>
-<ul class="backlinks-list"><li><a href="build.html">Building</a></li><li><a href="install.html">Installation</a></li><li><a href="quickstart.html">Quick Start</a></li><li><a href="steam.html">Steam / Proton</a></li></ul>
+<ul class="backlinks-list"><li><a href="build.html">Building</a></li><li><a href="install.html">Installation</a></li><li><a href="quickstart.html">Quick Start</a></li><li><a href="status.html">Project Status</a></li><li><a href="steam.html">Steam / Proton</a></li></ul>
 </section>
 </div>
 <aside class="doc-rail">
-<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#how-it-works">How It Works</a></li><li class="outline-item outline-l2"><a href="#enrolling-the-mvgal-key-recommended">Enrolling the MVGAL Key (Recommended)</a></li><li class="outline-item outline-l3"><a href="#manual-enrollment-alternative">Manual enrollment (alternative)</a></li><li class="outline-item outline-l2"><a href="#verifying-enrollment">Verifying Enrollment</a></li><li class="outline-item outline-l2"><a href="#degraded-mode-module-not-loaded">Degraded Mode (Module Not Loaded)</a></li><li class="outline-item outline-l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="outline-item outline-l2"><a href="#security-notes-v078-capabilities-corrected-in-v0714">Security Notes (v0.7.8, capabilities corrected in v0.7.14)</a></li><li class="outline-item outline-l2"><a href="#what-v0714-fixed-here">What v0.7.14 Fixed Here</a></li></ul>
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#how-it-works">How It Works</a></li><li class="outline-item outline-l2"><a href="#enrolling-the-mvgal-key-recommended">Enrolling the MVGAL Key (Recommended)</a></li><li class="outline-item outline-l3"><a href="#manual-enrollment-alternative">Manual enrollment (alternative)</a></li><li class="outline-item outline-l2"><a href="#verifying-enrollment">Verifying Enrollment</a></li><li class="outline-item outline-l2"><a href="#modules-signed-with-the-wrong-key-fixed-in-v0722">Modules signed with the wrong key (fixed in v0.7.22)</a></li><li class="outline-item outline-l2"><a href="#degraded-mode-module-not-loaded">Degraded Mode (Module Not Loaded)</a></li><li class="outline-item outline-l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="outline-item outline-l2"><a href="#security-notes-v078-capabilities-corrected-in-v0714">Security Notes (v0.7.8, capabilities corrected in v0.7.14)</a></li><li class="outline-item outline-l2"><a href="#what-v0714-fixed-here">What v0.7.14 Fixed Here</a></li></ul>
 <div class="rail-actions">
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/SECURE_BOOT.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/SECURE_BOOT.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
@@ -476,7 +523,7 @@ pkexec mvgal-load
 </div>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.21 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.22 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

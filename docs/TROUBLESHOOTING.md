@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.21**; the source changelog documents releases through **0.7.21**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.22**; the source changelog documents releases through **0.7.22**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -92,10 +92,48 @@ If Secure Boot rejects a signed module, use the package's `mvgal-enroll-mok` hel
 
 ```bash
 mokutil --sb-state
-mokutil --list-enrolled
+mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der   # exit 0 = this key is trusted
 ```
 
-The module must also have been built for the running kernel. A successful MOK enrollment does not fix a missing or incompatible module build.
+> Verify with `--test-key`, **not** `mokutil --list-enrolled | grep MVGAL`. Every
+> MVGAL keypair shares one subject, so after the key is regenerated the old
+> certificate is still listed, the grep passes, and modules signed by the new key
+> are still rejected. `mvgald` had that bug and stayed silent about it; v0.7.22+
+> uses `--test-key`.
+
+### "Key was rejected by service" but the key *is* enrolled
+
+Check that every module carries the same signature. On v0.7.21 and earlier,
+`mvgal_ntsync.ko` — a hard dependency of `mvgal.ko` — was signed with DKMS's own
+key while `mvgal-enroll-mok` enrolled only the MVGAL key, so enrollment could
+never fix it:
+
+```bash
+for ko in $(find /lib/modules/$(uname -r) -name 'mvgal*.ko*'); do
+  printf '%-60s ' "$ko"; modinfo -F signer "$ko" 2>/dev/null || echo "(unsigned)"
+done
+```
+
+Anything reporting `DKMS module signing key` is the defect. Fix:
+
+```bash
+pkexec /usr/lib/mvgal/mvgal-sign-modules.sh
+```
+
+This handles the `.ko.xz` modules DKMS installs on a compression-enabled distro
+(a compressed module cannot be signed in place), covers every directory a module
+can land in, and is safe to re-run. Fixed in v0.7.22.
+
+### Load with `mvgal-load`, not `modprobe mvgal`
+
+```bash
+pkexec mvgal-load
+```
+
+`mvgal.ko` depends on `mvgal_ntsync.ko`, so `modprobe mvgal` fails on the
+dependency while naming only the outer module. `mvgal-load` loads the inventory
+in order, reports which module was rejected, and prints the enrollment steps when
+Secure Boot is the cause.
 
 ## GPU is missing from MVGAL output
 

@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: guide
 mvgal_order: 3
 ---
 
 # MVGAL Secure Boot & MOK Enrollment
 
-> **Implementation status:** Source metadata is 0.7.21. The source changelog documents through 0.7.21. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.22. The source changelog documents through 0.7.22. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.21 | **Updated:** September 2026
+**Source version:** 0.7.22 | **Updated:** September 2026
 
 MVGAL ships seven kernel modules. On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 
@@ -85,18 +85,64 @@ Then reboot and complete enrollment in the MOK Manager.
 
 ## Verifying Enrollment
 
+Ask whether **this machine's certificate** is enrolled — not whether some MVGAL
+certificate is:
+
 ```bash
-mokutil --list-enrolled | grep 'CN=MVGAL Kernel Module Signing Key'   # enrolled keys
-mokutil --list-new | grep 'CN=MVGAL Kernel Module Signing Key'        # pending keys (empty after reboot)
+mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der
 ```
 
-> **Note:** grep for the certificate's **common name**, not the bare word `mvgal`. mokutil prints `Issuer/Subject: CN=MVGAL Kernel Module Signing Key, O=MVGAL`; the filename `mvgal-signing` never appears in its output.
+`--test-key` exits 0 only if that exact certificate is in the platform keyring.
+
+> **Do not verify by grepping the enrolled list.** `mokutil --list-enrolled |
+> grep MVGAL` looks like it works and does not: every MVGAL keypair shares the
+> subject `CN=MVGAL Kernel Module Signing Key, O=MVGAL`, so after the key is
+> regenerated — a reinstall that lost `/var/lib/mvgal/keys`, a restore from
+> backup, a deliberate rotation — the **old** certificate is still listed, the
+> grep succeeds, and every module signed by the **new** key is still rejected.
+> This was a live bug: `mvgald` performed exactly that check and stayed silent.
+> Fixed in v0.7.22, which uses `mokutil --test-key`.
 
 If the module still fails to load, check:
 
 ```bash
 journalctl -k -b | grep -i "module verification\|mvgal"
 ```
+
+## Modules signed with the wrong key (fixed in v0.7.22)
+
+If `mvgal_ntsync` is rejected but the other modules are not, compare the keys
+that actually signed them:
+
+```bash
+for ko in $(find /lib/modules/$(uname -r) -name 'mvgal*.ko*'); do
+  echo "$ko"; modinfo -F signer "$ko" 2>/dev/null || echo "  (unsigned)"
+done
+```
+
+Every module must show `MVGAL Kernel Module Signing Key`. Anything showing
+`DKMS module signing key` is the v0.7.21 defect: `mvgal_ntsync.ko` — a hard
+dependency of `mvgal.ko` — was signed with DKMS's own key while
+`mvgal-enroll-mok` enrolled only the MVGAL one, so the documented remediation
+(enroll, reboot, confirm) could never succeed.
+
+Re-sign every installed module:
+
+```bash
+pkexec /usr/lib/mvgal/mvgal-sign-modules.sh
+```
+
+The helper searches all the places a module can end up (the kernel tree,
+`updates/dkms`, `extra`, `weak-updates`, `updates`), handles `.ko`, `.ko.xz`
+and `.ko.zst` by decompressing, signing and recompressing, and is idempotent —
+it leaves already-correct modules byte-identical. It also runs automatically
+from the RPM `%post`, from `mvgal-dkms` `%post`, and from `dkms.conf` after
+each DKMS rebuild.
+
+> A compressed module cannot be signed in place: the signature covers the ELF
+> image and the kernel verifies it after decompression. That is why the modules
+> DKMS installs on a compression-enabled distro are `mvgal_ntsync.ko.xz` and
+> have to be signed *before* compression.
 
 ---
 
@@ -137,10 +183,14 @@ returned 0 for the same condition.
 To load the module manually:
 
 ```bash
-pkexec modprobe mvgal
-# or, if the package is installed -- the shared inventory handles order:
 pkexec mvgal-load
 ```
+
+> Use `mvgal-load`, not `modprobe mvgal`. `mvgal.ko` declares `mvgal_ntsync.ko`
+> as a hard dependency, so `modprobe` reports only the outermost failure and
+> tells you nothing about which module was actually rejected. `mvgal-load` loads
+> the inventory in order, names the module that failed, and prints the
+> enrollment instructions itself when Secure Boot is the cause.
 
 > **Note:** the loader is `/usr/bin/mvgal-load` and its counterpart `/usr/bin/mvgal-unload`. Both source `/usr/lib/mvgal/modules.sh` for the module list.
 
@@ -158,7 +208,9 @@ pkexec mvgal-load
 | `modprobe mvgal` → "Required key not available" | The key is not enrolled. Run `mvgal-enroll-mok` and reboot. |
 | `mvgald` is `active (running)` but no module is loaded | The unit's `ExecStartPre` `modprobe` failed. Pre-v0.7.14 this was silent. Check `journalctl -u mvgald -b` for the reported reason. |
 | `mvgal load-module` seems to hang | Pre-v0.7.21 it waited on the polkit dialog with no bound, so a cancelled or ignored prompt left it blocked with no output. v0.7.21+ gives up after 60 s and says so. |
-| DKMS modules rejected but kernel-tree modules load | Pre-v0.7.5 behavior. Update to v0.7.5+ so DKMS modules are signed too. |
+| `mvgal_ntsync` rejected while other modules load | **v0.7.21 and earlier.** ntsync was signed with DKMS's key; the older "update to v0.7.5+" advice did not fix it. Upgrade to v0.7.22+, or re-sign with `pkexec /usr/lib/mvgal/mvgal-sign-modules.sh`, then enroll as described above. |
+| Modules still rejected after enrolling | Check for a stale key: `mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der`. If it fails, an older MVGAL certificate is enrolled instead — enroll the current one (`pkexec mvgal-enroll-mok && reboot`). |
+| Everything rejected right after a kernel update | Pre-v0.7.22: DKMS rebuilt the modules with its own key and no RPM scriptlet ran. v0.7.22+ sets a `POST_INSTALL` hook in `dkms.conf` to re-sign. Workaround on older versions: `pkexec /usr/lib/mvgal/mvgal-sign-modules.sh`. |
 
 ---
 

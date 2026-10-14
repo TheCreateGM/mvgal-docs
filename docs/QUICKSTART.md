@@ -1,21 +1,21 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: guide
 mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.21**; the source changelog documents releases through **0.7.21**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.22**; the source changelog documents releases through **0.7.22**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 This guide covers package discovery, basic diagnostics, and service startup. Package publication and optional components depend on the distribution and build.
 
 ## 1. Inspect the package or build
 
-The documentation workspace's `package/` directory holds **0.7.20 builds in every format** — four RPMs (`mvgal`, `mvgal-dkms`, `mvgal-user-space`, and the source RPM), five `.deb` packages, and the AppImage, tarball and Flatpak bundles. Read [`package/README.md`](https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md) before installing; it lists every file with its SHA-256 and flags the prebuilt-module kernel mismatch. **These artifacts have not been rebuilt for 0.7.21**; current 0.7.21 RPMs are published by the upstream COPR project. For anything else, build from the [Build Guide](BUILD.md). The source repository includes package definitions, but availability from a remote COPR repository can change.
+The documentation workspace's `package/` directory holds **0.7.20 builds in every format** — four RPMs (`mvgal`, `mvgal-dkms`, `mvgal-user-space`, and the source RPM), five `.deb` packages, and the AppImage, tarball and Flatpak bundles. Read [`package/README.md`](https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md) before installing; it lists every file with its SHA-256 and flags the prebuilt-module kernel mismatch. **These artifacts have not been rebuilt for 0.7.22**; current 0.7.22 RPMs are published by the upstream COPR project. For anything else, build from the [Build Guide](BUILD.md). The source repository includes package definitions, but availability from a remote COPR repository can change.
 
 > [!note]
 > On RPM distros, install `mvgal-dkms` rather than relying on the prebuilt modules in `mvgal`. Those are pinned to kernel `7.2.7-200.fc44` and are ignored on any other kernel.
@@ -73,7 +73,7 @@ Inspect the device capability information exposed by the installed kernel/runtim
 
 ## Secure Boot
 
-For packages that install signed DKMS modules, follow [Secure Boot](SECURE_BOOT.md). Verify package-specific key paths and confirm enrollment with `mokutil --list-enrolled` before diagnosing module loading.
+For packages that install signed DKMS modules, follow [Secure Boot](SECURE_BOOT.md). Confirm enrollment with `mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der` — not by grepping the enrolled list for `MVGAL`, which matches any MVGAL keypair including a stale one (see [SECURE_BOOT.md](SECURE_BOOT.md) § Verifying Enrollment).
 
 ## Troubleshooting
 

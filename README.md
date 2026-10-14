@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
-> **Source version 0.7.21** (CMake/Cargo metadata); the source changelog documents releases through **0.7.21**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
+> **Source version 0.7.22** (CMake/Cargo metadata); the source changelog documents releases through **0.7.22**. This project has API and integration work in progress. Discovery or an API symbol does not mean cross-vendor submission or VRAM allocation is supported.
 
 ## 📚 Documentation
 
@@ -34,7 +34,7 @@ Documentation for **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
 
 Most Linux systems with multiple GPUs (e.g. an AMD RX 7900 + NVIDIA RTX 4080) treat each card as a completely separate device. Applications can only use one at a time, leaving the other idle.
 
-MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.21, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
+MVGAL explores cross-vendor GPU discovery, runtime interfaces, scheduling, and application integration on Linux. The kernel module discovers GPUs without binding them away from their native drivers. As of 0.7.22, unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`; the Vulkan ICD does not advertise a synthetic aggregate device. Verify each API path on the target system before relying on it.
 
 ```mermaid
 flowchart TD
@@ -90,7 +90,7 @@ flowchart TD
 
 ## Packages
 
-This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.20 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. **These have not been rebuilt for 0.7.21**; current 0.7.21 RPMs are on the upstream COPR project. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
+This workspace includes package artifacts under [`package/`](package/README.md), which holds **0.7.20 builds in every format** — RPM, `.deb`, AppImage, tarball and Flatpak. **These have not been rebuilt for 0.7.22**; current 0.7.22 RPMs are on the upstream COPR project. Check the version before installing; the files here do not update themselves. The source tree includes RPM, Debian, Flatpak, and other packaging definitions. Availability of a remote COPR repository depends on the current publication state; check that repository before installation.
 
 ```bash
 dnf info mvgal
@@ -114,7 +114,11 @@ mvgal-status        # real-time utilization
 mvgal-compat --system   # check readiness
 ```
 
-## Recent source changes (through v0.7.21)
+## Recent source changes (through v0.7.22)
+
+- **Secure Boot now works, which it did not in 0.7.21** (v0.7.22) — `mvgal_ntsync.ko`, a hard dependency of `mvgal.ko`, was signed with **DKMS’s** key while `mvgal-enroll-mok` enrolled only the MVGAL key, so a user could follow the printed instructions exactly and still get `Key was rejected by service`. The signing loops globbed `"$dir/"*.ko`, which cannot match the `.ko.xz` a compression-enabled distro installs, searched only the kernel tree and `updates/dkms` when DKMS’s real destination is `.../extra` on Fedora, and discarded every failure so the install reported success. Both are replaced by `/usr/lib/mvgal/mvgal-sign-modules.sh`, which handles compressed modules by decompressing, signing and recompressing. Two related gaps closed with it: `mvgal-dkms` now *requires* `mvgal` so its `%post` cannot run before the key exists, and `dkms.conf` re-signs after the automatic rebuild a kernel upgrade triggers.
+- **The Secure Boot check could pass while the key was unusable** (v0.7.22) — `mvgald` tested enrollment with `mokutil --list-enrolled | grep -qi MVGAL`, which matches on subject name. Every MVGAL keypair shares one subject, so after a key rotation the old certificate is still listed, the check passes, and the daemon stays silent while modules signed by the new key are rejected. It now uses `mokutil --test-key` against the specific certificate. See [Secure Boot](docs/SECURE_BOOT.md).
+- **The tools stopped overstating what they did** (v0.7.22) — `set-power-curve` no longer takes a GPU index it silently discarded (its documented `gaming` example was invalid); log output no longer reaches stdout on the pre-initializer path, which is the one the affected tools actually take; `tool | head` exits 0 instead of 141; the Vulkan interception layer and the opt-in aggregated ICD are reported separately instead of as one ambiguous "registered"; `mvgal-compat` suggests `mvgal-load` rather than a `modprobe mvgal` that cannot succeed and hides the ntsync dependency; and `mvgal-bench` labels every figure with the hardware path it measured, which is host RAM and a single-threaded host CPU, not a GPU.
 
 - **The daemon socket is reachable again** (v0.7.21) — `/run/mvgal/mvgal.sock` was being created `root:root`, so every user in the `mvgal` group was locked out of all CLI-to-daemon IPC while `sudo` worked fine. The `chown()` call was correct; the unit's `CapabilityBoundingSet` omitted `CAP_CHOWN`, which caps what a uid-0 process can hold, and root is not a member of `mvgal`, so the call could only fail — with the error discarded. A first fix that only added error reporting would have documented the bug without fixing it.
 - **The OpenCL ICD stopped claiming a version it did not implement** (v0.7.21) — it reported `OpenCL 1.2` while exporting 2 of the 7 core entry points 1.2 added, so ocl-icd handed `NULL` to any application using one. All seven are now exported.

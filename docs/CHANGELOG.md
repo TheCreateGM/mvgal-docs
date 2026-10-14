@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.21"
-mvgal_verified: 2026-10-12
+mvgal_version: "0.7.22"
+mvgal_verified: 2026-10-14
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [v0.7.22] - 2026-10-14
+
+Fixes a Secure Boot packaging defect that made the documented remediation
+impossible to complete, plus five reporting defects found by a black-box audit
+of 0.7.21 on a Secure Boot host.
+
+### Fixed
+
+- **Modules were signed with two different keys, so Secure Boot could never be made to work.** `mvgal_ntsync.ko` — a hard dependency of `mvgal.ko` — was signed with DKMS's own key while every other module carried the per-machine MVGAL key, and `mvgal-enroll-mok` enrolled only the MVGAL key. A user could follow the printed instructions exactly and still get `Key was rejected by service`. Three faults combined: the signing loops globbed `"$dir/"*.ko`, which cannot match the `.ko.xz` a compression-enabled distro installs; they looked only in the kernel tree and `.../updates/dkms` when DKMS's real destination is distro-dependent (on Fedora, `.../extra`); and they discarded every failure, so the install reported success. Both loops are replaced by `/usr/lib/mvgal/mvgal-sign-modules.sh`, which searches every location a module can land in, handles `.ko`, `.ko.xz` and `.ko.zst`, decompresses to sign and recompresses, and exits non-zero when a module could not be signed.
+- **A scriptlet-ordering bug could leave every module unsigned.** `mvgal-dkms` did not depend on `mvgal`, so on a first install its `%post` could run before the main package's `%post` generated the signing key. It now requires `mvgal` at the same version.
+- **Kernel updates re-signed themselves again.** DKMS rebuilds automatically on a new kernel, and that runs no RPM scriptlet, so the rebuilt modules returned with DKMS's key. `dkms.conf` now sets `POST_INSTALL` to re-run the signer, and the signer with no argument covers every installed kernel release rather than only the running one.
+- **The Secure Boot check could pass while the key was unusable.** The daemon tested enrollment with `mokutil --list-enrolled | grep -qi MVGAL`, which matches on subject name. Every MVGAL keypair shares one subject, so after a key rotation the old certificate is still listed, the check passes, and the daemon stays silent while modules signed by the new key are rejected. It now uses `mokutil --test-key`.
+- **`set-power-curve` accepted a GPU index it discarded.** The helper persists a single global `power.power_curve_profile`, so every index wrote the same key. Its documented example, `set-power-curve 0 gaming`, also failed, because `gaming` is not a valid profile. The argument is removed and the example corrected; the old two-argument form still works with a warning. The help now states that the profile is persisted but not yet consumed, because nothing reads the key.
+- **Informational log output still reached stdout.** v0.7.21 redirected `get_default_output()`, but `log_internal()` has a separate fallback for when `mvgal_log_init()` was never called, and that fallback still sent INFO and above to stdout — which is exactly the path the affected tools take. Both paths now write to stderr.
+- **`tool | head` killed the producer with SIGPIPE.** The CLI tools now ignore it, so a closed downstream pipe yields exit 0 instead of status 141.
+- **"Vulkan registered: yes" implied aggregation was active.** The implicit interception layer ships globally and only intercepts calls; the aggregated ICD, which would expose an MVGAL `VkPhysicalDevice`, is a separate opt-in. `mvgal-info` and `mvgal-compat` now report the two separately and name the opt-in script.
+- **`mvgal-compat` advised a command that cannot succeed.** `pkexec modprobe mvgal` fails on a Secure Boot machine whose key is not enrolled, and `mvgal.ko` depends on `mvgal_ntsync.ko`, so modprobe reports only the outermost failure. The hint now points at `mvgal-load`.
+- **`mvgal-bench` presented host measurements as GPU figures.** Memory bandwidth is an `mmap`'d host RAM copy and compute is a single-threaded host CPU DAXPY; both were printed under headings that read as GPU performance. Every measurement is now labelled with its hardware path, the run header states when no GPU path is exercised, and `--metadata` gains `hardware_path`, `mvgal_device_present`, `measures_gpu` and `measurement_note`.
+
+### Notes
+
+- Re-signing a module that already carries a signature **appends** a second one rather than replacing it; the signer strips the existing signature first.
+- A signed module ends with the DER blob, an 8-byte `struct module_signature`, a 4-byte big-endian DER length, and the marker `"~Module signature appended~\n"` — the terminator is a newline, not a NUL.
+- The per-machine key is preserved across upgrades: `%post` regenerates it only when missing and no `%postun` removes it.
+- Verified by extracting the built RPMs and executing the shipped binaries, not by reading the source. Upstream COPR build #11118333 is green on all 19 enabled chroots.
 
 ## [v0.7.21] - 2026-10-12
 
