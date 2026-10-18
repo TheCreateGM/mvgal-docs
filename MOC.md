@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.22"
-mvgal_verified: 2026-10-04
+mvgal_version: "0.7.24"
+mvgal_verified: 2026-10-18
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.22**; the source changelog documents releases through **0.7.22**.
-> Every page in this vault was re-verified against the source tree on **2026-10-04**.
+> Source version **0.7.24**; the source changelog documents releases through **0.7.24**.
+> Core architecture and status pages were reconciled against the source tree on **2026-10-18**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.22 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.24 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -31,59 +31,43 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | Note | Purpose |
 |------|---------|
 | [[docs/ARCHITECTURE\|Architecture]] | System architecture overview |
+| [[docs/CODEBASE\|Codebase Map]] | Directory map and subsystem ownership |
 | [[docs/DESIGN\|Design Document]] | Design decisions, and which ones shipped |
-| [[docs/API\|API Reference]] | Public C API reference (30 headers) |
+| [[docs/API\|API Reference]] | Public C API reference (32 headers) |
 | [[docs/MEMORY\|Memory Management]] | Transfer paths, allocation, and what is not implemented |
 | [[docs/STRATEGIES\|Scheduling Strategies]] | The 13 public strategy identifiers |
 | [[docs/POWER_MANAGEMENT\|Power Management]] | Power, DVFS, thermal |
 | [[docs/HARDWARE_COMPATIBILITY\|Hardware Compatibility]] | Supported GPUs and platforms |
-| [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Zig, DKMS) |
+| [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Cargo, DKMS) |
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What’s New in 0.7.22
+## 🔍 What’s New in 0.7.24
 
 > [!tip]
-> The summary below is generated from the source changelog. For the full prose entry see [[docs/CHANGELOG|Changelog]].
+> The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
 
-```dataview
-TABLE WITHOUT ID
-  file.link AS "Note",
-  file.mtime AS "Last reviewed"
-FROM "docs"
-WHERE file.mtime >= date(2026-10-04)
-SORT file.mtime DESC
-```
+**v0.7.24 is an audit and validation-path release.** It fixes daemon device-node
+access and D-Bus name conflict reporting, corrects PCIe/NUMA/class-code
+discovery, repairs sysfs and kernel resource-lifetime issues, separates shared
+system memory from dedicated VRAM, and fixes power caps that were silently
+overwritten. It adds `mvgal-workload`, a host-staged OpenCL workload gate that
+checks execution against a CPU reference and requires two distinct vendors.
+The source changelog records a remaining clean-boot hardware check for a PCI
+enumeration fix. See [[docs/STATUS|Status]] for implementation and validation
+boundaries.
 
-**v0.7.22 fixed a defect that made Secure Boot unusable, and the symptom looked
-like the user’s fault.** On v0.7.21 and earlier, `mvgal_ntsync.ko` — a hard
-dependency of `mvgal.ko` — was signed with DKMS’s key while `mvgal-enroll-mok`
-enrolled only the MVGAL key. Following the printed instructions exactly
-(enroll, reboot, confirm in MOK Manager) still produced `Key was rejected by
-service`. Read [[docs/SECURE_BOOT|Secure Boot]] before diagnosing any module
-load failure on those versions, and note that the old advice to "update to
-v0.7.5+" for this symptom was never true.
-
-**This is the second field-driven release**, and again the most serious finding
-was one a source-reading pass had walked past — the two recent releases were both
-caught by installing the package and running the shipped tools on real hardware.
-
-**v0.7.21 — correctness and packaging.** The daemon socket was `root:root`
-because the unit’s `CapabilityBoundingSet` omitted `CAP_CHOWN`, so the `chown()`
-could only ever fail; the OpenCL ICD claimed `OpenCL 1.2` while exporting 2 of
-the 7 entry points 1.2 added; and configuration edits were lost on RPM upgrade.
-See [[docs/STATUS|Status]] for the full account.
-
-**v0.7.20 — reproducible source artefacts.** Found by reading the source, then reproduced:
 ## ⚠️ Read Before Relying on a Feature
 
-Three areas of this documentation describe capability that the current source does **not** deliver. Each page carries an explicit callout. All three were re-checked against the v0.7.21 tree on **2026-10-12** and all three still hold.
+The following implementation limits were checked against the 0.7.24 source
+tree on **2026-10-18**. Build presence and API declarations do not prove device
+execution support.
 
-| Area | Reality | Page |
-|------|---------|------|
-| Vendor VRAM allocation, compute submission | Return `-EOPNOTSUPP` for all four vendor adapters | [[docs/MEMORY\|Memory]] |
-| Frame pacing | `mvgal_fp_submit_frame()` has no call site anywhere in the tree | [[docs/STEAM_INTEGRATION\|Steam]] |
-| Proton plugin, WoW64 thunk | `compat/` and `steam/` have no `CMakeLists.txt`, so they are not built | [[docs/STEAM_INTEGRATION\|Steam]] |
+| Area | Current boundary | Page |
+|------|------------------|------|
+| Vendor GPU submission and VRAM allocation | Native drivers own those paths; current vendor adapters report unsupported operations | [[docs/MEMORY\|Memory]] |
+| Frame pacing | Frame-pacer code exists, but presence of the helper does not establish an active presentation hook | [[docs/STEAM_INTEGRATION\|Steam]] |
+| Compatibility bridges | `compat/` contains integration sources; root CMake only adds them when a compat CMake definition exists | [[docs/STEAM_INTEGRATION\|Steam]] |
 
 ## 🗂️ All Notes
 

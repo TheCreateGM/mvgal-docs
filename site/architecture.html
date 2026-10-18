@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Architecture — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Architecture — MVGAL Documentation", "name": "Architecture — MVGAL Documentation", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.", "url": "https://thecreategm.github.io/mvgal-docs/site/architecture.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL architecture, kernel module, read-only GPU discovery, runtime capability probes, userspace APIs", "datePublished": "2026-08-31", "dateModified": "2026-10-14", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Architecture — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/architecture.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Architecture — MVGAL Documentation", "name": "Architecture — MVGAL Documentation", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling.", "url": "https://thecreategm.github.io/mvgal-docs/site/architecture.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL architecture, kernel module, read-only GPU discovery, runtime capability probes, userspace APIs", "datePublished": "2026-08-31", "dateModified": "2026-10-18", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Architecture — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/architecture.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
-      <span>v0.7.22</span>
+      <span>v0.7.24</span>
     </a>
   </div>
 </header>
@@ -76,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.22, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.24, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,7 +153,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
-  <div class="sb-sub">v0.7.22 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.24 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -167,6 +167,7 @@
 <div class="sidebar-section-title">Architecture & Design</div>
 <div class="sidebar-section">
 <a href="architecture.html" class="active"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="2.6" width="11.6" height="3" rx=".7"/><rect x="2.2" y="6.9" width="11.6" height="3" rx=".7"/><rect x="2.2" y="11.2" width="11.6" height="3" rx=".7"/></svg><span>Architecture</span></a>
+<a href="codebase.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 1.8H4.4a1.2 1.2 0 0 0-1.2 1.2v10a1.2 1.2 0 0 0 1.2 1.2h7.2a1.2 1.2 0 0 0 1.2-1.2V6Z"/><path d="M9 1.8V6h4.2M6.6 8.8 5 10.4l1.6 1.6M9.4 8.8 11 10.4l-1.6 1.6"/></svg><span>Codebase Map</span></a>
 <a href="design.html"><svg class="octicon nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg><span>Design</span></a>
 </div>
 <div class="sidebar-divider"></div>
@@ -195,7 +196,7 @@
 <button class="sidebar-backdrop" type="button" aria-label="Close navigation" hidden></button>
 <div class="content-wrap">
 <div class="repo-tabs">
-<a class="repo-tab" href="index.html">Code<span class="tab-count">16</span></a>
+<a class="repo-tab" href="index.html">Code<span class="tab-count">17</span></a>
 <a class="repo-tab" href="api.html">API</a>
 <a class="repo-tab active" href="architecture.html">Architecture</a>
 <a class="repo-tab" href="status.html">Status</a>
@@ -217,7 +218,7 @@
 
 <div class="page-header">
   <div class="page-header-main">
-    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.22</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-10-14</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.24</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-10-18</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
     <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>architecture</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>reference</a></div>
   </div>
   <div class="page-header-actions">
@@ -235,122 +236,98 @@
 <div class="doc-layout">
 <div class="doc-body">
 <h1 id="mvgal-architecture">MVGAL Architecture<a class="anchor-link" href="#mvgal-architecture" aria-label="Permalink to this section"></a></h1>
-<blockquote>
-<p>Source metadata is <strong>0.7.22</strong>; the source changelog documents releases through <strong>0.7.22</strong>. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.</p>
-</blockquote>
-<h2 id="repository-components">Repository components<a class="anchor-link" href="#repository-components" aria-label="Permalink to this section"></a></h2>
+<p>This page describes the 0.7.24 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.</p>
+<h2 id="main-components">Main components<a class="anchor-link" href="#main-components" aria-label="Permalink to this section"></a></h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Component</th>
-<th>Source location</th>
-<th>Responsibility</th>
+<th>Source</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Kernel module</td>
-<td><code>kernel/</code></td>
-<td>Character device/UAPI, GPU discovery, vendor adapters, capability probes, synchronization and sysfs reporting</td>
-</tr>
-<tr>
-<td>Public interfaces</td>
+<td>Public interfaces and UAPI</td>
 <td><code>include/mvgal/</code></td>
-<td>C API and kernel/userspace data structures</td>
+<td>Public C headers, ioctl structures, capability bits, scheduler and memory API contracts</td>
 </tr>
 <tr>
-<td>Userspace library and API components</td>
+<td>Kernel modules</td>
+<td><code>kernel/</code></td>
+<td>DRM device/UAPI, PCI discovery, runtime capability reporting, sysfs, sync and vendor adapters; the native vendor driver retains GPU ownership</td>
+</tr>
+<tr>
+<td>Userspace core</td>
 <td><code>src/userspace/</code></td>
-<td>API, scheduler, memory and execution code, Vulkan/OpenCL/CUDA components, daemon-related code</td>
+<td>GPU discovery, C API, scheduler policies, memory helpers, transports, API interception and test topology backend</td>
 </tr>
 <tr>
 <td>Runtime daemon</td>
-<td><code>runtime/daemon/</code>, <code>src/userspace/daemon/</code></td>
-<td>Device registry, IPC, metrics, config, scheduling, memory, and power managers</td>
+<td><code>runtime/daemon/</code></td>
+<td><code>mvgald</code>: device registry, kernel-device client, IPC and D-Bus, scheduler, memory/power managers, metrics, NVML and Steam profile loading</td>
 </tr>
 <tr>
-<td>Safety crates</td>
+<td>Rust components</td>
 <td><code>safe/</code>, <code>runtime/safe/</code></td>
-<td>Rust fence, memory-safety, and capability-model components</td>
+<td>Fence, memory-safety and capability helpers; workspace crates and the daemon-facing wrapper are separate source areas</td>
 </tr>
 <tr>
-<td>Tools</td>
-<td><code>tools/</code></td>
-<td><code>mvgal</code>, <code>mvgal-info</code>, <code>mvgal-status</code>, <code>mvgal-bench</code>, <code>mvgal-compat</code>, <code>mvgal-config</code>, <code>mvgal-enum</code>, <code>mvgal-hw-validate</code>, <code>mvgal-steam-setup</code>, and probe components</td>
+<td>Applications and tools</td>
+<td><code>tools/</code>, <code>src/monitoring/</code>, <code>ui/</code></td>
+<td>CLI and diagnostic tools, optional monitoring/exporter and optional Qt dashboard</td>
 </tr>
 <tr>
-<td>Integrations</td>
-<td><code>steam/</code>, <code>compat/</code>, <code>opengl/</code>, <code>bindings/</code></td>
-<td>Compatibility helpers, API interception, and language bindings</td>
+<td>API and platform integrations</td>
+<td><code>src/userspace/intercept/</code>, <code>src/userspace/vulkan_icd/</code>, <code>compat/</code>, <code>steam/</code>, <code>opengl/</code></td>
+<td>Vulkan layer/opt-in ICD, OpenCL and other wrappers, Linux/Windows compatibility helpers and Steam integration</td>
 </tr>
 <tr>
-<td>UI</td>
-<td><code>ui/</code>, <code>dashboard/</code></td>
-<td>Optional Qt and Haxe UI components</td>
+<td>Language bindings</td>
+<td><code>bindings/</code></td>
+<td>Clients/wrappers for Rust, Zig, Go, Python, Java, C#, Node.js, Swift and other languages</td>
 </tr>
 <tr>
-<td>Tests and synthetic topology</td>
-<td><code>src/tests/</code>, <code>src/userspace/testing/</code></td>
-<td>Unit suite, and the synthetic GPU topology backend that substitutes for hardware during rescan so hetero-GPU paths can be exercised deterministically</td>
+<td>Packaging/deployment</td>
+<td><code>packaging/</code>, <code>config/</code>, <code>data/</code>, <code>systemd/</code></td>
+<td>RPM/DEB and other package recipes, helpers, policies and service units</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="device-ownership-and-capabilities">Device ownership and capabilities<a class="anchor-link" href="#device-ownership-and-capabilities" aria-label="Permalink to this section"></a></h2>
-<p>The kernel module discovers GPUs through the PCI subsystem and does not register as their PCI driver. The native vendor driver remains responsible for command submission and memory management. MVGAL records capabilities from runtime probes rather than assuming that a vendor adapter can perform an operation.</p>
-<p>The 0.7.12 source changelog explicitly says kernel submission, kernel VRAM allocation, DMA-BUF export, and wait-idle are not advertised as supported. Unsupported operations return <code>-EOPNOTSUPP</code>; they must not be interpreted as successful no-ops. The Vulkan ICD does not advertise a fabricated aggregate physical device.</p>
-<h2 id="control-and-diagnostic-flow">Control and diagnostic flow<a class="anchor-link" href="#control-and-diagnostic-flow" aria-label="Permalink to this section"></a></h2>
+<p>See <a href="codebase.html">Codebase Map</a> for a directory-level guide and build entry points.</p>
+<h2 id="runtime-relationships">Runtime relationships<a class="anchor-link" href="#runtime-relationships" aria-label="Permalink to this section"></a></h2>
 <div class="mermaid">
-flowchart LR
-    CLI[CLI and applications] --&gt; US[Userspace APIs and runtime]
-    US --&gt; IPC[IPC / device UAPI]
-    IPC --&gt; K[MVGAL kernel module]
-    K --&gt; PCI[Read-only GPU discovery]
-    PCI --&gt; N[Native vendor driver remains owner]
-    US --&gt; Probe[Runtime capability probes]
-    Probe --&gt; Decision[Supported operations or explicit unsupported result]
+flowchart TD
+    App[Application or diagnostic tool] --&gt; API[Userspace API / API-specific integration]
+    API --&gt; Core[Userspace core: discovery, policies, memory helpers]
+    API --&gt; Daemon[mvgald: managers, IPC and telemetry]
+    Daemon --&gt; Client[Kernel-device client]
+    Client --&gt; UAPI[MVGAL DRM device and ioctl UAPI]
+    UAPI --&gt; Probe[PCI discovery and runtime capability probes]
+    Probe --&gt; Drivers[Native vendor drivers retain device ownership]
 </div>
 
-<p>Use <code>mvgal --help</code>, <code>mvgal-info --help</code>, and <code>mvgal-config --help</code> to inspect commands actually provided by an installed build. Whether an API component was compiled is controlled by build options and dependencies; whether an operation works depends on runtime capabilities.</p>
-<h2 id="cli-output-contract">CLI output contract<a class="anchor-link" href="#cli-output-contract" aria-label="Permalink to this section"></a></h2>
-<p>The tools are meant to be parsed, so the split is enforced:</p>
-<ul>
-<li><strong>stdout</strong> carries only the requested output — a GPU list, <code>--json</code>, a table.
-  Nothing else. Informational logging goes to stderr.</li>
-<li><strong>SIGPIPE is ignored</strong> by every tool, so <code>mvgal ... | head</code> exits 0 instead of
-  dying on signal 13 (shell status 141).</li>
-</ul>
-<p>Both were fixed in v0.7.22. The stdout rule previously leaked: the library's
-pre-initialisation fallback in <code>log_internal()</code> sent INFO and above to stdout,
-and the tools that printed <code>Configuration loaded from ...</code> were exactly the ones
-that never call <code>mvgal_log_init()</code>. Note for contributors — routing
-<code>get_default_output()</code> to stderr is <strong>not</strong> sufficient on its own, because that
-function is never reached on that path.</p>
-<h3 id="what-mvgal-bench-actually-measures">What <code>mvgal-bench</code> actually measures<a class="anchor-link" href="#what-mvgal-bench-actually-measures" aria-label="Permalink to this section"></a></h3>
-<p><code>mvgal-bench</code> does not measure GPU performance. It reports:</p>
-<ul>
-<li><strong>memory bandwidth</strong> — read/write/copy of <code>mmap</code>'d <strong>host RAM</strong></li>
-<li><strong>compute</strong> — a single-threaded <strong>host CPU</strong> DAXPY</li>
-</ul>
-<p>Every figure is now labelled with that hardware path, and the run header states
-it explicitly when <code>/dev/mvgal0</code> is absent. <code>--metadata</code> carries the same
-provenance as machine-readable fields:</p>
-<pre><code class="language-json">{ &quot;hardware_path&quot;: &quot;host_cpu&quot;, &quot;mvgal_device_present&quot;: false, &quot;measures_gpu&quot;: false }
-</code></pre>
-<p><code>measures_gpu</code> is a constant <code>false</code> today and is present so a consumer can tell
-host figures from GPU figures without inferring it from the tool name (v0.7.22).</p>
-<h2 id="build-configuration">Build configuration<a class="anchor-link" href="#build-configuration" aria-label="Permalink to this section"></a></h2>
-<p>The top-level CMake project defines optional build groups for the kernel module, runtime, API, gaming integration, tools, Rust components, tests, and UI. Vulkan, OpenCL, and other API components may be omitted when dependencies are unavailable. See <a href="build.html">BUILD.md</a> and the source <code>CMakeLists.txt</code> for the exact configuration.</p>
+<p>This is a map of control and reporting paths, not a claim that every API submits work through the daemon. API integrations and build targets are conditional, and each operation depends on the capabilities observed on the host.</p>
+<h2 id="device-ownership-and-capability-truth">Device ownership and capability truth<a class="anchor-link" href="#device-ownership-and-capability-truth" aria-label="Permalink to this section"></a></h2>
+<p>The kernel module discovers devices through PCI and does not bind itself as their PCI driver. Vendor drivers remain responsible for GPU command submission and their memory managers. The kernel reports capabilities obtained from probes; an unprobed or unsupported operation must fail or use its documented fallback. Several ioctl numbers and feature flags are reserved for future functionality and do not mean that the corresponding operation is implemented.</p>
+<p>The Vulkan ICD is an optional, separate build component. Its presence does not mean a synthetic aggregate physical device exists. The Vulkan layer and ICD must be treated as distinct components. DMA-BUF import/export and peer transfers are device-pair dependent; host staging is the portable fallback where the userspace path supports it.</p>
+<h2 id="build-topology">Build topology<a class="anchor-link" href="#build-topology" aria-label="Permalink to this section"></a></h2>
+<p>The primary build is CMake. Top-level options gate kernel, runtime, API, gaming, tools, Rust, tests and UI components. Meson is a separate build definition with its own smaller option set; Cargo builds the Rust workspace. A target may be omitted when its optional dependency is unavailable. See <a href="build.html">Build Guide</a> and the source <code>CMakeLists.txt</code> for the exact target graph.</p>
 <h2 id="related-references">Related references<a class="anchor-link" href="#related-references" aria-label="Permalink to this section"></a></h2>
 <ul>
-<li><a href="status.html">Status</a> summarizes verified implementation boundaries.</li>
-<li><a href="api.html">API</a> lists public interfaces; declarations do not guarantee operational backend support.</li>
-<li><a href="hardware.html">Hardware compatibility</a> explains discovery and capability reporting.</li>
-<li>The source repository <code>CHANGELOG.md</code> records implementation changes and audit findings.</li>
+<li><a href="codebase.html">Codebase Map</a> — source layout and subsystem ownership.</li>
+<li><a href="status.html">Status</a> — version and verified limits.</li>
+<li><a href="api.html">API</a> — public interfaces; an API declaration does not establish backend support.</li>
+<li><a href="hardware.html">Hardware Compatibility</a> — device discovery and capability reporting.</li>
+<li><a href="strategies.html">Scheduling Strategies</a> and <a href="memory.html">Memory Management</a> — policy and transfer boundaries.</li>
 </ul>
-
+<section class="backlinks">
+<div class="backlinks-title"><svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 9.4 9.4 6.6"/><path d="M7 4.6 8.4 3.2a2.8 2.8 0 0 1 4 4L11 10.6"/><path d="M9 11.4 7.6 12.8a2.8 2.8 0 0 1-4-4L5 7.4"/></svg> Linked mentions</div>
+<ul class="backlinks-list"><li><a href="codebase.html">Codebase Map</a></li><li><a href="status.html">Project Status</a></li></ul>
+</section>
 </div>
 <aside class="doc-rail">
-<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#repository-components">Repository components</a></li><li class="outline-item outline-l2"><a href="#device-ownership-and-capabilities">Device ownership and capabilities</a></li><li class="outline-item outline-l2"><a href="#control-and-diagnostic-flow">Control and diagnostic flow</a></li><li class="outline-item outline-l2"><a href="#cli-output-contract">CLI output contract</a></li><li class="outline-item outline-l3"><a href="#what-mvgal-bench-actually-measures">What <code>mvgal-bench</code> actually measures</a></li><li class="outline-item outline-l2"><a href="#build-configuration">Build configuration</a></li><li class="outline-item outline-l2"><a href="#related-references">Related references</a></li></ul>
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#main-components">Main components</a></li><li class="outline-item outline-l2"><a href="#runtime-relationships">Runtime relationships</a></li><li class="outline-item outline-l2"><a href="#device-ownership-and-capability-truth">Device ownership and capability truth</a></li><li class="outline-item outline-l2"><a href="#build-topology">Build topology</a></li><li class="outline-item outline-l2"><a href="#related-references">Related references</a></li></ul>
 <div class="rail-actions">
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/ARCHITECTURE.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
@@ -359,7 +336,7 @@ host figures from GPU figures without inferring it from the tool name (v0.7.22).
 </div>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.22 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.24 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

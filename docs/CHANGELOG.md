@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.22"
-mvgal_verified: 2026-10-14
+mvgal_version: "0.7.24"
+mvgal_verified: 2026-10-18
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,103 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.24] - 2026-10-18
+
+Audit release: eleven defects found by exercising the installed package on a
+three-GPU AMD/NVIDIA/Intel host, most of which had been silently disabling
+parts of the system rather than failing visibly.
+
+### Fixed
+- Daemon: the systemd unit's `DeviceAllow=` used glob paths. systemd does not
+  expand them, and their presence flipped the implicit `DevicePolicy` from
+  `auto` to `closed`, so mvgald could open neither `/dev/mvgal0` nor any
+  `/dev/dri/*` node. It ran permanently in userspace-only fallback while
+  reporting only that the kernel device was unavailable. The allowlist is
+  removed: the GPU node set depends on topology and udev render-node
+  numbering, and GPUs hot-plug at runtime, so no static list can be correct.
+- Daemon: surface `KernelDevice::lastError` when the kernel device cannot be
+  opened. The errno was discarded, which is why the above went unnoticed --
+  ENOENT and EPERM call for completely different investigations.
+- Daemon: request the D-Bus name with `DO_NOT_QUEUE` and check the reply code.
+  With flags=0 a taken name was queued and returned a positive value, so a
+  takeover would have looked like success while every method call went to the
+  other instance. Conflicts now name the owning pid instead of advising a
+  dbus reload that could not help.
+- Kernel: `pcie_gen`/`pcie_lanes` stored raw `enum pci_bus_speed` values, which
+  are bus-speed codes rather than generations (`PCIE_SPEED_2_5GT` is 0x14). A
+  Gen4 x16 GPU reported as "Gen 23 x16". Both are now decoded from the PCI
+  Express capability register; the legacy wrappers also signal failure with
+  `PCI_SPEED_UNKNOWN`, so the `>= 0` guard never fired.
+- Kernel: `numa_node` used `dev_to_node()` on a PCI device, whose `dev` is never
+  NUMA-aware, so it always read unknown. Now uses `pcibus_to_node()`, with a
+  single-node fallback for hosts that have no ACPI/SRAT topology.
+- Kernel: the `numa_node >= 0` guard was tautological on an unsigned field, so
+  two GPUs with unknown nodes compared as same-node and P2P was admitted on
+  the strength of a value carrying no information.
+- Kernel: `class_code` was declared in the UABI and printed by mvgal-info, but
+  no code ever assigned it. Every GPU reported `0x0000` instead of `0x030000`.
+- Kernel: `mvgal_sysfs_init()` called `class_create("mvgal")` a second time
+  when `mvgal_core.c` had already created it. The -EEXIST was swallowed, so the
+  module reported a clean load while the documented per-GPU `capabilities`
+  attributes did not exist -- and the stale class made every load after the
+  first fail. sysfs_init now parents its per-GPU kobjects to the device kobject
+  the core already registered instead of creating a competing class.
+- Kernel: `mvgal_device_free()` cancelled the same delayed work twice, via
+  `*_stop()` and again via `*_fini()`, tripping `WARN_ON` in `__flush_work` on
+  every rmmod -- once per GPU. Both cancels are now guarded, which also makes
+  `fini()` safe standalone. The DVFS work item had the same defect.
+- Kernel: fix a use-after-free in PCI enumeration. `pci_get_device()` takes a
+  reference on what it returns but not on the cursor it is handed, and the skip
+  path released a reference on a cursor it did not own, so the next iteration
+  walked freed memory. The cursor now owns one reference for the whole scan.
+- Kernel: `*_init()` passed NULL as the delayed-work handler, so anything
+  queuing the work before `*_start()` would have faulted.
+- Tools: mvgal-info pooled an integrated GPU's shared system memory into
+  "Aggregate VRAM", claiming a 66 GiB pool on a machine with 10 GiB of real
+  VRAM. Dedicated VRAM and shared system RAM are now accumulated and reported
+  separately.
+- Daemon: `writeFrequency()` returned success without writing a clock, so the
+  DVFS controller recorded clocks the GPU was never running at. It now reports
+  clock control as unavailable and leaves last-known state intact.
+- Daemon: the PSU headroom and power curve controllers both wrote
+  `targetClockMhz`, which the DVFS controller rewrites from utilisation every
+  tick, making both silently inert. Each now holds its own cap that the DVFS
+  controller clamps against.
+- Steam: shipped game profiles pinned `primary_gpu_mask = 0x3`, freezing them to
+  a two-GPU machine regardless of hardware. Now `0`, which the scheduler already
+  defines as "all GPUs".
+
+### Added
+- D1-D5 design/docs: narrow end-to-end userspace workload path (OpenCL ICD loader, host-staged, CPU reference validation)
+- Tool: mvgal-workload (end-to-end OpenCL workload gate; validates >=2 distinct vendors)
+
+### Changed
+- Build: link mvgal-info with nvml_query.c and ${CMAKE_DL_LIBS} (standalone tool needs NVML helper)
+- Kernel: PCIe link attributes are read from the capability register (maximum
+  supported) rather than the status register, so a powered-down GPU reports its
+  real capability instead of a negotiated width of zero.
+
+- packaging: ship `/usr/bin/mvgal-workload`. The tool and its CMake install
+  rule arrived in 0.7.23 but were never added to the RPM `%files`, so every
+  COPR build since then has failed with "Installed (but unpackaged) file(s)
+  found". It is built only when `find_package(OpenCL)` succeeds, so it is
+  now listed under the existing `%bcond_without opencl`.
+
+### Known issues
+- The PCI enumeration use-after-free is source-verified only. On the host where
+  it was found, earlier load/unload cycles had already driven a device refcount
+  to zero, and such refcounts are not recoverable without a reboot. It needs a
+  clean-boot check; `test_uapi_probe` fails on an affected machine because
+  enumeration reports zero GPUs.
+
+## [0.7.23] - 2026-10-18
+
+### Fixed
+- DKMS: ensure KERNELDIR is correctly resolved in kernel/Makefile and dkms.conf (fixes module build on kernel 7.2.11-200.fc44.x86_64)
+- Userspace: fix NVIDIA VRAM reporting (0 GB) via NVML fallback by PCI BDF; aggregate VRAM correctly labels/excludes shared system memory
+- Daemon: eliminate AMD frequency-set log spam by initializing C logger at INFO level (mvgal_log_init) so DEBUG messages are filtered
+- Tools: mvgal-info shows full driver names (amdgpu/nvidia/i915); mvgal status displays VRAM with "(shared system memory)" for shared RAM
 
 ## [v0.7.22] - 2026-10-14
 

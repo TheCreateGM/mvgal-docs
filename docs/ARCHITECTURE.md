@@ -1,92 +1,61 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.22"
-mvgal_verified: 2026-10-14
+mvgal_version: "0.7.24"
+mvgal_verified: 2026-10-18
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-> Source metadata is **0.7.22**; the source changelog documents releases through **0.7.22**. This page follows the current source tree. Earlier design documents describe ambitions that are not all implemented.
+This page describes the 0.7.24 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
 
-## Repository components
+## Main components
 
-| Component | Source location | Responsibility |
-|-----------|-----------------|----------------|
-| Kernel module | `kernel/` | Character device/UAPI, GPU discovery, vendor adapters, capability probes, synchronization and sysfs reporting |
-| Public interfaces | `include/mvgal/` | C API and kernel/userspace data structures |
-| Userspace library and API components | `src/userspace/` | API, scheduler, memory and execution code, Vulkan/OpenCL/CUDA components, daemon-related code |
-| Runtime daemon | `runtime/daemon/`, `src/userspace/daemon/` | Device registry, IPC, metrics, config, scheduling, memory, and power managers |
-| Safety crates | `safe/`, `runtime/safe/` | Rust fence, memory-safety, and capability-model components |
-| Tools | `tools/` | `mvgal`, `mvgal-info`, `mvgal-status`, `mvgal-bench`, `mvgal-compat`, `mvgal-config`, `mvgal-enum`, `mvgal-hw-validate`, `mvgal-steam-setup`, and probe components |
-| Integrations | `steam/`, `compat/`, `opengl/`, `bindings/` | Compatibility helpers, API interception, and language bindings |
-| UI | `ui/`, `dashboard/` | Optional Qt and Haxe UI components |
-| Tests and synthetic topology | `src/tests/`, `src/userspace/testing/` | Unit suite, and the synthetic GPU topology backend that substitutes for hardware during rescan so hetero-GPU paths can be exercised deterministically |
+| Component | Source | Role |
+|---|---|---|
+| Public interfaces and UAPI | `include/mvgal/` | Public C headers, ioctl structures, capability bits, scheduler and memory API contracts |
+| Kernel modules | `kernel/` | DRM device/UAPI, PCI discovery, runtime capability reporting, sysfs, sync and vendor adapters; the native vendor driver retains GPU ownership |
+| Userspace core | `src/userspace/` | GPU discovery, C API, scheduler policies, memory helpers, transports, API interception and test topology backend |
+| Runtime daemon | `runtime/daemon/` | `mvgald`: device registry, kernel-device client, IPC and D-Bus, scheduler, memory/power managers, metrics, NVML and Steam profile loading |
+| Rust components | `safe/`, `runtime/safe/` | Fence, memory-safety and capability helpers; workspace crates and the daemon-facing wrapper are separate source areas |
+| Applications and tools | `tools/`, `src/monitoring/`, `ui/` | CLI and diagnostic tools, optional monitoring/exporter and optional Qt dashboard |
+| API and platform integrations | `src/userspace/intercept/`, `src/userspace/vulkan_icd/`, `compat/`, `steam/`, `opengl/` | Vulkan layer/opt-in ICD, OpenCL and other wrappers, Linux/Windows compatibility helpers and Steam integration |
+| Language bindings | `bindings/` | Clients/wrappers for Rust, Zig, Go, Python, Java, C#, Node.js, Swift and other languages |
+| Packaging/deployment | `packaging/`, `config/`, `data/`, `systemd/` | RPM/DEB and other package recipes, helpers, policies and service units |
 
-## Device ownership and capabilities
+See [Codebase Map](CODEBASE.md) for a directory-level guide and build entry points.
 
-The kernel module discovers GPUs through the PCI subsystem and does not register as their PCI driver. The native vendor driver remains responsible for command submission and memory management. MVGAL records capabilities from runtime probes rather than assuming that a vendor adapter can perform an operation.
-
-The 0.7.12 source changelog explicitly says kernel submission, kernel VRAM allocation, DMA-BUF export, and wait-idle are not advertised as supported. Unsupported operations return `-EOPNOTSUPP`; they must not be interpreted as successful no-ops. The Vulkan ICD does not advertise a fabricated aggregate physical device.
-
-## Control and diagnostic flow
+## Runtime relationships
 
 ```mermaid
-flowchart LR
-    CLI[CLI and applications] --> US[Userspace APIs and runtime]
-    US --> IPC[IPC / device UAPI]
-    IPC --> K[MVGAL kernel module]
-    K --> PCI[Read-only GPU discovery]
-    PCI --> N[Native vendor driver remains owner]
-    US --> Probe[Runtime capability probes]
-    Probe --> Decision[Supported operations or explicit unsupported result]
+flowchart TD
+    App[Application or diagnostic tool] --> API[Userspace API / API-specific integration]
+    API --> Core[Userspace core: discovery, policies, memory helpers]
+    API --> Daemon[mvgald: managers, IPC and telemetry]
+    Daemon --> Client[Kernel-device client]
+    Client --> UAPI[MVGAL DRM device and ioctl UAPI]
+    UAPI --> Probe[PCI discovery and runtime capability probes]
+    Probe --> Drivers[Native vendor drivers retain device ownership]
 ```
 
-Use `mvgal --help`, `mvgal-info --help`, and `mvgal-config --help` to inspect commands actually provided by an installed build. Whether an API component was compiled is controlled by build options and dependencies; whether an operation works depends on runtime capabilities.
+This is a map of control and reporting paths, not a claim that every API submits work through the daemon. API integrations and build targets are conditional, and each operation depends on the capabilities observed on the host.
 
-## CLI output contract
+## Device ownership and capability truth
 
-The tools are meant to be parsed, so the split is enforced:
+The kernel module discovers devices through PCI and does not bind itself as their PCI driver. Vendor drivers remain responsible for GPU command submission and their memory managers. The kernel reports capabilities obtained from probes; an unprobed or unsupported operation must fail or use its documented fallback. Several ioctl numbers and feature flags are reserved for future functionality and do not mean that the corresponding operation is implemented.
 
-- **stdout** carries only the requested output — a GPU list, `--json`, a table.
-  Nothing else. Informational logging goes to stderr.
-- **SIGPIPE is ignored** by every tool, so `mvgal ... | head` exits 0 instead of
-  dying on signal 13 (shell status 141).
+The Vulkan ICD is an optional, separate build component. Its presence does not mean a synthetic aggregate physical device exists. The Vulkan layer and ICD must be treated as distinct components. DMA-BUF import/export and peer transfers are device-pair dependent; host staging is the portable fallback where the userspace path supports it.
 
-Both were fixed in v0.7.22. The stdout rule previously leaked: the library's
-pre-initialisation fallback in `log_internal()` sent INFO and above to stdout,
-and the tools that printed `Configuration loaded from ...` were exactly the ones
-that never call `mvgal_log_init()`. Note for contributors — routing
-`get_default_output()` to stderr is **not** sufficient on its own, because that
-function is never reached on that path.
+## Build topology
 
-### What `mvgal-bench` actually measures
-
-`mvgal-bench` does not measure GPU performance. It reports:
-
-- **memory bandwidth** — read/write/copy of `mmap`'d **host RAM**
-- **compute** — a single-threaded **host CPU** DAXPY
-
-Every figure is now labelled with that hardware path, and the run header states
-it explicitly when `/dev/mvgal0` is absent. `--metadata` carries the same
-provenance as machine-readable fields:
-
-```json
-{ "hardware_path": "host_cpu", "mvgal_device_present": false, "measures_gpu": false }
-```
-
-`measures_gpu` is a constant `false` today and is present so a consumer can tell
-host figures from GPU figures without inferring it from the tool name (v0.7.22).
-
-## Build configuration
-
-The top-level CMake project defines optional build groups for the kernel module, runtime, API, gaming integration, tools, Rust components, tests, and UI. Vulkan, OpenCL, and other API components may be omitted when dependencies are unavailable. See [BUILD.md](BUILD.md) and the source `CMakeLists.txt` for the exact configuration.
+The primary build is CMake. Top-level options gate kernel, runtime, API, gaming, tools, Rust, tests and UI components. Meson is a separate build definition with its own smaller option set; Cargo builds the Rust workspace. A target may be omitted when its optional dependency is unavailable. See [Build Guide](BUILD.md) and the source `CMakeLists.txt` for the exact target graph.
 
 ## Related references
 
-- [Status](STATUS.md) summarizes verified implementation boundaries.
-- [API](API.md) lists public interfaces; declarations do not guarantee operational backend support.
-- [Hardware compatibility](HARDWARE_COMPATIBILITY.md) explains discovery and capability reporting.
-- The source repository `CHANGELOG.md` records implementation changes and audit findings.
+- [Codebase Map](CODEBASE.md) — source layout and subsystem ownership.
+- [Status](STATUS.md) — version and verified limits.
+- [API](API.md) — public interfaces; an API declaration does not establish backend support.
+- [Hardware Compatibility](HARDWARE_COMPATIBILITY.md) — device discovery and capability reporting.
+- [Scheduling Strategies](STRATEGIES.md) and [Memory Management](MEMORY.md) — policy and transfer boundaries.
