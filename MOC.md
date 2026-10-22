@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-18
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: index
 ---
 
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.24**; the source changelog documents releases through **0.7.24**.
+> Source version **0.7.25**; the source changelog documents releases through **0.7.25**.
 > Core architecture and status pages were reconciled against the source tree on **2026-10-18**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.24 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.25 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -42,10 +42,23 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What’s New in 0.7.24
+## 🔍 What’s New in 0.7.25
 
 > [!tip]
 > The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.25 fixed a defect that made the modules unloadable, and the
+documented Secure Boot recovery could not have repaired them.** The
+modules were compressed with `xz -9e`, producing a CRC64 xz stream that
+the kernel's decoder rejects, so they failed at *decompression* — before
+the signature was examined. Enrolling the MOK correctly still left the
+system broken, and the journal pointed at a signature problem that was
+not the cause. The release also closed the reload path (the daemon had
+chowned systemd's `RuntimeDirectory`, and SIGHUP was handled by a branch
+that did not exist), and fixed the tools' reporting: the Vulkan probe
+called a staged manifest "ACTIVE", the D-Bus methods were registered
+without `SD_BUS_VTABLE_UNPRIVILEGED` so sd-bus refused every non-root
+call, and a multi-GPU strategy was accepted on a single-GPU host.
 
 **v0.7.24 is an audit and validation-path release.** It fixes daemon device-node
 access and D-Bus name conflict reporting, corrects PCIe/NUMA/class-code

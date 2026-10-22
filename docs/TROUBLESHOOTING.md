@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-14
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.24**; the source changelog documents releases through **0.7.24**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.25**; the source changelog documents releases through **0.7.25**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -100,6 +100,28 @@ mokutil --test-key /var/lib/mvgal/keys/mvgal-signing.der   # exit 0 = this key i
 > certificate is still listed, the grep passes, and modules signed by the new key
 > are still rejected. `mvgald` had that bug and stayed silent about it; v0.7.22+
 > uses `--test-key`.
+
+### "Invalid parameters" or "decompression failed with status 6"
+
+The module could not be **decompressed**, which happens before the Secure
+Boot signature is ever checked. On v0.7.21 and v0.7.22 the modules were
+compressed with `xz -9e`, producing a CRC64 stream that the kernel's
+decoder rejects (it accepts CRC32 and below). Enrolling the MOK does not
+help here — the failure is upstream of the signature check.
+
+```bash
+xz --list --verbose /lib/modules/$(uname -r)/kernel/drivers/gpu/drm/mvgal/mvgal.ko.xz | grep Check
+```
+
+`Check: CRC32` is what the kernel accepts. Anything else fails to
+decompress. Fix:
+
+```bash
+pkexec /usr/lib/mvgal/mvgal-sign-modules.sh
+```
+
+Fixed in v0.7.25, which uses the kernel's own compression settings
+(`xz --check=crc32 --lzma2=dict=1MiB`).
 
 ### "Key was rejected by service" but the key *is* enrolled
 

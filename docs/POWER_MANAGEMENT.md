@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, power, reference]
 aliases: [Power Management, Power]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-14
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: reference
 mvgal_order: 11
 ---
 
 # MVGAL Power Management
 
-> Source metadata is **0.7.24**; the source changelog documents releases through **0.7.24**. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.
+> Source metadata is **0.7.25**; the source changelog documents releases through **0.7.25**. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.
 
 ## What the source provides
 
@@ -39,6 +39,23 @@ It takes **no GPU index** (v0.7.22). It used to accept one, print it, and then
 discard it: the value is persisted once as `power.power_curve_profile`, so every
 index wrote the same key. The old two-argument form is still accepted, but warns
 that the index is ignored.
+
+### Multi-GPU strategies need two GPUs
+
+`afr`, `sfr`, `round_robin`, `hybrid`, `task` and `compute_offload`
+distribute work across GPUs, so they need at least two. Since v0.7.25 that
+is checked, in three places:
+
+- `mvgal-config set-strategy afr` on a one-GPU machine **refuses**, and
+  says so. `--force` overrides it.
+- The daemon falls back to `single` at startup and says why, leaving your
+  configuration file untouched so it takes effect if you add a GPU.
+- `mvgal-compat` names the active strategy when it cannot be used.
+
+The shipped configuration says "Use afr/sfr/hybrid only after mvgal-compat
+reports COMPAT_SUPPORTED", but that guidance was enforced nowhere before
+v0.7.25 — the daemon would announce
+`Scheduler mode from config default_strategy='afr'` on a single-GPU host.
 
 **The profile is stored but not yet acted on.** Nothing in the daemon reads
 `power_curve_profile` today, so this command records intent and currently changes

@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-14
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.24. The source changelog documents through 0.7.24. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.25. The source changelog documents through 0.7.25. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.24 | **Updated:** September 2026
+**Source version:** 0.7.25 | **Updated:** September 2026
 
 ---
 
@@ -84,6 +84,46 @@ journalctl -u mvgald -b | grep -A6 'Secure Boot is enabled'
 [SECURE_BOOT.md](SECURE_BOOT.md) § Degraded Mode.
 
 ---
+
+### The canonical systemd unit name
+
+The unit is `mvgal-daemon.service`, with `mvgal.service` and
+`mvgald.service` as aliases. `systemctl` accepts all three, but
+`journalctl` does **not** resolve aliases:
+
+```bash
+journalctl -u mvgald              # no entries
+journalctl -u mvgal-daemon.service # the full log
+```
+
+Use `mvgal-daemon.service` when reading the journal. The MVGAL tools
+resolve the real name with `systemctl show -p Id`, so they work either way.
+
+`systemctl reload mvgal-daemon.service` re-reads the configuration since
+v0.7.25. Before that, SIGHUP was installed but the handler ignored it, so
+a reload signalled the daemon and nothing happened while still reporting
+success.
+
+### The OpenCL ICD is registered by default
+
+Since v0.7.25 `/etc/OpenCL/vendors/mvgal.icd` is installed **active**.
+Earlier releases parked it as `mvgal.icd.disabled` when no other vendor
+runtime happened to be installed at that moment — a snapshot that went
+stale as soon as a vendor runtime was installed later, leaving MVGAL's
+OpenCL interception out of every application's path while the tools still
+reported OpenCL results.
+
+The decision now lives in a script you can re-run at any time:
+
+```bash
+/usr/lib/mvgal/mvgal-opencl-icd.sh --status
+sudo /usr/lib/mvgal/mvgal-opencl-icd.sh          # re-evaluate and register
+sudo /usr/lib/mvgal/mvgal-opencl-icd.sh --force-unregister
+```
+
+Run the plain form after installing a vendor runtime (for example
+`intel-compute-runtime`) and it registers the ICD if there is now
+something to aggregate.
 
 ## Prerequisites
 

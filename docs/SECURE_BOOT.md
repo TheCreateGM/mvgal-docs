@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-14
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: guide
 mvgal_order: 3
 ---
 
 # MVGAL Secure Boot & MOK Enrollment
 
-> **Implementation status:** Source metadata is 0.7.24. The source changelog documents through 0.7.24. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.25. The source changelog documents through 0.7.25. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.24 | **Updated:** September 2026
+**Source version:** 0.7.25 | **Updated:** September 2026
 
 MVGAL ships seven kernel modules. On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 
@@ -108,6 +108,78 @@ If the module still fails to load, check:
 ```bash
 journalctl -k -b | grep -i "module verification\|mvgal"
 ```
+
+## Modules compressed in a format the kernel cannot read (fixed in v0.7.25)
+
+This is the reason a Secure Boot install could not be made to work at all on
+v0.7.21 and v0.7.22, **even after enrolling the MOK correctly**.
+
+The modules were compressed with `xz -9e`, which produces a **CRC64**-checked
+xz stream. The kernel's xz decoder rejects any check type above CRC32:
+
+```c
+/* lib/xz/xz_dec_stream.c */
+if (s->check_type > XZ_CHECK_CRC32)
+        return XZ_OPTIONS_ERROR;
+```
+
+The kernel's decoder only carries an internal CRC32 implementation
+(`lib/xz/xz_crc32.c`) and no CRC64 at all, so a CRC64 stream is rejected as
+"encoded with settings that are not supported by this XZ decoder". The
+kernel reports that as `EINVAL`:
+
+```
+insmod: ERROR: could not insert module ...: Invalid parameters
+dmesg:  decompression failed with status 6
+```
+
+The critical detail is **where** it fails. Decompression happens *before*
+the Secure Boot signature is examined, so a module that fails this way
+never reaches the signature check. Enrolling the MOK cannot fix it, and
+the journal mentions a signature problem only because the signature check
+is the next thing that would have happened.
+
+> **CRC64 is xz's default check type at *every* compression level.** Plain
+> `xz -9` is just as broken as `xz -9e`. The "extreme" preset is not what
+> causes it.
+
+v0.7.25 uses the kernel's own settings, copied verbatim from
+`scripts/Makefile.modinst`:
+
+```
+cmd_xz = $(XZ) --check=crc32 --lzma2=dict=1MiB -f $<
+```
+
+Two consequences worth knowing:
+
+- the signed module is **byte-identical** to what DKMS builds for the same
+  `.ko`, so the two no longer disagree;
+- because the output matches the kernel's own compression, the file is
+  accepted by the kernel's module decompressor by construction.
+
+Check what you have on disk:
+
+```bash
+xz --list --verbose /lib/modules/$(uname -r)/kernel/drivers/gpu/drm/mvgal/mvgal.ko.xz | grep Check
+```
+
+`Check: CRC32` is correct. `Check: CRC64` means the module cannot be
+decompressed, whatever the MOK says.
+
+Repair it:
+
+```bash
+pkexec /usr/lib/mvgal/mvgal-sign-modules.sh
+```
+
+`mvgal-enroll-mok` also re-signs the installed modules before it queues
+the certificate, so from v0.7.25 the enrollment itself completes the fix
+instead of only half of it.
+
+> The "already signed" check compares the **decompressed** image, so a
+> module signed by v0.7.21/v0.7.22 looked correct and was left in place
+> with its CRC64 container intact — the upgrade would have silently
+> repaired nothing. v0.7.25 checks the container first.
 
 ## Modules signed with the wrong key (fixed in v0.7.22)
 

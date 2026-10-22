@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-18
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,106 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.25] - 2026-10-22
+
+Packaging and reporting release. The headline defect made the modules
+unloadable, and the documented Secure Boot recovery could not have
+repaired it.
+
+### Fixed
+
+- **Signed modules could not be decompressed by the kernel.** The modules
+  were compressed with `xz -9e`, producing a CRC64-checked xz stream. The
+  kernel's xz decoder rejects any check type above CRC32
+  (`lib/xz/xz_dec_stream.c`), and it carries only an internal CRC32
+  implementation. The module failed at decompression with `Invalid
+  parameters` and `decompression failed with status 6` — before the
+  Secure Boot signature was examined, so **enrolling the MOK could not fix
+  it**. CRC64 is xz's default check at every compression level, so `xz -9`
+  was equally broken. v0.7.25 uses the kernel's own settings from
+  `scripts/Makefile.modinst` (`xz --check=crc32 --lzma2=dict=1MiB -f`),
+  which is byte-identical to what DKMS builds.
+- **A module already signed with the MVGAL key was never repaired.** The
+  "already signed" check compares the decompressed image, so a module
+  signed by v0.7.21/v0.7.22 was left with its unloadable container intact
+  and the upgrade silently fixed nothing.
+- **Enrolling the MOK now also makes the modules loadable**:
+  `mvgal-enroll-mok` re-signs the installed modules before queueing the
+  certificate.
+- **`systemctl reload mvgald` failed permanently** (`status=233`): the
+  daemon chowned systemd's `RuntimeDirectory=/run/mvgal` to `root:mvgal`,
+  and systemd requires `root:root`. The daemon no longer touches the
+  directory's ownership.
+- **A reload did nothing.** SIGHUP was installed but the handler had no
+  case for it, so a reload signalled the daemon and reported success
+  while nothing happened. The daemon now re-reads the configuration on
+  SIGHUP.
+- **"Vulkan aggregated ICD: ACTIVE" was a false positive** — the staging
+  copy in the opt-in directory was treated as a registration. The ICD now
+  reports registered / available / absent.
+- **The OpenCL ICD registration was decided once, from a stale snapshot**,
+  so on a host where the vendor runtime was installed after MVGAL it
+  stayed parked and every OpenCL application ran without MVGAL in the
+  path. The decision moved to `/usr/lib/mvgal/mvgal-opencl-icd.sh` and the
+  manifest is registered by default.
+- **Module load failures were always blamed on Secure Boot.** The loader
+  used `insmod` on a path `modinfo` can legitimately return compressed
+  (`.ko.xz`), which `insmod` cannot load, and then printed the MOK
+  remedy for a failure enrollment could not fix. It now uses `modprobe`
+  first and classifies the failure.
+- **The D-Bus API refused every non-root call.** The methods were
+  registered without `SD_BUS_VTABLE_UNPRIVILEGED`, so sd-bus applied its
+  own default policy and rejected them with `AccessDenied` regardless of
+  the bus policy that allows the `mvgal` group.
+- **A multi-GPU strategy was accepted on a single-GPU machine.** It is now
+  checked against the detected GPU count in three places.
+- **`mvgal-config list-gpus` reported shared system RAM as dedicated
+  VRAM**, without the caveat `mvgal-info` gave.
+- **`mvgal-compat` exited 0 while reporting "Not operational"**, and
+  `mvgal-dashboard --check` printed "daemon not running" and then "OK".
+  Both now have meaningful exit codes.
+- **`mvgal-steam-setup --check` reported two false results** — it checked
+  for `libmvgal.so` on disk rather than the runtime, and looked for a
+  Steam compatdata directory rather than the `mvgal-compat` binary.
+- **Every vendor shader backend was skipped, even for a present GPU**,
+  because the check only knew the Debian library layout.
+- **The DKMS build and the packaged modules used two different layouts and
+  compression conventions**, so `rpm -V` and `dkms status` both reported
+  them as mismatched.
+- **`mvgal-config show-config` dumped the raw file** rather than the
+  effective configuration the daemon runs on. `--raw` now prints the file.
+- **`/etc/OpenCL/layers` was missing**, so the loader warned on every run.
+- **The pkexec log was world-readable** and recorded configuration
+  values.
+- **`/var/log/mvgal` was created and never written to.**
+- **The key directory was 0700 root**, so the documented
+  `mvgal-signing.der` path was unreadable by the group it exists for. It
+  is now 0750 root:mvgal, with the public certificate at 0640 and the
+  private key still 0600.
+- **Stale DKMS build trees accumulated** for every kernel the machine had
+  ever had.
+- **`[ai_scheduler] enabled = false` was never read**, so a default
+  install complained on every start about a feature that was switched off.
+- **`mvgal-config --help` demonstrated destructive global mutations**; the
+  examples are now read-only.
+- **`journalctl -u mvgald` returned nothing** because `journalctl` does not
+  resolve unit aliases. The canonical name is `mvgal-daemon.service`.
+
+### Notes
+
+- The kernel's own module compression is
+  `xz --check=crc32 --lzma2=dict=1MiB`; matching it exactly is what makes
+  the signed module byte-identical to the DKMS-built one.
+- The marker terminator in an appended module signature is a NEWLINE, not
+  a NUL, and the 4-byte big-endian DER length sits 32 bytes before the end
+  of the file.
+- `sign-file` has no verify mode and re-signing APPENDS rather than
+  replaces, so the signer strips any existing signature first.
+- The Mageia 9 COPR chroot was removed from the upstream project: Mageia 9
+  is end-of-life and its repository content has been purged from the
+  mirrors, so every build failed at bootstrap with a mirrorlist 404 for
+  reasons unrelated to the package. Builds now cover 18 chroots.
 
 ## [0.7.24] - 2026-10-18
 

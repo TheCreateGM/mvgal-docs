@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-18
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-This page describes the 0.7.24 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
+This page describes the 0.7.25 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
 
 ## Main components
 
@@ -47,6 +47,44 @@ This is a map of control and reporting paths, not a claim that every API submits
 The kernel module discovers devices through PCI and does not bind itself as their PCI driver. Vendor drivers remain responsible for GPU command submission and their memory managers. The kernel reports capabilities obtained from probes; an unprobed or unsupported operation must fail or use its documented fallback. Several ioctl numbers and feature flags are reserved for future functionality and do not mean that the corresponding operation is implemented.
 
 The Vulkan ICD is an optional, separate build component. Its presence does not mean a synthetic aggregate physical device exists. The Vulkan layer and ICD must be treated as distinct components. DMA-BUF import/export and peer transfers are device-pair dependent; host staging is the portable fallback where the userspace path supports it.
+
+## CLI output and status contract
+
+The diagnostic tools are meant to be read by people and by scripts, so two
+things are fixed:
+
+- **stdout carries only the requested output** — a GPU list, `--json`, a
+  table. Informational logging goes to stderr, on every code path
+  including the library's pre-initialisation fallback, which is the one
+  the tools that print `Configuration loaded from ...` actually take.
+- **SIGPIPE is ignored** by every tool, so `mvgal ... | head` exits 0
+  instead of dying on signal 13 (shell status 141).
+
+The tools also agree on what a degraded state means, so a script can rely
+on the status:
+
+| Tool | 0 | 1 | 2 |
+|------|---|---|---|
+| `mvgal-compat` | fully operational | not operational | partially operational |
+| `mvgal-hw-validate` | all checks passed | a check failed | — |
+| `mvgal-workload` | workload passed | failed | — |
+| `mvgal-dashboard --check` | display and daemon both up | no display | daemon not running |
+
+`mvgal-compat` used to exit 0 while printing "Not operational", and
+`mvgal-dashboard --check` printed "daemon not running" and then "OK" — the
+two statements contradicted each other in one output.
+
+`mvgal-config show-config` prints the **effective** configuration: the
+parsed values with the built-in defaults applied, which is what the daemon
+actually runs on. `mvgal-config show-config --raw` prints the literal
+`/etc/mvgal/mvgal.conf` instead.
+
+`mvgal-bench` does not measure GPU performance. It reports memory
+bandwidth of `mmap`'d **host RAM** and a single-threaded **host CPU**
+DAXPY; every figure is labelled with that hardware path, and `--metadata`
+carries `hardware_path`, `mvgal_device_present` and `measures_gpu` so a
+consumer can tell host figures from GPU figures without inferring it from
+the tool name.
 
 ## Build topology
 

@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.24"
-mvgal_verified: 2026-10-18
+mvgal_version: "0.7.25"
+mvgal_verified: 2026-10-22
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.24**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.25**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -31,6 +31,15 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - The Vulkan interception layer and optional ICD are separate. The ICD does not publish a fabricated aggregate physical device.
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
 - The latest source changelog notes that one PCI enumeration fix still needs a clean-boot hardware check on the affected system.
+
+## Recent source changes (through v0.7.25)
+
+- **The modules could not be decompressed, so enrolling the MOK could not make them load** (v0.7.25) — they were compressed with `xz -9e`, producing a CRC64 xz stream, and the kernel's xz decoder rejects any check type above CRC32 (`lib/xz/xz_dec_stream.c`; it only carries an internal CRC32). The module failed at decompression with `Invalid parameters`, *before* the Secure Boot signature was checked, so the documented recovery — enroll, reboot, confirm — still left the system broken. CRC64 is xz's default check at every level, so `xz -9` was equally broken. v0.7.25 uses the kernel's own settings (`xz --check=crc32 --lzma2=dict=1MiB`), byte-identical to what DKMS builds. The signer also repairs modules that were already signed correctly but compressed wrongly, and `mvgal-enroll-mok` now re-signs before queueing the certificate.
+- **`systemctl reload mvgald` failed permanently** (v0.7.25) — the daemon chowned systemd's `RuntimeDirectory=/run/mvgal` to `root:mvgal`, and systemd requires `root:root`, so every reload after the first start failed with `status=233/RUNTIME_DIRECTORY` while `restart` kept working. Separately, SIGHUP was installed but the handler had no case for it, so a reload did nothing and still reported success. Both are fixed: the daemon leaves the directory alone and now re-reads the configuration on SIGHUP.
+- **The D-Bus API refused every non-root call** (v0.7.25) — the methods were registered without `SD_BUS_VTABLE_UNPRIVILEGED`, so sd-bus applied its own default policy and rejected them with `AccessDenied` regardless of the bus policy that allows the `mvgal` group. The GUI and dashboard were dead for members of that group.
+- **"Vulkan aggregated ICD: ACTIVE" was a false positive** (v0.7.25) — the staging copy in the opt-in directory was treated as a registration. The ICD now reports registered / available / absent, and never says ACTIVE for the staging copy.
+- **The OpenCL ICD registration was frozen at install time** (v0.7.25) — the decision was made from a snapshot of the machine, so on a host where the vendor runtime was installed after MVGAL the manifest stayed parked and every OpenCL application ran without MVGAL in the path. The decision moved to `/usr/lib/mvgal/mvgal-opencl-icd.sh`, which can be re-run, and the manifest is registered by default.
+- **The tools stopped describing a system that was not in the state they claimed** (v0.7.25) — module load failures are classified instead of always being blamed on Secure Boot; a multi-GPU strategy is refused on a one-GPU machine; shared system RAM is no longer presented as dedicated VRAM; `mvgal-compat` and `mvgal-dashboard --check` have meaningful exit codes; `mvgal-steam-setup --check` reports the real runtime state; `mvgal-config show-config` shows the effective configuration; and `journalctl -u mvgald` works again because the canonical unit name is used.
 
 ## Package artifacts
 
