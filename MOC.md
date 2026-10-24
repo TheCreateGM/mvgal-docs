@@ -2,7 +2,7 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.26"
+mvgal_version: "0.7.27"
 mvgal_verified: 2026-10-24
 mvgal_role: index
 ---
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.26**; the source changelog documents releases through **0.7.26**.
-> Core architecture and status pages were reconciled against the source tree on **2026-10-18**.
+> Source version **0.7.27**; the source changelog documents releases through **0.7.27**.
+> Core architecture and status pages were reconciled against the source tree on **2026-10-24**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.26 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.27 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -42,10 +42,22 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What’s New in 0.7.26
+## 🔍 What’s New in 0.7.27
 
 > [!tip]
 > The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.27 fixes three hardware-detection and reporting defects that made
+valid hardware look missing or report no stats.** The Vulkan ICD filename
+check did not match Fedora's `radeon_icd.x86_64.json`, so AMD GPUs were
+reported as having no Vulkan driver, and the AMD shader-backend probe
+pointed at mesa's software rasterizer (`libvulkan_lvp.so`) instead of
+RADV's `libvulkan_radeon.so`. The WoW64 layer check only looked in
+`/usr/lib`, so a correctly installed multilib Fedora package reported
+"not built". And `mvgal-info` left NVIDIA temperature and utilization at
+their `-1` sentinel, because the proprietary driver exposes no hwmon
+source — it now fills those fields from NVML, only where sysfs left them
+empty, and never fabricates a value.
 
 **v0.7.26 is a packaging release; runtime behaviour is unchanged.** The
 RPM files list now always includes `mvgal-workload`, which the build
@@ -81,7 +93,7 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.26 source
+The following implementation limits were checked against the 0.7.27 source
 tree on **2026-10-24**. Build presence and API declarations do not prove device
 execution support.
 

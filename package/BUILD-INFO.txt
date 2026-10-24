@@ -1,0 +1,7 @@
+name         = mvgal
+version      = 0.7.27
+git_commit   = f312c77519b9a477cf7b9fdccc180b407504706e
+git_describe = v0.7.25-6-gf312c77
+build_arch   = x86_64
+build_date   = 2026-10-24T09:05:17Z
+built_by     = jenkins

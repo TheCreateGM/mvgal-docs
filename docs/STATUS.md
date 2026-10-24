@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.26"
+mvgal_version: "0.7.27"
 mvgal_verified: 2026-10-24
 mvgal_role: reference
 mvgal_order: 5
@@ -11,11 +11,22 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.26** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.26**. This documentation snapshot was reconciled against that source on 2026-10-24. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.27** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.27**. This documentation snapshot was reconciled against that source on 2026-10-24. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.27 fixes three hardware-detection and reporting defects. The Vulkan
+ICD filename check did not match Fedora's `radeon_icd.x86_64.json`, so
+AMD GPUs were reported as having no Vulkan driver; the AMD shader-backend
+probe pointed at mesa's software rasterizer instead of RADV; the WoW64
+layer check only looked in `/usr/lib` and reported "not built" on a
+correctly installed multilib Fedora package; and `mvgal-info` left
+NVIDIA temperature and utilization at their `-1` sentinel — the
+proprietary driver exposes no hwmon source for them — and now fills
+only those empty fields via NVML, never fabricating a value. See
+[Changelog](CHANGELOG.md) § v0.7.27.
 
 v0.7.26 is a packaging release with no runtime behaviour changes. The RPM
 files list now always includes `mvgal-workload`, which the build produces
@@ -70,7 +81,7 @@ The latest source changelog records a PCI enumeration reference-lifetime issue t
 
 ## Package state
 
-This docs repository's `package/` directory contains **0.7.26** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
+This docs repository's `package/` directory contains **0.7.27** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
 
 ## Further reading
 

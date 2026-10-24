@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.26"
+mvgal_version: "0.7.27"
 mvgal_verified: 2026-10-24
 mvgal_role: guide
 mvgal_order: 1
@@ -9,11 +9,11 @@ mvgal_order: 1
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.26**; the source changelog documents releases through **0.7.26**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.27**; the source changelog documents releases through **0.7.27**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 ## 1. Inspect the package or build
 
-The documentation workspace contains 0.7.26 package artifacts in RPM, DEB, AppImage and tarball formats. Inspect package metadata and signatures before installation; see [`package/README.md`](https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md) for the current inventory. Package availability through remote repositories varies. For source builds, follow the [Build Guide](BUILD.md).
+The documentation workspace contains 0.7.27 package artifacts in RPM, DEB, AppImage and tarball formats. Inspect package metadata and signatures before installation; see [`package/README.md`](https://github.com/TheCreateGM/mvgal-docs/blob/main/package/README.md) for the current inventory. Package availability through remote repositories varies. For source builds, follow the [Build Guide](BUILD.md).
 
 > [!note]
 > On RPM distributions, check the module package metadata and kernel version before choosing prebuilt modules or DKMS. Secure Boot and kernel-header requirements are covered in [Secure Boot](SECURE_BOOT.md).

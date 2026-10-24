@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, power, reference]
 aliases: [Power Management, Power]
-mvgal_version: "0.7.26"
+mvgal_version: "0.7.27"
 mvgal_verified: 2026-10-24
 mvgal_role: reference
 mvgal_order: 11
@@ -9,7 +9,7 @@ mvgal_order: 11
 
 # MVGAL Power Management
 
-> Source metadata is **0.7.26**; the source changelog documents releases through **0.7.26**. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.
+> Source metadata is **0.7.27**; the source changelog documents releases through **0.7.27**. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.
 
 ## What the source provides
 

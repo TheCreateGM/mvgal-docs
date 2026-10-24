@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.26"
+mvgal_version: "0.7.27"
 mvgal_verified: 2026-10-24
 mvgal_role: reference
 mvgal_order: 13
@@ -15,6 +15,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.27] - 2026-10-24
+
+Fixes three hardware-detection and reporting defects that made valid
+hardware look missing or report no stats.
+
+### Fixed
+
+- **AMD ICD detection now matches Fedora's `radeon_icd` manifest.** The
+  Vulkan ICD filename check only matched `amd`/`radv`/`intel`/`mtt`
+  substrings, but Fedora ships mesa's manifest as `radeon_icd.x86_64.json`,
+  which contains none of them, so AMD GPUs were reported as having no
+  Vulkan driver. The matcher now also accepts `radeon`/`radv` for AMD.
+- **AMD shader-backend library list no longer probes lavapipe.** The list
+  pointed at mesa's software rasterizer (`libvulkan_lvp.so`), not an AMD
+  driver. It now probes the real RADV paths (`libvulkan_radeon.so` in the
+  Fedora/RHEL/Arch and Debian layouts).
+- **WoW64 layer detection accepts the `/usr/lib64` install path.** Multilib
+  Fedora installs `libmvgal-wow64.so` under `/usr/lib64`, not `/usr/lib`, so
+  the WoW64 check reported "not built" on a correctly installed package.
+  Both paths are now checked.
+- **`mvgal-info` reports NVIDIA temperature and utilization.** The
+  proprietary NVIDIA driver exposes no hwmon `temp1_input` and no
+  `gpu_busy_percent`, so those fields were left at their `-1` "unavailable"
+  sentinel. `mvgal-info` now queries NVML (already linked in) for
+  temperature and utilization by PCI bus id, filling only the fields sysfs
+  left empty and leaving the sentinel when NVML is unavailable — never
+  fabricating a value.
 
 ## [0.7.26] - 2026-10-24
 
