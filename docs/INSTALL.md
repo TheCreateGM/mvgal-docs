@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.25"
-mvgal_verified: 2026-10-22
+mvgal_version: "0.7.26"
+mvgal_verified: 2026-10-24
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.25. The source changelog documents through 0.7.25. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.26. The source changelog documents through 0.7.26. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.25 | **Updated:** September 2026
+**Source version:** 0.7.26 | **Updated:** October 2026
 
 ---
 

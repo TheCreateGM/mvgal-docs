@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.25"
-mvgal_verified: 2026-10-22
+mvgal_version: "0.7.26"
+mvgal_verified: 2026-10-24
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.25**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.26**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -32,7 +32,9 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
 - The latest source changelog notes that one PCI enumeration fix still needs a clean-boot hardware check on the affected system.
 
-## Recent source changes (through v0.7.25)
+## Recent source changes (through v0.7.26)
+
+- **A built `mvgal-workload` could not be packaged** (v0.7.26) — CMake builds the tool whenever it finds OpenCL, but the RPM files list made its inclusion conditional, so a Fedora build that found OpenCL failed in `%install` with `Installed (but unpackaged) file(s) found: /usr/bin/mvgal-workload`. The files list now always includes what the build produces. The same release fixed the AppImage dependency self-check (the `ldd` walk now resolves `not found` entries and the final check runs against the staged `usr/lib`) and normalized the application icons to 256×256, which the Flatpak, RPM and AppImage exports require.
 
 - **The modules could not be decompressed, so enrolling the MOK could not make them load** (v0.7.25) — they were compressed with `xz -9e`, producing a CRC64 xz stream, and the kernel's xz decoder rejects any check type above CRC32 (`lib/xz/xz_dec_stream.c`; it only carries an internal CRC32). The module failed at decompression with `Invalid parameters`, *before* the Secure Boot signature was checked, so the documented recovery — enroll, reboot, confirm — still left the system broken. CRC64 is xz's default check at every level, so `xz -9` was equally broken. v0.7.25 uses the kernel's own settings (`xz --check=crc32 --lzma2=dict=1MiB`), byte-identical to what DKMS builds. The signer also repairs modules that were already signed correctly but compressed wrongly, and `mvgal-enroll-mok` now re-signs before queueing the certificate.
 - **`systemctl reload mvgald` failed permanently** (v0.7.25) — the daemon chowned systemd's `RuntimeDirectory=/run/mvgal` to `root:mvgal`, and systemd requires `root:root`, so every reload after the first start failed with `status=233/RUNTIME_DIRECTORY` while `restart` kept working. Separately, SIGHUP was installed but the handler had no case for it, so a reload did nothing and still reported success. Both are fixed: the daemon leaves the directory alone and now re-reads the configuration on SIGHUP.
@@ -43,7 +45,7 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 
 ## Package artifacts
 
-The [`package/`](package/README.md) directory contains version 0.7.24 RPM, DEB, AppImage and tarball artifacts. Consult its README and the artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
+The [`package/`](package/README.md) directory contains version 0.7.26 RPM, DEB, AppImage, tarball and Flatpak artifacts. Consult its README and the artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
 
 ## Updating the HTML site
 

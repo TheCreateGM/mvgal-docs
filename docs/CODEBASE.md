@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, codebase, reference]
 aliases: [Codebase Map, Source Map]
-mvgal_version: "0.7.25"
-mvgal_verified: 2026-10-22
+mvgal_version: "0.7.26"
+mvgal_verified: 2026-10-24
 mvgal_role: reference
 mvgal_order: 7
 ---
 
 # Codebase Map
 
-This guide maps the checked-in source tree at MVGAL 0.7.25. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
+This guide maps the checked-in source tree at MVGAL 0.7.26. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
 
 ## Repository root
 
@@ -38,7 +38,8 @@ This guide maps the checked-in source tree at MVGAL 0.7.25. Generated build dire
 - `scheduler/` — policy selection, load balancing, work splitting, strategy implementations and AI-related helpers.
 - `memory/` — allocation bookkeeping, mapping/copy helpers, coherency, DMA-BUF, P2P DMA and unified heap.
 - `execution/` — execution coordination, dispatch and reproducible-build helpers.
-- `intercept/` — API-specific wrappers/layers: Vulkan, OpenCL, CUDA, D3D, WebGPU, SYCL/media, vendor helpers and shader translation.
+- `intercept/` — API-specific wrappers/layers: Vulkan, OpenCL, CUDA, D3D, WebGPU, media, vendor helpers and shader translation.
+- `power/`, `sycl/`, `win32/` — power curve and power-manager helpers, the SYCL entry point, and the WoW64 thunk.
 - `vulkan_icd/` — separate Vulkan ICD implementation and IPC client; distinct from `intercept/vulkan/` layer.
 - `transport/`, `network/`, `ccl/` — transport, remote/pool discovery and collective communication code.
 - `testing/` — synthetic GPU topology used to exercise userspace discovery and policy paths; it creates no physical devices.

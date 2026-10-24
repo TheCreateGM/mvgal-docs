@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.25"
-mvgal_verified: 2026-10-22
+mvgal_version: "0.7.26"
+mvgal_verified: 2026-10-24
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.26] - 2026-10-24
+
+Packaging release. No runtime behaviour changes.
+
+### Fixed
+
+- **`mvgal-workload` could be built but not packaged.** The tool is built
+  whenever CMake finds OpenCL, while the RPM files list made its
+  inclusion conditional, so a Fedora build that found OpenCL failed in
+  `%install` with `Installed (but unpackaged) file(s) found:
+  /usr/bin/mvgal-workload`. The files list now always includes the
+  binary that the build produces.
+- **The AppImage dependency self-check failed on a library it had just
+  staged.** The `ldd` walk now resolves `soname => not found` entries
+  instead of skipping them, and the final check runs with
+  `LD_LIBRARY_PATH` pointing at the staged `usr/lib`, so `mvgal-probe`
+  and its `libmvgal.so.0` dependency are verified inside the image
+  rather than against the host.
+- **Icon dimensions broke the Flatpak build.** The application icons
+  were 1056×1024; the exported hicolor icons are normalized to
+  256×256, which is the size the manifest installs and the size the
+  RPM and Flatpak packages ship.
 
 ## [0.7.25] - 2026-10-22
 

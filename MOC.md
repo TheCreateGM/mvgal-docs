@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.25"
-mvgal_verified: 2026-10-22
+mvgal_version: "0.7.26"
+mvgal_verified: 2026-10-24
 mvgal_role: index
 ---
 
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.25**; the source changelog documents releases through **0.7.25**.
+> Source version **0.7.26**; the source changelog documents releases through **0.7.26**.
 > Core architecture and status pages were reconciled against the source tree on **2026-10-18**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.25 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.26 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -42,10 +42,19 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What’s New in 0.7.25
+## 🔍 What’s New in 0.7.26
 
 > [!tip]
 > The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.26 is a packaging release; runtime behaviour is unchanged.** The
+RPM files list now always includes `mvgal-workload`, which the build
+produces whenever CMake finds OpenCL — the previous conditional listing
+made a Fedora build that found OpenCL fail in `%install` with an
+"installed but unpackaged" error. The AppImage dependency self-check now
+resolves `not found` entries and verifies against the staged `usr/lib`,
+and the application icons are normalized to 256×256, which the Flatpak,
+RPM and AppImage exports require.
 
 **v0.7.25 fixed a defect that made the modules unloadable, and the
 documented Secure Boot recovery could not have repaired them.** The
@@ -72,8 +81,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.24 source
-tree on **2026-10-18**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.26 source
+tree on **2026-10-24**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |
