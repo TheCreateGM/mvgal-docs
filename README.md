@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.27**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.28**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -30,9 +30,11 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - Unsupported operations must be treated as unsupported; use runtime capability reporting and the documented fallback for each path.
 - The Vulkan interception layer and optional ICD are separate. The ICD does not publish a fabricated aggregate physical device.
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
-- The latest source changelog notes that one PCI enumeration fix still needs a clean-boot hardware check on the affected system.
+- The source changelog's 0.7.24 known-issues note records that the PCI enumeration use-after-free fix is source-verified only and still needs a clean-boot check on the host where it was found; the 2026-10-25 bench run does not substitute for that check on the affected machine.
 
-## Recent source changes (through v0.7.27)
+## Recent source changes (through v0.7.28)
+
+- **CUDA multi-device attribution was wrong, and device counts were fabricated** (v0.7.28) — the shim returned the MVGAL GPU count from `cuDeviceGetCount`/`cudaGetDeviceCount` instead of the native driver's, and mapped CUDA ordinals to MVGAL GPUs by modulo, so CUDA device 0 (RTX 3050) was attributed to MVGAL GPU 0 (Intel Arc). v0.7.28 probes each ordinal's PCI BDF once and matches it against the NVIDIA MVGAL GPUs, passes native counts through, rejects the `-1` sentinel before `cuCtxCreate`/`cuMemAlloc`/`cuLaunchKernel` (the old `mvgal_gpu < gpu_count` guard was true for `-1`), restricts kernel launches to eligible GPUs, and lets `MVGAL_CUDA_DEBUG=1` raise the log level so the attribution line is visible. A new `test_cuda_multidevice` LD_PRELOAD harness asserts ordinal resolution, BDF set equality and `cuCtxCreate` attribution; ctest is 27/27 (4.73 s) on the bench. The release also adds a Windows cross-compilation packaging pipeline (NSIS and WiX installers from `Jenkinsfile.windows`), and the RPM ships a `systemd-sysusers` fragment so the `mvgal` group is declared before dependency resolution — `dnf install` no longer fails with `nothing provides group(mvgal)`.
 
 - **Valid AMD hardware looked missing, and NVIDIA reported no stats** (v0.7.27) — the Vulkan ICD filename check only matched `amd`/`radv`/`intel`/`mtt`, but Fedora ships mesa's manifest as `radeon_icd.x86_64.json`, so AMD GPUs were reported as having no Vulkan driver; the AMD shader-backend list probed mesa's software rasterizer (`libvulkan_lvp.so`) instead of the real RADV paths; the WoW64 check only looked in `/usr/lib`, so multilib Fedora reported the layer "not built" despite a correct install; and `mvgal-info` left NVIDIA temperature and utilization at their `-1` sentinel because the proprietary driver exposes no hwmon `temp1_input`/`gpu_busy_percent`. The tool now fills only those empty fields from NVML by PCI bus id, leaving the sentinel when NVML is unavailable.
 
@@ -47,7 +49,7 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 
 ## Package artifacts
 
-The [`package/`](package/README.md) directory contains version 0.7.27 RPM, DEB, AppImage, tarball and Flatpak artifacts. Consult its README and the artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
+The [`package/`](package/README.md) directory contains version 0.7.28 RPM, DEB, AppImage, tarball and Flatpak artifacts. Consult its README and the artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
 
 ## Updating the HTML site
 

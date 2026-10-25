@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.27**; the source changelog documents releases through **0.7.27**.
-> Core architecture and status pages were reconciled against the source tree on **2026-10-24**.
+> Source version **0.7.28**; the source changelog documents releases through **0.7.28**.
+> Core architecture and status pages were reconciled against the source tree on **2026-10-25**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.27 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.28 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -42,10 +42,28 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What’s New in 0.7.27
+## 🔍 What’s New in 0.7.28
 
 > [!tip]
 > The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.28 is a correctness and packaging release, validated on the physical
+three-vendor bench (AMD Navi 24 + NVIDIA RTX 3050 + Intel Arc A380).** The
+CUDA shim now reports the native driver's device count instead of the MVGAL
+GPU count, and maps CUDA ordinals to MVGAL GPUs by PCI BDF instead of
+modulo — the old mapping attributed CUDA device 0 (RTX 3050) to MVGAL GPU 0
+(Intel Arc). The `-1` sentinel is rejected before context creation,
+allocation and launch (the old `mvgal_gpu < gpu_count` guard was true for
+`-1`), kernel launches are restricted to eligible GPUs, and
+`MVGAL_CUDA_DEBUG=1` now raises the log level so the attribution line is
+visible. A new `test_cuda_multidevice` integration harness brings ctest to
+27/27 (4.73 s). The release also adds a Windows cross-compilation packaging
+pipeline (NSIS and WiX installers built from `Jenkinsfile.windows`), and the
+RPM ships a `systemd-sysusers` fragment (`g mvgal - -`) so the `mvgal`
+group is declared before dependency resolution — fixing `dnf install`
+failing with `nothing provides group(mvgal)`. In the source documentation,
+SPEC_COMPLIANCE findings 4 and 5 are resolved and finding 6 has its first
+physical evidence.
 
 **v0.7.27 fixes three hardware-detection and reporting defects that made
 valid hardware look missing or report no stats.** The Vulkan ICD filename
@@ -93,8 +111,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.27 source
-tree on **2026-10-24**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.28 source
+tree on **2026-10-25**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |

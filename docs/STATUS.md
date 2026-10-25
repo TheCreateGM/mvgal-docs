@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,11 +11,27 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.27** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.27**. This documentation snapshot was reconciled against that source on 2026-10-24. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.28** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.28**. This documentation snapshot was reconciled against that source on 2026-10-25. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.28 is a correctness and packaging release. The CUDA shim reported
+the MVGAL GPU count from `cuDeviceGetCount`/`cudaGetDeviceCount` instead
+of the native driver's, and mapped CUDA ordinals to MVGAL GPUs by modulo,
+so CUDA device 0 (RTX 3050) was attributed to MVGAL GPU 0 (Intel Arc).
+The shim now probes each ordinal's PCI BDF once and matches it against
+the NVIDIA MVGAL GPUs, passes native counts through, rejects the `-1`
+sentinel before context creation, allocation and launch (the old
+`mvgal_gpu < gpu_count` guard was true for `-1`), restricts kernel
+launches to eligible GPUs, and lets `MVGAL_CUDA_DEBUG=1` raise the log
+level. A new `test_cuda_multidevice` harness brings ctest to 27/27
+(4.73 s). The release also adds a Windows cross-compilation packaging
+pipeline (NSIS and WiX installers from `Jenkinsfile.windows`), and the
+RPM ships a `systemd-sysusers` fragment so the `mvgal` group is declared
+before dependency resolution — `dnf install` no longer fails with
+`nothing provides group(mvgal)`. See [Changelog](CHANGELOG.md) § v0.7.28.
 
 v0.7.27 fixes three hardware-detection and reporting defects. The Vulkan
 ICD filename check did not match Fedora's `radeon_icd.x86_64.json`, so
@@ -77,11 +93,13 @@ The 0.7.23–0.7.24 releases mainly fixed correctness and observability issues f
 
 CMake is the primary broad build; Meson and Cargo cover separate portions. Optional dependencies and build switches determine which targets exist. Unit/integration tests, synthetic topology, successful package builds and physical multi-vendor validation provide different evidence and should be reported separately. The synthetic topology backend is a test fixture and does not create devices.
 
-The latest source changelog records a PCI enumeration reference-lifetime issue that still needs a clean-boot hardware check on the affected host. Do not turn this source-level fix into a claim of completed physical validation.
+The source test table records 27/27 CTest tests (4.73 s, measured 2026-10-25) and 71/71 across the full suite, including the new `test_cuda_multidevice` and `uapi_probe` on the three-vendor bench host (AMD Navi 24, NVIDIA RTX 3050, Intel Arc A380). This is bench evidence for that host, not a universal hardware claim.
+
+The source changelog's 0.7.24 known-issues entry records a PCI enumeration reference-lifetime fix that still needs a clean-boot hardware check on the host where it was found; the 0.7.28 entry does not restate it. The 2026-10-25 bench run (ctest 27/27, including `uapi_probe`, on the three-vendor bench host) does not substitute for that check on the affected machine. Do not turn this source-level fix into a claim of completed physical validation.
 
 ## Package state
 
-This docs repository's `package/` directory contains **0.7.27** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
+This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
 
 ## Further reading
 

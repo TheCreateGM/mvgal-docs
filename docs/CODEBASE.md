@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, codebase, reference]
 aliases: [Codebase Map, Source Map]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: reference
 mvgal_order: 7
 ---
 
 # Codebase Map
 
-This guide maps the checked-in source tree at MVGAL 0.7.27. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
+This guide maps the checked-in source tree at MVGAL 0.7.28. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
 
 ## Repository root
 
@@ -28,6 +28,10 @@ This guide maps the checked-in source tree at MVGAL 0.7.27. Generated build dire
 | `ui/`, `dashboard/` | Optional Qt dashboard and Haxe dashboard source |
 | `config/`, `data/`, `systemd/` | Runtime configuration, privileged helpers, D-Bus/polkit policy and service unit |
 | `packaging/`, `scripts/`, `configs/` | Distribution recipes, release/build helpers and COPR target configurations |
+| `Jenkinsfile`, `Jenkinsfile.windows` | CI pipelines: the Linux package build and the Windows cross-compilation packaging pipeline (added in v0.7.28) |
+| `cmake/toolchains/` | Cross-compilation toolchain files for the Windows targets: `mingw-w64-x86_64.cmake`, `mingw-w64-override.cmake`, `zig-cc-windows.sh` (v0.7.28) |
+| `packaging/windows/` | Windows installer definitions: `mvgal.nsi` (NSIS), `mvgal.wxs` (WiX) and packaging notes (v0.7.28) |
+| `packaging/jenkins/` | CI build scripts for each artifact format, including `build_windows.sh` used by the Windows pipeline |
 | `src/tests/`, `kernel/tests/`, `safe/ffi_tests/` | Userspace, kernel and Rust FFI test sources |
 | `professional/`, `misc/`, `tests/` | Examples, integrations, benchmark assets and validation helpers |
 

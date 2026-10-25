@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, api, reference]
 aliases: [API Reference, API]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: reference
 mvgal_order: 8
 ---
 
 # MVGAL Public API Reference
 
-> **Implementation status:** Source metadata is 0.7.27. The source changelog documents through 0.7.27. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.27 | **Header:** `#include <mvgal/mvgal.h>`
+**Source version:** 0.7.28 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 
@@ -847,7 +847,7 @@ The following claims appeared in earlier revisions of this document and have no 
 | `VK_MVGAL_*` Vulkan extensions | No such symbol exists; the layer implements standard Vulkan |
 | IPC client calls without `fd` or `request_id` | Both are required parameters |
 | "12 ioctls" | 13 declared, 9 implemented, plus 10 separate DRM ioctls |
-| "26 headers" (in [MOC](MOC.md)) | 31 headers as of v0.7.27 — the count of 32 overstated by one, and the table itself had been missing `mvgal_nvml.h` |
+| "26 headers" (in [MOC](MOC.md)) | 31 headers as of v0.7.28 — the count of 32 overstated by one, and the table itself had been missing `mvgal_nvml.h` |
 | Header count omitted `mvgal_mock.h` (v0.7.18) | It is a public header; see § Synthetic Topology Backend |
 | Rust functions returning `void` from mutating calls | They return `i32` status; `mvgal_mem_track` also takes a `gpu_index` |
 | `GpuCapability`-based `mvgal_cap_to_json` returning `const char *` | Takes a caller-supplied buffer and returns `i32` |

@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: guide
 mvgal_order: 14
 ---
 
 # MVGAL Build Guide
 
-> Source metadata is **0.7.27**; the source changelog documents releases through **0.7.27**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
+> Source metadata is **0.7.28**; the source changelog documents releases through **0.7.28**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
 
 ## Requirements
 
@@ -77,7 +77,7 @@ Distribution packaging definitions are under `packaging/`; artifact names and in
 ## Packaging
 
 > [!info]
-> Historical build record: the earlier v0.7.20 source RPM and package pipeline were exercised in October 2026. That record does not describe the current 0.7.27 artifacts or establish their publication state. See [`package/README.md`](../package/README.md) for files present in this docs checkout.
+> Historical build record: the earlier v0.7.20 source RPM and package pipeline were exercised in October 2026. That record does not describe the current 0.7.28 artifacts or establish their publication state. See [`package/README.md`](../package/README.md) for files present in this docs checkout.
 
 ### Source RPM
 

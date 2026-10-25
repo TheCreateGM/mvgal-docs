@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.28] - 2026-10-25
+
+Phase C (documentation gap closure) and Phase D (CUDA shim multi-device
+correctness) of the 2026-10-25 full campaign, validated on the physical
+three-vendor bench (AMD Navi 24 + NVIDIA RTX 3050 + Intel Arc A380).
+
+### Fixed
+
+- **CUDA device counts pass through natively.** `cuDeviceGetCount` /
+  `cudaGetDeviceCount` no longer return the MVGAL GPU count; the fabricated
+  override is gone.
+- **CUDA ordinal → MVGAL GPU attribution is BDF-based.** A one-time PCI
+  BDF probe replaces the modulo mapping that sent CUDA device 0 (RTX 3050)
+  to MVGAL GPU 0 (Intel Arc).
+- **No more out-of-bounds GPU indexing.** The `-1` sentinel is rejected by
+  `>= 0` checks in `cuCtxCreate`, `cuMemAlloc`, `cuLaunchKernel`, and the
+  runtime launch path; the old `mvgal_gpu < gpu_count` guard was true for
+  `-1`.
+- **Kernel launches are restricted to eligible GPUs.**
+- **`MVGAL_CUDA_DEBUG=1` actually raises the log level**, so the
+  `cuCtxCreate: CUDA device=N -> MVGAL GPU=M` attribution line is visible.
+
+### Added
+
+- **`test_cuda_multidevice`** — LD_PRELOAD integration harness asserting
+  ordinal resolution, BDF set equality, and `cuCtxCreate` attribution.
+  ctest is now 27/27 (4.73 s) on the bench.
+- **Documentation:** Phase D addendum in `HARDWARE_VALIDATION_2026-10-25.md`;
+  `POWER_MANAGEMENT.md`, `WINDOWS_COMPAT.md`, `STATUS.md`, and
+  `SPEC_COMPLIANCE.md` gap closures (findings 4/5 resolved, 6 partially
+  addressed).
 
 ## [0.7.27] - 2026-10-24
 

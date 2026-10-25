@@ -1,24 +1,24 @@
 ---
 tags: [mvgal, design, reference]
 aliases: [Design Document, Design]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: design
 mvgal_order: 7
 ---
 
 # MVGAL Design Document
 
-> **Implementation status:** Source metadata is 0.7.27. The source changelog documents through 0.7.27. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.27 | **Last Updated:** October 2026
+**Source version:** 0.7.28 | **Last Updated:** October 2026
 
 ---
 
 ## Design Goals
 
-1. **Transparent multi-vendor GPU aggregation** — applications see one logical GPU regardless of how many physical GPUs exist.
-2. **Zero application changes** — interception via Vulkan layer, OpenCL ICD, CUDA shim, and LD_PRELOAD.
+1. **Multi-vendor GPU coordination** — a design goal, not an achieved behaviour: MVGAL does not make arbitrary applications see one physical GPU; explicit, workload-specific coordination is the supported shape.
+2. **Interception without source changes** — a Vulkan layer, OpenCL ICD, CUDA shim and LD_PRELOAD hooks exist, but per-call forwarding and multi-device correctness require validation and interception is opt-in per launch.
 3. **Vendor-agnostic scheduling** — AMD, NVIDIA, Intel, and Moore Threads GPUs work together.
 4. **Safety-first** — kernel module with DRM registration, Rust safety crates for critical paths.
 5. **Low overhead** — target <2% frame time regression for single-GPU pass-through mode.
@@ -74,7 +74,7 @@ Authentication reads the peer's credentials with `getsockopt(SOL_SOCKET, SO_PEER
 
 ### Decision 3: LD_PRELOAD Interception for All APIs
 
-**Chosen approach:** Transparent interception via Vulkan implicit layer, OpenCL ICD wrapper, CUDA function hooking (40+ functions), and LD_PRELOAD for OpenGL/D3D/Metal/WebGPU.
+**Chosen approach:** Interception scaffolding via Vulkan implicit layer, OpenCL ICD wrapper, CUDA function hooking (40+ functions), and LD_PRELOAD for OpenGL/D3D/Metal/WebGPU. Per-call forwarding and multi-device correctness require validation; interception is opt-in per launch.
 
 **Alternatives considered:**
 - **Library wrapping (link-time):** Compile against MVGAL lib instead of vendor lib. Rejected because it requires recompilation and breaks binary compatibility.
@@ -82,8 +82,8 @@ Authentication reads the peer's credentials with `getsockopt(SOL_SOCKET, SO_PEER
 - **Binary patching:** Modify vendor libraries in-place. Rejected because it violates vendor licenses and breaks with updates.
 
 **Tradeoffs:**
-- (+) Zero application changes
-- (+) Works with any binary (Steam games, AI frameworks)
+- (+) No application source changes required when the layer/ICD is enabled
+- (+) Applies to unmodified binaries in principle (Steam games, AI frameworks) — validated paths vary by API, driver and workload
 - (-) Environment variable setup required per-launch
 - (-) Anti-cheat software may flag LD_PRELOAD
 
@@ -92,9 +92,9 @@ Authentication reads the peer's credentials with `getsockopt(SOL_SOCKET, SO_PEER
 **Chosen approach:** Three-tier memory transfer: (1) DMA-BUF zero-copy between GPUs sharing the same IOMMU group, (2) PCIe P2P for GPUs on the same root complex, (3) host-RAM staging as universal fallback.
 
 **Alternatives considered:**
-- **CUDA peer-to-peer only:** Works for NVIDIA+NVIDIA. Rejected because MVGAL must handle AMD+NVIDIA+Intel combinations.
+- **CUDA peer-to-peer only:** NVIDIA-to-NVIDIA in principle. Rejected because MVGAL targets AMD+NVIDIA+Intel combinations — cross-vendor paths remain capability-probed and require validation.
 - **ROCm hipMemcpyPeer:** AMD-specific. Rejected for the same reason.
-- **Always host-staged:** Simplest implementation. Rejected because it adds 2-5ms latency per cross-GPU transfer for large buffers.
+- **Always host-staged:** Simplest implementation. Rejected because it adds a full host round-trip per cross-GPU transfer for large buffers.
 
 **Tradeoffs:**
 - (+) Best-case performance with zero-copy
@@ -189,15 +189,19 @@ flowchart TD
     SCH1 --> SCH2["Check memory availability"]
     SCH2 --> SCH3["Assign priority"]
     SCH3 --> MM["Memory Manager"]
-    MM --> MM1["Allocate VRAM on target GPU(s)"]
+    MM --> MM1["Per-device allocation (explicit copies)"]
     MM1 --> MM2["Import/export DMA-BUF"]
     MM2 --> MM3["Fallback to host-RAM if needed"]
     MM3 --> KM["Kernel Module (/dev/mvgal0)"]
-    KM --> KM1["DRM / char-dev ioctl submission"]
-    KM1 --> KM2["Vendor dispatch (nvidia/amd/intel/mtt/adreno shims)"]
-    KM2 --> KM3["Fence signaling"]
-    KM3 --> HW["GPU Hardware"]
+    KM --> KM1["DRM / char-dev ioctl: discovery + capabilities"]
+    KM1 --> KM2["Submission/VRAM alloc: -EOPNOTSUPP (native drivers own the GPU)"]
+    KM2 --> HW["GPU Hardware (via native vendor drivers)"]
 ```
+
+The kernel path carries discovery and capability reporting only: vendor VRAM
+allocation and kernel-side submission return `-EOPNOTSUPP` because the native
+drivers own the hardware. The diagram shows the intended control flow, not a
+claim that MVGAL submits work itself.
 
 ---
 

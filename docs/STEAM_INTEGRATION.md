@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, steam, proton, guide]
 aliases: [Steam Integration, Steam, Proton]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: guide
 mvgal_order: 15
 ---
@@ -15,7 +15,7 @@ mvgal_order: 15
 > 1. **The Vulkan interception layer is real and installed. The frame pacer is not connected to anything.** `mvgal_fp_create()` is called once at daemon start and a metrics callback is attached, but **no code in the tree ever calls `mvgal_fp_submit_frame()`**. The pacer maintains statistics; it does not pace any frames.
 > 2. **`compat/steam/` and `compat/wow64/` are not built.** Neither directory has a `CMakeLists.txt`, so the top-level `add_subdirectory(compat)` is skipped. The Proton plugin and the WoW64 thunk layer in those directories are dormant source.
 
-**Source version:** 0.7.27
+**Source version:** 0.7.28
 **Date:** September 2026
 
 ---
@@ -115,7 +115,7 @@ The tool manifest is KeyValues, not JSON:
 ```
 
 > [!warning] Two problems with the shipped VDFs
-> - The tool ID and display name still say **0.2.2**, and the source release is 0.7.27.
+> - The tool ID and display name still say **0.2.2**, and the source release is 0.7.28.
 > - `MVGAL_NTSYNC_ENABLE` is set here but **no code reads it**. The NTSYNC userspace library in `compat/ntsync/ntsync.c` does not consult any environment variable; it opens `/dev/mvgal_ntsync` directly.
 
 ### 2.3 Environment Variables
@@ -140,7 +140,7 @@ Variables with a real consumer:
 | `MVGAL_ICD_TIMEOUT_MS` | ms | Vulkan ICD | `getenv()` | ICD probe timeout |
 | `MVGAL_AMD_LLVM_PATH` | path | AMD interop | `getenv()` | Override the LLVM path |
 | `MVGAL_CUDA_MIGRATE` | any | CUDA interop | `getenv()` | Force migration behaviour |
-| `MVGAL_CUDA_DEBUG` | any | CUDA interop | `getenv()` | CUDA interop debug logging |
+| `MVGAL_CUDA_DEBUG` | `0` / `1` | CUDA interop | `getenv()` | Since v0.7.28, `=1` raises the wrapper's log level to DEBUG so the BDF attribution line is visible — `mvgal_init()` otherwise initializes the logger at WARN, which would suppress the wrapper's INFO/DEBUG lines |
 | `MVGAL_ROOT` | path | build tooling | `getenv()` | Repository root |
 | `MVGAL_BUILD_DIR` | path | build tooling | `getenv()` | Build directory |
 | `MVGAL_{CUDA,HIP,ROCR,SYCL,NVML,METAL,PPL,VAAPI}_{ENABLED,STRATEGY,DEBUG}` | varies | per-vendor interop | `getenv()` | Per-API-family control |

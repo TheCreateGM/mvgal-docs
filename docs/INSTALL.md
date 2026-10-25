@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.27"
-mvgal_verified: 2026-10-24
+mvgal_version: "0.7.28"
+mvgal_verified: 2026-10-25
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.27. The source changelog documents through 0.7.27. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.27 | **Updated:** October 2026
+**Source version:** 0.7.28 | **Updated:** October 2026
 
 ---
 
@@ -47,6 +47,15 @@ mvgal-compat --system   # check readiness
 
 **Check that the daemon is actually reachable by your user.** The package adds
 you to the `mvgal` group, but group membership only reaches a new session:
+
+Since v0.7.28 the RPM also ships a `systemd-sysusers` fragment
+(`/usr/lib/sysusers.d/mvgal.conf`, containing `g mvgal - -`), so the group is
+declared before dependency resolution. Earlier packages failed `dnf install`
+with `nothing provides group(mvgal)`: rpmbuild auto-generates
+`Requires: group(mvgal)` from the group-owned ghost key file, but the group
+existed only in `%post`'s `groupadd`, which runs *after* dependency
+resolution. The `%post` `groupadd` remains as the fallback for systems
+without the sysusers trigger.
 
 ```bash
 ls -l /run/mvgal/mvgal.sock      # expect: srw-rw---- root:mvgal
