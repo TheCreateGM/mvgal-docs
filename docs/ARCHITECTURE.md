@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-This page describes the 0.7.28 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
+This page describes the 0.7.29 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
 
 ## Main components
 
@@ -65,10 +65,17 @@ on the status:
 
 | Tool | 0 | 1 | 2 |
 |------|---|---|---|
+| `mvgal status` | daemon running, kernel module loaded | daemon running, module absent (degraded) | daemon not running |
 | `mvgal-compat` | fully operational | not operational | partially operational |
 | `mvgal-hw-validate` | all checks passed | a check failed | — |
 | `mvgal-workload` | workload passed | failed | — |
 | `mvgal-dashboard --check` | display and daemon both up | no display | daemon not running |
+
+`mvgal status` and `mvgal-status` now share the same three-tier exit code as
+of v0.7.29: `0` = healthy, `1` = degraded (kernel module not loaded), `2` =
+daemon down. Previously both always returned `1` on a Secure Boot machine
+where the module could not load, making it impossible to distinguish a daemon
+failure from a module-load failure via the shell.
 
 `mvgal-compat` used to exit 0 while printing "Not operational", and
 `mvgal-dashboard --check` printed "daemon not running" and then "OK" — the

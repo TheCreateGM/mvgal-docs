@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: guide
 mvgal_order: 2
 ---
@@ -11,7 +11,7 @@ mvgal_order: 2
 
 > **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.28 | **Updated:** October 2026
+**Source version:** 0.7.29 | **Updated:** October 2026
 
 ---
 
@@ -89,8 +89,9 @@ is visible without running a diagnostic:
 journalctl -u mvgald -b | grep -A6 'Secure Boot is enabled'
 ```
 
-`mvgal status` and `mvgal-status --once` both exit non-zero in this state; see
-[SECURE_BOOT.md](SECURE_BOOT.md) § Degraded Mode.
+`mvgal status` and `mvgal-status --once` both exit `1` in this state (degraded);
+exit `2` means the daemon itself is not running (v0.7.29 three-tier scheme);
+see [SECURE_BOOT.md](SECURE_BOOT.md) § Degraded Mode.
 
 ---
 
@@ -239,7 +240,7 @@ dump_file = /tmp/mvgal_dump.log
 [network]
 enabled = false
 discovery_port = 49500
-listen_addr = 0.0.0.0
+listen_addr = 127.0.0.1
 heartbeat_interval_s = 5
 peer_timeout_s = 30
 
@@ -401,11 +402,13 @@ active" when no aggregated device existed.
 itself, and delegates to every peer it finds. The manifest is at
 `/etc/OpenCL/vendors/mvgal.icd`.
 
-Since v0.7.14, if **no peer** OpenCL runtime is installed at first install time, the manifest
-is moved aside to `mvgal.icd.disabled` and the install message names the package that
-provides a peer and the exact command to re-enable it. With nothing to aggregate, leaving it
-registered only produced zero platforms and no explanation. Erasing the MVGAL package
-re-enables it if a peer has since appeared.
+Since v0.7.25, if **no peer** OpenCL runtime is installed at first install time, the manifest
+is parked outside the loader's scan directory at `/usr/lib/mvgal/mvgal.icd.parked`
+and the install message names the package that provides a peer and the exact command to
+re-enable it. The decision can be re-evaluated at any time with
+`/usr/lib/mvgal/mvgal-opencl-icd.sh`. With nothing to aggregate, leaving it registered only
+produced zero platforms and no explanation. Erasing the MVGAL package re-registers it
+automatically if a peer has since appeared.
 
 Verify with:
 
@@ -418,7 +421,7 @@ clinfo | grep -i mvgal
 See [STEAM_INTEGRATION.md](STEAM_INTEGRATION.md). Add to Steam launch options:
 
 ```
-ENABLE_MVGAL=1 %command%
+MVGAL_VULKAN_ENABLE=1 %command%
 ```
 
 ---
@@ -432,7 +435,7 @@ ENABLE_MVGAL=1 %command%
 | No GPUs detected | `lspci \| grep -i vga`; check `/etc/mvgal/mvgal.conf` `enabled` flags |
 | Vulkan app crashes | Update to v0.7.7+ (device dispatch fix); check `vulkaninfo` |
 | `vulkaninfo` reports the ICD is not conformant | The ICD is opt-in since v0.7.14. Do not register it globally — source `mvgal-vulkan-env.sh` per-run instead. |
-| `clinfo` reports zero platforms | Expected when no peer OpenCL runtime is installed; the manifest is parked as `mvgal.icd.disabled`. Install a vendor OpenCL runtime. |
+| `clinfo` reports zero platforms | Expected when no peer OpenCL runtime is installed; the manifest is parked at `/usr/lib/mvgal/mvgal.icd.parked`. Install a vendor OpenCL runtime, then run `/usr/lib/mvgal/mvgal-opencl-icd.sh`. |
 | Daemon socket exists but you cannot connect | v0.7.14 chowns it to group `mvgal` (falling back to `video`). Run `mvgal-compat` — it prints the socket's real owner, mode, and your uid. |
 
 See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for the full guide.

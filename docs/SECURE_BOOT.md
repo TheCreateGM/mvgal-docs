@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: guide
 mvgal_order: 3
 ---
@@ -11,7 +11,7 @@ mvgal_order: 3
 
 > **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.28 | **Updated:** October 2026
+**Source version:** 0.7.29 | **Updated:** October 2026
 
 MVGAL ships seven kernel modules. On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 
@@ -228,7 +228,7 @@ If the `mvgal` kernel module is **not loaded** (e.g. MOK not yet enrolled, or Se
   Kernel Module: NOT LOADED (degraded userspace-only mode)
   ```
 
-  with a MOK enrollment hint, and exits non-zero (v0.7.6+).
+  with a MOK enrollment hint, and exits `1` (v0.7.6+, upgraded to the three-tier scheme in v0.7.29).
 - The load-balance figure is a real estimate, or `N/A` when fewer than 2 enabled GPUs / no workload data (v0.7.8+).
 - `mvgal-hw-validate` attributes device-node failures to "kernel module not loaded" with a load hint (v0.7.8+).
 
@@ -247,10 +247,12 @@ the reason aggregation and kernel-side memory management are unavailable — the
 userspace discovery you see in `mvgal list-gpus` still works, which is exactly
 why degraded mode is easy to mistake for a working install.
 
-Because this state looks healthy from several angles, the tools now agree on it:
-`mvgal status` exits non-zero when the module is absent, matching
-`mvgal-status --once` (v0.7.21+). Earlier versions disagreed — `mvgal status`
-returned 0 for the same condition.
+Because this state looks healthy from several angles, the tools now agree on it
+via a three-tier exit code (v0.7.29): `mvgal status` exits `0` when healthy
+(daemon up, module loaded), `1` when degraded (daemon up, module absent), and
+`2` when the daemon is not running at all. This matches `mvgal-status --once`,
+which uses the same codes. Earlier versions disagreed — `mvgal status`
+returned 0 for the same condition where `mvgal-status` returned 1.
 
 To load the module manually:
 

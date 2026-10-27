@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, steam, proton, guide]
 aliases: [Steam Integration, Steam, Proton]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: guide
 mvgal_order: 15
 ---
@@ -15,7 +15,7 @@ mvgal_order: 15
 > 1. **The Vulkan interception layer is real and installed. The frame pacer is not connected to anything.** `mvgal_fp_create()` is called once at daemon start and a metrics callback is attached, but **no code in the tree ever calls `mvgal_fp_submit_frame()`**. The pacer maintains statistics; it does not pace any frames.
 > 2. **`compat/steam/` and `compat/wow64/` are not built.** Neither directory has a `CMakeLists.txt`, so the top-level `add_subdirectory(compat)` is skipped. The Proton plugin and the WoW64 thunk layer in those directories are dormant source.
 
-**Source version:** 0.7.28
+**Source version:** 0.7.29
 **Date:** September 2026
 
 ---
@@ -67,11 +67,11 @@ MVGAL_ENABLED=1 MVGAL_VULKAN_ENABLE=1 MVGAL_STRATEGY=afr MVGAL_GPUS=0x3 MVGAL_LO
 For manual use in Steam's *Properties → Launch Options*, the reliable subset is:
 
 ```bash
-ENABLE_MVGAL=1 MVGAL_VULKAN_ENABLE=1 MVGAL_STRATEGY=afr %command%
+MVGAL_VULKAN_ENABLE=1 MVGAL_STRATEGY=afr %command%
 ```
 
 > [!note] Not every variable the daemon emits is consumed
-> `MVGAL_ENABLED`, `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE` and `MVGAL_PROTON_MODE` are all written into the child environment by `execution.c:857-881`, but a search for `getenv()` across the tree finds **no reader** for `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE` or `MVGAL_PROTON_MODE`. `ENABLE_MVGAL` and `MVGAL_STRATEGY` *are* read (`compat/steam/mvgal_proton.cpp:89`, and the strategy path in the execution and interception layers).
+> `MVGAL_ENABLED`, `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE` and `MVGAL_PROTON_MODE` are all written into the child environment by `execution.c:857-881`, but a search for `getenv()` across the tree finds **no reader** for `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE`, `MVGAL_PROTON_MODE` or `MVGAL_ENABLED`. `MVGAL_STRATEGY` is read by the execution and interception layers. `ENABLE_MVGAL` was listed in earlier revisions as read by `compat/steam/mvgal_proton.cpp:89`, but that file lives in `compat/steam/`, which is **not built** (see §1) — so `ENABLE_MVGAL` has no consumer in the installed tree as of v0.7.29. Use `MVGAL_VULKAN_ENABLE=1` to activate the Vulkan layer.
 
 ### 2.2 Steam Compatibility Tool
 
@@ -115,7 +115,7 @@ The tool manifest is KeyValues, not JSON:
 ```
 
 > [!warning] Two problems with the shipped VDFs
-> - The tool ID and display name still say **0.2.2**, and the source release is 0.7.28.
+> - The tool ID and display name still say **0.2.2**, and the source release is 0.7.29.
 > - `MVGAL_NTSYNC_ENABLE` is set here but **no code reads it**. The NTSYNC userspace library in `compat/ntsync/ntsync.c` does not consult any environment variable; it opens `/dev/mvgal_ntsync` directly.
 
 ### 2.3 Environment Variables
@@ -126,7 +126,6 @@ Variables with a real consumer:
 |----------|--------|-------------|-----------|-------------|
 | `MVGAL_VULKAN_ENABLE` | `1` | **Vulkan loader** | manifest `enable_environment` | Activate the interception layer |
 | `MVGAL_VULKAN_DISABLE` | `1` | **Vulkan loader** | manifest `disable_environment` | Force the layer off for a launch |
-| `ENABLE_MVGAL` | `0` / `1` | `compat/steam/mvgal_proton.cpp:89` | `getenv()` | Master enable for a Proton launch |
 | `MVGAL_VULKAN_DEBUG` | `0` / `1` | `src/userspace/intercept/vulkan/vk_layer.c:131` | `getenv()` | Layer debug logging |
 | `MVGAL_STRATEGY` | see [§5.3](#53-strategy-names) | execution and interception layers | Scheduling strategy |
 | `MVGAL_FRAME_PACING_DEBUG` | any | `steam/mvgal_frame_pacer.c:156` | `getenv()` | Frame-pacer trace output |
@@ -149,7 +148,7 @@ Variables with a real consumer:
 > `MVGAL_VULKAN_ENABLE` and `MVGAL_VULKAN_DISABLE` never appear in a `getenv()` call in MVGAL's own code. They are honoured by the **Vulkan loader**, which reads the `enable_environment` and `disable_environment` blocks of the layer manifest (`manifest.json.in:13-18`). `execution.c:858,879` writes them into the child environment; the loader is what acts on them.
 
 > [!warning] Removed in this revision
-> The previous version of this page listed `MVGAL_GPU_MASK` and `MVGAL_LOG_PATH`. **Neither is read anywhere.** A `getenv()` search returns zero hits for both. `MVGAL_GPU_MASK` is *exported* by `steam/mvgal_steam_compat.sh` and appears in `steam/README.md`, but nothing consumes it. The GPU list is carried by `MVGAL_GPUS`, which `execution.c` emits but — as noted above — also nothing reads yet.
+> The previous version of this page listed `MVGAL_GPU_MASK` and `MVGAL_LOG_PATH`. **Neither is read anywhere.** A `getenv()` search returns zero hits for both. `MVGAL_GPU_MASK` is *exported* by `steam/mvgal_steam_compat.sh` and appears in `steam/README.md`, but nothing consumes it. The GPU list is carried by `MVGAL_GPUS`, which `execution.c` emits but — as noted above — also nothing reads yet. `ENABLE_MVGAL` — previously listed as read by `compat/steam/mvgal_proton.cpp:89` — is also removed: that file lives in `compat/steam/`, which is **not built** (see §1), so the variable has no consumer in the installed tree. Use `MVGAL_VULKAN_ENABLE=1` to activate the layer.
 
 ---
 
@@ -595,7 +594,7 @@ mvgal-steam-setup --check
 ```
 
 > [!warning] `mvgal-status --verbose` does not exist
-> `tools/mvgal-status.c` accepts `--watch/-w`, `--once/-1`, `--interval/-i`, `--version/-V` and `--help/-h`. There is no `--verbose`. Similarly, `MVGAL_LOG_PATH` is not a real variable and no log file can be redirected with it.
+> `tools/mvgal-status.c` accepts `--watch/-w`, `--once/-1`, `--interval/-i`, `--version/-V` and `--help/-h`. There is no `--verbose`. `mvgal-status` and `mvgal status` share the same three-tier exit code: `0` = healthy, `1` = degraded (module absent), `2` = daemon down. Similarly, `MVGAL_LOG_PATH` is not a real variable and no log file can be redirected with it.
 
 ### 9.3 Log Analysis
 
@@ -625,7 +624,7 @@ journalctl -u mvgal-daemon.service | grep -i "not loaded\|userspace-only"
 1. **The frame pacer is inert.** No call site for `mvgal_fp_submit_frame()` exists, and its refresh rate is hardcoded to 60 Hz. Frame pacing is not happening.
 2. **AFR has no coordinator.** The layer picks a GPU for `vkQueueSubmit`, but nothing sequences alternating frames; there is no present-path interception.
 3. **"Vsync" is a software interval.** The pacer computes a target time from `1e9 / refresh_hz` and waits with `nanosleep()`. It does not wait on a real display signal.
-4. **Four launch variables are emitted but never read.** `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE`, `MVGAL_PROTON_MODE` — set by `execution.c`, consumed by nothing.
+4. **Five launch variables are emitted but never read.** `MVGAL_ENABLED`, `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE`, `MVGAL_PROTON_MODE` — set by `execution.c`, consumed by nothing. `ENABLE_MVGAL` (the old manual-launch toggle) is also no longer read — see [§2.1](#21-steam-launch-options) and [§2.3](#23-environment-variables). The layer is activated with `MVGAL_VULKAN_ENABLE=1`, which the Vulkan loader honours directly.
 5. **`compat/steam/` and `compat/wow64/` are not built.** The Proton plugin and the WoW64 thunk layer are dormant.
 6. **The Steam compatibility tool is not packaged.** No build installs `steam/toolmanifest.vdf` or `compatibilitytool.vdf`, and both still name version `0.2.2`.
 7. **Kernel-side VRAM allocation and compute-submission return `-EOPNOTSUPP`.** AF- and compute-strategy wins therefore cannot be backed by device memory today — see [MEMORY.md](MEMORY.md).
@@ -673,6 +672,7 @@ Every claim below was in the 0.7.13 edition of this page. Each was checked again
 | `MVGAL_REFRESH_HZ` | Does not exist. `mvgal_fp_create(60)` is hardcoded |
 | `MVGAL_FRAME_PACING` toggles pacing | Never read by any component |
 | `MVGAL_GPU_MASK` | Never read. `steam/mvgal_steam_compat.sh` exports it; nothing consumes it |
+| `ENABLE_MVGAL` | Never read by built code. Its only listed consumer was `compat/steam/mvgal_proton.cpp:89`, which lives in `compat/steam/` — a directory with no `CMakeLists.txt`, so the Proton plugin is never compiled. The layer is enabled instead with `MVGAL_VULKAN_ENABLE=1` via the manifest's `enable_environment` block, which the Vulkan loader honours. |
 | `MVGAL_LOG_PATH` | Does not exist |
 | `MVGAL_WOW64`, `MVGAL_WOW64_DEBUG` | Never read. `compat/wow64/` is not compiled |
 | `struct afr_sync`, `afr_submit_frame()` | Do not exist. No AFR coordinator in the tree |

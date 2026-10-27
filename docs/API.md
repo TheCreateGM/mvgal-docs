@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, api, reference]
 aliases: [API Reference, API]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: reference
 mvgal_order: 8
 ---
@@ -11,7 +11,7 @@ mvgal_order: 8
 
 > **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.28 | **Header:** `#include <mvgal/mvgal.h>`
+**Source version:** 0.7.29 | **Header:** `#include <mvgal/mvgal.h>`
 
 ---
 

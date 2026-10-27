@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, hardware, compatibility, reference]
 aliases: [Hardware Compatibility, Hardware]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: reference
 mvgal_order: 12
 ---

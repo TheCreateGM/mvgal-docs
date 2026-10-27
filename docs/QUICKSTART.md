@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: guide
 mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.28**; the source changelog documents releases through **0.7.28**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.29***; the source changelog documents releases through **0.7.28**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 ## 1. Inspect the package or build
 
@@ -63,7 +63,15 @@ mvgal-info
 mvgal-status --once
 ```
 
-`mvgal-status` may return a non-zero exit status when the MVGAL kernel module is not loaded. That status is a degraded-mode signal, not proof that the userspace daemon failed.
+`mvgal-status` uses a three-tier exit code:
+
+| Exit code | Meaning |
+|----------|---------|
+| `0` | Healthy — daemon running and kernel module loaded |
+| `1` | Degraded — daemon running, kernel module not loaded (userspace-only mode) |
+| `2` | Down — daemon not running |
+
+A non-zero status from `mvgal-status` is a degraded-mode signal, not proof that the userspace daemon failed. On a Secure Boot machine where the MOK is not yet enrolled, the exit code is `1`, not `0`.
 
 ## 5. Check capability support
 

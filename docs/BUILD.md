@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: guide
 mvgal_order: 14
 ---

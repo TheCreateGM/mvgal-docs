@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.28"
+mvgal_version: "0.7.29"
 mvgal_verified: 2026-10-25
 mvgal_role: index
 ---
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.28**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.29**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -32,7 +32,9 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
 - The source changelog's 0.7.24 known-issues note records that the PCI enumeration use-after-free fix is source-verified only and still needs a clean-boot check on the host where it was found; the 2026-10-25 bench run does not substitute for that check on the affected machine.
 
-## Recent source changes (through v0.7.28)
+## Recent source changes (through v0.7.29)
+
+- **Vulkan layer env var and config/security/status/bench fixes** (v0.7.29) — `VK_LAYER_MVGAL=1`/`ENABLE_MVGAL=1` corrected to `MVGAL_VULKAN_ENABLE=1` in `--help`, `mvgal-config`, `mvgal-steam-setup`, `mvgal-vulkan-env.sh` and Steam compat scripts; `/etc/mvgal` hardened to `0755 root:root` with `custom_strategy.lua` at `0644 root:root` (was `0775 group:mvgal`, a local privilege-escalation path); `mvgal status`/`mvgal-status` now use three-tier exit codes (`0` healthy, `1` degraded, `2` daemon down); benchmark subcommands forward `mvgal-bench` output instead of suppressing it; `set-strategy` refuses multi-GPU strategies on single-GPU machines; `mvgal-config show-config` handles `ENUM` types and defaults to effective view; `-c/--config` rejects paths outside `/etc/mvgal/`; start/stop are idempotent; OpenCL ICD park moved to `/usr/lib/mvgal/`; `mvgal-workload` skips the MVGAL aggregating ICD platform; `mvgal-probe` demotes `/dev/mvgal0` open failure to a notice; `listen_addr` defaults to `127.0.0.1`. COPR build #11212845 succeeded.
 
 - **CUDA multi-device attribution was wrong, and device counts were fabricated** (v0.7.28) — the shim returned the MVGAL GPU count from `cuDeviceGetCount`/`cudaGetDeviceCount` instead of the native driver's, and mapped CUDA ordinals to MVGAL GPUs by modulo, so CUDA device 0 (RTX 3050) was attributed to MVGAL GPU 0 (Intel Arc). v0.7.28 probes each ordinal's PCI BDF once and matches it against the NVIDIA MVGAL GPUs, passes native counts through, rejects the `-1` sentinel before `cuCtxCreate`/`cuMemAlloc`/`cuLaunchKernel` (the old `mvgal_gpu < gpu_count` guard was true for `-1`), restricts kernel launches to eligible GPUs, and lets `MVGAL_CUDA_DEBUG=1` raise the log level so the attribution line is visible. A new `test_cuda_multidevice` LD_PRELOAD harness asserts ordinal resolution, BDF set equality and `cuCtxCreate` attribution; ctest is 27/27 (4.73 s) on the bench. The release also adds a Windows cross-compilation packaging pipeline (NSIS and WiX installers from `Jenkinsfile.windows`), and the RPM ships a `systemd-sysusers` fragment so the `mvgal` group is declared before dependency resolution — `dnf install` no longer fails with `nothing provides group(mvgal)`.
 
@@ -49,7 +51,7 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 
 ## Package artifacts
 
-The [`package/`](package/README.md) directory contains version 0.7.28 RPM, DEB, AppImage, tarball and Flatpak artifacts. Consult its README and the artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
+The [`package/`](package/README.md) directory contains version 0.7.28 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.29 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.29. Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
 
 ## Updating the HTML site
 

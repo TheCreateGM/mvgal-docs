@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, power, reference]
 aliases: [Power Management, Power]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: reference
 mvgal_order: 11
 ---
@@ -21,7 +21,7 @@ Power management exists at three layers, but the control loops are **not fully w
 
 ### Wiring status (read this first)
 
-Honest state of each control path as of 0.7.28:
+Honest state of each control path as of 0.7.29:
 
 | Path | Status |
 |------|--------|

@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: index
 ---
 
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.28**; the source changelog documents releases through **0.7.28**.
+> Source version **0.7.29***; the source changelog documents releases through **0.7.28**.
 > Core architecture and status pages were reconciled against the source tree on **2026-10-25**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.28 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.29 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -42,10 +42,23 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What’s New in 0.7.28
+## 🔍 What's New in 0.7.29
 
 > [!tip]
 > The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.29 is a test-report-driven correctness release** addressing 15 issues from the v0.7.28 field validation on a single-GPU Secure Boot host (Fedora 44, kernel 7.2.11, Intel UHD 770). Key fixes:
+
+- **Vulkan layer env var corrected** — `mvgal --help` and all Steam/compat scripts now use `MVGAL_VULKAN_ENABLE=1` instead of the wrong `VK_LAYER_MVGAL=1` / `ENABLE_MVGAL=1` that the manifest never checked.
+- **`/etc/mvgal` security hardened** — config dir is now explicitly `0755 root:root` in the RPM (was `0775 group:mvgal`), closing a privilege-escalation path via `custom_strategy.lua`.
+- **Three-tier status exit codes** — `mvgal status` and `mvgal-status` now return `0` (healthy), `1` (degraded — module absent), or `2` (daemon down), replacing the always-`1` behaviour on Secure Boot machines.
+- **Benchmark commands fixed** — `mvgal benchmark`/`bench-*` now forward `mvgal-bench` output instead of suppressing it and printing "No workload data".
+- **set-strategy validation** — multi-GPU strategies are refused on single-GPU machines, matching `mvgal-config`.
+- **Config path validation** — `-c/--config` rejects paths outside `/etc/mvgal/`, mirroring the pkexec helper's safety check.
+- **OpenCL ICD park** — parked manifest moved to `/usr/lib/mvgal/mvgal.icd.parked`, out of the loader's scan directory.
+- **Workload device de-duplication** — `mvgal-workload` skips the MVGAL aggregating ICD platform.
+- **Probe error demotion** — `mvgal-probe` logs `/dev/mvgal0` open failure as a notice, not a scary error.
+- **`listen_addr` default** — changed to `127.0.0.1` (loopback only).
 
 **v0.7.28 is a correctness and packaging release, validated on the physical
 three-vendor bench (AMD Navi 24 + NVIDIA RTX 3050 + Intel Arc A380).** The
@@ -111,7 +124,7 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.28 source
+The following implementation limits were checked against the 0.7.29 source
 tree on **2026-10-25**. Build presence and API declarations do not prove device
 execution support.
 

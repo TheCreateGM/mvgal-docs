@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: guide
 mvgal_order: 4
 ---
@@ -30,7 +30,7 @@ journalctl -u mvgald -b --no-pager
 journalctl -k -b --no-pager | grep -i mvgal
 ```
 
-`mvgal-status` returns a non-zero status if the MVGAL kernel module is not loaded. `mvgal-info` can still discover GPUs through the system's DRM/sysfs interfaces. Discovery alone does not establish that submission, allocation, DMA-BUF export, or P2P works.
+`mvgal-status` returns a three-tier exit code: `0` = healthy (daemon up, module loaded), `1` = degraded (daemon running, module absent), `2` = daemon not running. A return of `1` is expected on a Secure Boot machine where the MOK has not been enrolled, and is not a daemon failure. `mvgal-info` can still discover GPUs through the system's DRM/sysfs interfaces. Discovery alone does not establish that submission, allocation, DMA-BUF export, or P2P works.
 
 ## Package or command not found
 

@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.28"
-mvgal_verified: 2026-10-25
+mvgal_version: "0.7.29"
+mvgal_verified: 2026-10-27
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.29] - 2026-10-27
+
+Test-report-driven correctness release addressing 15 issues from the v0.7.28
+field validation on a single-GPU Secure Boot host (Fedora 44, kernel
+7.2.11-200.fc44.x86_64, Intel UHD 770). COPR build #11212845 succeeded on all
+enabled chroots.
+
+### Fixed
+
+- **Vulkan layer activation env var was wrong in `--help` and all Steam/compat scripts.** Every user-facing path told users to set `VK_LAYER_MVGAL=1` or `ENABLE_MVGAL=1`, but the layer manifest only enables on `MVGAL_VULKAN_ENABLE=1`. Users following the docs got no Vulkan interception. All references corrected across `mvgal --help`, `mvgal-config`, `mvgal-steam-setup`, `mvgal-vulkan-env.sh`, `mvgal_steam_compat.sh`, and `README.md`.
+- **`/etc/mvgal` was group-writable (0775 root:mvgal) with no sticky bit.** Any user in the `mvgal` group could unlink and replace root-owned files there; combined with `strategy = custom` being settable by unprivileged users and reloaded by the root daemon, this was a local privilege-escalation path. The RPM `%post` now explicitly `chmod 0755` + `chown root:root` the directory and forces `custom_strategy.lua` to `0644 root:root`; `%files` declares `%dir %attr(755,root,root)` for `/etc/mvgal`.
+- **`mvgal status` always exited 1, even when the daemon was running.** Both `mvgal status` and `mvgal-status` now use a three-tier exit code: `0` = healthy (daemon running + module loaded), `1` = degraded (daemon running, module absent), `2` = daemon down. On a Secure Boot machine with an unenrolled key, the code is `1`, not `0`.
+- **Benchmark subcommands printed "No workload data" and exited 0.** `mvgal benchmark`, `bench-synthetic`, `bench-realworld`, and `bench-stress` invoked `mvgal-bench` with `>/dev/null 2>&1`, suppressing all output, and then read zero in-process counters. They now forward `mvgal-bench`'s stdout/stderr directly and propagate its exit code.
+- **`mvgal set-strategy` did not validate multi-GPU requirements.** It accepted `afr`, `sfr`, `round_robin`, `hybrid`, `task`, and `compute_offload` on a single-GPU machine, while `mvgal-config set-strategy` already refused them. The CLI now calls `strategy_requires_multiple_gpus()` and `mvgal_gpu_get_count()` before proceeding; `--force` overrides.
+- **`mvgal-config show-config` rendered `ENUM`-typed entries as "(unsupported type)".** `log_level` and `scheduler.strategy` (both `MVGAL_CONFIG_ENUM`) now print their integer value. The default view also returns early after showing the effective configuration — `--raw` is required to see the literal file.
+- **`-c/--config` path constraint was not enforced.** The CLI accepted any path; only the pkexec helper validated it. The CLI now rejects paths that are not a `*.conf` inside `/etc/mvgal` (after symlink resolution), matching the helper's check.
+- **`mvgal start` returned exit 1 when already running** (via both systemd and `pidof`). Now exits 0 with an informational message.
+- **`mvgal stop` returned exit 1 when not running** (via both systemd and `pidof`). Now exits 0 with an informational message.
+- **OpenCL ICD park file was at `/etc/OpenCL/vendors/mvgal.icd.disabled`.** Because it sat in the loader's scan directory, some distributions picked it up during rescan. The parked manifest now lives at `/usr/lib/mvgal/mvgal.icd.parked`, outside the scan path entirely; the force-unregister action creates `/usr/lib/mvgal/` if missing.
+- **`mvgal-workload` counted the MVGAL aggregating ICD platform as a second device.** On a single GPU it reported 2 devices and refused to run. It now skips the platform whose `CL_PLATFORM_VENDOR` is `"Multi-Vendor GPU Aggregation Layer"`, counting each physical GPU once.
+- **`mvgal-probe` printed a scary "Failed to open /dev/mvgal0" error on systems without the kernel module.** The message is demoted to a notice: "kernel module not loaded; falling back to DRM".
+- **`listen_addr` defaulted to `0.0.0.0`** in `[network]`. Changed to `127.0.0.1` so the listener (when enabled) only accepts local connections.
+- **Steam profiles directory (`steam/steam_profiles/`) shipped 3 profile files but no directory listing.** The RPM `%files` now includes the directory as `%{_sysconfdir}/mvgal/steam_profiles/`.
+- **`mvgal-steam-setup --help` exited non-zero with no arguments.** Fixed to exit 0.
+
+### Packaging
+
+- COPR build #11212845 succeeded.
+- `/etc/mvgal` and `custom_strategy.lua` permissions hardened as described above.
+- OpenCL ICD park path updated in `%files` and `mvgal-opencl-icd.sh`.
 
 ## [0.7.28] - 2026-10-25
 
