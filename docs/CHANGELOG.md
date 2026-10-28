@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.30] - 2026-10-28
+
+Field-report-driven correctness and packaging release from the 0.7.30 test
+campaign on a single-GPU Secure Boot host (Fedora 44, kernel
+7.2.12-200.fc44.x86_64, Intel UHD Graphics 770). Multi-GPU aggregation could
+not be exercised (single GPU); the kernel module path remains unavailable
+under Secure Boot until the MOK is enrolled (see [SECURE_BOOT.md](SECURE_BOOT.md)).
+COPR build #11217288 succeeded on all 18 enabled chroots.
+
+### Fixed
+
+- **The Vulkan aggregated ICD opt-in broke every Vulkan app** ([2], [13]) — `mvgal-vulkan-env.sh` set `VK_ICD_FILENAMES`/`VK_DRIVER_FILES` to *only* `/usr/share/vulkan/mvgal/mvgal_icd.json` (with `MVGAL_ICD_ONLY=1`). That ICD deliberately reports zero physical devices when the kernel module is absent, so sourcing the script made `vulkaninfo` and every Vulkan app see no GPU at all. The script now defaults to `MVGAL_ICD_ONLY=0`, preserving the loaded vendor ICDs as fallback; the duplicate `MVGAL_VULKAN_ENABLE` export and the stale `VK_LAYER_PATH` are normalised, and `MVGAL_PREFIX` defaults to `/usr`. Sourcing the script no longer disables the vendor renderer.
+- **OpenCL ICD exposed a half-working platform when the kernel module was absent** ([5]) — `libmvgal_opencl.so` now reports 0 platforms (stepping aside) when the kernel module is not loaded/degraded, instead of exposing a platform whose context creation fails.
+- **GUI dashboard status cards stayed "Checking…" forever** ([6]) — `MainWindow` now auto-refreshes the status cards on startup via a single-shot `QTimer`, so they resolve to real values instead of never firing.
+- **Benchmark caveats were missing from single-suite paths** ([8]) — `mvgal-bench compute` (synthetic) and other single-suite invocations now print the "What is actually measured" caveat block in the same form as `all`, so the host-proxy vs. GPU distinction is unambiguous.
+- **Tools disagreed on the usage/error exit code** ([9], [17]) — usage/error paths are standardised to exit `2` across the CLI tools; `mvgal --help`/`--version` exit `0`. The contract is documented in the man pages.
+- **Configuration log lines spammed stderr before logging was initialised** ([10]) — the two configuration log lines are now `DEBUG`-only and gated behind `--verbose`, so unstripped CLI output no longer falls through to stderr before `mvgal_log_init`.
+- **A stale parked OpenCL ICD could be picked up after upgrade** ([11]) — the RPM `%post` now removes any leftover `/etc/OpenCL/vendors/mvgal.icd.disabled` at install time (the park now lives at `/usr/lib/mvgal/mvgal.icd.parked`).
+- **`mvgal-dmabuf-matrix` leaked build-instruction text into its cdoc header** output ([12]) — the stray lines are removed.
+
+### Added
+
+- **Man pages** ([16]) — added `mvgal-gui`, `mvgal-dashboard`, `mvgal-load`, `mvgal-unload`, `mvgal-workload` and `mvgal-probe`.
+- **`mvgal-daemon.preset`** ([19]) — a disabled preset documenting that `%post` enables the unit on first install.
+
+### Packaging
+
+- COPR build `#11217288` succeeded on all 18 enabled chroots. The Qt GUI is not built on `amazonlinux-2023` (the spec skips its Qt build-requires there via `%if ! 0%{?amzn}`), but that build still succeeds.
 
 ## [0.7.29] - 2026-10-27
 

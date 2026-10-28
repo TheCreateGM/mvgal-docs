@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.29***; the source changelog documents releases through **0.7.28**.
-> Core architecture and status pages were reconciled against the source tree on **2026-10-25**.
+> Source version **0.7.30***; the source changelog documents releases through **0.7.30**.
+> Core architecture and status pages were reconciled against the source tree on **2026-10-28**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.29 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.30 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -41,6 +41,21 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Cargo, DKMS) |
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
+
+## 🔍 What's New in 0.7.30
+
+> [!tip]
+> The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.30 is a field-report-driven correctness and packaging release** addressing the 0.7.30 test report on a single-GPU Secure Boot host (Fedora 44, kernel 7.2.12-200.fc44.x86_64, Intel UHD Graphics 770). Multi-GPU aggregation could not be exercised (single GPU), and the kernel module path stays unavailable under Secure Boot until the MOK is enrolled (see [SECURE_BOOT.md](docs/SECURE_BOOT.md)). COPR build #11217288 succeeded on all 18 enabled chroots. Key fixes:
+
+- **Vulkan ICD opt-in no longer breaks all Vulkan** — `mvgal-vulkan-env.sh` no longer forces `VK_ICD_FILENAMES`/`VK_DRIVER_FILES` to *only* the MVGAL ICD (which reports zero devices when the kernel module is absent); `MVGAL_ICD_ONLY=0` by default preserves vendor ICDs, the duplicate `MVGAL_VULKAN_ENABLE` export and stale `VK_LAYER_PATH` are normalised, and `MVGAL_PREFIX` defaults to `/usr`.
+- **OpenCL ICD steps aside when the kernel module is absent** — `libmvgal_opencl.so` reports 0 platforms instead of a half-working platform whose context creation fails.
+- **GUI dashboard status cards refresh on startup** — `MainWindow` auto-refreshes via a single-shot `QTimer` so the cards no longer stay "Checking…".
+- **Benchmark caveats everywhere** — `mvgal-bench compute` and other single-suite paths now print the "What is actually measured" caveat block in the same form as `all`, so host-proxy vs. GPU figures are unambiguous.
+- **Standardised exit codes** — usage/error paths exit `2` across tools; the contract is documented in the man pages.
+- **Config log lines are DEBUG-only** — gated behind `--verbose`, so unstripped CLI output no longer falls through to stderr before `mvgal_log_init`.
+- **Install-time cleanup and metadata** — `%post` removes leftover `/etc/OpenCL/vendors/mvgal.icd.disabled`; man pages were added for `mvgal-gui`, `mvgal-dashboard`, `mvgal-load`, `mvgal-unload`, `mvgal-workload`, `mvgal-probe`; and `mvgal-daemon.preset` (disabled) documents that `%post` enables the unit on first install.
 
 ## 🔍 What's New in 0.7.29
 
@@ -124,8 +139,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.29 source
-tree on **2026-10-25**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.30 source
+tree on **2026-10-28**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |

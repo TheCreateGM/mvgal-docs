@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.30. The source changelog documents through 0.7.30. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.29 | **Updated:** October 2026
+**Source version:** 0.7.30 | **Updated:** October 2026
 
 ---
 
@@ -375,6 +375,17 @@ MVGAL_ICD_JSON=/usr/share/vulkan/mvgal/mvgal_icd.json vulkaninfo
 The script is installed at `/usr/share/mvgal/scripts/mvgal-vulkan-env.sh` (v0.7.14 installs
 it for the first time). The `library_path` in the manifest is absolute, so it no longer
 depends on the loader's `dlopen` search order.
+
+> [!important] Sourcing this script no longer disables the vendor renderer (v0.7.30)
+> Prior to v0.7.30 the script set `VK_ICD_FILENAMES` / `VK_DRIVER_FILES` to *only*
+> `/usr/share/vulkan/mvgal/mvgal_icd.json` (with `MVGAL_ICD_ONLY=1`). That ICD reports
+> zero physical devices when the kernel module is absent, so every Vulkan application
+> broke after sourcing the script. The script now defaults to `MVGAL_ICD_ONLY=0`, which
+> leaves the loaded vendor ICDs in place and only *adds* the MVGAL ICD on request. Set
+> `MVGAL_ICD_ONLY=1` only when the kernel module is loaded and you want the MVGAL
+> aggregating ICD to be the sole discoverable device. The script also normalises a
+> duplicate `MVGAL_VULKAN_ENABLE` export, drops a stale `VK_LAYER_PATH`, and
+> `MVGAL_PREFIX` defaults to `/usr`.
 
 Upgrades remove a stale manifest from `icd.d` **only** when it is recognisably MVGAL's.
 

@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,11 +11,13 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.29** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.29**. This documentation snapshot was reconciled against that source on 2026-10-27. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.30** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.30**. This documentation snapshot was reconciled against that source on 2026-10-28. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.30 is a field-report-driven correctness and packaging release from the 0.7.30 test campaign on a single-GPU Secure Boot host (Fedora 44, kernel 7.2.12-200.fc44.x86_64, Intel UHD Graphics 770). Multi-GPU aggregation could not be exercised (single GPU), and the kernel module path remains unavailable under Secure Boot until the MOK is enrolled (see [SECURE_BOOT.md](SECURE_BOOT.md)). The headline fixes: `mvgal-vulkan-env.sh` no longer forces `VK_ICD_FILENAMES`/`VK_DRIVER_FILES` to *only* the MVGAL aggregating ICD (which reports zero devices when the kernel module is absent), defaulting to `MVGAL_ICD_ONLY=0` so vendor ICDs are preserved; the OpenCL ICD reports zero platforms when the kernel module is absent instead of exposing a half-working platform whose context creation fails; the GUI dashboard status cards auto-refresh on startup via a single-shot `QTimer` instead of staying "Checking…"; `mvgal-bench compute` and other single-suite paths now print the "What is actually measured" caveat like `all`; usage/error paths are standardized to exit `2` across tools (documented in man pages); the two configuration log lines are `DEBUG`-only and gated behind `--verbose`; `%post` removes leftover `/etc/OpenCL/vendors/mvgal.icd.disabled`; man pages were added for `mvgal-gui`, `mvgal-dashboard`, `mvgal-load`, `mvgal-unload`, `mvgal-workload`, `mvgal-probe`; and `mvgal-daemon.preset` (disabled) documents that `%post` enables the unit on first install. COPR build #11217288 succeeded on all 18 enabled chroots.
 
 v0.7.29 is a test-report-driven correctness release addressing 15 issues from the v0.7.28 field validation on a single-GPU Secure Boot host. The headline fixes: the Vulkan layer activation variable was documented as `VK_LAYER_MVGAL=1`/`ENABLE_MVGAL=1` but the manifest only enables on `MVGAL_VULKAN_ENABLE=1`; `/etc/mvgal` is now explicitly `0755 root:root` in the package (was `0775 group:mvgal`, a privilege-escalation path); `mvgal status` and `mvgal-status` now use a three-tier exit code (`0` healthy, `1` degraded, `2` daemon down) instead of always returning `1`; benchmark subcommands forward `mvgal-bench` output instead of suppressing it; `mvgal set-strategy` now refuses multi-GPU strategies on single-GPU machines; `mvgal-config show-config` handles `ENUM`-typed entries and shows only the effective view by default; `-c/--config` now rejects paths outside `/etc/mvgal/`; start/stop are idempotent (exit 0 when already in the target state); the OpenCL ICD park location moved to `/usr/lib/mvgal/`; `mvgal-workload` skips the MVGAL aggregating ICD platform to avoid double-counting; `mvgal-probe` demotes its `/dev/mvgal0` open failure to a notice; and `listen_addr` defaults to `127.0.0.1`.
 

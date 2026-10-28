@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, strategies, reference]
 aliases: [Scheduling Strategies, Strategies]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: reference
 mvgal_order: 10
 ---
 
 # MVGAL Scheduling Strategy Identifiers
 
-> Source metadata is **0.7.28**; the source changelog documents releases through **0.7.28**. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.
+> Source metadata is **0.7.30**; the source changelog documents releases through **0.7.30**. These are API/configuration identifiers. A declared strategy does not establish that a supported backend can submit work across GPUs.
 
 ## Public C identifiers
 

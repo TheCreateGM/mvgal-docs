@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, memory, reference]
 aliases: [Memory Management, Memory]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: reference
 mvgal_order: 9
 ---
 
 # MVGAL Memory Management
 
-> **Implementation status:** Source metadata is 0.7.28. The source changelog documents through 0.7.28. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.30. The source changelog documents through 0.7.30. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.29 | **Updated:** October 2026
+**Source version:** 0.7.30 | **Updated:** October 2026
 
 ---
 

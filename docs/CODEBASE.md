@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, codebase, reference]
 aliases: [Codebase Map, Source Map]
-mvgal_version: "0.7.29"
-mvgal_verified: 2026-10-27
+mvgal_version: "0.7.30"
+mvgal_verified: 2026-10-28
 mvgal_role: reference
 mvgal_order: 7
 ---
 
 # Codebase Map
 
-This guide maps the checked-in source tree at MVGAL 0.7.29. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
+This guide maps the checked-in source tree at MVGAL 0.7.30. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
 
 ## Repository root
 
