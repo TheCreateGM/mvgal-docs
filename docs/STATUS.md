@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,11 +11,13 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.30** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.30**. This documentation snapshot was reconciled against that source on 2026-10-28. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.31** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.31**. This documentation snapshot was reconciled against that source on 2026-10-30. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.31 is a field-report-driven correctness release addressing the 0.7.30 test report on a single-GPU Secure Boot host (Fedora 43, kernel 7.2.13-200.fc44.x86_64, Intel UHD Graphics 770, plus a blacklisted MTT S30). COPR build #11229933 succeeded on `fedora-43-x86_64`. Key fixes: **C1** — the kernel module now includes `PCI_CLASS_DISPLAY_OTHER` (0x0380) so Intel integrated GPUs are found alongside discrete cards, and skips display-class PCI devices whose native driver is not bound (blacklisted MTT S30), so kernel and userspace enumeration agree on GPU indices; **C2** — `mvgal_mtt.c` now checks `MVGAL_FULL_STACK` (the real compile-time guard) instead of the non-existent `CONFIG_MVGal_MTT` typo, and the `find_module()` calls removed from kernel 7.x are replaced by a `/proc/modules` read; **C3** — udev rules and the pkexec helper now set `GROUP="mvgal"` and `MODE="0660"` (were `GROUP="video"` and `MODE="0666"`); **H1** — `mvgal-enum` and `mvgal list-gpus` now scan PCI for display-class GPUs with no DRM node and warn about present-but-unusable devices; **H2** — `mvgal start` now checks for `/sys/module/mvgal` after launching the daemon and prints a degraded-mode warning if the kernel module is absent.
 
 v0.7.30 is a field-report-driven correctness and packaging release from the 0.7.30 test campaign on a single-GPU Secure Boot host (Fedora 44, kernel 7.2.12-200.fc44.x86_64, Intel UHD Graphics 770). Multi-GPU aggregation could not be exercised (single GPU), and the kernel module path remains unavailable under Secure Boot until the MOK is enrolled (see [SECURE_BOOT.md](SECURE_BOOT.md)). The headline fixes: `mvgal-vulkan-env.sh` no longer forces `VK_ICD_FILENAMES`/`VK_DRIVER_FILES` to *only* the MVGAL aggregating ICD (which reports zero devices when the kernel module is absent), defaulting to `MVGAL_ICD_ONLY=0` so vendor ICDs are preserved; the OpenCL ICD reports zero platforms when the kernel module is absent instead of exposing a half-working platform whose context creation fails; the GUI dashboard status cards auto-refresh on startup via a single-shot `QTimer` instead of staying "Checking…"; `mvgal-bench compute` and other single-suite paths now print the "What is actually measured" caveat like `all`; usage/error paths are standardized to exit `2` across tools (documented in man pages); the two configuration log lines are `DEBUG`-only and gated behind `--verbose`; `%post` removes leftover `/etc/OpenCL/vendors/mvgal.icd.disabled`; man pages were added for `mvgal-gui`, `mvgal-dashboard`, `mvgal-load`, `mvgal-unload`, `mvgal-workload`, `mvgal-probe`; and `mvgal-daemon.preset` (disabled) documents that `%post` enables the unit on first install. COPR build #11217288 succeeded on all 18 enabled chroots.
 
@@ -103,7 +105,7 @@ The source changelog's 0.7.24 known-issues entry records a PCI enumeration refer
 
 ## Package state
 
-This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
+This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Version 0.7.31 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.31. COPR build #11229933 succeeded on `fedora-43-x86_64`. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
 
 ## Further reading
 

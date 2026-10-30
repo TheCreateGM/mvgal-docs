@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, steam, proton, guide]
 aliases: [Steam Integration, Steam, Proton]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: guide
 mvgal_order: 15
 ---
@@ -15,7 +15,7 @@ mvgal_order: 15
 > 1. **The Vulkan interception layer is real and installed. The frame pacer is not connected to anything.** `mvgal_fp_create()` is called once at daemon start and a metrics callback is attached, but **no code in the tree ever calls `mvgal_fp_submit_frame()`**. The pacer maintains statistics; it does not pace any frames.
 > 2. **`compat/steam/` and `compat/wow64/` are not built.** Neither directory has a `CMakeLists.txt`, so the top-level `add_subdirectory(compat)` is skipped. The Proton plugin and the WoW64 thunk layer in those directories are dormant source.
 
-**Source version:** 0.7.30
+**Source version:** 0.7.31
 **Date:** September 2026
 
 ---
@@ -71,7 +71,7 @@ MVGAL_VULKAN_ENABLE=1 MVGAL_STRATEGY=afr %command%
 ```
 
 > [!note] Not every variable the daemon emits is consumed
-> `MVGAL_ENABLED`, `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE` and `MVGAL_PROTON_MODE` are all written into the child environment by `execution.c:857-881`, but a search for `getenv()` across the tree finds **no reader** for `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE`, `MVGAL_PROTON_MODE` or `MVGAL_ENABLED`. `MVGAL_STRATEGY` is read by the execution and interception layers. `ENABLE_MVGAL` was listed in earlier revisions as read by `compat/steam/mvgal_proton.cpp:89`, but that file lives in `compat/steam/`, which is **not built** (see §1) — so `ENABLE_MVGAL` has no consumer in the installed tree as of v0.7.30. Use `MVGAL_VULKAN_ENABLE=1` to activate the Vulkan layer.
+> `MVGAL_ENABLED`, `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE` and `MVGAL_PROTON_MODE` are all written into the child environment by `execution.c:857-881`, but a search for `getenv()` across the tree finds **no reader** for `MVGAL_GPUS`, `MVGAL_LOW_LATENCY`, `MVGAL_STEAM_MODE`, `MVGAL_PROTON_MODE` or `MVGAL_ENABLED`. `MVGAL_STRATEGY` is read by the execution and interception layers. `ENABLE_MVGAL` was listed in earlier revisions as read by `compat/steam/mvgal_proton.cpp:89`, but that file lives in `compat/steam/`, which is **not built** (see §1) — so `ENABLE_MVGAL` has no consumer in the installed tree 0.7.31. Use `MVGAL_VULKAN_ENABLE=1` to activate the Vulkan layer.
 
 ### 2.2 Steam Compatibility Tool
 
@@ -115,7 +115,7 @@ The tool manifest is KeyValues, not JSON:
 ```
 
 > [!warning] Two problems with the shipped VDFs
-> - The tool ID and display name still say **0.2.2**, and the source release is 0.7.30.
+> - The tool ID and display name still say **0.2.2**, and the source release is 0.7.31.
 > - `MVGAL_NTSYNC_ENABLE` is set here but **no code reads it**. The NTSYNC userspace library in `compat/ntsync/ntsync.c` does not consult any environment variable; it opens `/dev/mvgal_ntsync` directly.
 
 ### 2.3 Environment Variables
@@ -398,7 +398,7 @@ int ntsync_close(int handle);
 3. **MVGAL userspace** — `libmvgal`'s NTSYNC library wraps it for MVGAL's own synchronisation.
 
 > [!note] The udev rule
-> `config/99-mvgal.rules` sets `MODE="0666", GROUP="video"` on the `mvgal_ntsync` misc node so unprivileged Proton/Wine processes can reach it. Unlike `/dev/mvgal*`, this node is **not** tightened to `0660` by the privileged helper.
+> `config/99-mvgal.rules` sets `MODE="0660", GROUP="mvgal"` on the `mvgal_ntsync` misc node so unprivileged Proton/Wine processes in the `mvgal` group can reach it. Since v0.7.31 the `mvgal` group and mode `0660` match the udev rules for `/dev/mvgal0`; the privileged helper no longer tightens these nodes further. Previously this node was `MODE="0666", GROUP="video"` (v0.7.30 and earlier).
 
 ---
 

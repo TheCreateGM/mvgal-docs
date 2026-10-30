@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-This page describes the 0.7.30 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
+This page describes the 0.7.31 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
 
 ## Main components
 
@@ -44,7 +44,7 @@ This is a map of control and reporting paths, not a claim that every API submits
 
 ## Device ownership and capability truth
 
-The kernel module discovers devices through PCI and does not bind itself as their PCI driver. Vendor drivers remain responsible for GPU command submission and their memory managers. The kernel reports capabilities obtained from probes; an unprobed or unsupported operation must fail or use its documented fallback. Several ioctl numbers and feature flags are reserved for future functionality and do not mean that the corresponding operation is implemented.
+The kernel module discovers devices through PCI and does not bind itself as their PCI driver. It enumerates display-class PCI devices in three classes: VGA (`0x0300`), 3D controllers (`0x0302`), and Generic Display Controllers (`0x0380`, `PCI_CLASS_DISPLAY_OTHER`) — the class Intel integrated GPUs enumerate as. Since v0.7.31, the kernel **skips** any display-class PCI device whose native driver is not bound (`pdev->driver` is `NULL`), so blacklisted GPUs like the MTT S30 are invisible to both kernel and userspace enumeration. This ensures the GPU index the kernel assigns matches what userspace sees through DRM/sysfs enumeration — fixing the index mismatch where the kernel enumerated a device userspace could not. Vendor drivers remain responsible for GPU command submission and their memory managers. The kernel reports capabilities obtained from probes; an unprobed or unsupported operation must fail or use its documented fallback. Several ioctl numbers and feature flags are reserved for future functionality and do not mean that the corresponding operation is implemented.
 
 The Vulkan ICD is an optional, separate build component. Its presence does not mean a synthetic aggregate physical device exists. The Vulkan layer and ICD must be treated as distinct components. DMA-BUF import/export and peer transfers are device-pair dependent; host staging is the portable fallback where the userspace path supports it.
 

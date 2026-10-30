@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: guide
 mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.30***; the source changelog documents releases through **0.7.30**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.31***; the source changelog documents releases through **0.7.31**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 ## 1. Inspect the package or build
 
@@ -52,9 +52,15 @@ If the package installed the systemd unit:
 
 ```bash
 pkexec systemctl start mvgald
+# or, equivalently:
+mvgal start
 systemctl status mvgald
 journalctl -u mvgald -b --no-pager
 ```
+
+Since v0.7.31, `mvgal start` checks for `/sys/module/mvgal` after launching the
+daemon and prints a degraded-mode warning if the kernel module is absent (e.g.
+on a Secure Boot machine where the MOK has not been enrolled).
 
 Then inspect current device status:
 

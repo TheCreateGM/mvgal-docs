@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,72 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.31] - 2026-10-30
+
+Field-report-driven correctness release addressing the 0.7.30 test report on a
+single-GPU Secure Boot host (Fedora 43, kernel 7.2.13-200.fc44.x86_64, Intel
+UHD Graphics 770, plus a blacklisted MTT S30). COPR build #11229933 succeeded
+on `fedora-43-x86_64`.
+
+### Fixed
+
+- **C1 — Kernel module and userspace disagreed on GPU identity/index.** The
+  kernel module enumerated the MTT S30 via PCI and assigned it GPU index 0, but
+  userspace (DRM/sysfs) could not see it (driver blacklisted) and assigned index
+  0 to the Intel GPU instead. `mvgal_enumerate_gpus()` now includes
+  `PCI_CLASS_DISPLAY_OTHER` (0x0380) so Intel integrated GPUs are found
+  alongside discrete cards, and skips display-class PCI devices whose native
+  driver is not bound — `mvgal_native_driver()` checks `pdev->driver`, which is
+  `NULL` when no driver owns the function. The userspace device registry
+  (`enumeratePciDevices`) applies the same class filter and warns when a PCI
+  GPU has no DRM node. Both sides now agree on which GPUs exist and their
+  indices. The Intel PCI ID `0x4680` comment is corrected from "DG2" to
+  "UHD Graphics 770 (Alder Lake)".
+- **C2 — Contradictory MTT backend messages.** `kernel/vendors/mvgal_mtt.c`
+  checked the non-existent `CONFIG_MVGal_MTT` (a typo for `CONFIG_MVGAL_MTT`
+  that never appeared in any Kconfig), so `MVGAL_MTT_ENABLED` was always 0 and
+  `mvgal_mtt_init()` returned `-ENOTSUPP`, producing the contradictory messages
+  "Registered Moore Threads GPU backend" (from `mtt_main.c`) followed by
+  "Moore Threads support not compiled in" (from `mtt.c`). The guard is now
+  `MVGAL_FULL_STACK`, the real compile-time symbol from `Kbuild` ccflags. The
+  `find_module("mtgpu")` / `find_module("mtgpu_drv")` calls — removed from the
+  kernel symbol table in 7.x and causing a `modpost` build failure — are
+  replaced by a `/proc/modules` read via `filp_open` + `kernel_read`.
+- **C3 — Group/permission mismatch locked users out of `/dev/mvgal0`.** The
+  udev rules `config/99-mvgal.rules` and `packaging/99-mvgal.rules` set
+  `GROUP="video"` and `MODE="0666"`, but the daemon and CLI tools use the
+  `mvgal` group. Users in `video` but not `mvgal` were locked out of
+  `/dev/mvgal0` despite being members of the video group. Both rules now set
+  `GROUP="mvgal"` and `MODE="0660"`. The privileged helper
+  (`mvgal-pkexec-helper.sh`) now `chown root:mvgal` (was `root:video`) on
+  device nodes after module load.
+- **C4 — `listen_addr` already correct.** The `[network]` section default was
+  confirmed as `127.0.0.1` from v0.7.30; no code change needed.
+- **H1 — Blacklisted GPUs were silently omitted.** The MTT S30 was present on
+  PCI but invisible to MVGAL because its driver was blacklisted, with no warning.
+  `mvgal-enum` and `mvgal list-gpus` now scan `/sys/bus/pci/devices/` for
+  display-class PCI devices (classes 0x0300, 0x0302, 0x0380) with known GPU
+  vendor IDs (AMD 0x1002, NVIDIA 0x10de, Intel 0x8086, MTT 0x1ed5), check
+  whether each has a DRM card node, and print a warning to stderr when a GPU has
+  no DRM node — naming the PCI BDF, vendor, and the likely cause (blacklisted or
+  missing driver). The daemon's `DeviceRegistry::enumeratePciDevices()` emits
+  the same warning with the bound driver name (or "no driver bound").
+- **H2 — `mvgal start` did not report degraded mode.** After launching the
+  daemon successfully (both systemd and fork paths), `mvgal start` now checks
+  for `/sys/module/mvgal` and prints a degraded-mode warning to stderr if the
+  kernel module is absent or failed to load, with remediation steps (enroll
+  the MOK, then `pkexec mvgal-load`).
+
+### Added
+
+- **MTT S30 PCI ID in the kernel table.** `{ PCI_DEVICE(0x1ED5, 0x0102) }` is
+  now in the `mvgal_gpu_pci_ids[]` table (`kernel/mvgal_core.c`), so the MTT S30
+  is recognized when its driver is bound.
+
+### Packaging
+
+- COPR build #11229933 succeeded on `fedora-43-x86_64`.
 
 ## [0.7.30] - 2026-10-28
 

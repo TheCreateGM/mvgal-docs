@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: guide
 mvgal_order: 3
 ---
 
 # MVGAL Secure Boot & MOK Enrollment
 
-> **Implementation status:** Source metadata is 0.7.30. The source changelog documents through 0.7.30. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.31. The source changelog documents through 0.7.31. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.30 | **Updated:** October 2026
+**Source version:** 0.7.31 | **Updated:** October 2026
 
 MVGAL ships seven kernel modules. On systems with **UEFI Secure Boot** enabled, the kernel refuses to load modules that are not signed by a trusted key. MVGAL solves this with **per-machine key signing** and **MOK (Machine Owner Key) enrollment**.
 
@@ -246,6 +246,12 @@ The RPM `%post` prints the same guidance at install time. Treat that banner as
 the reason aggregation and kernel-side memory management are unavailable — the
 userspace discovery you see in `mvgal list-gpus` still works, which is exactly
 why degraded mode is easy to mistake for a working install.
+
+> [!note] `mvgal start` also checks (v0.7.31)
+> After launching the daemon — via both the systemd and the process-fork paths —
+> `mvgal start` checks for `/sys/module/mvgal` and prints a degraded-mode warning
+> to stderr if the kernel module is absent or failed to load, with remediation
+> steps (enroll the MOK, then `pkexec mvgal-load`).
 
 Because this state looks healthy from several angles, the tools now agree on it
 via a three-tier exit code (v0.7.29): `mvgal status` exits `0` when healthy

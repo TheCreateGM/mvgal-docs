@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.30. The source changelog documents through 0.7.30. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.31. The source changelog documents through 0.7.31. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.30 | **Updated:** October 2026
+**Source version:** 0.7.31 | **Updated:** October 2026
 
 ---
 
@@ -34,8 +34,15 @@ Package contents and installation paths depend on the selected recipe. Inspect t
 
 ```bash
 pkexec systemctl start mvgald
+# or, equivalently:
+mvgal start
 pkexec systemctl enable mvgald   # auto-start on boot
 ```
+
+Since v0.7.31, `mvgal start` checks for `/sys/module/mvgal` after launching
+the daemon and prints a degraded-mode warning to stderr if the kernel module
+is absent or failed to load (common on Secure Boot machines where the MOK has
+not been enrolled). See [SECURE_BOOT.md](SECURE_BOOT.md) for enrollment steps.
 
 Verify:
 
@@ -441,13 +448,14 @@ MVGAL_VULKAN_ENABLE=1 %command%
 
 | Symptom | Fix |
 |---------|-----|
-| `mvgal-status` shows degraded mode | Kernel module not loaded — enroll MOK (see [SECURE_BOOT.md](SECURE_BOOT.md)) or `pkexec modprobe mvgal` |
+| `mvgal-status` shows degraded mode | Kernel module not loaded — enroll MOK (see [SECURE_BOOT.md](SECURE_BOOT.md)) or `pkexec mvgal-load`. Since v0.7.31, `mvgal start` prints this warning automatically when the module is absent after starting the daemon. |
 | Daemon won't start | `journalctl -u mvgald -f` for logs |
-| No GPUs detected | `lspci \| grep -i vga`; check `/etc/mvgal/mvgal.conf` `enabled` flags |
+| No GPUs detected | `lspci \| grep -i vga`; check `/etc/mvgal/mvgal.conf` `enabled` flags; verify the native driver is installed and not blacklisted in `/etc/modprobe.d/`. Since v0.7.31, `mvgal-enum` and `mvgal list-gpus` warn about display-class PCI GPUs with known vendor IDs (AMD/NVIDIA/Intel/MTT) that have no DRM node — a blacklisted or missing driver. |
 | Vulkan app crashes | Update to v0.7.7+ (device dispatch fix); check `vulkaninfo` |
 | `vulkaninfo` reports the ICD is not conformant | The ICD is opt-in since v0.7.14. Do not register it globally — source `mvgal-vulkan-env.sh` per-run instead. |
 | `clinfo` reports zero platforms | Expected when no peer OpenCL runtime is installed; the manifest is parked at `/usr/lib/mvgal/mvgal.icd.parked`. Install a vendor OpenCL runtime, then run `/usr/lib/mvgal/mvgal-opencl-icd.sh`. |
-| Daemon socket exists but you cannot connect | v0.7.14 chowns it to group `mvgal` (falling back to `video`). Run `mvgal-compat` — it prints the socket's real owner, mode, and your uid. |
+| Daemon socket exists but you cannot connect | The socket is `root:mvgal` mode `0660`. Run `mvgal-compat` — it prints the socket's real owner, mode, and your uid. |
+| Cannot access `/dev/mvgal0` despite being in the group | Since v0.7.31 the udev rules set `GROUP="mvgal"` and `MODE="0660"` on `/dev/mvgal0` and `/dev/mvgal_ntsync` (previously `GROUP="video"`/`MODE="0666"`). Re-plug the device or run `pkexec udevadm trigger` to apply the new rules, and ensure your session has the `mvgal` group (log out and back in). |
 
 See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for the full guide.
 

@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, design, reference]
 aliases: [Design Document, Design]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: design
 mvgal_order: 7
 ---
 
 # MVGAL Design Document
 
-> **Implementation status:** Source metadata is 0.7.30. The source changelog documents through 0.7.30. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.31. The source changelog documents through 0.7.31. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.30 | **Last Updated:** October 2026
+**Source version:** 0.7.31 | **Last Updated:** October 2026
 
 ---
 
@@ -210,7 +210,7 @@ claim that MVGAL submits work itself.
 - **Socket permissions:** `/run/mvgal/mvgal.sock` is mode `0660`, owned `root:mvgal` — falling back to the daemon's primary group if the `mvgal` group does not exist. The run directory `/run/mvgal` is chowned to the same gid and made `0775`. *(Changed in v0.7.14; earlier releases chmod'ed the socket `0660` without a matching chown, leaving it `root:root` and unreachable by any non-root user. Both the C++ and the legacy C daemon now apply this, and `mvgal-compat` reports the socket's real uid:gid and mode instead of advising you to join a group that did not own it.)*
 - **IPC authentication:** `SO_PEERCRED` on the Unix socket. Admitted: root, the daemon's own uid, and members of the `mvgal` group (falling back to the daemon's primary group) or of the standard `video` group, including via supplementary group membership.
 - **Kernel module:** Signed at install time; MOK enrollment required for Secure Boot. The signing keypair lives in `/var/lib/mvgal/keys/` (directory `0700`, private key `0600`) and `sign-file` is installed to `/usr/lib/mvgal/sign-file`.
-- **Device nodes:** `/dev/mvgal*` is `root:video`, mode `0660`. Two mechanisms set this: `config/99-mvgal.rules` (`SUBSYSTEM=="mvgal", MODE="0666", GROUP="video"`) establishes the group, and the privileged helper then `chown root:video` + `chmod 660` each node after loading the modules. The helper deliberately does **not** leave the nodes world-writable.
+- **Device nodes:** `/dev/mvgal*` and `/dev/mvgal_ntsync` are `root:mvgal`, mode `0660` (since v0.7.31). Two mechanisms set this: `config/99-mvgal.rules` (`SUBSYSTEM=="mvgal", MODE="0660", GROUP="mvgal"`) establishes the group and mode at device creation, and the privileged helper then `chown root:mvgal` + `chmod 660` each node after loading the modules. *(Prior to v0.7.31 the udev rules used `GROUP="video"` and `MODE="0666"`, which locked out users who were in the `mvgal` group but not `video` and left the nodes world-writable. The helper used `chown root:video` to match.)* The helper deliberately does **not** leave the nodes world-writable.
 - **pkexec:** All privileged operations go through `/usr/lib/mvgal/mvgal-pkexec-helper.sh`, and the daemon start is a separate `/usr/sbin/mvgald` action. `data/com.mvgal.policy` defines exactly these two actions, both `auth_admin`, and both with `exec.allow_gui=false`. *(v0.7.14 replaced ten orphaned action IDs — none of which was ever annotated on an executable, so polkit fell back to its anonymous `org.freedesktop.policykit.exec` prompt — with the two that match reality.)*
 - **No firmware flashing:** Vendor-overriding firmware operations are explicitly excluded
 

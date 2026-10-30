@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.30***; the source changelog documents releases through **0.7.30**.
-> Core architecture and status pages were reconciled against the source tree on **2026-10-28**.
+> Source version **0.7.31**; the source changelog documents releases through **0.7.31**.
+> Core architecture and status pages were reconciled against the source tree on **2026-10-30**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.30 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.31 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -33,7 +33,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/ARCHITECTURE\|Architecture]] | System architecture overview |
 | [[docs/CODEBASE\|Codebase Map]] | Directory map and subsystem ownership |
 | [[docs/DESIGN\|Design Document]] | Design decisions, and which ones shipped |
-| [[docs/API\|API Reference]] | Public C API reference (32 headers) |
+| [[docs/API\|API Reference]] | Public C API reference (31 headers) |
 | [[docs/MEMORY\|Memory Management]] | Transfer paths, allocation, and what is not implemented |
 | [[docs/STRATEGIES\|Scheduling Strategies]] | The 13 public strategy identifiers |
 | [[docs/POWER_MANAGEMENT\|Power Management]] | Power, DVFS, thermal |
@@ -41,6 +41,19 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Cargo, DKMS) |
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
+
+## 🔍 What's New in 0.7.31
+
+> [!tip]
+> The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.31 is a field-report-driven correctness release** addressing the 0.7.30 test report on a single-GPU Secure Boot host (Fedora 43, kernel 7.2.13-200.fc44.x86_64, Intel UHD Graphics 770, plus a blacklisted MTT S30). COPR build #11229933 succeeded on `fedora-43-x86_64`. Key fixes:
+
+- **C1: GPU index mismatch corrected** — the kernel module now includes `PCI_CLASS_DISPLAY_OTHER` (0x0380) so Intel integrated GPUs are found alongside discrete cards, and skips display-class PCI devices whose native driver is not bound (blacklisted MTT S30), so kernel and userspace enumeration agree on which GPUs exist and their indices. The Intel PCI ID `0x4680` comment is corrected from "DG2" to "UHD Graphics 770 (Alder Lake)".
+- **C2: MTT backend compile guard fixed** — `mvgal_mtt.c` now checks `MVGAL_FULL_STACK` (the real compile-time guard from `Kbuild` ccflags) instead of the non-existent `CONFIG_MVGal_MTT` typo, so MTT GPUs are probed when the vendor module is built. The `find_module()` calls — removed from the kernel symbol table in 7.x — are replaced by a `/proc/modules` read.
+- **C3: udev permissions corrected** — udev rules and the pkexec helper now set `GROUP="mvgal"` and `MODE="0660"` (were `GROUP="video"` and `MODE="0666"`), so users in the `mvgal` group can access `/dev/mvgal0` and `/dev/mvgal_ntsync`.
+- **H1: Blacklisted GPU visibility** — `mvgal-enum` and `mvgal list-gpus` now scan PCI for display-class GPUs with no DRM node and warn about present-but-unusable devices instead of silently omitting them.
+- **H2: Start degraded mode check** — `mvgal start` now checks for `/sys/module/mvgal` after launching the daemon and prints a degraded-mode warning if the kernel module is absent or failed to load.
 
 ## 🔍 What's New in 0.7.30
 
@@ -139,8 +152,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.30 source
-tree on **2026-10-28**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.31 source
+tree on **2026-10-30**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |

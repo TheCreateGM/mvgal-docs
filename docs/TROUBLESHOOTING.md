@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.30"
-mvgal_verified: 2026-10-28
+mvgal_version: "0.7.31"
+mvgal_verified: 2026-10-30
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.30**; the source changelog documents releases through **0.7.30**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.31**; the source changelog documents releases through **0.7.31**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -167,6 +167,27 @@ mvgal-info
 ```
 
 Confirm the operating system detects the device and its native vendor driver is installed. MVGAL 0.7.12 removed GPU PCI binding so that native drivers retain device ownership. GPU detection is read-only and does not make MVGAL the GPU's kernel driver.
+
+### GPU appears in `lspci` but not in `mvgal-info`
+
+Since v0.7.31, a display-class PCI device whose native driver is not bound is
+**skipped** by both the kernel module and the userspace daemon — if
+`pdev->driver` is `NULL` (blacklisted or no driver loaded), the GPU is invisible
+to MVGAL enumeration to keep kernel and userspace GPU indices consistent.
+
+`mvgal-enum` and `mvgal list-gpus` now emit a warning to stderr for any
+display-class PCI device (class `0x03xx`) with a known GPU vendor ID (AMD
+`0x1002`, NVIDIA `0x10de`, Intel `0x8086`, Moore Threads `0x1ed5`) that has no
+DRM card node:
+
+```
+Warning: GPU 1ed5:0102 (Moore Threads) on PCI 0000:01:00.0 has no DRM device node —
+driver may be blacklisted. MVGAL cannot use it for rendering.
+```
+
+Check `/etc/modprobe.d/` for blacklist entries (the test environment blacklists
+`mtgpu_stub` and `sgpu_km`) and confirm the driver is installed and not
+blocked.
 
 ## Operation reports unsupported
 
