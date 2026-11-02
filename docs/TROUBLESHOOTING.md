@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.31"
-mvgal_verified: 2026-10-30
+mvgal_version: "0.7.32"
+mvgal_verified: 2026-11-02
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.31**; the source changelog documents releases through **0.7.31**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.32**; the source changelog documents releases through **0.7.32**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -145,6 +145,22 @@ pkexec /usr/lib/mvgal/mvgal-sign-modules.sh
 This handles the `.ko.xz` modules DKMS installs on a compression-enabled distro
 (a compressed module cannot be signed in place), covers every directory a module
 can land in, and is safe to re-run. Fixed in v0.7.22.
+
+### `mvgal unload-module` fails with "Module mvgal is in use"
+
+The core `mvgal` module has hard dependents — the vendor shims
+(`mvgal_intel`, `mvgal_amd`, `mvgal_nvidia`, `mvgal_mtt`, `mvgal_adreno`)
+and `mvgal_ntsync`. Running `modprobe -r mvgal` directly cannot remove a
+module with dependents, so it fails with "Module mvgal is in use". Use the
+provided unloader, which removes the dependents first:
+
+```bash
+pkexec mvgal unload-module
+```
+
+Fixed in v0.7.32; the CLI now routes through the pkexec helper, which
+unloads in reverse dependency order and names the blocker if one holds a
+reference.
 
 ### Load with `mvgal-load`, not `modprobe mvgal`
 

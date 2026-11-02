@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.31"
-mvgal_verified: 2026-10-30
+mvgal_version: "0.7.32"
+mvgal_verified: 2026-11-02
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,44 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.32] - 2026-11-02
+
+Fixes from the 0.7.31 test report.
+
+### Fixed
+
+- **`mvgal unload-module` always failed.** The core `mvgal` module has hard
+  dependents (the vendor shims `mvgal_intel`, `mvgal_amd`, `mvgal_nvidia`,
+  `mvgal_mtt`, `mvgal_adreno` and `mvgal_ntsync`), but the CLI ran
+  `pkexec modprobe -r mvgal` directly, which cannot remove a module with
+  dependents. It now routes through the pkexec helper, which unloads in
+  reverse dependency order and names the blocker if one holds a reference.
+- **`mvgal-bench --json` produced invalid JSON** in the compute and
+  memory-bandwidth suites: a missing comma after the `measurement_note`
+  field. The field is no longer marked as last.
+- **Misleading `--force` advice on `mvgal set-strategy`.** The error
+  message suggested `--force`, but `mvgal` did not implement it (only
+  `mvgal-config` did). `--force` is now a real flag on `mvgal
+  set-strategy`.
+- **Shipped config used `round_robin` as the default strategy** on
+  single-GPU installs, which the CLI refuses without force. The daemon
+  fallback is now `single`, and `%post` normalizes a stale `round_robin`
+  to `single` on upgrade.
+- **`listen_addr = 0.0.0.0`** contradicted the documented loopback-only
+  intent. `%post` normalizes a stale `0.0.0.0` to `127.0.0.1`.
+- **`mvgal -c <unreadable> show-config` exited 0.** It now exits 1.
+- **`mvgal-probe` reported zeros** for PCIe generation, link width, BAR
+  sizes and subsystem ID in the live query path. The kernel query now
+  populates those fields and falls back to capability values when the live
+  read returns 0.
+- **`mvgal-gui` hung forever with no display.** It now calls
+  `gtk_init_check()` and fails fast with a clear message.
+- **`mvgal-config set-power-curve` is gated behind `--experimental`**
+  until the daemon consumes the profile.
+- **MTT S30 blacklisted detection** now prints which modprobe file to
+  inspect and the consequence of unblacklisting.
+- **Documented exit codes** for all `mvgal` subcommands in `--help`.
 
 ## [0.7.31] - 2026-10-30
 

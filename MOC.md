@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.31"
-mvgal_verified: 2026-10-30
+mvgal_version: "0.7.32"
+mvgal_verified: 2026-11-02
 mvgal_role: index
 ---
 
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.31**; the source changelog documents releases through **0.7.31**.
+> Source version **0.7.31**; the source changelog documents releases through **0.7.32**.
 > Core architecture and status pages were reconciled against the source tree on **2026-10-30**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
@@ -41,6 +41,23 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Cargo, DKMS) |
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
+
+## 🔍 What's New in 0.7.32
+
+**v0.7.32 fixes seven issues from the 0.7.31 test report.** The headline fix is
+`mvgal unload-module`, which always failed because the core `mvgal` module has
+hard dependents (the vendor shims and `mvgal_ntsync`) that were never removed
+first — `modprobe -r mvgal` cannot remove a module with dependents. It now
+routes through the pkexec helper, which unloads in reverse dependency order
+and names the blocker if one holds a reference. Other fixes: `mvgal-bench --json`
+produced invalid JSON in the compute and memory-bandwidth suites (missing comma
+after `measurement_note`); `mvgal set-strategy` suggested `--force` but did not
+implement it; the shipped config used `round_robin` as the default strategy on
+single-GPU installs (now `single`); `mvgal -c <unreadable> show-config` exited
+0 (now 1); `mvgal-probe` reported zeros for PCIe generation, link width, BAR
+sizes and subsystem ID; `mvgal-gui` hung forever with no display (now fails
+fast); `set-power-curve` is gated behind `--experimental`; and `mvgal-enum`
+prints actionable guidance for blacklisted GPUs like the MTT S30.
 
 ## 🔍 What's New in 0.7.31
 

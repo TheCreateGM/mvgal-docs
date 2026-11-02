@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, design, reference]
 aliases: [Design Document, Design]
-mvgal_version: "0.7.31"
-mvgal_verified: 2026-10-30
+mvgal_version: "0.7.32"
+mvgal_verified: 2026-11-02
 mvgal_role: design
 mvgal_order: 7
 ---

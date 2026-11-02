@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.31"
-mvgal_verified: 2026-10-30
+mvgal_version: "0.7.32"
+mvgal_verified: 2026-11-02
 mvgal_role: guide
 mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.31***; the source changelog documents releases through **0.7.31**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.32***; the source changelog documents releases through **0.7.32**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 ## 1. Inspect the package or build
 

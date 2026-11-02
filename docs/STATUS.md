@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.31"
-mvgal_verified: 2026-10-30
+mvgal_version: "0.7.32"
+mvgal_verified: 2026-11-02
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,11 +11,18 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.31** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.31**. This documentation snapshot was reconciled against that source on 2026-10-30. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.32** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.32**. This documentation snapshot was reconciled against that source on 2026-11-02. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.32 fixes seven issues from the 0.7.31 test report: unload-module always
+failed because the core module has hard dependents; bench --json produced
+invalid JSON; set-strategy suggested --force but did not implement it;
+the shipped config used round_robin on single-GPU installs; -c with an
+unreadable file exited 0; mvgal-probe reported zeros for PCIe/BAR/subsystem;
+and mvgal-gui hung with no display. See [Changelog](CHANGELOG.md) § v0.7.32.
 
 v0.7.31 is a field-report-driven correctness release addressing the 0.7.30 test report on a single-GPU Secure Boot host (Fedora 43, kernel 7.2.13-200.fc44.x86_64, Intel UHD Graphics 770, plus a blacklisted MTT S30). COPR build #11229933 succeeded on `fedora-43-x86_64`. Key fixes: **C1** — the kernel module now includes `PCI_CLASS_DISPLAY_OTHER` (0x0380) so Intel integrated GPUs are found alongside discrete cards, and skips display-class PCI devices whose native driver is not bound (blacklisted MTT S30), so kernel and userspace enumeration agree on GPU indices; **C2** — `mvgal_mtt.c` now checks `MVGAL_FULL_STACK` (the real compile-time guard) instead of the non-existent `CONFIG_MVGal_MTT` typo, and the `find_module()` calls removed from kernel 7.x are replaced by a `/proc/modules` read; **C3** — udev rules and the pkexec helper now set `GROUP="mvgal"` and `MODE="0660"` (were `GROUP="video"` and `MODE="0666"`); **H1** — `mvgal-enum` and `mvgal list-gpus` now scan PCI for display-class GPUs with no DRM node and warn about present-but-unusable devices; **H2** — `mvgal start` now checks for `/sys/module/mvgal` after launching the daemon and prints a degraded-mode warning if the kernel module is absent.
 
