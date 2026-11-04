@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: guide
 mvgal_order: 14
 ---
 
 # MVGAL Build Guide
 
-> Source metadata is **0.7.32**; the source changelog documents releases through **0.7.32**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
+> Source metadata is **0.7.38**; the source changelog documents releases through **0.7.38**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
 
 ## Requirements
 
@@ -77,7 +77,7 @@ Distribution packaging definitions are under `packaging/`; artifact names and in
 ## Packaging
 
 > [!info]
-> Historical build record: the earlier v0.7.20 source RPM and package pipeline were exercised in October 2026. That record does not describe the current 0.7.28 artifacts or establish their publication state. See [`package/README.md`](../package/README.md) for files present in this docs checkout.
+> Historical build record: the earlier v0.7.20 source RPM and package pipeline were exercised in October 2026. That record does not describe the current 0.7.38 release or establish its publication state. See [`package/README.md`](../package/README.md) for files present in this docs checkout.
 
 ### Source RPM
 
@@ -95,9 +95,56 @@ Distribution packaging definitions are under `packaging/`; artifact names and in
 ### Fedora COPR
 
 ```bash
-copr build axogm/mvgal mvgal-<version>-1.fc44.src.rpm
-copr watch-build <build_id>
+copr-cli build mvgal mvgal-<version>-1.fc45.src.rpm
+copr-cli watch-build <build_id>
 ```
+
+Build logs are only reachable from the download host, because the web UI sits
+behind bot protection and `copr-cli build-log` is not a valid command:
+
+```bash
+curl -sL https://download.copr.fedorainfracloud.org/results/axogm/mvgal/\
+<chroot>/<build_id>-mvgal/builder-live.log.gz | gunzip -c | less
+```
+
+In that directory `build.log.gz` is the SRPM stage, `builder-live.log.gz` is the
+real binary build, `state.log.gz` is the phase timeline and `root.log.gz` is only
+the chroot probe.
+
+### Distribution matrix
+
+COPR build **#11253985** (0.7.38) is green on 56 chroots: `fedora-*`,
+`opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9`, `mageia-10`,
+`openeuler-22.03` and `openeuler-24.03`, each on x86_64 and aarch64. The
+remaining chroots fail for reasons outside the source tree:
+
+| Chroot | Failure |
+|--------|---------|
+| `openeuler-20.03-*` | needs CMake ≥ 3.20; the 2020 LTS ships 3.17 and GCC 7.3 |
+| `mageia-8-*` | end-of-life; repository content was purged from the mirrors |
+| `mageia-cauldron-*` | mirror download failures for current Cauldron packages |
+| `epel-7-x86_64`, `rhel-7-x86_64` | the EPEL 7 archive no longer serves content |
+| `centos-stream+epel-next-8-*` | the `epel-next` repository metadata is unreachable |
+| `custom-1-x86_64` | empty chroot |
+
+Three source-level portability accommodations exist because of that matrix, and
+they are worth knowing before changing the affected files:
+
+- `runtime/daemon/kernel_ioctl_types.hpp` uses `__has_include(<drm/drm.h>)` and
+  falls back to equivalent `_IOC` definitions for `DRM_IOWR`/`DRM_COMMAND_BASE`.
+  openSUSE Leap 16 and Mageia Cauldron ship no `drm/drm.h` in the build chroot.
+  The generated ioctl numbers are identical either way.
+- `packaging/rpm/mvgal.spec` defines `%{!?cmake_build:...}` and
+  `%{!?cmake_install:...}` fallbacks and then builds whichever directory
+  actually received the CMake cache. Chroots without `cmake-rpm-macros` left the
+  macro undefined, so bash read the literal token as a job spec and died with
+  `fg: no job control`; openEuler configures in-source while its macro expects an
+  out-of-tree `x86_64-openEuler-linux-gnu/` directory.
+- `include/mvgal/mvgal_cmd_dag.h` derives `MVGAL_HAVE_SYNC2` from
+  `VK_VERSION_1_3`/`VK_KHR_synchronization2`. On Vulkan 1.2 headers
+  (openEuler 22.03) the barrier payload becomes an opaque handle, the lowering
+  helpers and the `vkCmdPipelineBarrier2` slot are compiled out, and a recorded
+  sync2 barrier reports `VK_ERROR_FEATURE_NOT_PRESENT` rather than being dropped.
 
 The SRPM embeds the source tarball, so no build chroot fetches anything from the forge. This matters: the spec's `Source0` points at a `github.com/.../archive/refs/tags/v<version>.tar.gz` URL, and if a build ever did resolve it, the tag must exist first. Bumping the version without pushing the tag yields a build that fails in every chroot with a 404.
 

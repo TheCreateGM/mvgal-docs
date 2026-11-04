@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, power, reference]
 aliases: [Power Management, Power]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: reference
 mvgal_order: 11
 ---
 
 # MVGAL Power Management
 
-> Source metadata is **0.7.32**; the source changelog documents releases through **0.7.32**. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.
+> Source metadata is **0.7.38**; the source changelog documents releases through **0.7.38**. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.
 
 ## What the source provides
 
@@ -21,7 +21,7 @@ Power management exists at three layers, but the control loops are **not fully w
 
 ### Wiring status (read this first)
 
-Honest state of each control path as of 0.7.31:
+Honest state of each control path as of 0.7.38:
 
 | Path | Status |
 |------|--------|

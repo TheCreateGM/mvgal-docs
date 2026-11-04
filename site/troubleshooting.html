@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Troubleshooting — MVGAL Documentation">
 <meta name="twitter:description" content="Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Troubleshooting — MVGAL Documentation", "name": "Troubleshooting — MVGAL Documentation", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.", "url": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics", "datePublished": "2026-08-31", "dateModified": "2026-11-02", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Troubleshooting — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Troubleshooting — MVGAL Documentation", "name": "Troubleshooting — MVGAL Documentation", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics.", "url": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL troubleshooting, daemon, Vulkan layer, MOK, Secure Boot, GPU not detected, kernel module, common fixes, diagnostics", "datePublished": "2026-08-31", "dateModified": "2026-11-04", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Troubleshooting — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/troubleshooting.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
-      <span>v0.7.32</span>
+      <span>v0.7.38</span>
     </a>
   </div>
 </header>
@@ -76,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.32, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.38, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,7 +153,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
-  <div class="sb-sub">v0.7.32 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.38 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -218,7 +218,7 @@
 
 <div class="page-header">
   <div class="page-header-main">
-    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.32</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-11-02</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.38</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-11-04</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
     <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>troubleshooting</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>guide</a></div>
   </div>
   <div class="page-header-actions">
@@ -237,7 +237,7 @@
 <div class="doc-body">
 <h1 id="mvgal-troubleshooting-guide">MVGAL Troubleshooting Guide<a class="anchor-link" href="#mvgal-troubleshooting-guide" aria-label="Permalink to this section"></a></h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.32</strong>; the source changelog documents releases through <strong>0.7.32</strong>. Unsupported kernel submission and VRAM allocation paths return <code>-EOPNOTSUPP</code>. Diagnose the installed build and the specific capability in question.</p>
+<p>Source metadata is <strong>0.7.38</strong>; the source changelog documents releases through <strong>0.7.38</strong>. Unsupported kernel submission and VRAM allocation paths return <code>-EOPNOTSUPP</code>. Diagnose the installed build and the specific capability in question.</p>
 </blockquote>
 <h2 id="start-with-supported-diagnostics">Start with supported diagnostics<a class="anchor-link" href="#start-with-supported-diagnostics" aria-label="Permalink to this section"></a></h2>
 <pre><code class="language-bash">mvgal --help
@@ -359,7 +359,58 @@ provided unloader, which removes the dependents first:</p>
 </code></pre>
 <p>Fixed in v0.7.32; the CLI now routes through the pkexec helper, which
 unloads in reverse dependency order and names the blocker if one holds a
-reference.</p>
+reference. Since v0.7.33 the helper only names modules that are actually
+loaded — it reads <code>/proc/modules</code> instead of reciting a fixed list — and it no
+longer leaks shell job-control notices such as <code>Killed</code>.</p>
+<h3 id="the-module-is-stuck-in-unloading-and-nothing-can-load-it-again">The module is stuck in <code>Unloading</code> and nothing can load it again<a class="anchor-link" href="#the-module-is-stuck-in-unloading-and-nothing-can-load-it-again" aria-label="Permalink to this section"></a></h3>
+<pre><code class="language-bash">grep '^mvgal ' /proc/modules
+# mvgal 327680 -1 - Unloading 0x0000000000000000 (OE-)
+dd if=/dev/mvgal0 of=/dev/null bs=1 count=1
+# dd: failed to open '/dev/mvgal0': No such device or address
+</code></pre>
+<p>A refcount of <code>-1</code> with state <code>Unloading</code> means <code>module_exit</code> never finished.
+The root cause fixed in v0.7.34 was the idle-gate sweep re-queuing itself
+unconditionally, so <code>cancel_delayed_work_sync()</code> never returned during teardown
+and the module stayed in <code>MODULE_STATE_GOING</code> while <code>/dev/mvgal0</code> returned
+ENXIO. <code>mvgal unload-module</code> and <code>mvgal status</code> now detect this state and say a
+reboot is required; on a build older than 0.7.34, or if it still happens, a
+reboot is the only recovery — <code>rmmod</code>, <code>modprobe</code> and a daemon restart all
+fail against a module in that state.</p>
+<h3 id="devmvgal0-exists-but-every-open-fails"><code>/dev/mvgal0</code> exists but every open fails<a class="anchor-link" href="#devmvgal0-exists-but-every-open-fails" aria-label="Permalink to this section"></a></h3>
+<p>Presence of the device node is not proof that the module is usable. Since
+v0.7.33 every tool shares <code>tools/mvgal_device_state.h</code>, which really opens
+<code>/dev/mvgal0</code> and reports one of four states:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>not loaded</td>
+<td><code>/sys/module/mvgal</code> is absent</td>
+</tr>
+<tr>
+<td>wedged</td>
+<td>loaded but stuck in <code>Unloading</code> (reboot required)</td>
+</tr>
+<tr>
+<td>loaded but unusable</td>
+<td>module present, <code>open()</code> fails with ENXIO/EPERM</td>
+</tr>
+<tr>
+<td>OK</td>
+<td><code>open()</code> succeeded</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>mvgal status</code>, <code>mvgal-hw-validate</code>, <code>mvgal-probe</code>, <code>mvgal-info</code> and the daemon
+all use it, so they can no longer report <code>Kernel Module: loaded</code> while every
+open fails. <code>mvgal-probe</code> likewise distinguishes "module not loaded" from
+"module loaded but the device is unusable" instead of claiming the module is
+absent.</p>
 <h3 id="load-with-mvgal-load-not-modprobe-mvgal">Load with <code>mvgal-load</code>, not <code>modprobe mvgal</code><a class="anchor-link" href="#load-with-mvgal-load-not-modprobe-mvgal" aria-label="Permalink to this section"></a></h3>
 <pre><code class="language-bash">pkexec mvgal-load
 </code></pre>
@@ -401,7 +452,7 @@ blocked.</p>
 </section>
 </div>
 <aside class="doc-rail">
-<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#start-with-supported-diagnostics">Start with supported diagnostics</a></li><li class="outline-item outline-l2"><a href="#package-or-command-not-found">Package or command not found</a></li><li class="outline-item outline-l2"><a href="#daemon-does-not-start">Daemon does not start</a></li><li class="outline-item outline-l2"><a href="#daemon-socket-permissions">Daemon socket permissions</a></li><li class="outline-item outline-l2"><a href="#kernel-module-does-not-load">Kernel module does not load</a></li><li class="outline-item outline-l3"><a href="#invalid-parameters-or-decompression-failed-with-status-6">"Invalid parameters" or "decompression failed with status 6"</a></li><li class="outline-item outline-l3"><a href="#key-was-rejected-by-service-but-the-key-is-enrolled">"Key was rejected by service" but the key <em>is</em> enrolled</a></li><li class="outline-item outline-l3"><a href="#mvgal-unload-module-fails-with-module-mvgal-is-in-use"><code>mvgal unload-module</code> fails with "Module mvgal is in use"</a></li><li class="outline-item outline-l3"><a href="#load-with-mvgal-load-not-modprobe-mvgal">Load with <code>mvgal-load</code>, not <code>modprobe mvgal</code></a></li><li class="outline-item outline-l2"><a href="#gpu-is-missing-from-mvgal-output">GPU is missing from MVGAL output</a></li><li class="outline-item outline-l3"><a href="#gpu-appears-in-lspci-but-not-in-mvgal-info">GPU appears in <code>lspci</code> but not in <code>mvgal-info</code></a></li><li class="outline-item outline-l2"><a href="#operation-reports-unsupported">Operation reports unsupported</a></li><li class="outline-item outline-l2"><a href="#steam-proton">Steam / Proton</a></li><li class="outline-item outline-l2"><a href="#report-a-reproducible-issue">Report a reproducible issue</a></li></ul>
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#start-with-supported-diagnostics">Start with supported diagnostics</a></li><li class="outline-item outline-l2"><a href="#package-or-command-not-found">Package or command not found</a></li><li class="outline-item outline-l2"><a href="#daemon-does-not-start">Daemon does not start</a></li><li class="outline-item outline-l2"><a href="#daemon-socket-permissions">Daemon socket permissions</a></li><li class="outline-item outline-l2"><a href="#kernel-module-does-not-load">Kernel module does not load</a></li><li class="outline-item outline-l3"><a href="#invalid-parameters-or-decompression-failed-with-status-6">"Invalid parameters" or "decompression failed with status 6"</a></li><li class="outline-item outline-l3"><a href="#key-was-rejected-by-service-but-the-key-is-enrolled">"Key was rejected by service" but the key <em>is</em> enrolled</a></li><li class="outline-item outline-l3"><a href="#mvgal-unload-module-fails-with-module-mvgal-is-in-use"><code>mvgal unload-module</code> fails with "Module mvgal is in use"</a></li><li class="outline-item outline-l3"><a href="#the-module-is-stuck-in-unloading-and-nothing-can-load-it-again">The module is stuck in <code>Unloading</code> and nothing can load it again</a></li><li class="outline-item outline-l3"><a href="#devmvgal0-exists-but-every-open-fails"><code>/dev/mvgal0</code> exists but every open fails</a></li><li class="outline-item outline-l3"><a href="#load-with-mvgal-load-not-modprobe-mvgal">Load with <code>mvgal-load</code>, not <code>modprobe mvgal</code></a></li><li class="outline-item outline-l2"><a href="#gpu-is-missing-from-mvgal-output">GPU is missing from MVGAL output</a></li><li class="outline-item outline-l3"><a href="#gpu-appears-in-lspci-but-not-in-mvgal-info">GPU appears in <code>lspci</code> but not in <code>mvgal-info</code></a></li><li class="outline-item outline-l2"><a href="#operation-reports-unsupported">Operation reports unsupported</a></li><li class="outline-item outline-l2"><a href="#steam-proton">Steam / Proton</a></li><li class="outline-item outline-l2"><a href="#report-a-reproducible-issue">Report a reproducible issue</a></li></ul>
 <div class="rail-actions">
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/TROUBLESHOOTING.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/TROUBLESHOOTING.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
@@ -410,7 +461,7 @@ blocked.</p>
 </div>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.32 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.38 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

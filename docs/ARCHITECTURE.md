@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: reference
 mvgal_order: 6
 ---
 
 # MVGAL Architecture
 
-This page describes the 0.7.31 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
+This page describes the 0.7.38 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
 
 ## Main components
 

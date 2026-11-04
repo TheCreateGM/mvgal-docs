@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,135 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.38] - 2026-11-04
+
+Build-portability release. No runtime behaviour changes on a Vulkan 1.3
+loader.
+
+### Fixed
+
+- **`mvgal_cmd_dag.c` did not compile against Vulkan 1.2 headers.**
+  openEuler 22.03 ships headers without `VkDependencyInfo`,
+  `VkImageMemoryBarrier2` or `PFN_vkCmdPipelineBarrier2`, and the command
+  buffer DAG used all three unconditionally. The recorded barrier payload
+  is now an opaque handle (`mvgal_dependency_info_t`, typedef'd to
+  `VkDependencyInfo` only when the headers provide synchronization2), the
+  mask-widening and lowering helpers and the `vkCmdPipelineBarrier2` emit
+  slot are compiled only for such builds, and a recorded sync2 barrier on
+  a build without sync2 reports `VK_ERROR_FEATURE_NOT_PRESENT` with an
+  explanatory log instead of being silently dropped. Vulkan 1.3 builds are
+  unchanged, including the existing runtime lowering to
+  `vkCmdPipelineBarrier`.
+
+## [0.7.37] - 2026-11-04
+
+### Fixed
+
+- **`'VK_API_VERSION_1_3' undeclared` on openEuler 22.03.**
+  `vk_layer.c` advertises its spec version and the instance API version it
+  exposes with `VK_API_VERSION_1_3`, a constant that only exists in Vulkan
+  headers from 1.2.170. A local
+  `VK_MAKE_API_VERSION(0, 1, 3, 0)` (falling back to
+  `VK_MAKE_VERSION(1, 3, 0)`) is now provided when the headers predate it.
+- **openEuler 24.03 configured in-source but the spec built out-of-tree.**
+  The chroot's `cmake` wrapper writes `CMakeCache.txt` into the source
+  directory while its `cmake_build` macro expects a
+  `x86_64-openEuler-linux-gnu` subdirectory that was never created, so the
+  build failed with "is not a directory". The spec now builds and installs
+  whichever directory actually received the cache and uses the standard
+  macros everywhere else.
+
+## [0.7.36] - 2026-11-04
+
+### Fixed
+
+- **Chroots without `cmake-rpm-macros` aborted after a successful
+  configure.** On openEuler the `cmake_build` macro was left undefined, so
+  the literal token reached the generated shell script and bash read it as
+  a job specification, dying with `fg: no job control`. The spec now
+  defines `cmake_build`/`cmake_install` fallbacks when the macros are
+  absent.
+
+## [0.7.35] - 2026-11-04
+
+### Fixed
+
+- **`runtime/daemon/kernel_ioctl_types.hpp` hard-required `drm/drm.h`.**
+  openSUSE Leap 16 and Mageia Cauldron ship the DRM uapi headers in a
+  package the build does not otherwise need. The header now probes with
+  `__has_include()` and falls back to equivalent `_IOC` definitions for
+  `DRM_IOWR` and `DRM_COMMAND_BASE`; the generated ioctl numbers are
+  identical either way.
+- **`mvgal-config set-strategy` did not reach a running daemon.** It wrote
+  the config and exited, leaving the daemon on the old strategy until a
+  manual reload. It now reloads the daemon like `mvgal set-strategy` and
+  says whether the change is live.
+
+## [0.7.34] - 2026-11-04
+
+### Fixed
+
+- **Module unload could leave `mvgal` wedged in `Unloading` with refcount
+  `-1` until reboot.** Root cause: the idle-gate sweep re-queued itself
+  unconditionally, so `cancel_delayed_work_sync()` never returned during
+  teardown and `module_exit` never completed. The sweep now honours a
+  stopping flag that is set before cancellation. The visible symptom was
+  `/dev/mvgal0` still present but every `open()` returning `ENXIO`, with
+  `modprobe` reporting "Device or resource busy" and `rmmod` refused.
+- **Section macros inside spec comments.** RPM expands macros in comments,
+  so a comment mentioning the install section was parsed as a real marker
+  and the build stopped with a second install section. Section names are no
+  longer spelled as macros in prose.
+- **Build-time `dkms` dependency removed** from the spec; it broke chroots
+  that have no kernel-devel package to build against.
+
+## [0.7.33] - 2026-11-04
+
+Closes the 0.7.32 test report (2 critical, 4 high, 7 medium, 6 low).
+
+### Fixed
+
+- **C1/C2/H1/M6 — the device is now probed, not assumed.** Every tool
+  shares `tools/mvgal_device_state.h`, which opens `/dev/mvgal0` and
+  reports *not loaded*, *wedged* (stuck in `Unloading`), *loaded but
+  unusable* (`ENXIO`/`EPERM`) or *OK*. `mvgal status`, `mvgal-status`,
+  `mvgal-info`, `mvgal-probe`, `mvgal-hw-validate` and the daemon all use
+  it, so a `stat()` hit is no longer reported as PASS and a wedged module
+  is no longer reported as loaded.
+- **H4 — unload advice names the real holders.** `unload-module` detects
+  the wedged state up front, unloads with a non-blocking rmmod, lists the
+  modules that actually appear in `/proc/modules` in dependency order, and
+  never suggests rmmod for modules that are not loaded. The pkexec helper
+  no longer leaks shell `Killed` notices to the terminal.
+- **M5 — `mvgal restart` on a stopped daemon** now says it started the
+  daemon rather than claiming it restarted one.
+- **L6 — no blank line before the JSON closing brace** in
+  `mvgal-bench --json` output.
+
+### Added
+
+- **L2 — shell completions** for bash, zsh and fish.
+- **Shader intermediate-format detection and routing** for SPIR-V, PTX,
+  cubin, fatbin, hsaco, LLVM IR, LLVM bitcode, assembly and Intel GEN.
+
+### Changed
+
+- **L3 — only user-facing documentation is installed** into
+  `/usr/share/doc/mvgal`. Internal engineering notes are kept out unless
+  the build sets `MVGAL_INSTALL_INTERNAL_DOCS=ON`.
+
+### 0.7.33-2
+
+- **aarch64 build fix.** `mvgal_ccl_transport.c` used
+  `__builtin_ia32_pause()` unconditionally; it now uses a per-architecture
+  pause/yield.
+- **openSUSE Leap 16 kernel-module build fix.** `kernel/mvgal_modinfo_compat.h`
+  emits `MODULE_IMPORT_NS()` so the `.modinfo` dma-buf record is identical
+  across kernel releases.
+- **RHEL/EPEL 7 spec fix.** `Recommends` is guarded for RPM older than
+  4.12.
+- **`-Wcomment` warning fixed** in the PCI ID table.
 
 ## [0.7.32] - 2026-11-02
 

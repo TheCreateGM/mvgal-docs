@@ -1,6 +1,6 @@
 # MVGAL Package Artifacts
 
-This directory currently contains package files named for MVGAL **0.7.28**, produced by the `mvgal-packages` Jenkins job together with `BUILD-INFO.txt` (the source commit, build date and builder) and `SHA256SUMS` over every artefact here. Verify the checksums before installing; check each file's package metadata and signature too.
+This directory currently contains package files named for MVGAL **0.7.28**, produced by the `mvgal-packages` Jenkins job together with `BUILD-INFO.txt` (the source commit, build date and builder) and `SHA256SUMS` over every artefact here. The current source release is **0.7.38**; the Fedora packages for it are published through COPR (`axogm/mvgal`, build #11253985) rather than copied into this checkout, so the artefact list below is a snapshot of 0.7.28 and is not the current version. Verify the checksums before installing; check each file's package metadata and signature too.
 
 ## Files present
 

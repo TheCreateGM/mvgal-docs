@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: guide
 mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.32***; the source changelog documents releases through **0.7.32**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.38***; the source changelog documents releases through **0.7.38**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 ## 1. Inspect the package or build
 
@@ -78,6 +78,18 @@ mvgal-status --once
 | `2` | Down — daemon not running |
 
 A non-zero status from `mvgal-status` is a degraded-mode signal, not proof that the userspace daemon failed. On a Secure Boot machine where the MOK is not yet enrolled, the exit code is `1`, not `0`.
+
+`mvgal-status` defaults to watch mode — it prints a live view and waits for
+Ctrl-C. Use `--once` in scripts; since v0.7.33 that path returns the documented
+`2` when the daemon is down instead of `0`, matching `mvgal status`. `mvgal
+show-stats` behaves the same way: it prints a `Daemon: NOT RUNNING` banner and
+exits `2` rather than a table of zeros.
+
+`mvgal --help` closes with an `Also see:` section listing the companion tools
+(`mvgal-status`, `mvgal-info`, `mvgal-probe`, `mvgal-enum`, `mvgal-compat`,
+`mvgal-dashboard`, `mvgal-hw-validate`, `mvgal-bench`, `mvgal-workload`,
+`mvgal-steam-setup`), and bash/zsh/fish completions are installed under
+`/usr/share/`.
 
 ## 5. Check capability support
 

@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,11 +11,70 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.32** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.32**. This documentation snapshot was reconciled against that source on 2026-11-02. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.38** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.38**. This documentation snapshot was reconciled against that source on 2026-11-04. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.38 makes the Vulkan command-buffer DAG compile against Vulkan 1.2
+headers. openEuler 22.03 ships headers without `VkDependencyInfo` or
+`PFN_vkCmdPipelineBarrier2`, so the recorded barrier payload is now an
+opaque handle, the synchronization2 lowering helpers and the
+`vkCmdPipelineBarrier2` slot are compiled only when the headers provide
+them, and a recorded sync2 barrier on such a build reports
+`VK_ERROR_FEATURE_NOT_PRESENT` instead of being silently dropped. Vulkan
+1.3 behaviour, including runtime lowering to `vkCmdPipelineBarrier`, is
+unchanged. See [Changelog](CHANGELOG.md) § v0.7.38.
+
+v0.7.37 fixes the two remaining openEuler 22.03 build failures.
+`vk_layer.c` uses `VK_API_VERSION_1_3` to advertise its spec and instance
+API version, and that constant only exists in Vulkan headers from
+1.2.170; a local `VK_MAKE_API_VERSION(0,1,3,0)` fallback keeps the layer
+compiling on older headers. The spec now builds whichever directory
+actually received the CMake cache: openEuler configures in-source while
+its `cmake_build` macro expects an out-of-tree `x86_64-openEuler-linux-gnu`
+directory that was never created.
+
+v0.7.36 defines `cmake_build`/`cmake_install` fallbacks for chroots that
+ship no `cmake-rpm-macros`. On openEuler the macro was left undefined, so
+the literal token reached the build script and bash read it as a job
+specification, aborting with `fg: no job control` after a successful
+configure. Fedora, RHEL and SUSE are unaffected and keep the standard
+out-of-tree macro path.
+
+v0.7.35 removes the hard requirement on `drm/drm.h` in
+`runtime/daemon/kernel_ioctl_types.hpp`, using `__has_include()` plus
+equivalent `_IOC` definitions for `DRM_IOWR` and `DRM_COMMAND_BASE`. This
+unblocks openSUSE Leap 16 on both architectures and Mageia Cauldron
+aarch64, and generates identical ioctl numbers. `mvgal-config` also
+reloads a running daemon after saving a strategy and says whether the
+change is live, matching `mvgal set-strategy`.
+
+v0.7.34 fixes the root cause of the module-unload wedge. The idle-gate
+sweep re-queued itself unconditionally, so `cancel_delayed_work_sync()`
+never returned during teardown and `mvgal` stayed in `MODULE_STATE_GOING`
+(`Unloading`, refcount `-1`) with `/dev/mvgal0` unopenable (`ENXIO`) until
+reboot; the sweep now honours a stopping flag set before cancellation.
+The spec also stops putting section macros in comments (rpm parsed one as
+a real marker and reported a second install section) and drops the
+build-time `dkms` dependency.
+
+v0.7.33 is the release that closes the 0.7.32 test report. **C1/C2/H1/M6**
+— every tool now shares `tools/mvgal_device_state.h`, which actually opens
+`/dev/mvgal0` and reports not-loaded, wedged, loaded-but-unusable or OK
+instead of trusting `stat()`. **H4** — unload-module detects the wedged
+state up front, uses a non-blocking rmmod, names the modules that really
+hold the reference, never suggests rmmod for unloaded modules, and the
+helper no longer leaks shell `Killed` notices. **M5** — `mvgal restart` on
+a stopped daemon says it started it. **L2** — bash, zsh and fish
+completions ship. **L3** — only user-facing documentation is installed.
+**L6** — no blank line before the JSON closing brace. Shader
+intermediate-format detection and routing was added for SPIR-V, PTX,
+cubin, fatbin, hsaco, LLVM IR/bitcode, assembly and Intel GEN. The 0.7.33-2
+rebuild fixed aarch64 (`__builtin_ia32_pause()` was used unconditionally),
+made the `.modinfo` dma-buf record identical across kernel releases via
+`MODULE_IMPORT_NS()`, and guarded `Recommends` for RPM older than 4.12.
 
 v0.7.32 fixes seven issues from the 0.7.31 test report: unload-module always
 failed because the core module has hard dependents; bench --json produced
@@ -112,7 +171,7 @@ The source changelog's 0.7.24 known-issues entry records a PCI enumeration refer
 
 ## Package state
 
-This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Version 0.7.31 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.31. COPR build #11229933 succeeded on `fedora-43-x86_64`. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
+This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Version 0.7.38 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.38. COPR build #11253985 succeeded on 56 chroots, including `fedora-*`, `opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9`, `mageia-10`, `openeuler-22.03` and `openeuler-24.03` on both x86_64 and aarch64. Ten chroots remain red for environmental reasons unrelated to the package: `epel-7` and `rhel-7` (EPEL 7 archive is gone), `mageia-8` (end of life), `mageia-cauldron` (mirror download failures), `centos-stream+epel-next-8` (epel-next repomd unreachable), `openeuler-20.03` (needs CMake 3.20, ships 3.17) and `custom-1` (empty chroot). Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
 
 ## Further reading
 

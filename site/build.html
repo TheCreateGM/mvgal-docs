@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Building — MVGAL Documentation">
 <meta name="twitter:description" content="Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Building — MVGAL Documentation", "name": "Building — MVGAL Documentation", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.", "url": "https://thecreategm.github.io/mvgal-docs/site/build.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM", "datePublished": "2026-08-31", "dateModified": "2026-11-02", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Building — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/build.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Building — MVGAL Documentation", "name": "Building — MVGAL Documentation", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging.", "url": "https://thecreategm.github.io/mvgal-docs/site/build.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL build, build from source, CMake, Meson, Zig, compile MVGAL, Fedora RHEL build, packaging RPM", "datePublished": "2026-08-31", "dateModified": "2026-11-04", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Building — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/build.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
-      <span>v0.7.32</span>
+      <span>v0.7.38</span>
     </a>
   </div>
 </header>
@@ -76,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.32, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.38, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,7 +153,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
-  <div class="sb-sub">v0.7.32 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.38 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -218,7 +218,7 @@
 
 <div class="page-header">
   <div class="page-header-main">
-    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.32</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-11-02</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.38</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-11-04</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>guide</span></div>
     <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>build</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>guide</a></div>
   </div>
   <div class="page-header-actions">
@@ -237,7 +237,7 @@
 <div class="doc-body">
 <h1 id="mvgal-build-guide">MVGAL Build Guide<a class="anchor-link" href="#mvgal-build-guide" aria-label="Permalink to this section"></a></h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.32</strong>; the source changelog documents releases through <strong>0.7.32</strong>. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.</p>
+<p>Source metadata is <strong>0.7.38</strong>; the source changelog documents releases through <strong>0.7.38</strong>. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.</p>
 </blockquote>
 <h2 id="requirements">Requirements<a class="anchor-link" href="#requirements" aria-label="Permalink to this section"></a></h2>
 <p>The top-level CMake configuration requires CMake 3.16+, a C and C++ compiler, pkg-config, libdrm, and pciaccess. Additional components are conditional on dependencies. Install the development packages matching your distribution; inspect CMake output for disabled optional targets.</p>
@@ -327,7 +327,7 @@ ninja -C builddir
 </code></pre>
 <p>Distribution packaging definitions are under <code>packaging/</code>; artifact names and install paths depend on the selected package recipe. Do not rely on old hard-coded paths or version numbers in generated examples.</p>
 <h2 id="packaging">Packaging<a class="anchor-link" href="#packaging" aria-label="Permalink to this section"></a></h2>
-<div class="callout callout-info"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg></span><span class="callout-label">Info</span></div><div class="callout-body"><p>Historical build record: the earlier v0.7.20 source RPM and package pipeline were exercised in October 2026. That record does not describe the current 0.7.28 artifacts or establish their publication state. See <a href="https://github.com/TheCreateGM/mvgal-docs/blob/main/README.md" class="external"><code>package/README.md</code></a> for files present in this docs checkout.</p></div></div>
+<div class="callout callout-info"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4M8 4.8h.01"/></svg></span><span class="callout-label">Info</span></div><div class="callout-body"><p>Historical build record: the earlier v0.7.20 source RPM and package pipeline were exercised in October 2026. That record does not describe the current 0.7.38 release or establish its publication state. See <a href="https://github.com/TheCreateGM/mvgal-docs/blob/main/README.md" class="external"><code>package/README.md</code></a> for files present in this docs checkout.</p></div></div>
 <h3 id="source-rpm">Source RPM<a class="anchor-link" href="#source-rpm" aria-label="Permalink to this section"></a></h3>
 <p><code>scripts/mksrpm.sh</code> builds the SRPM. It is deliberately strict, and the strictness is the feature:</p>
 <pre><code class="language-bash">./scripts/mksrpm.sh            # uses packaging/rpm/mvgal.spec
@@ -339,9 +339,75 @@ ninja -C builddir
 <li><strong>Output.</strong> Both <code>v&lt;version&gt;.tar.gz</code> and <code>mvgal-&lt;version&gt;-1.&lt;dist&gt;.src.rpm</code> are written to the repository root. Both are gitignored.</li>
 </ul>
 <h3 id="fedora-copr">Fedora COPR<a class="anchor-link" href="#fedora-copr" aria-label="Permalink to this section"></a></h3>
-<pre><code class="language-bash">copr build axogm/mvgal mvgal-&lt;version&gt;-1.fc44.src.rpm
-copr watch-build &lt;build_id&gt;
+<pre><code class="language-bash">copr-cli build mvgal mvgal-&lt;version&gt;-1.fc45.src.rpm
+copr-cli watch-build &lt;build_id&gt;
 </code></pre>
+<p>Build logs are only reachable from the download host, because the web UI sits
+behind bot protection and <code>copr-cli build-log</code> is not a valid command:</p>
+<pre><code class="language-bash">curl -sL https://download.copr.fedorainfracloud.org/results/axogm/mvgal/\
+&lt;chroot&gt;/&lt;build_id&gt;-mvgal/builder-live.log.gz | gunzip -c | less
+</code></pre>
+<p>In that directory <code>build.log.gz</code> is the SRPM stage, <code>builder-live.log.gz</code> is the
+real binary build, <code>state.log.gz</code> is the phase timeline and <code>root.log.gz</code> is only
+the chroot probe.</p>
+<h3 id="distribution-matrix">Distribution matrix<a class="anchor-link" href="#distribution-matrix" aria-label="Permalink to this section"></a></h3>
+<p>COPR build <strong>#11253985</strong> (0.7.38) is green on 56 chroots: <code>fedora-*</code>,
+<code>opensuse-leap-16.0</code>, <code>opensuse-tumbleweed</code>, <code>mageia-9</code>, <code>mageia-10</code>,
+<code>openeuler-22.03</code> and <code>openeuler-24.03</code>, each on x86_64 and aarch64. The
+remaining chroots fail for reasons outside the source tree:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Chroot</th>
+<th>Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>openeuler-20.03-*</code></td>
+<td>needs CMake ≥ 3.20; the 2020 LTS ships 3.17 and GCC 7.3</td>
+</tr>
+<tr>
+<td><code>mageia-8-*</code></td>
+<td>end-of-life; repository content was purged from the mirrors</td>
+</tr>
+<tr>
+<td><code>mageia-cauldron-*</code></td>
+<td>mirror download failures for current Cauldron packages</td>
+</tr>
+<tr>
+<td><code>epel-7-x86_64</code>, <code>rhel-7-x86_64</code></td>
+<td>the EPEL 7 archive no longer serves content</td>
+</tr>
+<tr>
+<td><code>centos-stream+epel-next-8-*</code></td>
+<td>the <code>epel-next</code> repository metadata is unreachable</td>
+</tr>
+<tr>
+<td><code>custom-1-x86_64</code></td>
+<td>empty chroot</td>
+</tr>
+</tbody>
+</table></div>
+<p>Three source-level portability accommodations exist because of that matrix, and
+they are worth knowing before changing the affected files:</p>
+<ul>
+<li><code>runtime/daemon/kernel_ioctl_types.hpp</code> uses <code>__has_include(&lt;drm/drm.h&gt;)</code> and
+  falls back to equivalent <code>_IOC</code> definitions for <code>DRM_IOWR</code>/<code>DRM_COMMAND_BASE</code>.
+  openSUSE Leap 16 and Mageia Cauldron ship no <code>drm/drm.h</code> in the build chroot.
+  The generated ioctl numbers are identical either way.</li>
+<li><code>packaging/rpm/mvgal.spec</code> defines <code>%{!?cmake_build:...}</code> and
+  <code>%{!?cmake_install:...}</code> fallbacks and then builds whichever directory
+  actually received the CMake cache. Chroots without <code>cmake-rpm-macros</code> left the
+  macro undefined, so bash read the literal token as a job spec and died with
+  <code>fg: no job control</code>; openEuler configures in-source while its macro expects an
+  out-of-tree <code>x86_64-openEuler-linux-gnu/</code> directory.</li>
+<li><code>include/mvgal/mvgal_cmd_dag.h</code> derives <code>MVGAL_HAVE_SYNC2</code> from
+  <code>VK_VERSION_1_3</code>/<code>VK_KHR_synchronization2</code>. On Vulkan 1.2 headers
+  (openEuler 22.03) the barrier payload becomes an opaque handle, the lowering
+  helpers and the <code>vkCmdPipelineBarrier2</code> slot are compiled out, and a recorded
+  sync2 barrier reports <code>VK_ERROR_FEATURE_NOT_PRESENT</code> rather than being dropped.</li>
+</ul>
 <p>The SRPM embeds the source tarball, so no build chroot fetches anything from the forge. This matters: the spec's <code>Source0</code> points at a <code>github.com/.../archive/refs/tags/v&lt;version&gt;.tar.gz</code> URL, and if a build ever did resolve it, the tag must exist first. Bumping the version without pushing the tag yields a build that fails in every chroot with a 404.</p>
 <div class="callout callout-warning"><div class="callout-title"><span class="callout-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 15 14H1Z"/><path d="M8 6.2v3.4M8 11.6h.01"/></svg></span><span class="callout-label">Warning</span></div><div class="callout-body"><p><code>copr build</code> prints nothing while uploading, and an SRPM is several megabytes. A short command timeout can kill the client after the upload has already succeeded server-side — check <code>copr list-builds</code> before assuming it failed.</p></div></div>
 <p>Build state is authoritative at <code>https://copr.fedorainfracloud.org/api_3/build/&lt;build_id&gt;</code>. Note that <code>api.copr.fedorainfracloud.org</code> does not resolve, and a bare <code>/api_3/</code> returns 404; only the per-build path works.</p>
@@ -392,7 +458,7 @@ copr watch-build &lt;build_id&gt;
 </section>
 </div>
 <aside class="doc-rail">
-<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#requirements">Requirements</a></li><li class="outline-item outline-l2"><a href="#cmake-build">CMake build</a></li><li class="outline-item outline-l2"><a href="#meson-build">Meson build</a></li><li class="outline-item outline-l2"><a href="#rust-crates">Rust crates</a></li><li class="outline-item outline-l2"><a href="#kernel-module">Kernel module</a></li><li class="outline-item outline-l2"><a href="#install">Install</a></li><li class="outline-item outline-l2"><a href="#packaging">Packaging</a></li><li class="outline-item outline-l3"><a href="#source-rpm">Source RPM</a></li><li class="outline-item outline-l3"><a href="#fedora-copr">Fedora COPR</a></li><li class="outline-item outline-l3"><a href="#reproducibility">Reproducibility</a></li><li class="outline-item outline-l3"><a href="#jenkins">Jenkins</a></li><li class="outline-item outline-l2"><a href="#source-references">Source references</a></li></ul>
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#requirements">Requirements</a></li><li class="outline-item outline-l2"><a href="#cmake-build">CMake build</a></li><li class="outline-item outline-l2"><a href="#meson-build">Meson build</a></li><li class="outline-item outline-l2"><a href="#rust-crates">Rust crates</a></li><li class="outline-item outline-l2"><a href="#kernel-module">Kernel module</a></li><li class="outline-item outline-l2"><a href="#install">Install</a></li><li class="outline-item outline-l2"><a href="#packaging">Packaging</a></li><li class="outline-item outline-l3"><a href="#source-rpm">Source RPM</a></li><li class="outline-item outline-l3"><a href="#fedora-copr">Fedora COPR</a></li><li class="outline-item outline-l3"><a href="#distribution-matrix">Distribution matrix</a></li><li class="outline-item outline-l3"><a href="#reproducibility">Reproducibility</a></li><li class="outline-item outline-l3"><a href="#jenkins">Jenkins</a></li><li class="outline-item outline-l2"><a href="#source-references">Source references</a></li></ul>
 <div class="rail-actions">
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/BUILD.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/BUILD.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
@@ -401,7 +467,7 @@ copr watch-build &lt;build_id&gt;
 </div>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.32 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.38 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

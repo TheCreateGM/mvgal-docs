@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.31**; the source changelog documents releases through **0.7.32**.
-> Core architecture and status pages were reconciled against the source tree on **2026-10-30**.
+> Source version **0.7.38**; the source changelog documents releases through **0.7.38**.
+> Core architecture and status pages were reconciled against the source tree on **2026-11-04**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.31 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.38 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -41,6 +41,59 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Cargo, DKMS) |
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
+
+## 🔍 What's New in 0.7.38
+
+> [!tip]
+> The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.38 closes the last distribution-portability gap in the Vulkan layer.**
+On openEuler 22.03 — which ships Vulkan 1.2 headers — the command-DAG emitter
+did not compile: `VkDependencyInfo` was an unknown type and
+`PFN_vkCmdPipelineBarrier2` undeclared. `include/mvgal/mvgal_cmd_dag.h` now
+defines `MVGAL_HAVE_SYNC2` from `VK_VERSION_1_3` / `VK_KHR_synchronization2`,
+stores a barrier payload as an opaque handle, and gates the lowering helpers
+and the `vkCmdPipelineBarrier2` slot behind it. A recorded sync2 barrier on
+such a build now reports `VK_ERROR_FEATURE_NOT_PRESENT` with an explanatory
+log instead of being silently dropped. Vulkan 1.3 builds are unchanged,
+including runtime lowering to `vkCmdPipelineBarrier`.
+
+**The 0.7.33 → 0.7.37 releases are the ones that fixed the 0.7.32 test report.**
+Every tool now shares `tools/mvgal_device_state.h`, which really opens
+`/dev/mvgal0` and reports not-loaded / wedged / loaded-but-unusable / OK
+instead of trusting `stat()` (C2, M6), so `mvgal-hw-validate`, `mvgal-probe`,
+`mvgal-info`, `mvgal-status` and the daemon can no longer disagree about the
+same node (H1, M1). The kernel-module wedge itself (C1) was an idle-gate sweep
+that re-queued itself unconditionally, so `cancel_delayed_work_sync()` never
+returned during teardown and `mvgal` stayed in `MODULE_STATE_GOING` with
+refcount −1 and `/dev/mvgal0` unopenable (ENXIO) until reboot; `unload-module`
+now detects that state up front and says a reboot is required (H4). Strategy
+changes now reach a running daemon: `mvgal set-strategy` and `mvgal-config`
+reload it after saving and say whether the change is live (H2), `--force` is
+documented in `--help` and the man page and emits the same single-GPU fallback
+warning as `mvgal-config -f` (H3), and `mvgal set-strategy --help` exists.
+`show-stats` prints a `Daemon: NOT RUNNING` banner and exits 2 instead of a
+zeroed table (M3), `mvgal-status --once` returns the documented exit 2 (M2),
+`mvgal restart` on a stopped daemon says it started it (M5), `set-strategy
+custom` warns when the script is missing and notes the shipped stub is a
+no-op (M4), the Vulkan ICD is one line — `available, not registered (opt-in)`
+(M7) — benchmark help no longer claims a daemon is required (L1), bash/zsh/fish
+completions ship (L2), internal engineering docs are excluded from the RPM
+(L3), dashes are ASCII (L4), `Also see:` lists the companion tools (L5), and
+JSON output is clean (L6). The release also added shader intermediate-format
+detection and routing for SPIR-V, PTX, cubin, fatbin, hsaco, LLVM IR/bitcode,
+assembly and Intel GEN.
+
+**Packaging work landed alongside.** COPR build **#11253985** is green on 56
+chroots, including openSUSE Leap 16.0 and Tumbleweed, Mageia 9 and 10, and
+openEuler 22.03 and 24.03 on both x86_64 and aarch64. Getting there required
+an `__has_include(<drm/drm.h>)` fallback with local `_IOC` macros in
+`runtime/daemon/kernel_ioctl_types.hpp`, `cmake_build`/`cmake_install`
+fallbacks plus a `CMakeCache.txt` dispatch for chroots whose rpm macros expect
+a build directory CMake never created, a local `VK_API_VERSION_1_3` for
+Vulkan 1.2 headers, an aarch64-correct pause in `mvgal_ccl_transport.c`, and a
+`MODULE_IMPORT_NS()` fix that makes the `.modinfo` dma-buf record identical
+across kernel releases.
 
 ## 🔍 What's New in 0.7.32
 
@@ -169,8 +222,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.31 source
-tree on **2026-10-30**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.38 source
+tree on **2026-11-04**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |

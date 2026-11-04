@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.32"
-mvgal_verified: 2026-11-02
+mvgal_version: "0.7.38"
+mvgal_verified: 2026-11-04
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.32**; the source changelog documents releases through **0.7.32**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.38**; the source changelog documents releases through **0.7.38**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -160,7 +160,46 @@ pkexec mvgal unload-module
 
 Fixed in v0.7.32; the CLI now routes through the pkexec helper, which
 unloads in reverse dependency order and names the blocker if one holds a
-reference.
+reference. Since v0.7.33 the helper only names modules that are actually
+loaded — it reads `/proc/modules` instead of reciting a fixed list — and it no
+longer leaks shell job-control notices such as `Killed`.
+
+### The module is stuck in `Unloading` and nothing can load it again
+
+```bash
+grep '^mvgal ' /proc/modules
+# mvgal 327680 -1 - Unloading 0x0000000000000000 (OE-)
+dd if=/dev/mvgal0 of=/dev/null bs=1 count=1
+# dd: failed to open '/dev/mvgal0': No such device or address
+```
+
+A refcount of `-1` with state `Unloading` means `module_exit` never finished.
+The root cause fixed in v0.7.34 was the idle-gate sweep re-queuing itself
+unconditionally, so `cancel_delayed_work_sync()` never returned during teardown
+and the module stayed in `MODULE_STATE_GOING` while `/dev/mvgal0` returned
+ENXIO. `mvgal unload-module` and `mvgal status` now detect this state and say a
+reboot is required; on a build older than 0.7.34, or if it still happens, a
+reboot is the only recovery — `rmmod`, `modprobe` and a daemon restart all
+fail against a module in that state.
+
+### `/dev/mvgal0` exists but every open fails
+
+Presence of the device node is not proof that the module is usable. Since
+v0.7.33 every tool shares `tools/mvgal_device_state.h`, which really opens
+`/dev/mvgal0` and reports one of four states:
+
+| State | Meaning |
+|-------|---------|
+| not loaded | `/sys/module/mvgal` is absent |
+| wedged | loaded but stuck in `Unloading` (reboot required) |
+| loaded but unusable | module present, `open()` fails with ENXIO/EPERM |
+| OK | `open()` succeeded |
+
+`mvgal status`, `mvgal-hw-validate`, `mvgal-probe`, `mvgal-info` and the daemon
+all use it, so they can no longer report `Kernel Module: loaded` while every
+open fails. `mvgal-probe` likewise distinguishes "module not loaded" from
+"module loaded but the device is unusable" instead of claiming the module is
+absent.
 
 ### Load with `mvgal-load`, not `modprobe mvgal`
 
