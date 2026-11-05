@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.38"
-mvgal_verified: 2026-11-04
+mvgal_version: "0.7.39"
+mvgal_verified: 2026-11-05
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,11 +11,22 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.38** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.38**. This documentation snapshot was reconciled against that source on 2026-11-04. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.39** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.39**. This documentation snapshot was reconciled against that source on 2026-11-05. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
 
 ## What the code provides
 
 The source includes a Linux DRM-facing kernel module, GPU discovery and capability reporting, a userspace library/API, the `mvgald` runtime daemon, several API integration targets, management/diagnostic tools, Rust safety crates, language bindings, UI sources, tests and distribution packaging definitions. Exact components depend on build options, dependency discovery and package selection.
+
+v0.7.39 makes the Vulkan ICD build on systems whose headers predate Vulkan
+1.3. `src/userspace/vulkan_icd/CMakeLists.txt` only ran its compile check
+when a Vulkan include directory had been discovered; otherwise it treated
+"Vulkan was found" as "headers are 1.3 or newer", so pkg-config reporting a
+1.2 SDK on openEuler 22.03 led to the ICD being compiled against 1.2 headers
+and failing with `unknown type name 'VkPhysicalDeviceToolProperties'`. The
+check now always runs, letting the compiler search its default include path
+when no directory is reported, and the ICD target is skipped with a warning
+when 1.3 headers are absent so the rest of MVGAL still builds there. See
+[Changelog](CHANGELOG.md) § v0.7.39.
 
 v0.7.38 makes the Vulkan command-buffer DAG compile against Vulkan 1.2
 headers. openEuler 22.03 ships headers without `VkDependencyInfo` or
@@ -171,7 +182,7 @@ The source changelog's 0.7.24 known-issues entry records a PCI enumeration refer
 
 ## Package state
 
-This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Version 0.7.38 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.38. COPR build #11253985 succeeded on 56 chroots, including `fedora-*`, `opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9`, `mageia-10`, `openeuler-22.03` and `openeuler-24.03` on both x86_64 and aarch64. Ten chroots remain red for environmental reasons unrelated to the package: `epel-7` and `rhel-7` (EPEL 7 archive is gone), `mageia-8` (end of life), `mageia-cauldron` (mirror download failures), `centos-stream+epel-next-8` (epel-next repomd unreachable), `openeuler-20.03` (needs CMake 3.20, ships 3.17) and `custom-1` (empty chroot). Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
+This docs repository's `package/` directory contains **0.7.28** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Version 0.7.39 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.39. COPR build #11261576 succeeded on **all 60 chroots** in the project, including `fedora-43/44/45`, `fedora-eln`, `fedora-rawhide`, `rhel` and `epel` 8–10, `almalinux-9/10`, `almalinux-kitten-10`, `centos-stream-8/9/10`, `amazonlinux-2023/2027`, `opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9/10` and `openeuler-22.03/24.03` on x86_64 and aarch64. Chroots that cannot build for environmental reasons — `openeuler-20.03` (CMake 3.17), `mageia-8` (end of life), `mageia-cauldron` (mirror failures), `epel-7`/`rhel-7` (archive gone), `centos-stream+epel-next-8` (unreachable metadata) and `custom-1` (empty chroot) — were removed from the project instead of being left permanently red. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
 
 ## Further reading
 

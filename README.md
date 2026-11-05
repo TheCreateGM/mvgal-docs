@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.38"
-mvgal_verified: 2026-11-04
+mvgal_version: "0.7.39"
+mvgal_verified: 2026-11-05
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.38**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.39**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -32,9 +32,11 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
 - The source changelog's 0.7.24 known-issues note records that the PCI enumeration use-after-free fix is source-verified only and still needs a clean-boot check on the host where it was found; the 2026-10-25 bench run does not substitute for that check on the affected machine.
 
-## Recent source changes (through v0.7.38)
+## Recent source changes (through v0.7.39)
 
-- **openEuler 22.03 could not compile the Vulkan layer (v0.7.38)** — its headers are Vulkan 1.2, where `VkDependencyInfo` and `PFN_vkCmdPipelineBarrier2` do not exist. `include/mvgal/mvgal_cmd_dag.h` now derives `MVGAL_HAVE_SYNC2` from `VK_VERSION_1_3`/`VK_KHR_synchronization2`, keeps a barrier payload as an opaque handle, and gates the lowering helpers and the `vkCmdPipelineBarrier2` slot; a recorded sync2 barrier on such a build reports `VK_ERROR_FEATURE_NOT_PRESENT` with an explanatory log instead of being dropped. Vulkan 1.3 builds are unchanged, runtime lowering included. COPR build #11253985: 56 chroots green.
+- **The Vulkan ICD builds on Vulkan 1.2 systems (v0.7.39)** — the ICD's compile check only ran when a Vulkan include directory had been discovered, so pkg-config reporting a 1.2 SDK was taken as "headers are 1.3 or newer" and openEuler 22.03 failed with `unknown type name 'VkPhysicalDeviceToolProperties'`. The check now always runs and the ICD target is skipped with a warning when 1.3 headers are absent, so the rest of MVGAL still builds and installs there. The ICD library and manifest are listed from a generated file list, so `%files` no longer depends on hand-maintained globs. COPR build #11261576: all 60 chroots green.
+
+- **openEuler 22.03 could not compile the Vulkan layer (v0.7.38)** — its headers are Vulkan 1.2, where `VkDependencyInfo` and `PFN_vkCmdPipelineBarrier2` do not exist. `include/mvgal/mvgal_cmd_dag.h` now derives `MVGAL_HAVE_SYNC2` from `VK_VERSION_1_3`/`VK_KHR_synchronization2`, keeps a barrier payload as an opaque handle, and gates the lowering helpers and the `vkCmdPipelineBarrier2` slot; a recorded sync2 barrier on such a build reports `VK_ERROR_FEATURE_NOT_PRESENT` with an explanatory log instead of being dropped. Vulkan 1.3 builds are unchanged, runtime lowering included.
 
 - **The 0.7.32 test report (v0.7.33 – v0.7.37)** — every tool now shares `tools/mvgal_device_state.h`, which really opens `/dev/mvgal0` and reports not-loaded / wedged / loaded-but-unusable / OK instead of trusting `stat()`, so `mvgal-hw-validate`, `mvgal-probe`, `mvgal-info`, `mvgal-status` and the daemon agree about the same node. The kernel-module wedge (module stuck in `Unloading` with refcount −1 and `/dev/mvgal0` returning ENXIO until reboot) was an idle-gate sweep that re-queued itself unconditionally, so `cancel_delayed_work_sync()` never returned during teardown; the sweep now honours a stopping flag, and `unload-module` detects that state up front and says a reboot is required instead of "still in use". Strategy changes reach a running daemon (`mvgal set-strategy` and `mvgal-config` reload it after saving and say whether the change is live), `--force` is documented in `--help` and the man page and emits the same single-GPU fallback warning as `mvgal-config -f`, `mvgal set-strategy --help` exists, `show-stats` prints a `Daemon: NOT RUNNING` banner and exits 2, `mvgal-status --once` returns the documented exit 2, `mvgal restart` on a stopped daemon says it started it, `set-strategy custom` warns when the script is missing and notes the shipped stub is a no-op, the Vulkan ICD is one line (`available, not registered (opt-in)`), benchmark help no longer claims a daemon is required, bash/zsh/fish completions ship, internal engineering docs are excluded from the RPM, dashes are ASCII, `Also see:` lists the companion tools, and JSON output is clean. The release also added shader intermediate-format detection and routing for SPIR-V, PTX, cubin, fatbin, hsaco, LLVM IR/bitcode, assembly and Intel GEN.
 
@@ -61,7 +63,7 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 
 ## Package artifacts
 
-The [`package/`](package/README.md) directory contains version 0.7.28 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.38 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.38. COPR build #11253985 succeeded on 56 chroots, including `fedora-*`, `opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9`, `mageia-10`, `openeuler-22.03` and `openeuler-24.03` on x86_64 and aarch64; the remaining chroots fail for environmental reasons documented in the [Build Guide](docs/BUILD.md). Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
+The [`package/`](package/README.md) directory contains version 0.7.28 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.39 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.39. COPR build #11261576 is green on all 60 chroots in the project — Fedora 43/44/45/ELN/rawhide, RHEL and EPEL 8–10, AlmaLinux 9/10 and Kitten 10, CentOS Stream 8/9/10, Amazon Linux 2023/2027, openSUSE Leap 16.0 and Tumbleweed, Mageia 9/10, and openEuler 22.03/24.03 on x86_64 and aarch64. Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
 
 ## Updating the HTML site
 

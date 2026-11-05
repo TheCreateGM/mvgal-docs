@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, hardware, compatibility, reference]
 aliases: [Hardware Compatibility, Hardware]
-mvgal_version: "0.7.38"
-mvgal_verified: 2026-11-04
+mvgal_version: "0.7.39"
+mvgal_verified: 2026-11-05
 mvgal_role: reference
 mvgal_order: 12
 ---
 
 # MVGAL Hardware Compatibility
 
-> Source metadata is **0.7.38**; the source changelog documents releases through **0.7.38**. This page describes discovery and probed interfaces, not certification of GPU workload execution.
+> Source metadata is **0.7.39**; the source changelog documents releases through **0.7.39**. This page describes discovery and probed interfaces, not certification of GPU workload execution.
 
 ## GPU discovery
 

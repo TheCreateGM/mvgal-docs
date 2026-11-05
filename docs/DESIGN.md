@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, design, reference]
 aliases: [Design Document, Design]
-mvgal_version: "0.7.38"
-mvgal_verified: 2026-11-04
+mvgal_version: "0.7.39"
+mvgal_verified: 2026-11-05
 mvgal_role: design
 mvgal_order: 7
 ---
 
 # MVGAL Design Document
 
-> **Implementation status:** Source metadata is 0.7.38. The source changelog documents through 0.7.38. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.39. The source changelog documents through 0.7.39. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.38 | **Last Updated:** November 2026
+**Source version:** 0.7.39 | **Last Updated:** November 2026
 
 ---
 

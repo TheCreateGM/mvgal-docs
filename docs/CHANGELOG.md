@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.38"
-mvgal_verified: 2026-11-04
+mvgal_version: "0.7.39"
+mvgal_verified: 2026-11-05
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.39] - 2026-11-04
+
+Packaging and build-portability release. No runtime behaviour changes.
+
+### Fixed
+
+- **The Vulkan ICD was compiled on systems whose headers predate Vulkan
+  1.3.** `src/userspace/vulkan_icd/CMakeLists.txt` only ran its compile
+  check when a Vulkan include directory had been discovered; otherwise it
+  treated "Vulkan was found" as "headers are 1.3 or newer". pkg-config
+  reports success for a 1.2 SDK, so on openEuler 22.03 the ICD was built
+  against 1.2 headers and failed with `unknown type name
+  'VkPhysicalDeviceToolProperties'` and a series of `expected expression
+  before ')' token` errors around
+  `VkPhysicalDeviceShaderDrawParametersFeatures`. The check now always
+  runs — letting the compiler search its default include path when no
+  directory is reported — and the target is skipped with a warning when 1.3
+  headers are absent, so the rest of MVGAL still builds there.
+
+### Changed
+
+- **The ICD artefacts are listed from a generated file list.** The main
+  package's `%files` no longer depends on hand-maintained globs for
+  `mvgal_vulkan_icd.so` and its manifest; the list is produced during
+  `%install`, so a build that places them differently still packages them
+  and a build that does not create them cannot fail the file check.
 
 ## [0.7.38] - 2026-11-04
 
