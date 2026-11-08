@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.39"
-mvgal_verified: 2026-11-05
+mvgal_version: "0.7.43"
+mvgal_verified: 2026-11-08
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.39**; the source changelog documents releases through **0.7.39**.
-> Core architecture and status pages were reconciled against the source tree on **2026-11-05**.
+> Source version **0.7.43**; the source changelog documents releases through **0.7.43**.
+> Core architecture and status pages were reconciled against the source tree on **2026-11-08**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.39 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.43 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -42,25 +42,16 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
 
-## 🔍 What's New in 0.7.39
+## 🔍 What's New in 0.7.43
 
 > [!tip]
 > The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
 
-**v0.7.39 makes the Vulkan ICD build on systems whose headers predate Vulkan
-1.3.** `src/userspace/vulkan_icd/CMakeLists.txt` only ran its compile check
-when a Vulkan include directory had been discovered; otherwise it treated
-"Vulkan was found" as "headers are 1.3 or newer". pkg-config reports success
-for a 1.2 SDK, so on openEuler 22.03 the ICD was compiled against 1.2
-headers and failed with `unknown type name
-'VkPhysicalDeviceToolProperties'`. The check now always runs — letting the
-compiler search its default include path when no directory is reported — and
-the ICD target is skipped with a warning when 1.3 headers are absent, so the
-rest of MVGAL still builds and installs there.
+**v0.7.43 adds a daemon execution-backend seam and diagnostic tools.** The daemon now routes workload requests through a common backend interface, with OpenCL and mock implementations, and its scheduler is wired through IPC and D-Bus. `mvgal-exec` exercises workload submission through that path; `mvgal-doctor` gathers system, device, runtime, permission, and backend diagnostics. Mock execution is for exercising software paths and does not establish physical GPU execution.
 
-The release also carries the packaging change that lists the ICD artefacts
-from a generated file list, so the aggregated ICD and its manifest are always
-accounted for in the main package's `%files`.
+**v0.7.42 hardens teardown and unload reporting.** Thermal and DVFS workers synchronize re-arming with stop; module-unload checks detect wedged modules across the shared inventory, avoid forced removal, and bound the polkit wait. Status tools now provide daemon-down diagnostics and identify wedged modules.
+
+**v0.7.41 fixes DKMS placement.** Rebuilt `mvgal_ntsync` now uses the same DRM module destination claimed by the RPM.
 
 ## 🔍 What's New in 0.7.38
 
@@ -242,8 +233,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.39 source
-tree on **2026-11-05**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.43 source
+tree on **2026-11-08**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |

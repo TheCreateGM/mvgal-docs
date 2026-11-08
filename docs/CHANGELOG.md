@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.39"
-mvgal_verified: 2026-11-05
+mvgal_version: "0.7.43"
+mvgal_verified: 2026-11-08
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.43] - 2026-11-08
+
+Execution and diagnostics release.
+
+### Added
+
+- **Execution backend interface.** `runtime/daemon/execution_backend.hpp` defines the daemon backend contract, with OpenCL and mock implementations in `opencl_backend.cpp` and `mock_backend.cpp`. The mock allows scheduling paths to be exercised without physical GPUs; it is not evidence of GPU execution.
+- **Capability-aware scheduler rework.** `runtime/daemon/scheduler.cpp/.hpp`, IPC, and D-Bus now wire scheduling requests through the updated scheduler path.
+- **`mvgal-doctor`.** Reports host, kernel, PCIe, GPU/driver, compute-runtime, topology, IOMMU, resizable BAR, permission, version, and backend information with recommendations.
+- **`mvgal-exec`.** Submits workloads through the daemon execution-backend path for exercising and benchmarking that interface.
+- **Engineering documentation.** Adds development audit, implementation-gap analysis, architecture, scheduling matrix, and vendor-driver integration material under the source `docs/` tree.
+
+## [0.7.42] - 2026-11-07
+
+### Fixed
+
+- DVFS and thermal delayed work now synchronize re-arming with their stop paths, preventing work from being queued again during teardown.
+- Unload checks scan the shared module inventory for wedged modules before and after removal. Unload no longer falls back to unsafe forced module removal, and the polkit call is bounded.
+- `mvgal status` and `mvgal-status` provide actionable daemon-down details, honor `MVGAL_RUN_DIR`, and identify wedged modules.
+
+### Added
+
+- `cli_smoke` CTest coverage for the CLI smoke script and shared module-list consumers.
+- Troubleshooting guidance for expected hardware-validation skips.
+
+## [0.7.41] - 2026-11-07
+
+### Fixed
+
+- DKMS now installs `mvgal_ntsync` to the same DRM module destination claimed by the RPM, keeping rebuilt modules in place.
+
+### Added
+
+- Development audit, toolchain, usage, configuration, hardware, roadmap, and third-party dependency documentation in the source docs tree.
+
 
 ## [0.7.39] - 2026-11-04
 

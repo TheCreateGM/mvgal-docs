@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.39"
-mvgal_verified: 2026-11-05
+mvgal_version: "0.7.43"
+mvgal_verified: 2026-11-08
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.39**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.43**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -32,7 +32,11 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
 - The source changelog's 0.7.24 known-issues note records that the PCI enumeration use-after-free fix is source-verified only and still needs a clean-boot check on the host where it was found; the 2026-10-25 bench run does not substitute for that check on the affected machine.
 
-## Recent source changes (through v0.7.39)
+## Recent source changes (through v0.7.43)
+
+- **Execution and diagnostics (v0.7.43)** — adds a daemon execution-backend contract with OpenCL and mock implementations, wires the scheduler through IPC and D-Bus, and adds `mvgal-exec` and `mvgal-doctor`. The mock exercises software paths and is not physical GPU validation.
+- **Teardown and diagnostics (v0.7.42)** — prevents thermal/DVFS work from rearming during stop, detects wedged modules across unload inventory, removes forced-removal fallback, bounds polkit wait, and improves daemon-down status output.
+- **DKMS module placement (v0.7.41)** — aligns `mvgal_ntsync` rebuild destination with RPM packaging.
 
 - **The Vulkan ICD builds on Vulkan 1.2 systems (v0.7.39)** — the ICD's compile check only ran when a Vulkan include directory had been discovered, so pkg-config reporting a 1.2 SDK was taken as "headers are 1.3 or newer" and openEuler 22.03 failed with `unknown type name 'VkPhysicalDeviceToolProperties'`. The check now always runs and the ICD target is skipped with a warning when 1.3 headers are absent, so the rest of MVGAL still builds and installs there. The ICD library and manifest are listed from a generated file list, so `%files` no longer depends on hand-maintained globs. COPR build #11261576: all 60 chroots green.
 
@@ -63,7 +67,7 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 
 ## Package artifacts
 
-The [`package/`](package/README.md) directory contains version 0.7.28 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.39 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.39. COPR build #11261576 is green on all 60 chroots in the project — Fedora 43/44/45/ELN/rawhide, RHEL and EPEL 8–10, AlmaLinux 9/10 and Kitten 10, CentOS Stream 8/9/10, Amazon Linux 2023/2027, openSUSE Leap 16.0 and Tumbleweed, Mageia 9/10, and openEuler 22.03/24.03 on x86_64 and aarch64. Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
+The [`package/`](package/README.md) directory contains version 0.7.43 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.43 artifacts are present in this checkout. Verify package metadata and checksums when available; artifact presence does not establish remote publication or hardware validation. Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
 
 ## Updating the HTML site
 
