@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, codebase, reference]
 aliases: [Codebase Map, Source Map]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: reference
 mvgal_order: 7
@@ -9,7 +9,7 @@ mvgal_order: 7
 
 # Codebase Map
 
-This guide maps the checked-in source tree at MVGAL 0.7.43. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
+This guide maps the checked-in source tree at MVGAL 0.7.44. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
 
 ## Repository root
 
@@ -35,9 +35,9 @@ This guide maps the checked-in source tree at MVGAL 0.7.43. Generated build dire
 | `src/tests/`, `kernel/tests/`, `safe/ffi_tests/` | Userspace, kernel and Rust FFI test sources |
 | `professional/`, `misc/`, `tests/` | Examples, integrations, benchmark assets and validation helpers |
 
-## Diagnostics and workload execution (v0.7.43)
+## Diagnostics and workload execution (v0.7.43–v0.7.44)
 
-The daemon execution path now has an explicit backend contract in `runtime/daemon/execution_backend.hpp`; the OpenCL and mock backends implement it. The mock is useful for exercising scheduler/IPC behavior without a GPU and must not be described as physical execution. `tools/mvgal-exec.c` is the CLI client for submitting workloads through this path. `tools/mvgal-doctor.c` gathers host, driver, runtime, topology, permission, and backend diagnostics. The scheduler implementation and its IPC/D-Bus wiring live in `runtime/daemon/scheduler.cpp`, `ipc_server.cpp`, and `dbus_service.cpp`.
+The daemon execution path has an explicit backend contract in `runtime/daemon/execution_backend.hpp`; OpenCL and mock backends implement it. v0.7.44 adds CUDA (`cuda_backend.cpp/.hpp`), Vulkan (`vulkan_backend.cpp/.hpp`) and SYCL (`sycl_backend.cpp/.hpp`) backend slots. CUDA submits the reference PTX kernel through the dynamically loaded driver API; Vulkan submission is currently an explicit stub pending per-ICD integration; SYCL provides a oneAPI/DPC++ slot. The mock is useful for exercising scheduler/IPC behavior without a GPU and must not be described as physical execution. `tools/mvgal-exec.c` is the CLI client for submitting workloads through this path. `tools/mvgal-doctor.c` gathers host, driver, runtime, topology, permission, and backend diagnostics. The scheduler and IPC/D-Bus wiring live in `runtime/daemon/scheduler.cpp`, `ipc_server.cpp`, and `dbus_service.cpp`; `partition_plan.hpp` provides heterogeneous workload partition planning, covered by `src/tests/tests/unit/test_partition_plan.cpp`.
 
 ## Userspace core (`src/userspace/`)
 

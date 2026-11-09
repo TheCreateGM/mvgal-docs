@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, architecture, reference]
 aliases: [Architecture]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: reference
 mvgal_order: 6
@@ -9,7 +9,7 @@ mvgal_order: 6
 
 # MVGAL Architecture
 
-This page describes the 0.7.43 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
+This page describes the 0.7.44 source tree. MVGAL is an experimental coordinator and integration layer, not a replacement GPU driver or a transparent way to combine arbitrary GPUs.
 
 ## Main components
 
@@ -42,9 +42,9 @@ flowchart TD
 
 This is a map of control and reporting paths, not a claim that every API submits work through the daemon. API integrations and build targets are conditional, and each operation depends on the capabilities observed on the host.
 
-## Workload execution boundary (v0.7.43)
+## Workload execution boundary (v0.7.43–v0.7.44)
 
-The daemon exposes a backend abstraction for workload execution, with OpenCL and mock implementations. Requests flow through the scheduler and daemon control surfaces (IPC and D-Bus) to that backend. The mock backend supports software-path development and scheduler exercise; it does not execute on a physical GPU. OpenCL execution depends on a usable OpenCL runtime and the relevant device capabilities. `mvgal-doctor` reports the detected environment and backend status, while `mvgal-exec` exercises the daemon submission path. Treat reported availability as diagnostic evidence, and validate actual execution on the target hardware.
+The daemon exposes a backend abstraction for workload execution, with OpenCL and mock implementations. Requests flow through the scheduler and daemon control surfaces (IPC and D-Bus) to that backend. The mock backend supports software-path development and scheduler exercise; it does not execute on a physical GPU. OpenCL execution depends on a usable OpenCL runtime and relevant device capabilities. v0.7.44 adds a CUDA backend that loads the CUDA driver dynamically and submits a reference PTX compute kernel, a SYCL backend slot for oneAPI/DPC++, and a Vulkan backend whose command submission is still an explicit stub pending per-ICD integration. The scheduler also has a partition planner for distributing workloads across heterogeneous GPUs; its presence does not imply all backends can execute those partitions. `mvgal-doctor` reports the detected environment and backend status, while `mvgal-exec` exercises the daemon submission path. Treat reported availability as diagnostic evidence, and validate actual execution on the target hardware.
 
 ## Device ownership and capability truth
 

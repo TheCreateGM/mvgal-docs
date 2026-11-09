@@ -2,7 +2,7 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: index
 ---
@@ -11,7 +11,7 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.43**; the source changelog documents releases through **0.7.43**.
+> Source version **0.7.44**; the source changelog documents releases through **0.7.44**.
 > Core architecture and status pages were reconciled against the source tree on **2026-11-08**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.

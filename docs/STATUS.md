@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: reference
 mvgal_order: 5
@@ -11,7 +11,11 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.43** in its CMake and Cargo workspace metadata. The source changelog has entries through **0.7.43**. This documentation snapshot was reconciled against that source on 2026-11-08. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.44** in CMake and the generated public version header. The source changelog has entries through **0.7.44**. This documentation snapshot was reconciled against that source on 2026-11-09. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+
+## v0.7.44 execution updates
+
+v0.7.44 adds CUDA, Vulkan, and SYCL daemon backend implementations/slots plus heterogeneous workload partition planning. The CUDA backend dynamically loads the CUDA driver and submits a reference PTX kernel. Vulkan command submission remains an explicit stub pending per-ICD integration; SYCL availability depends on a compatible oneAPI/DPC++ environment. The partition planner has a unit test, which validates planning logic rather than physical multi-vendor execution. See [Changelog](CHANGELOG.md) § v0.7.44.
 
 ## What the code provides
 

@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: reference
 mvgal_order: 13
@@ -15,6 +15,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.44] - 2026-11-09
+
+Heterogeneous execution backend and partition planning release.
+
+### Added
+
+- **CUDA backend** (`runtime/daemon/cuda_backend.cpp/.hpp`) submits the reference compute kernel as PTX through the CUDA driver API, loaded at runtime so systems without NVIDIA userspace libraries can still run the daemon.
+- **Vulkan backend** (`runtime/daemon/vulkan_backend.cpp/.hpp`) registers a compute path; command submission remains an explicit stub pending per-ICD integration.
+- **SYCL backend** (`runtime/daemon/sycl_backend.cpp/.hpp`) adds a backend slot for oneAPI/DPC++ environments.
+- **Partition planning** (`runtime/daemon/partition_plan.hpp`) splits workloads across heterogeneous GPUs, with dispatch updates in `scheduler.cpp/.hpp`.
+- **Partition planner unit test** in `src/tests/tests/unit/test_partition_plan.cpp`.
+- Source documentation adds vendor research, vendor capability matrix, power management design, and research/gap audits under `docs/`.
 
 ## [0.7.43] - 2026-11-08
 

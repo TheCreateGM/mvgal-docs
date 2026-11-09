@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, secure-boot, mok, kernel, guide]
 aliases: [Secure Boot, MOK, MOK Enrollment]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: guide
 mvgal_order: 3
@@ -9,7 +9,7 @@ mvgal_order: 3
 
 # MVGAL Secure Boot & MOK Enrollment
 
-> **Implementation status:** Source metadata is 0.7.43. The source changelog documents through 0.7.43. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.44. The source changelog documents through 0.7.44. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
 **Source version:** 0.7.43 | **Updated:** November 2026
 

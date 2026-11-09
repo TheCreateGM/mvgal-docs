@@ -1,7 +1,7 @@
 ---
 tags: [mvgal, steam, proton, guide]
 aliases: [Steam Integration, Steam, Proton]
-mvgal_version: "0.7.43"
+mvgal_version: "0.7.44"
 mvgal_verified: 2026-11-08
 mvgal_role: guide
 mvgal_order: 15
