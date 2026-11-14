@@ -2,8 +2,8 @@
 tags: [mvgal, moc, index]
 aliases: [MOC, Documentation Index, Home]
 cssclasses: [moc]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: index
 ---
 
@@ -11,8 +11,8 @@ mvgal_role: index
 
 > [!info] Source version
 > **MVGAL** — Multi-Vendor GPU Aggregation Layer for Linux.
-> Source version **0.7.44**; the source changelog documents releases through **0.7.44**.
-> Core architecture and status pages were reconciled against the source tree on **2026-11-08**.
+> Source version **0.7.46**; the source changelog documents releases through **0.7.46**.
+> Core architecture and status pages were reconciled against the source tree on **2026-11-14**.
 
 Cross-vendor GPU discovery and integration components for Linux; operational support is capability-dependent.
 
@@ -23,7 +23,7 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/QUICKSTART\|Quick Start]] | Get MVGAL running in 5 minutes |
 | [[docs/INSTALL\|Installation]] | Full installation guide (COPR, Secure Boot, config) |
 | [[docs/SECURE_BOOT\|Secure Boot & MOK]] | MOK enrollment for Secure Boot systems |
-| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.43 |
+| [[docs/CHANGELOG\|Changelog]] | Release history through v0.7.46 |
 | [[docs/STATUS\|Project Status]] | What is verified, and what is not |
 
 ## 📖 Reference
@@ -41,6 +41,17 @@ Cross-vendor GPU discovery and integration components for Linux; operational sup
 | [[docs/BUILD\|Build Guide]] | Build from source (CMake, Meson, Cargo, DKMS) |
 | [[docs/TROUBLESHOOTING\|Troubleshooting]] | Common issues and fixes |
 | [[docs/STEAM_INTEGRATION\|Steam/Proton]] | Steam integration, and what is dormant |
+
+## 🔍 What's New in 0.7.46
+
+> [!tip]
+> The summary below follows the source changelog. For full details see [[docs/CHANGELOG|Changelog]].
+
+**v0.7.46 wires power management end to end and adds CLI diagnostics.** The `[power]` `power_curve_profile` key (`silent|balanced|performance|custom`) is now parsed by the daemon's `applyPowerConfig()` — previously the pkexec helper persisted it but nothing read it. An explicit `power_curve` list still takes precedence. New `mvgal` subcommands persist `[power]` keys through the helper's generic `set-config` action: `set-power-curve`, `set-power-limit`, `psu-config`, `psu-headroom`. New diagnostics: `mvgal doctor [--json]` (delegates to `mvgal-doctor`), `mvgal verify` (end-to-end self-check including an optional Vulkan dispatch smoke test), and `mvgal test` (delegates to `mvgal-hw-validate`).
+
+**v0.7.46 also removes phantom power telemetry.** `PowerManager::readTemperature()`, `readPowerDraw()`, `readFanSpeed()`, `writePowerLimit()` and `writeFrequency()` no longer return fabricated values (50 °C, 100 W, 0 RPM, unconditional success) when no vendor interface is present — callers keep their last known readings — and the fixed per-state NVML wattage writes (250/150/50/20 W) that ignored the card's actual rating are gone.
+
+**v0.7.45 lands a real Vulkan compute backend.** `runtime/daemon/vulkan_backend.cpp` creates a `VkDevice` per PCI-BDF-matched `VkPhysicalDevice`, compiles an embedded SPIR-V reference kernel, stages inputs through host-visible `VkDeviceMemory`, submits to a compute queue, waits on a `VkFence`, and CPU-validates the mapped output — the same contract as the OpenCL/CUDA backends. Validated on AMD RADV (RX 6400), NVIDIA proprietary (RTX 3050) and Intel Mesa (Arc A380), including element-range partitioning across GPUs. A new `daemon_dispatch` ctest (`src/tests/tests/test_daemon_dispatch.sh`) starts `mvgald` on an isolated socket and submits the reference workload through OpenCL, CUDA and Vulkan via `mvgal-exec`; `mvgal-exec --api vulkan` was added. The backend now uses real `vulkan/vulkan.h` types at compile time (runtime entry points still resolved via dlopen), fixing undersized-struct crashes inside `libvulkan_intel`/`libnvidia-glcore`, and PCI matching uses `vkGetPhysicalDeviceProperties2` with all-zero BDFs from software rasterizers filtered out.
 
 ## 🔍 What's New in 0.7.43
 
@@ -233,8 +244,8 @@ boundaries.
 
 ## ⚠️ Read Before Relying on a Feature
 
-The following implementation limits were checked against the 0.7.43 source
-tree on **2026-11-08**. Build presence and API declarations do not prove device
+The following implementation limits were checked against the 0.7.46 source
+tree on **2026-11-14**. Build presence and API declarations do not prove device
 execution support.
 
 | Area | Current boundary | Page |

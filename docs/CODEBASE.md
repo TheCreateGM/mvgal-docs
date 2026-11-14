@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, codebase, reference]
 aliases: [Codebase Map, Source Map]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: reference
 mvgal_order: 7
 ---
 
 # Codebase Map
 
-This guide maps the checked-in source tree at MVGAL 0.7.44. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
+This guide maps the checked-in source tree at MVGAL 0.7.46. Generated build directories, package outputs, vendored dependencies and research/session notes are excluded from the map.
 
 ## Repository root
 
@@ -35,9 +35,9 @@ This guide maps the checked-in source tree at MVGAL 0.7.44. Generated build dire
 | `src/tests/`, `kernel/tests/`, `safe/ffi_tests/` | Userspace, kernel and Rust FFI test sources |
 | `professional/`, `misc/`, `tests/` | Examples, integrations, benchmark assets and validation helpers |
 
-## Diagnostics and workload execution (v0.7.43–v0.7.44)
+## Diagnostics and workload execution (v0.7.43–v0.7.46)
 
-The daemon execution path has an explicit backend contract in `runtime/daemon/execution_backend.hpp`; OpenCL and mock backends implement it. v0.7.44 adds CUDA (`cuda_backend.cpp/.hpp`), Vulkan (`vulkan_backend.cpp/.hpp`) and SYCL (`sycl_backend.cpp/.hpp`) backend slots. CUDA submits the reference PTX kernel through the dynamically loaded driver API; Vulkan submission is currently an explicit stub pending per-ICD integration; SYCL provides a oneAPI/DPC++ slot. The mock is useful for exercising scheduler/IPC behavior without a GPU and must not be described as physical execution. `tools/mvgal-exec.c` is the CLI client for submitting workloads through this path. `tools/mvgal-doctor.c` gathers host, driver, runtime, topology, permission, and backend diagnostics. The scheduler and IPC/D-Bus wiring live in `runtime/daemon/scheduler.cpp`, `ipc_server.cpp`, and `dbus_service.cpp`; `partition_plan.hpp` provides heterogeneous workload partition planning, covered by `src/tests/tests/unit/test_partition_plan.cpp`.
+The daemon execution path has an explicit backend contract in `runtime/daemon/execution_backend.hpp`; OpenCL, CUDA, Vulkan and mock backends implement it, with a SYCL slot (`sycl_backend.cpp/.hpp`) for oneAPI/DPC++ environments. v0.7.44 added CUDA (`cuda_backend.cpp/.hpp`, PTX via the dynamically loaded driver API) and the partition planner; v0.7.45 turned the Vulkan backend (`vulkan_backend.cpp/.hpp`) into a real compute path — a `VkDevice` per PCI-BDF-matched `VkPhysicalDevice`, an embedded glslc-compiled SPIR-V reference kernel (`vulkan_ref_kernel_spv.h`), host-visible `VkDeviceMemory` staging, compute-queue submission, `VkFence` waits and CPU-validated output, using system `vulkan/vulkan.h` types at compile time with dlopen-resolved entry points. The mock is useful for exercising scheduler/IPC behavior without a GPU and must not be described as physical execution. `tools/mvgal-exec.c` is the CLI client for submitting workloads through this path (`--api vulkan` since v0.7.45). `tools/mvgal-doctor.c` gathers host, driver, runtime, topology, permission, and backend diagnostics; since v0.7.46 `mvgal doctor`, `mvgal verify` and `mvgal test` in `tools/mvgal.c` wrap the diagnostic surface. The scheduler and IPC/D-Bus wiring live in `runtime/daemon/scheduler.cpp`, `ipc_server.cpp`, and `dbus_service.cpp`; `partition_plan.hpp` provides heterogeneous workload partition planning, covered by `src/tests/tests/unit/test_partition_plan.cpp`. `src/tests/tests/test_daemon_dispatch.sh` (ctest `daemon_dispatch`, added v0.7.45) starts `mvgald` on an isolated socket and submits the reference workload through OpenCL, CUDA and Vulkan; `src/tests/tests/test_power_profile.sh` (ctest `power_profile`, added v0.7.46) covers the `[power]` `power_curve_profile` parsing.
 
 ## Userspace core (`src/userspace/`)
 

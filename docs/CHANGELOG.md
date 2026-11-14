@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, changelog, reference]
 aliases: [Changelog, Release Notes]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: reference
 mvgal_order: 13
 ---
@@ -15,6 +15,66 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.7.46] - 2026-11-14
+
+### Added
+
+- **Power-curve profiles wired end to end.** `power_curve_profile`
+  (`silent|balanced|performance|custom`) under `[power]` is now parsed by
+  `daemon.cpp` `applyPowerConfig()` via `profileToPowerCurve()`; an
+  explicit `power_curve` list takes precedence. Previously the pkexec
+  helper persisted the key but nothing read it — a phantom control.
+- **`mvgal` CLI power and diagnostic commands.** New subcommands:
+  `set-power-curve`, `set-power-limit`, `psu-config`, `psu-headroom`
+  (persist `[power]` keys via the pkexec helper's new generic
+  `set-config` action, restricted to keys the daemon parses), plus
+  `doctor [--json]`, `verify` (end-to-end self-check with an optional
+  Vulkan dispatch smoke test), and `test` (delegates to
+  `mvgal-hw-validate`).
+
+### Fixed
+
+- **Phantom power telemetry.** `PowerManager::readTemperature()`,
+  `readPowerDraw()`, `readFanSpeed()`, `writePowerLimit()`, and
+  `writeFrequency()` no longer return fabricated values (50 C, 100 W,
+  0 RPM, unconditional success) when no vendor interface is present;
+  callers keep their last known readings. Fixed per-state NVML wattage
+  writes (250/150/50/20 W) that ignored the card's actual rating.
+
+## [0.7.45] - 2026-11-14
+
+### Added
+
+- **Real Vulkan compute backend.** `runtime/daemon/vulkan_backend.cpp`
+  now creates a `VkDevice` per PCI-BDF-matched `VkPhysicalDevice`,
+  compiles an embedded SPIR-V reference kernel (`vulkan_ref_kernel_spv.h`,
+  produced by glslc), stages inputs through host-visible
+  `VkDeviceMemory`, submits to a compute queue, waits on a `VkFence`,
+  and CPU-validates the mapped output — the same contract as the
+  OpenCL/CUDA backends. Validated on AMD RADV (RX 6400), NVIDIA
+  proprietary (RTX 3050) and Intel Mesa (Arc A380), including
+  element-range partitioning across GPUs.
+- **Daemon dispatch test.** `src/tests/tests/test_daemon_dispatch.sh`
+  starts `mvgald` on an isolated socket and submits the reference
+  workload through OpenCL, CUDA and Vulkan via `mvgal-exec`, wired
+  into ctest as `daemon_dispatch`. `mvgal-exec --api vulkan` added.
+- **Docs.** `docs/GPU_BINARY_FORMATS.md`, `docs/TESTING.md`,
+  `docs/FINAL_REPORT.md`.
+
+### Fixed
+
+- **Vulkan ABI safety.** The backend previously hand-declared Vulkan
+  structs; undersized declarations (notably `VkPhysicalDeviceProperties`,
+  which embeds `VkPhysicalDeviceLimits`) let drivers overflow caller
+  storage and crash inside `libvulkan_intel`/`libnvidia-glcore`.
+  Structs now come from the system `vulkan/vulkan.h` at compile time;
+  entry points are still resolved at runtime via dlopen, so there is
+  no link-time dependency. Systems without Vulkan headers get an
+  honest "unavailable" stub.
+- **PCI matching.** Uses `vkGetPhysicalDeviceProperties2` with
+  `VK_KHR_get_physical_device_properties2` for real BDFs; all-zero BDFs
+  reported by software rasterizers (llvmpipe) are filtered out.
 
 ## [0.7.44] - 2026-11-09
 

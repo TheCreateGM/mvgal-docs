@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, quickstart, guide]
 aliases: [Quick Start, Quickstart]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: guide
 mvgal_order: 1
 ---
 
 # MVGAL Quick Start
 
-> Source metadata is **0.7.44**; the source changelog documents releases through **0.7.44**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
+> Source metadata is **0.7.46**; the source changelog documents releases through **0.7.46**. GPU discovery and API availability do not imply cross-vendor workload execution. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`.
 
 ## 1. Inspect the package or build
 
@@ -45,6 +45,8 @@ mvgal-status --help
 mvgal-config --help
 mvgal-steam-setup --help
 ```
+
+Since v0.7.46 `mvgal --help` also lists the diagnostic commands `doctor [--json]`, `verify` (end-to-end self-check) and `test` (hardware validation battery), plus the power commands `set-power-curve`, `set-power-limit`, `psu-config` and `psu-headroom`.
 
 ## 4. Start and inspect the daemon
 

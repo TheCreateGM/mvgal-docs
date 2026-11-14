@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, build, guide]
 aliases: [Build Guide, Building, Compile]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: guide
 mvgal_order: 14
 ---
 
 # MVGAL Build Guide
 
-> Source metadata is **0.7.44**; the source changelog documents releases through **0.7.44**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
+> Source metadata is **0.7.46**; the source changelog documents releases through **0.7.46**. This guide reflects the checked-in CMake, Meson, and Cargo manifests. A successful build does not mean all hardware operations are supported.
 
 ## Requirements
 
@@ -114,7 +114,11 @@ the chroot probe.
 ### Distribution matrix
 
 COPR build **#11261576** (0.7.39) is green on **all 60 chroots** in the
-project: `fedora-43`, `fedora-44`, `fedora-45`, `fedora-eln` and
+project. The current release, **0.7.46**, was built the same way
+(`scripts/mksrpm.sh` verified all version sources agree; the SRPM
+`mvgal-0.7.46-1.fc45.src.rpm` built clean) and COPR build **11324792**
+succeeded on all 60 enabled chroots on the first attempt. The chroot list
+covers `fedora-43`, `fedora-44`, `fedora-45`, `fedora-eln` and
 `fedora-rawhide`; `rhel-8/9/10` and `rhel+epel-8/9/10`; `almalinux-9/10`,
 `almalinux-kitten-10` and `alma+epel-9/10`; `centos-stream-8/9/10` and
 `centos-stream+epel-next-9`; `epel-8/9/10`; `amazonlinux-2023` and

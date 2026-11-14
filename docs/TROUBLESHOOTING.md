@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, troubleshooting, guide]
 aliases: [Troubleshooting, FAQ]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: guide
 mvgal_order: 4
 ---
 
 # MVGAL Troubleshooting Guide
 
-> Source metadata is **0.7.44**; the source changelog documents releases through **0.7.44**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
+> Source metadata is **0.7.46**; the source changelog documents releases through **0.7.46**. Unsupported kernel submission and VRAM allocation paths return `-EOPNOTSUPP`. Diagnose the installed build and the specific capability in question.
 
 ## Start with supported diagnostics
 
@@ -21,6 +21,14 @@ mvgal-config --help
 mvgal-info
 mvgal-status --once
 ```
+
+Since v0.7.46, `mvgal doctor [--json]` delegates to `mvgal-doctor` for a full
+system diagnostic, `mvgal verify` runs an end-to-end self-check of the
+installed stack (companion tools, `/dev/mvgal0`, GPU detection, config,
+daemon IPC dispatch smoke test), and `mvgal test` runs the
+`mvgal-hw-validate` hardware battery. `mvgal verify` prints PASS/FAIL/SKIP
+per check and exits non-zero on any FAIL; checks needing absent hardware or a
+stopped daemon are SKIPped, never faked.
 
 For service and kernel messages:
 

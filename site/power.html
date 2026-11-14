@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="Power Management — MVGAL Documentation">
 <meta name="twitter:description" content="MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.">
 <meta name="twitter:image" content="https://thecreategm.github.io/mvgal-docs/site/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Power Management — MVGAL Documentation", "name": "Power Management — MVGAL Documentation", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.", "url": "https://thecreategm.github.io/mvgal-docs/site/power.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL power management, runtime capability probing, native driver controls", "datePublished": "2026-08-31", "dateModified": "2026-11-08", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Power Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/power.html"}]}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Power Management — MVGAL Documentation", "name": "Power Management — MVGAL Documentation", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly.", "url": "https://thecreategm.github.io/mvgal-docs/site/power.html", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "MVGAL Documentation", "url": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, "publisher": {"@type": "Organization", "name": "MVGAL", "logo": {"@type": "ImageObject", "url": "https://thecreategm.github.io/mvgal-docs/site/favicon.svg"}}, "about": "Multi-Vendor GPU Aggregation Layer for Linux", "keywords": "MVGAL power management, runtime capability probing, native driver controls", "datePublished": "2026-08-31", "dateModified": "2026-11-14", "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://thecreategm.github.io/mvgal-docs/site/index.html"}, {"@type": "ListItem", "position": 2, "name": "Power Management — MVGAL Documentation", "item": "https://thecreategm.github.io/mvgal-docs/site/power.html"}]}}</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -49,7 +49,7 @@
     </a>
     <a href="changelog.html" class="btn btn-sm">
       <svg class="octicon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>
-      <span>v0.7.44</span>
+      <span>v0.7.46</span>
     </a>
   </div>
 </header>
@@ -76,7 +76,7 @@
 
   var searchInput = document.getElementById('docs-search');
   var searchResults = document.getElementById('docs-search-results');
-  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.44, bug fixes, new features, known issues and release notes."}];
+  var searchPages = [{"href": "quickstart.html", "title": "Quick Start", "description": "Inspect an installed MVGAL build, enumerate GPUs, and check daemon status. Package availability varies by distribution."}, {"href": "install.html", "title": "Installation", "description": "Review package availability or build MVGAL from source. Includes prerequisites and Secure Boot notes."}, {"href": "secure_boot.html", "title": "Secure Boot & MOK Enrollment", "description": "Enroll the MVGAL signing key with MOK for Secure Boot systems: mvgal-enroll-mok, manual enrollment, verification with mokutil, and troubleshooting."}, {"href": "build.html", "title": "Building", "description": "Build MVGAL from source with CMake, Meson or Zig on Fedora and RHEL. Prerequisites, build options, targets and packaging."}, {"href": "architecture.html", "title": "Architecture", "description": "MVGAL system architecture, kernel module, userspace runtime and API layers: kernel HAL, vendor drivers, runtime daemon, execution engine, scheduler, Rust safety crates, API interception and tooling."}, {"href": "codebase.html", "title": "Codebase Map", "description": "Directory-level guide to MVGAL source modules, build entry points and subsystem ownership."}, {"href": "design.html", "title": "Design", "description": "MVGAL design goals, component boundaries, and distinctions between proposed and verified behavior."}, {"href": "api.html", "title": "API Reference", "description": "Public C API reference for MVGAL: initialization, context management, execution control, scheduling strategies, stats, fences and semaphores."}, {"href": "strategies.html", "title": "Scheduling Strategies", "description": "Public MVGAL scheduling strategy identifiers and the current limitations on runtime dispatch."}, {"href": "memory.html", "title": "Memory Management", "description": "MVGAL memory APIs and runtime capability limits for allocation, DMA-BUF, and peer transfers."}, {"href": "hardware.html", "title": "Hardware Compatibility", "description": "Recognized PCI GPU vendors, native driver ownership, and how to inspect runtime capability reports."}, {"href": "steam.html", "title": "Steam / Proton", "description": "Steam and Proton helper components, their environment variables, and capability-dependent behavior."}, {"href": "power.html", "title": "Power Management", "description": "MVGAL power interfaces and capability-dependent vendor controls; unsupported operations are reported explicitly."}, {"href": "troubleshooting.html", "title": "Troubleshooting", "description": "Troubleshoot MVGAL: daemon not starting, Vulkan layer missing, Secure Boot / MOK failures, GPU not detected, kernel module, common fixes and diagnostics."}, {"href": "status.html", "title": "Project Status", "description": "MVGAL source version, release provenance, and verified runtime capability boundaries."}, {"href": "changelog.html", "title": "Changelog", "description": "MVGAL release history and changelog: source release history through v0.7.46, bug fixes, new features, known issues and release notes."}];
   function closeSearch() {
     if (!searchInput || !searchResults) return;
     searchResults.hidden = true;
@@ -153,7 +153,7 @@
 <nav class="sidebar">
 <div class="sidebar-brand">
   <div class="sb-title"><svg class="octicon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 4.6a1.2 1.2 0 0 1 1.2-1.2h2.7l1.5 1.8h5.6a1.2 1.2 0 0 1 1.2 1.2v5.2a1.2 1.2 0 0 1-1.2 1.2H3a1.2 1.2 0 0 1-1.2-1.2Z"/></svg> Documentation</div>
-  <div class="sb-sub">v0.7.44 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
+  <div class="sb-sub">v0.7.46 · GPL-2.0/3.0 · MIT/Apache-2.0</div>
 </div>
 <div class="sidebar-section-title">Getting Started</div>
 <div class="sidebar-section">
@@ -218,7 +218,7 @@
 
 <div class="page-header">
   <div class="page-header-main">
-    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.44</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-11-08</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
+    <div class="page-chips"><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg></span>v0.7.46</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8.5 3.2 3.2L13 5"/></svg></span>2026-11-14</span><span class="page-chip"><span class="chip-icon"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.1A1 1 0 0 1 3.6 2.1H13v10.8H3.6a1 1 0 0 0-1 1Z"/><path d="M2.6 12.9a1 1 0 0 0 1 1H13"/></svg></span>reference</span></div>
     <div class="page-tags"><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>power</a><a class="tag-pill" href="#"><svg class="octicon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 2H14v5.5l-5.8 5.8a1 1 0 0 1-1.4 0L2 8.8a1 1 0 0 1 0-1.4Z"/><circle cx="11" cy="5" r="1"/></svg>reference</a></div>
   </div>
   <div class="page-header-actions">
@@ -237,7 +237,7 @@
 <div class="doc-body">
 <h1 id="mvgal-power-management">MVGAL Power Management<a class="anchor-link" href="#mvgal-power-management" aria-label="Permalink to this section"></a></h1>
 <blockquote>
-<p>Source metadata is <strong>0.7.44</strong>; the source changelog documents releases through <strong>0.7.44</strong>. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.</p>
+<p>Source metadata is <strong>0.7.46</strong>; the source changelog documents releases through <strong>0.7.46</strong>. Power operations are vendor- and capability-dependent. Do not assume that a compiled adapter can control clocks, power limits, or idle states.</p>
 </blockquote>
 <h2 id="what-the-source-provides">What the source provides<a class="anchor-link" href="#what-the-source-provides" aria-label="Permalink to this section"></a></h2>
 <p>Power management exists at three layers, but the control loops are <strong>not fully wired to runtime triggers</strong>:</p>
@@ -247,7 +247,7 @@
 <li><strong>Userspace power library</strong> (<code>src/userspace/power/</code>): <code>power_curve.c</code> (curve math, PSU efficiency table, per-vendor power-profile helpers) and <code>power_manager.c</code> (park/unpark, suspend/resume, thermal check, power monitor thread).</li>
 </ol>
 <h3 id="wiring-status-read-this-first">Wiring status (read this first)<a class="anchor-link" href="#wiring-status-read-this-first" aria-label="Permalink to this section"></a></h3>
-<p>Honest state of each control path as of 0.7.39:</p>
+<p>Honest state of each control path as of 0.7.46:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -262,7 +262,7 @@
 </tr>
 <tr>
 <td>Daemon fan curve / power curve / PSU APIs</td>
-<td><strong>Implemented</strong> — callable in-process; no CLI or D-Bus method exposes them</td>
+<td><strong>Implemented</strong> — power curve, per-GPU power limit, and PSU keys are settable via the <code>mvgal</code> CLI (<code>set-power-curve</code>, <code>set-power-limit</code>, <code>psu-config</code>, <code>psu-headroom</code>), which persists them to <code>[power]</code> through the pkexec helper and reloads the daemon; fan curves remain in-process only (no CLI or D-Bus method)</td>
 </tr>
 <tr>
 <td>Kernel DVFS/thermal periodic work handlers</td>
@@ -274,7 +274,7 @@
 </tr>
 <tr>
 <td><code>[power]</code> section of <code>mvgal.conf</code></td>
-<td><strong>Not wired to the daemon</strong> — <code>PowerManager::setConfig()</code> has no external callers; the daemon reads only <code>[core] default_strategy</code> (<code>daemon.cpp</code> <code>readDefaultStrategy()</code>; <code>reloadConfig()</code> re-reads only the strategy) and uses compiled defaults</td>
+<td><strong>Wired</strong> — <code>daemon.cpp</code> <code>applyPowerConfig()</code> parses the section into <code>PowerManager::setConfig()</code> / <code>setPsuConfig()</code> / <code>setPowerCurve()</code> at startup and on SIGHUP</td>
 </tr>
 <tr>
 <td>D-Bus power interface</td>
@@ -282,11 +282,14 @@
 </tr>
 </tbody>
 </table></div>
+<h3 id="telemetry-and-control-return-values">Telemetry and control return values<a class="anchor-link" href="#telemetry-and-control-return-values" aria-label="Permalink to this section"></a></h3>
+<p>Since v0.7.46 the daemon reports what it actually has. When a GPU exposes neither an NVML handle nor a readable hwmon node, <code>readTemperature()</code>, <code>readPowerDraw()</code>, and <code>readFanSpeed()</code> report failure instead of a substitute value (they previously returned fabricated 50 °C, 100 W, and 0 RPM), and the caller keeps its last known reading. <code>writePowerLimit()</code>, <code>writeFanSpeed()</code>, and <code>writeFrequency()</code> return false when no vendor interface accepted the request, so callers no longer record a value the GPU never received. No fixed wattage is written on a power state change: NVML exposes no per-state power mode and no per-GPU TDP is probed, so the idle state machine records the transition without applying an invented power limit.</p>
 <p>In 0.7.12 the changelog notes that DPM capability is no longer inferred from vendor family and requires the relevant sysfs node to exist. Operations without a verified backend report unsupported or record state without claiming that hardware changed.</p>
 <h3 id="power-curves">Power curves<a class="anchor-link" href="#power-curves" aria-label="Permalink to this section"></a></h3>
 <ul>
 <li>Kernel default curve: exactly three points (0% util → 30% limit / 40 °C, 50% → 70% / 70 °C, 100% → 100% / 85 °C), linear interpolation, no voltage column.</li>
 <li>Shipped <code>config/mvgal.conf</code> <code>[power] power_curve=</code>: five points, <code>0:30, 25:50, 50:70, 75:90, 100:100</code>.</li>
+<li>Named profiles: <code>[power] power_curve_profile = silent | balanced | performance | custom</code> (commented out in the shipped file). <code>daemon.cpp</code> <code>profileToPowerCurve()</code> maps a name to a preset point list — <code>silent</code>: 0:15, 25:25, 50:40, 75:55, 100:70; <code>balanced</code>: 0:30, 25:50, 50:70, 75:90, 100:100; <code>performance</code>: 0:50, 25:75, 50:90, 75:100, 100:100; <code>custom</code>: no preset, the explicit <code>power_curve</code> list applies. An explicit <code>power_curve</code> list wins over a profile; an unknown name warns and changes nothing. The curve only has an effect when power capping is enabled (<code>enable_power_capping = true</code> with <code>power_limit_watts &gt; 0</code>) or PSU headroom tracking is active — see <code>PowerManager::applyPowerCurves()</code>.</li>
 <li>The public header defines an eight-value profile enum (<code>PERFORMANCE</code>, <code>BALANCED</code>, <code>POWERSAVER</code>, <code>AUTO</code>, <code>CUSTOM</code>, <code>ADAPTIVE</code>, <code>RENDERING</code>, <code>GAMING</code>). There is no <code>turbo</code> profile and no fixed "%TDP per profile" table — profile behavior is curve-driven.</li>
 <li>PSU capacity is a <strong>user-provided</strong> value (<code>psu_capacity_watts</code>, default 0 = unknown). MVGAL does not discover PSU capacity from hardware.</li>
 </ul>
@@ -298,14 +301,36 @@ mvgal-config --help
 mvgal-info
 mvgal-status --once
 </code></pre>
-<p><code>mvgal-config --help</code> lists configured power commands in builds that include them. Current source exposes selected commands such as <code>set-power-profile</code>, <code>set-power-curve</code>, and PSU configuration; valid options and hardware applicability are shown by that tool. There is no separate <code>mvgal-powercurve</code> target in the current tools CMake file.</p>
-<h3 id="set-power-curve-is-a-global-setting"><code>set-power-curve</code> is a global setting<a class="anchor-link" href="#set-power-curve-is-a-global-setting" aria-label="Permalink to this section"></a></h3>
-<pre><code class="language-bash">mvgal-config set-power-curve balanced     # valid profiles: silent|balanced|performance|custom
-</code></pre>
-<p>It takes <strong>no GPU index</strong> (v0.7.22). It used to accept one, print it, and then
-discard it: the value is persisted once as <code>power.power_curve_profile</code>, so every
-index wrote the same key. The old two-argument form is still accepted, but warns
-that the index is ignored.</p>
+<p><code>mvgal-config --help</code> lists configured power commands in builds that include them. Since v0.7.46 the <code>mvgal</code> CLI itself exposes the power/PSU surface; valid options and hardware applicability are shown by <code>mvgal --help</code>. There is no separate <code>mvgal-powercurve</code> target in the current tools CMake file.</p>
+<h3 id="power-and-psu-cli-commands-v0746">Power and PSU CLI commands (v0.7.46)<a class="anchor-link" href="#power-and-psu-cli-commands-v0746" aria-label="Permalink to this section"></a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mvgal set-power-curve &lt;profile&gt;</code></td>
+<td>Persists <code>power.power_curve_profile</code> (<code>silent\|balanced\|performance\|custom</code>); reloads the daemon</td>
+</tr>
+<tr>
+<td><code>mvgal set-power-limit &lt;watts&gt;</code></td>
+<td>Persists <code>power.power_limit_watts</code> and sets <code>enable_power_capping</code> (0 disables capping); reloads the daemon</td>
+</tr>
+<tr>
+<td><code>mvgal psu-config &lt;watts&gt; &lt;margin%&gt;</code></td>
+<td>Persists <code>psu_capacity_watts</code> and <code>psu_safety_margin_percent</code></td>
+</tr>
+<tr>
+<td><code>mvgal psu-headroom &lt;on\|off&gt;</code></td>
+<td>Persists <code>enable_psu_headroom</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>All four go through <code>pkexec /usr/lib/mvgal/mvgal-pkexec-helper.sh</code> — the helper's generic <code>set-config</code> action is restricted to keys <code>applyPowerConfig()</code> actually parses, and <code>set_config_value</code> rejects shell metacharacters — then signal the daemon to reload. Writes the hardware refuses are reported honestly by the daemon (see "Telemetry and control return values" above). The ctest <code>power_profile</code> covers profile parsing, explicit-curve precedence, <code>custom</code>, and bogus-name handling.</p>
+<p><code>mvgal-config set-power-curve balanced</code> remains available and takes <strong>no GPU index</strong> (v0.7.22). It used to accept one, print it, and then discard it: the value is persisted once as <code>power.power_curve_profile</code>, so every index wrote the same key. The old two-argument form is still accepted, but warns that the index is ignored.</p>
 <h3 id="multi-gpu-strategies-need-two-gpus">Multi-GPU strategies need two GPUs<a class="anchor-link" href="#multi-gpu-strategies-need-two-gpus" aria-label="Permalink to this section"></a></h3>
 <p><code>afr</code>, <code>sfr</code>, <code>round_robin</code>, <code>hybrid</code>, <code>task</code> and <code>compute_offload</code>
 distribute work across GPUs, so they need at least two. Since v0.7.25 that
@@ -321,12 +346,14 @@ is checked, in three places:</p>
 reports COMPAT_SUPPORTED", but that guidance was enforced nowhere before
 v0.7.25 — the daemon would announce
 <code>Scheduler mode from config default_strategy='afr'</code> on a single-GPU host.</p>
-<p><strong>The profile is stored but not yet acted on.</strong> Nothing in the daemon reads
-<code>power_curve_profile</code> today (<code>PowerManager::setConfig()</code> has no external
-callers), so this command records intent and currently changes no hardware
-behaviour. It is documented this way deliberately rather than implying a
-per-GPU capability that does not exist. <code>set-power-profile</code>, which drives
-AMD hardware through sysfs, is the command that does take effect.</p>
+<p><strong>The profile is acted on, but only as a curve — not as a hardware guarantee.</strong>
+Since v0.7.46 <code>applyPowerConfig()</code> parses <code>power_curve_profile</code> at startup and
+on SIGHUP, so the command changes the curve the daemon applies. Whether that
+curve moves any hardware depends on the probed capability mask and on power
+capping or PSU headroom tracking being enabled; on a GPU with no writable power
+interface the write is now reported as refused rather than recorded as applied.
+<code>set-power-profile</code>, which drives AMD hardware through sysfs, is the command
+that takes effect at the driver level.</p>
 <p>System telemetry can also be inspected through the native driver's interfaces and tools. For NVIDIA, use the installed <code>nvidia-smi</code>; for AMD and Intel, consult the relevant DRM, hwmon, and sysfs nodes. Availability differs by driver and GPU.</p>
 <h2 id="idle-gating">Idle gating<a class="anchor-link" href="#idle-gating" aria-label="Permalink to this section"></a></h2>
 <p>The kernel gates idle control on a measurable busy signal
@@ -350,7 +377,7 @@ exposed per GPU in sysfs as <code>idle_gate</code> (write-only enable),
 <tbody>
 <tr>
 <td><code>mvgal-powercurve</code> CLI tool</td>
-<td>Does not exist; <code>tools/</code> has no power tool, and the <code>mvgal</code> CLI has no power/fan/profile subcommands</td>
+<td>Does not exist as a separate binary; power curve/profile/PSU control is exposed through <code>mvgal set-power-curve</code>, <code>mvgal set-power-limit</code>, <code>mvgal psu-config</code>, and <code>mvgal psu-headroom</code> (v0.7.46). Fan curves still have no CLI or D-Bus method</td>
 </tr>
 <tr>
 <td><code>mvgal-info --dvfs / --power / --temperature / --history</code></td>
@@ -387,7 +414,7 @@ exposed per GPU in sysfs as <code>idle_gate</code> (write-only enable),
 
 </div>
 <aside class="doc-rail">
-<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#what-the-source-provides">What the source provides</a></li><li class="outline-item outline-l3"><a href="#wiring-status-read-this-first">Wiring status (read this first)</a></li><li class="outline-item outline-l3"><a href="#power-curves">Power curves</a></li><li class="outline-item outline-l2"><a href="#inspect-power-and-device-status">Inspect power and device status</a></li><li class="outline-item outline-l3"><a href="#set-power-curve-is-a-global-setting"><code>set-power-curve</code> is a global setting</a></li><li class="outline-item outline-l3"><a href="#multi-gpu-strategies-need-two-gpus">Multi-GPU strategies need two GPUs</a></li><li class="outline-item outline-l2"><a href="#idle-gating">Idle gating</a></li><li class="outline-item outline-l2"><a href="#what-does-not-exist">What does not exist</a></li><li class="outline-item outline-l2"><a href="#limitations">Limitations</a></li></ul>
+<div class="outline-title">On this page</div><ul class="outline-list"><li class="outline-item outline-l2"><a href="#what-the-source-provides">What the source provides</a></li><li class="outline-item outline-l3"><a href="#wiring-status-read-this-first">Wiring status (read this first)</a></li><li class="outline-item outline-l3"><a href="#telemetry-and-control-return-values">Telemetry and control return values</a></li><li class="outline-item outline-l3"><a href="#power-curves">Power curves</a></li><li class="outline-item outline-l2"><a href="#inspect-power-and-device-status">Inspect power and device status</a></li><li class="outline-item outline-l3"><a href="#power-and-psu-cli-commands-v0746">Power and PSU CLI commands (v0.7.46)</a></li><li class="outline-item outline-l3"><a href="#multi-gpu-strategies-need-two-gpus">Multi-GPU strategies need two GPUs</a></li><li class="outline-item outline-l2"><a href="#idle-gating">Idle gating</a></li><li class="outline-item outline-l2"><a href="#what-does-not-exist">What does not exist</a></li><li class="outline-item outline-l2"><a href="#limitations">Limitations</a></li></ul>
 <div class="rail-actions">
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/edit/main/POWER_MANAGEMENT.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11.1 2.4 2.5 2.5-8 8-3.2.7.7-3.2Z"/><path d="m9.8 3.7 2.5 2.5"/></svg> Edit this page</a>
   <a class="rail-link" href="https://github.com/TheCreateGM/mvgal-docs/blob/main/POWER_MANAGEMENT.md" target="_blank" rel="noopener"><svg class="octicon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5.4 4.6-3.4 3.4 3.4 3.4M10.6 4.6 14 8l-3.4 3.4M9.2 2.6 6.8 13.4"/></svg> View source</a>
@@ -396,7 +423,7 @@ exposed per GPU in sysfs as <code>idle_gate</code> (write-only enable),
 </div>
   </main>
   <footer>
-    <div>© 2026 MVGAL Project · v0.7.44 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
+    <div>© 2026 MVGAL Project · v0.7.46 · <a href="status.html" style="color: inherit; text-decoration: none;">Project Status</a></div>
     <div class="footer-links">
       <a href="changelog.html">Changelog</a>
       <a href="troubleshooting.html">Troubleshooting</a>

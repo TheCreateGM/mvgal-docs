@@ -1,17 +1,17 @@
 ---
 tags: [mvgal, install, guide]
 aliases: [Installation, Install]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: guide
 mvgal_order: 2
 ---
 
 # MVGAL Installation Guide
 
-> **Implementation status:** Source metadata is 0.7.44. The source changelog documents through 0.7.44. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
+> **Implementation status:** Source metadata is 0.7.46. The source changelog documents through 0.7.46. Treat design/API descriptions as available only where the relevant code path and runtime capability are verified; unsupported kernel submission and VRAM allocation return `-EOPNOTSUPP`.
 
-**Source version:** 0.7.43 | **Updated:** November 2026
+**Source version:** 0.7.46 | **Updated:** November 2026
 
 ---
 
@@ -236,6 +236,7 @@ park_timeout_ms = 30000
 thermal_threshold = 85
 critical_threshold = 95
 power_curve = 0:30,25:50,50:70,75:90,100:100
+# power_curve_profile = balanced   # silent|balanced|performance|custom (v0.7.46)
 enable_dvfs = true
 
 [debug]

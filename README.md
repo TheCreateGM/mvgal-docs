@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, docs, index]
 aliases: [Home, Index]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: index
 ---
 
@@ -10,7 +10,7 @@ mvgal_role: index
 
 Documentation for **MVGAL**, an experimental Linux project for multi-vendor GPU discovery, capability reporting, workload coordination and API-specific integrations.
 
-> These pages describe source version **0.7.44**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
+> These pages describe source version **0.7.46**. The project is not a universal transparent multi-GPU driver. Device ownership stays with native vendor drivers, and actual operation support depends on build options and runtime capability probes.
 
 ## Read the documentation
 
@@ -32,8 +32,9 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 - Synthetic GPU topologies are a userspace test fixture; they do not create hardware or establish physical multi-vendor validation.
 - The source changelog's 0.7.24 known-issues note records that the PCI enumeration use-after-free fix is source-verified only and still needs a clean-boot check on the host where it was found; the 2026-10-25 bench run does not substitute for that check on the affected machine.
 
-## Recent source changes (through v0.7.43)
+## Recent source changes (through v0.7.46)
 
+- **Real Vulkan compute backend and power wiring (v0.7.45–v0.7.46)** — the daemon's Vulkan backend now creates a `VkDevice` per PCI-BDF-matched `VkPhysicalDevice`, runs an embedded SPIR-V reference kernel, and CPU-validates results, validated on AMD RADV, NVIDIA proprietary and Intel Mesa including cross-GPU partitioning. A new `daemon_dispatch` ctest submits the reference workload through OpenCL, CUDA and Vulkan via `mvgal-exec`. The `[power]` section is now wired end to end: `power_curve_profile` is parsed by the daemon, `mvgal` gained `set-power-curve`/`set-power-limit`/`psu-config`/`psu-headroom`/`doctor`/`verify`/`test` subcommands, and the power manager no longer reports fabricated telemetry (50 C / 100 W / 0 RPM) when no vendor interface exists.
 - **Execution and diagnostics (v0.7.43)** — adds a daemon execution-backend contract with OpenCL and mock implementations, wires the scheduler through IPC and D-Bus, and adds `mvgal-exec` and `mvgal-doctor`. The mock exercises software paths and is not physical GPU validation.
 - **Teardown and diagnostics (v0.7.42)** — prevents thermal/DVFS work from rearming during stop, detects wedged modules across unload inventory, removes forced-removal fallback, bounds polkit wait, and improves daemon-down status output.
 - **DKMS module placement (v0.7.41)** — aligns `mvgal_ntsync` rebuild destination with RPM packaging.
@@ -67,7 +68,7 @@ The source repository is organized around a Linux kernel module (`kernel/`), pub
 
 ## Package artifacts
 
-The [`package/`](package/README.md) directory contains version 0.7.43 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.43 artifacts are present in this checkout. Verify package metadata and checksums when available; artifact presence does not establish remote publication or hardware validation. Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
+The [`package/`](package/README.md) directory contains version 0.7.44 RPM, DEB, AppImage, tarball and Flatpak artifacts. Version 0.7.44 artifacts are present in this checkout. Verify package metadata and checksums when available; artifact presence does not establish remote publication or hardware validation. Consult the package README and artifact metadata for exact contents and verification details. Files in this repository do not update automatically, and their presence does not imply remote publication or hardware validation.
 
 ## Updating the HTML site
 

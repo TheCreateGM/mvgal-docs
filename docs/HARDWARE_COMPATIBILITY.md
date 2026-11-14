@@ -1,15 +1,15 @@
 ---
 tags: [mvgal, hardware, compatibility, reference]
 aliases: [Hardware Compatibility, Hardware]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: reference
 mvgal_order: 12
 ---
 
 # MVGAL Hardware Compatibility
 
-> Source metadata is **0.7.44**; the source changelog documents releases through **0.7.44**. This page describes discovery and probed interfaces, not certification of GPU workload execution.
+> Source metadata is **0.7.46**; the source changelog documents releases through **0.7.46**. This page describes discovery and probed interfaces, not certification of GPU workload execution.
 
 ## GPU discovery
 
@@ -67,3 +67,5 @@ For reproducible compatibility reports, include the GPU model and PCI ID, native
 The source repository contains test scaffolding and vendor adapters. A build or passing synthetic/unit test is not physical-hardware certification. No blanket “production supported” matrix is claimed here; consult the source changelog, runtime probe output, and hardware-specific validation results.
 
 The source tree's `docs/HARDWARE_VALIDATION_2026-10-25.md` records a bench run on a three-vendor host — AMD Navi 24, NVIDIA RTX 3050 and Intel Arc A380 — with ctest 27/27 (4.73 s) including `uapi_probe`, and 71/71 across the full suite. That is dated evidence for that host, not a blanket support matrix; the same document keeps synthetic, single-vendor and multi-vendor results separate.
+
+The source tree's `docs/HARDWARE_VALIDATION_2026-11-14.md` records a later pass on the same three-vendor host (kernel 7.3.3-300.fc45, Fedora 45): ctest 32/32 (7.94 s) in `build_check` and 30/30 (7.85 s) in `build_output`, a per-GPU × per-API dispatch matrix (OpenCL/CUDA/Vulkan `COMPLETE` on NVIDIA; Vulkan and OpenCL `COMPLETE` on Intel Arc A380 and AMD RX 6400; CUDA on non-NVIDIA GPUs returns an honest `ERROR (error_code=6)`), and `COMPLETE [PARTITIONED across multiple physical GPUs]` for OpenCL and Vulkan. It proves real kernel execution through the daemon IPC → scheduler → `ExecutionBackend` path for the embedded reference kernel only — not arbitrary workloads, graphics paths, DMA-BUF/P2P transfers, hotplug, or MTT hardware.

@@ -1,8 +1,8 @@
 ---
 tags: [mvgal, status, reference]
 aliases: [Project Status, Status]
-mvgal_version: "0.7.44"
-mvgal_verified: 2026-11-08
+mvgal_version: "0.7.46"
+mvgal_verified: 2026-11-14
 mvgal_role: reference
 mvgal_order: 5
 ---
@@ -11,7 +11,17 @@ mvgal_order: 5
 
 ## Source version
 
-The source repository reports **0.7.44** in CMake and the generated public version header. The source changelog has entries through **0.7.44**. This documentation snapshot was reconciled against that source on 2026-11-09. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+The source repository reports **0.7.46** in CMake and the generated public version header. The source changelog has entries through **0.7.46**. This documentation snapshot was reconciled against that source on 2026-11-14. Package publication and physical hardware validation are separate questions; a successful build or installed artifact does not establish runtime support.
+
+## v0.7.46 power and diagnostics updates
+
+v0.7.46 wires the `[power]` section of `mvgal.conf` to the daemon end to end. `applyPowerConfig()` in `daemon.cpp` now parses `power_curve_profile` (`silent|balanced|performance|custom`) via `profileToPowerCurve()` — previously the pkexec helper persisted the key but nothing read it, so `set-power-curve` reported success while the daemon kept compiled defaults. An explicit `power_curve` list takes precedence over a named profile, and an unknown profile name is warned about rather than applied. The release also adds `mvgal` CLI subcommands `set-power-curve`, `set-power-limit`, `psu-config` and `psu-headroom`, which persist `[power]` keys through the pkexec helper's new generic `set-config` action (restricted to keys the daemon actually parses) and reload the daemon, plus diagnostics `mvgal doctor [--json]` (delegates to `mvgal-doctor`), `mvgal verify` (end-to-end self-check with an optional Vulkan dispatch smoke test) and `mvgal test` (delegates to `mvgal-hw-validate`).
+
+The same release removes phantom power telemetry: `PowerManager::readTemperature()`, `readPowerDraw()`, `readFanSpeed()`, `writePowerLimit()` and `writeFrequency()` no longer return fabricated values (50 °C, 100 W, 0 RPM, unconditional success) when no vendor interface is present — callers keep their last known readings — and the fixed per-state NVML wattage writes (250/150/50/20 W) that ignored the card's actual rating are gone. See [Changelog](CHANGELOG.md) § v0.7.46.
+
+## v0.7.45 execution updates
+
+v0.7.45 replaces the Vulkan backend stub with a real compute path: `runtime/daemon/vulkan_backend.cpp` creates a `VkDevice` per PCI-BDF-matched `VkPhysicalDevice`, compiles an embedded SPIR-V reference kernel (`vulkan_ref_kernel_spv.h`), stages inputs through host-visible `VkDeviceMemory`, submits to a compute queue, waits on a `VkFence`, and CPU-validates the mapped output — the same contract as the OpenCL/CUDA backends. It was validated on AMD RADV (RX 6400), NVIDIA proprietary (RTX 3050) and Intel Mesa (Arc A380), including element-range partitioning across GPUs. The backend previously hand-declared Vulkan structs whose undersized declarations let drivers overflow caller storage; structs now come from the system `vulkan/vulkan.h` at compile time while entry points are still resolved via dlopen, and systems without Vulkan headers get an honest "unavailable" stub. PCI matching uses `vkGetPhysicalDeviceProperties2` and filters all-zero BDFs reported by software rasterizers. A new `daemon_dispatch` ctest (`src/tests/tests/test_daemon_dispatch.sh`) starts `mvgald` on an isolated socket and submits the reference workload through OpenCL, CUDA and Vulkan via `mvgal-exec` (`--api vulkan` added). See [Changelog](CHANGELOG.md) § v0.7.45.
 
 ## v0.7.44 execution updates
 
@@ -180,13 +190,15 @@ The 0.7.23–0.7.24 releases mainly fixed correctness and observability issues f
 
 CMake is the primary broad build; Meson and Cargo cover separate portions. Optional dependencies and build switches determine which targets exist. Unit/integration tests, synthetic topology, successful package builds and physical multi-vendor validation provide different evidence and should be reported separately. The synthetic topology backend is a test fixture and does not create devices.
 
-The source test table records 27/27 CTest tests (4.73 s, measured 2026-10-25) and 71/71 across the full suite, including the new `test_cuda_multidevice` and `uapi_probe` on the three-vendor bench host (AMD Navi 24, NVIDIA RTX 3050, Intel Arc A380). This is bench evidence for that host, not a universal hardware claim.
+The source test table records 27/27 CTest tests (4.73 s, measured 2026-10-25) and 71/71 across the full suite, including the new `test_cuda_multidevice` and `uapi_probe` on the three-vendor bench host (AMD Navi 24, NVIDIA RTX 3050, Intel Arc A380). That is bench evidence for that host, not a universal hardware claim.
+
+The 2026-11-14 validation pass on the same three-vendor host (kernel 7.3.3-300.fc45, Fedora 45, Mesa 26.2.6, NVIDIA driver 620.70.06) records `ctest` 32/32 passed (7.94 s) in `build_check` and 30/30 (7.85 s) in `build_output`, plus a per-GPU × per-API dispatch matrix: OpenCL, CUDA and Vulkan all `COMPLETE` on the NVIDIA GPU; Vulkan `COMPLETE` on the Intel Arc A380 and AMD RX 6400 with OpenCL also complete there; CUDA pinned to non-NVIDIA GPUs returns an honest `ERROR (error_code=6)` rather than faking success. The new `daemon_dispatch` test exercises real daemon IPC dispatch for all three backends including element-range partitioning across physical GPUs. The SYCL backend remains an honest stub — no oneAPI runtime exists on the host. This is dated bench evidence for that host, covering only the embedded reference kernel, not arbitrary workloads, graphics paths, DMA-BUF/P2P transfers, hotplug, or MTT hardware.
 
 The source changelog's 0.7.24 known-issues entry records a PCI enumeration reference-lifetime fix that still needs a clean-boot hardware check on the host where it was found; the 0.7.28 entry does not restate it. The 2026-10-25 bench run (ctest 27/27, including `uapi_probe`, on the three-vendor bench host) does not substitute for that check on the affected machine. Do not turn this source-level fix into a claim of completed physical validation.
 
 ## Package state
 
-This docs repository's `package/` directory contains **0.7.43** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. Version 0.7.43 has been built and pushed to COPR (`axogm/mvgal`); install with `pkexec dnf install mvgal` from the repository configured for v0.7.43. COPR build #11261576 succeeded on **all 60 chroots** in the project, including `fedora-43/44/45`, `fedora-eln`, `fedora-rawhide`, `rhel` and `epel` 8–10, `almalinux-9/10`, `almalinux-kitten-10`, `centos-stream-8/9/10`, `amazonlinux-2023/2027`, `opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9/10` and `openeuler-22.03/24.03` on x86_64 and aarch64. Chroots that cannot build for environmental reasons — `openeuler-20.03` (CMake 3.17), `mageia-8` (end of life), `mageia-cauldron` (mirror failures), `epel-7`/`rhel-7` (archive gone), `centos-stream+epel-next-8` (unreachable metadata) and `custom-1` (empty chroot) — were removed from the project instead of being left permanently red. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
+This docs repository's `package/` directory contains **0.7.44** RPM, DEB, AppImage, tarball and Flatpak artifacts as of this update. The current source release, **0.7.46**, has had its SRPM built cleanly and submitted to COPR: build **11324792** succeeded on **all 60 enabled chroots** in the project on the first attempt, covering `fedora-43/44/45`, `fedora-eln`, `fedora-rawhide`, `rhel` and `epel` 8–10, `almalinux-9/10`, `almalinux-kitten-10`, `centos-stream-8/9/10`, `amazonlinux-2023/2027`, `opensuse-leap-16.0`, `opensuse-tumbleweed`, `mageia-9/10` and `openeuler-22.03/24.03` on x86_64 and aarch64. Chroots that cannot build for environmental reasons — `openeuler-20.03` (CMake 3.17), `mageia-8` (end of life), `mageia-cauldron` (mirror failures), `epel-7`/`rhel-7` (archive gone), `centos-stream+epel-next-8` (unreachable metadata) and `custom-1` (empty chroot) — were removed from the project instead of being left permanently red. Its package README and individual manifests should be consulted for exact contents. Presence here does not establish that a remote repository has published the same version or that the artifacts have passed hardware validation.
 
 ## Further reading
 
